@@ -1,0 +1,13 @@
+name = Simplenews rules
+description = Provides integration with Rules module for Simplenews.
+dependencies[] = simplenews
+dependencies[] = rules
+package = Mail
+core = 7.x
+
+; Information added by drupal.org packaging script on 2011-12-24
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "simplenews"
+datestamp = "1324686393"
+
