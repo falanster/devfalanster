@@ -2,7 +2,7 @@
 /**
  * @file
  * Variable API module - Database storage
- * 
+ *
  * This module provides database storage for variable realms
  */
 
@@ -10,12 +10,14 @@
  * Get variable store
  */
 function &variable_store($realm, $key) {
-  static $variable_store;
-  if (!isset($variable_store)) {
-    $variable_store = &drupal_static('variable_store');
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['store'] = &drupal_static('variable_store');
   }
+  $variable_store = &$drupal_static_fast['store'];
+
   if (!isset($variable_store[$realm][$key])) {
-    $variable_store[$realm][$key] = variable_store_load($realm, $key);
+    $variable_store[$realm][$key] = _variable_store_load($realm, $key);
   }
   return $variable_store[$realm][$key];
 }
@@ -38,7 +40,7 @@ function variable_store_del($realm, $key, $name, $rebuild = TRUE) {
     ->condition('name', $name)
     ->execute();
   unset($store[$name]);
-  variable_realm_del($realm, $key, $name, $rebuild);
+  cache_clear_all('variable:' . $realm . ':' . $key, 'cache_bootstrap');
 }
 
 /**
@@ -54,17 +56,58 @@ function variable_store_get($realm, $key, $name, $default = NULL) {
 }
 
 /**
- * Initialize realm from variable store
+ * Delete realm variable or full realm from store.
+ *
+ * @param $realm
+ *   Realm name to delete. NULL to delete all realms.
+ * @param $key
+ *   Realm key to delete. NULL to delete all realm keys.
+ * @param $name
+ *   Variable name to delete. NULL to delete all variables for that realm, key
  */
-function variable_store_initialize($realm, $key) {
-  $variables = variable_store($realm, $key);
-  variable_realm_add($realm, $key, $variables); 
+function variable_store_delete_all($realm, $key, $name = NULL) {
+  _variable_store_reset();
+  $query = db_delete('variable_store');
+  if (isset($realm)) {
+    $query->condition('realm', $realm);
+  }
+  if (isset($key)) {
+    $query->condition('realm_key', $key);
+  }
+  if (isset($name)) {
+    $query->condition('name', $name);
+  }
+  return $query->execute();
+}
+
+/**
+ * List all variable names from a realm.
+ *
+ * @param $realm
+ *   Realm name to list. NULL to list all realms.
+ * @param $key
+ *   Realm key to list. NULL to list all realm keys.
+ *
+ * @return array
+ *   List of variable names.
+ */
+function variable_store_list_all($realm, $key) {
+  $query = db_select('variable_store', 'vs')
+    ->fields('vs', array('name'))
+    ->distinct();
+  if ($realm) {
+    $query->condition('realm', $realm);
+  }
+  if ($key) {
+    $query->condition('realm_key', $key);
+  }
+  return $query->execute()->fetchCol();
 }
 
 /**
  * Load realm from db store
  */
-function variable_store_load($realm, $key) {
+function _variable_store_load($realm, $key) {
   $cacheid = 'variable:' . $realm . ':' . $key;
   if ($cached = cache_get($cacheid, 'cache_bootstrap')) {
     $variables = $cached->data;
@@ -85,6 +128,14 @@ function variable_store_load($realm, $key) {
 }
 
 /**
+ * Reset caches and static variables.
+ */
+function _variable_store_reset() {
+  drupal_static_reset('variable_store');
+  cache_clear_all('variable:', 'cache_bootstrap', TRUE);
+}
+
+/**
  * Set variable value
  */
 function variable_store_set($realm, $key, $name, $value, $rebuild = TRUE) {
@@ -96,5 +147,14 @@ function variable_store_set($realm, $key, $name, $value, $rebuild = TRUE) {
     ->execute();
   cache_clear_all('variable:' . $realm . ':' . $key, 'cache_bootstrap');
   $store[$name] = $value;
-  variable_realm_set($realm, $key, $name, $value, $rebuild);
+}
+
+/**
+ * Implements hook_variable_delete().
+ */
+function variable_store_variable_delete($variable) {
+  db_delete('variable_store')
+    ->condition('name', variable_children($variable['name']))
+    ->execute();
+  _variable_store_reset();
 }

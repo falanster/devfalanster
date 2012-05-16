@@ -3,80 +3,66 @@
  * @file
  * This file holds the install information for the ShareThis Module.
  */
+
 /**
  * Implements hook_install().
  */
 function sharethis_install() {
-  $record = (object) NULL;
-  $record->st_option = "widget";
-  $record->st_value = "st_multi";
-  drupal_write_record('st_table', $record);
-
-  $record = (object) NULL;
-  $record->st_option = 'buttons';
-  $record->st_value = 'stbc_large';
-  drupal_write_record('st_table', $record);
-
-  $record = (object) NULL;
-  $record->st_option = 'services';
-  $record->st_value = '"Tweet:twitter","Facebook:facebook","ShareThis:sharethis"';
-  drupal_write_record('st_table', $record);
-  
-  $record = (object) NULL;
-  $record->st_option = 'nodeType';
-  $record->st_value = 'page,article';
-  drupal_write_record('st_table', $record);
-  
-  $record = (object) NULL;
-  $record->st_option = 'viewMode';
-  $record->st_value = '0';
-  drupal_write_record('st_table', $record);
-  
-  $record = (object) NULL;
-  $record->st_option = 'publisherID';
-  $record->st_value = create_default_publisher_key();
-  drupal_write_record('st_table', $record);
+  variable_set('sharethis_publisherID', sharethis_create_publisher_key());
 }
 
- /**
- * Implements hook_schema().
- *
- * This defines the database implementation that will be used by the ShareThis module.
- *
+/**
+ * Creates a publisher key for use with the ShareThis API.
  */
-function sharethis_schema() {
-  $schema['st_table'] = array(
-    'description' => 'A table used by the ShareThis Module', 
-    'fields' => array(
-      'st_option' => array(
-        'description' => 'A ShareThis option', 
-        'type' => 'varchar',  
-        'length' => 100, 
-        'not null' => TRUE, 
-        'default' => '',
-      ), 
-      'st_value' => array(
-        'description' => 'The option value as a string.', 
-        'type' => 'varchar', 
-        'length' => 2000, 
-        'not null' => TRUE, 
-        'default' => '',
-      ), 
-    ), 
-    'primary key' => array('st_option'),
-  );
-  return $schema;
+function sharethis_create_publisher_key() {
+  $pubkey = "dr-";
+  $pubkey .= dechex(mt_rand( 0, 0xffff ));
+  $pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
+  $pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
+  $pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
+  $pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
+  $pubkey .= dechex(mt_rand( 0, 0xffff ));
+  $pubkey .= dechex(mt_rand( 0, 0xffff ));
+  $pubkey .= dechex(mt_rand( 0, 0xffff ));
+  return $pubkey;
 }
 
-function create_default_publisher_key() {
-	$pubkey = "dr-";
-	$pubkey .= dechex(mt_rand( 0, 0xffff ));
-	$pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
-	$pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
-	$pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
-	$pubkey .= dechex(mt_rand( 0, 0xffff )) . "-";
-	$pubkey .= dechex(mt_rand( 0, 0xffff ));
-	$pubkey .= dechex(mt_rand( 0, 0xffff ));
-	$pubkey .= dechex(mt_rand( 0, 0xffff ));
-	return $pubkey;
+/**
+ * Remove the custom ShareThis table.
+ */
+function sharethis_update_7001() {
+  // Move from the st_table to the variables table.
+  if (db_table_exists('st_table')) {
+    // Select all options in the ShareThis table.
+    $result = db_select('st_table', 's')
+      ->fields('s', array('st_option', 'st_value'))
+      ->execute();
+    while ($record = $result->fetchAssoc()) {
+      // Variable name switches. publisherID stays the same.
+      switch ($record['st_option']) {
+        case 'buttons':
+          $record['st_option'] = 'button_option';
+          break;
+        case 'nodeType':
+          $record['st_option'] = 'node_option';
+          break;
+        case 'services':
+          $record['st_option'] = 'service_option';
+          break;
+        case 'viewMode':
+          $record['st_option'] = 'teaser_option';
+          break;
+        case 'widget':
+          $record['st_option'] = 'widget_option';
+          break;
+      }
+      // Prefix the option with a "sharethis_" namespace.
+      variable_set('sharethis_' . $record['st_option'], $record['st_value']);
+    }
+    // Now that our settings are in the variables table, safely drop the table.
+    db_drop_table('st_table');
+
+    // Return a success message.
+    return t('Switched from the custom ShareThis table to the Variables table.');
+  }
 }

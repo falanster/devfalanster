@@ -10,11 +10,10 @@
 /**
  * Add the newsletter node to the mail spool.
  *
- * Depending on the configuration, the node will either be sent immediatly
- * afterwards or during cron runs.
- *
  * @param $node
  *   The newsletter node to be sent.
+ *
+ * @ingroup issue
  */
 function simplenews_add_node_to_spool($node) {
   // To send the newsletter, the node id and target email addresses
@@ -37,20 +36,49 @@ function simplenews_add_node_to_spool($node) {
     ->execute();
 
   // Update simplenews newsletter status to send pending.
-  simplenews_update_sent_status($node);
+  simplenews_newsletter_update_sent_status($node);
+}
 
-  // When cron is not used the newsletter is send immediately to the emails
-  // in the spool. When cron is used newsletters are send to addresses in the
-  // spool during the next (and following) cron run.
-  if (variable_get('simplenews_use_cron', TRUE) == FALSE) {
-    simplenews_mail_spool();
-    simplenews_clear_spool();
-    simplenews_send_status_update();
-    return SIMPLENEWS_STATUS_SEND_READY;
+/**
+ * Send mail spool immediatly if cron should not be used.
+ *
+ * @param $conditions
+ *   (Optional) Array of spool conditions which are applied to the query.
+ */
+function simplenews_mail_attempt_immediate_send(array $conditions = array(), $use_batch = TRUE) {
+  if (variable_get('simplenews_use_cron', TRUE)) {
+    return FALSE;
+  }
+  if ($use_batch) {
+    // Set up as many send operations as necessary to send all mails with the
+    // defined throttle amount.
+    $throttle = variable_get('simplenews_throttle', 20);
+    $spool_count = simplenews_count_spool($conditions);
+    $num_operations = ceil($spool_count / $throttle);
+
+    $operations = array();
+    for ($i = 0; $i < $num_operations; $i++) {
+      $operations[] = array('simplenews_mail_spool', array($throttle, $conditions));
+    }
+
+    // Add separate operations to clear the spool and updat the send status.
+    $operations[] = array('simplenews_clear_spool', array());
+    $operations[] = array('simplenews_send_status_update', array());
+
+    $batch = array(
+      'operations' => $operations,
+      'title' => t('Sending mails'),
+      'file' => drupal_get_path('module', 'simplenews') . '/includes/simplenews.mail.inc',
+    );
+    batch_set($batch);
   }
   else {
-    return SIMPLENEWS_STATUS_SEND_PENDING;
+    // Send everything that matches the conditions immediatly.
+    simplenews_mail_spool(SIMPLENEWS_UNLIMITED, $conditions);
+    simplenews_clear_spool();
+    simplenews_send_status_update();
   }
+  return TRUE;
 }
 
 /**
@@ -58,6 +86,8 @@ function simplenews_add_node_to_spool($node) {
  *
  * @param mixed $node
  *   The newsletter node to be sent.
+ *
+ * @ingroup issue
  */
 function simplenews_send_test($node, $test_addresses) {
   // Prevent session information from being saved while sending.
@@ -78,9 +108,17 @@ function simplenews_send_test($node, $test_addresses) {
   foreach ($test_addresses as $mail) {
     $mail = trim($mail);
     if (!empty($mail)) {
-      $account = _simplenews_user_load($mail);
-      $subscriber = simplenews_get_subscription($account);
-      if ($account->uid) {
+      $subscriber = simplenews_subscriber_load_by_mail($mail);
+      if (!$subscriber) {
+        // The source expects a subscriber object with mail and language set.
+        // @todo: Find a cleaner way to do this.
+        $subscriber = new stdClass();
+        $subscriber->uid = 0;
+        $subscriber->mail = $mail;
+        $subscriber->language = $GLOBALS['language']->language;
+      }
+
+      if (!empty($account->uid)) {
         $recipients['user'][] = $account->name . ' <' . $mail . '>';
       }
       else {
@@ -114,6 +152,8 @@ function simplenews_send_test($node, $test_addresses) {
  *
  * @return boolean
  *   TRUE if the email was successfully delivered; otherwise FALSE.
+ *
+ * @ingroup source
  */
 function simplenews_send_source(SimplenewsSourceInterface $source) {
   $params['simplenews_source'] = $source;
@@ -157,13 +197,25 @@ function simplenews_send_source(SimplenewsSourceInterface $source) {
  * Mail data is retrieved from the spool, rendered and send one by one
  * If sending is successful the message is marked as send in the spool.
  *
- * TODO: Redesign API to allow language counter in multilingual sends.
+ * @todo: Redesign API to allow language counter in multilingual sends.
+ *
+ * @param $limit
+ *   (Optional) The maximum number of mails to send. Defaults to
+ *   unlimited.
+ * @param $conditions
+ *   (Optional) Array of spool conditions which are applied to the query.
+ *
+ * @return
+ *   Returns the amount of sent mails.
+ *
+ * @ingroup spool
  */
-function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED) {
+function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED, array $conditions = array()) {
   $check_counter = 0;
 
-  // Send pending messages from database cache
-  if ($spool_list = simplenews_get_spool(array(SIMPLENEWS_SPOOL_PENDING, SIMPLENEWS_SPOOL_IN_PROGRESS), $limit)) {
+  // Send pending messages from database cache.
+  $spool_list = simplenews_get_spool($limit, $conditions);
+  if ($spool_list) {
 
     // Switch to the anonymous user.
     simplenews_impersonate_user(drupal_anonymous_user());
@@ -194,7 +246,7 @@ function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED) {
       // Check every n emails if we exceed the limit.
       // When PHP maximum execution time is almost elapsed we interrupt
       // sending. The remainder will be sent during the next cron run.
-      if (++$check_counter >= SIMPLENEWS_SEND_CHECK_INTERVAL) {
+      if (++$check_counter >= SIMPLENEWS_SEND_CHECK_INTERVAL && ini_get('max_execution_time') > 0) {
         $check_counter = 0;
         // Break the sending if a percentage of max execution time was exceeded.
         $elapsed = _simplenews_measure_usec();
@@ -231,6 +283,7 @@ function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED) {
     variable_set('simplenews_last_sent', $count_success);
 
     simplenews_revert_user();
+    return $count_success;
   }
 }
 
@@ -245,6 +298,8 @@ function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED) {
  *   - tid
  *   - status: (optional) Defaults to SIMPLENEWS_SPOOL_PENDING
  *   - time: (optional) Defaults to REQUEST_TIME.
+ *
+ * @ingroup spool
  */
 function simplenews_save_spool($spool) {
   $status = isset($spool['status']) ? $spool['status'] : SIMPLENEWS_SPOOL_PENDING;
@@ -284,45 +339,53 @@ function simplenews_get_expiration_time() {
  * time has expired, the message id will be returned as a message which is not
  * allocated to another process.
  *
- * @param string  $status
- *   The status of data to be retrieved.  Must be one of:
- *   - 0: hold
- *   - 1: pending
- *   - 2: send
- *   - 3: in progress
- * @param integer $limit
- *   The maximum number of mails to load from the spool.
+ * @param $limit
+ *   (Optional) The maximum number of mails to load from the spool. Defaults to
+ *   unlimited.
+ * @param $conditions
+ *   (Optional) Array of conditions which are applied to the query. If not set,
+ *   status defaults to SIMPLENEWS_SPOOL_PENDING, SIMPLENEWS_SPOOL_IN_PROGRESS.
  *
- * @return array
+ * @return
  *   An array of message ids to be sent in the current run.
+ *
+ * @ingroup spool
  */
-function simplenews_get_spool($status, $limit = SIMPLENEWS_UNLIMITED) {
+function simplenews_get_spool($limit = SIMPLENEWS_UNLIMITED, $conditions = array()) {
   $messages = array();
-  $clauses = array();
-  $params = array();
 
-  if (!is_array($status)) {
-    $status = array($status);
+  // Add default status condition if not set.
+  if (!isset($conditions['status'])) {
+    $conditions['status'] = array(SIMPLENEWS_SPOOL_PENDING, SIMPLENEWS_SPOOL_IN_PROGRESS);
   }
 
-  foreach ($status as $s) {
-    if ($s == SIMPLENEWS_SPOOL_IN_PROGRESS) {
-      // Select messages which are allocated by another process, but whose
-      // maximum send time has expired.
-      $clauses[] = '(s.status = :statusinprogress AND s.timestamp < :expiration)';
-      $params[':statusinprogress'] = $s;
-      $params[':expiration'] = simplenews_get_expiration_time();
+  // Special case for the status condition, the in progress actually only
+  // includes spool items whose locking time has expired. So this need to build
+  // an OR condition for them.
+  $status_or = db_or();
+  $statuses = is_array($conditions['status']) ? $conditions['status'] : array($conditions['status']);
+  foreach ($statuses as $status) {
+    if ($status == SIMPLENEWS_SPOOL_IN_PROGRESS) {
+      $status_or->condition(db_and()
+        ->condition('status', $status)
+        ->condition('s.timestamp', simplenews_get_expiration_time(), '<')
+      );
     }
     else {
-      $clauses[] = 's.status = :status';
-      $params[':status'] = $s;
+      $status_or->condition('status', $status);
     }
   }
+  unset($conditions['status']);
 
   $query = db_select('simplenews_mail_spool', 's')
     ->fields('s')
-    ->where(implode(' OR ', $clauses), $params)
+    ->condition($status_or)
     ->orderBy('s.timestamp', 'ASC');
+
+  // Add conditions.
+  foreach ($conditions as $field => $value) {
+    $query->condition($field, $value);
+  }
 
   /* BEGIN CRITICAL SECTION */
   // The semaphore ensures that multiple processes get different message ID's,
@@ -339,8 +402,7 @@ function simplenews_get_spool($status, $limit = SIMPLENEWS_UNLIMITED) {
         $message->data = unserialize($message->data);
       }
       else {
-        $mail = (object)array('mail' => $message->mail);
-        $message->data = simplenews_get_subscription($mail);
+        $message->data = simplenews_subscriber_load_by_mail($message->mail);
       }
       $messages[$message->msid] = $message;
     }
@@ -375,6 +437,8 @@ function simplenews_get_spool($status, $limit = SIMPLENEWS_UNLIMITED) {
  *     - 2: send
  *     - 3: in progress
  *   - error: (optional) The error id.  Defaults to 0 (no error).
+ *
+ * @ingroup spool
  */
 function simplenews_update_spool($msids, $data) {
   db_update('simplenews_mail_spool')
@@ -390,40 +454,44 @@ function simplenews_update_spool($msids, $data) {
 /**
  * Count data in mail spool table.
  *
- * @param integer $nid
- *   Newsletter node id.
- * @param array $status
- *   Array of status flags.
+ * @param $conditions
+ *   (Optional) Array of conditions which are applied to the query. Defaults
  *
- * @return integer
- *   Count of mail spool elements which own the attributes passed in as params.
+ * @return
+ *   Count of mail spool elements of the passed in arguments.
+ *
+ * @ingroup spool
  */
-function simplenews_count_spool($nid, $status = array(SIMPLENEWS_SPOOL_PENDING, SIMPLENEWS_SPOOL_IN_PROGRESS)) {
-  $clauses = array();
-  $params = array();
+function simplenews_count_spool(array $conditions = array()) {
 
-  if (!is_array($status)) {
-    $status = array($status);
+  // Add default status condition if not set.
+  if (!isset($conditions['status'])) {
+    $conditions['status'] = array(SIMPLENEWS_SPOOL_PENDING, SIMPLENEWS_SPOOL_IN_PROGRESS);
   }
 
-  foreach ($status as $s) {
-    $clauses[] = "status = $s";
+  $query = db_select('simplenews_mail_spool');
+  // Add conditions.
+  foreach ($conditions as $field => $value) {
+    $query->condition($field, $value);
   }
 
-  $query = db_select('simplenews_mail_spool')
-    ->condition('nid', $nid)
-    ->where(implode(' OR ', $clauses));
-  return $query->countQuery()->execute()->fetchField();
+  $query->addExpression('COUNT(*)', 'count');
+
+  return (int)$query
+    ->execute()
+    ->fetchField();
 }
 
 /**
- * Remove records from mail spool table.
+ * Remove old records from mail spool table.
  *
  * All records with status 'send' and time stamp before the expiration date
  * are removed from the spool.
- * @todo Replace time(): http://drupal.org/node/224333#time
  *
- * @return Count deleted
+ * @return
+ *   Number of deleted spool rows.
+ *
+ * @ingroup spool
  */
 function simplenews_clear_spool() {
   $expiration_time = REQUEST_TIME - variable_get('simplenews_spool_expire', 0) * 86400;
@@ -434,14 +502,19 @@ function simplenews_clear_spool() {
 }
 
 /**
- * Remove records from mail spool table for node.
+ * Remove records from mail spool table according to the conditions.
  *
  * @return Count deleted
+ *
+ * @ingroup spool
  */
-function simplenews_clear_spool_node($node) {
-  return db_delete('simplenews_mail_spool')
-    ->condition('nid', $node->nid)
-    ->execute();
+function simplenews_delete_spool(array $conditions) {
+  $query = db_delete('simplenews_mail_spool');
+
+  foreach ($conditions as $condition => $value) {
+    $query->condition($condition, $value);
+  }
+  return $query->execute();
 }
 
 
@@ -462,6 +535,8 @@ function simplenews_clear_spool_node($node) {
  * Only one node of the group is found in the spool, but all nodes should share
  * the same state. Therefore they are checked for the combined number of emails
  * in the spool.
+ *
+ * @ingroup issue
  */
 function simplenews_send_status_update() {
   $counts = array(); // number pending of emails in the spool
@@ -475,7 +550,7 @@ function simplenews_send_status_update() {
     ->fields('n', array('tnid'))
     ->condition('s.status', SIMPLENEWS_STATUS_SEND_PENDING);
   foreach ($query->execute() as $newsletter) {
-    $counts[$newsletter->tnid][$newsletter->nid] = simplenews_count_spool($newsletter->nid);
+    $counts[$newsletter->tnid][$newsletter->nid] = simplenews_count_spool(array('nid' => $newsletter->nid));
   }
 
   // Determine which nodes are send per translation group and per individual node.
@@ -521,7 +596,7 @@ function _simplenews_set_from() {
   $name = variable_get('simplenews_from_name', $name_default);
 
   // Windows based PHP systems don't accept formatted emails.
-  $formatted_address = substr(PHP_OS, 0, 3) == 'WIN' ? $address : '"' . mime_header_encode($name) . '" <' . $address . '>';
+  $formatted_address = substr(PHP_OS, 0, 3) == 'WIN' ? $address : '"' . $name . '" <' . $address . '>';
 
   return array(
     'address' => $address,
@@ -654,6 +729,8 @@ function _simplenews_measure_usec($start = FALSE) {
  *   Message array as used by hook_mail().
  * @param array $source
  *   The SimplenewsSource instance.
+ *
+ * @ingroup source
  */
 function simplenews_build_newsletter_mail(&$message, SimplenewsSourceInterface $source) {
   // Get message data from source.
@@ -701,6 +778,47 @@ function simplenews_build_subscribe_mail(&$message, $params) {
 }
 
 /**
+ * Build subject and body of the subscribe confirmation email.
+ *
+ * @param array $message
+ *   Message array as used by hook_mail().
+ * @param array $params
+ *   Parameter array as used by hook_mail().
+ */
+function simplenews_build_combined_mail(&$message, $params) {
+  $context = $params['context'];
+  $changes = $context['changes'];
+  $langcode = $message['language'];
+
+  // Use formatted from address "name" <mail_address>
+  $message['headers']['From'] = $params['from']['formatted'];
+
+  $message['subject'] = simplenews_subscription_confirmation_text('combined_subject', $langcode);
+  $message['subject'] = token_replace($message['subject'], $context, array('sanitize' => FALSE));
+
+  $changes_list = '';
+  $actual_changes = 0;
+  foreach (simplenews_confirmation_get_changes_list($context['simplenews_subscriber'], $changes, $langcode) as $tid => $change) {
+    $changes_list .= ' - ' . $change . "\n";
+
+    // Count the actual changes.
+    $subscribed = simplenews_user_is_subscribed($context['simplenews_subscriber']->mail, $tid);
+    if ($changes[$tid] == 'subscribe' && !$subscribed || $changes[$tid] == 'unsubscribe' && $subscribed) {
+      $actual_changes++;
+    }
+  }
+
+  // If there are actual changes, use the combined_body key otherwise use the
+  // one without a confirmation link.
+  $body_key = $actual_changes ? 'combined_body' : 'combined_body_unchanged';
+
+  $body = simplenews_subscription_confirmation_text($body_key, $langcode);
+  // The changes list is not an actual token.
+  $body = str_replace('[changes-list]', $changes_list, $body);
+  $message['body'][] = token_replace($body, $context, array('sanitize' => FALSE));
+}
+
+/**
  * Build subject and body of the unsubscribe confirmation email.
  *
  * @param array $message
@@ -725,5 +843,37 @@ function simplenews_build_unsubscribe_mail(&$message, $params) {
   else {
     $body = simplenews_subscription_confirmation_text('unsubscribe_unsubscribed', $langcode);
     $message['body'][] = token_replace($body, $context, array('sanitize' => FALSE));
+  }
+}
+
+/**
+ * A mail sending implementation that captures sent messages to a variable.
+ *
+ * This class is for running tests or for development and does not convert HTML
+ * to plaintext.
+ */
+class SimplenewsHTMLTestingMailSystem implements MailSystemInterface {
+
+  /**
+   * Implements MailSystemInterface::format().
+   */
+  public function format(array $message) {
+    // Join the body array into one string.
+    $message['body'] = implode("\n\n", $message['body']);
+    // Wrap the mail body for sending.
+    $message['body'] = drupal_wrap_mail($message['body']);
+    return $message;
+  }
+
+  /**
+   * Implements MailSystemInterface::mail().
+   */
+  public function mail(array $message) {
+    $captured_emails = variable_get('drupal_test_email_collector', array());
+    $captured_emails[] = $message;
+    // @todo: This is rather slow when sending 100 and more mails during tests.
+    // Investigate in other methods like APC shared memory.
+    variable_set('drupal_test_email_collector', $captured_emails);
+    return TRUE;
   }
 }

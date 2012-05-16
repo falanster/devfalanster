@@ -82,7 +82,7 @@ function fivestar_theme() {
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_summary' => array(
-      'variables' => array('user_rating' => NULL, 'average_rating' => NULL, 'votes' => 0, 'stars' => 5),
+      'variables' => array('user_rating' => NULL, 'average_rating' => NULL, 'votes' => 0, 'stars' => 5, 'microdata' => array()),
       'file' => 'includes/fivestar.theme.inc',
     ),
     // fivestar.admin.inc.
@@ -130,10 +130,10 @@ function _fivestar_variables() {
  * voting, etc...
  */
 
-function _fivestar_cast_vote($entity_type, $id, $value, $tag = NULL, $uid = NULL, $result = FALSE, $skip_validation = FALSE) {
+function _fivestar_cast_vote($entity_type, $id, $value, $tag = NULL, $uid = NULL, $skip_validation = FALSE) {
   global $user;
   $tag = empty($tag) ? 'vote' : $tag;
-  $uid = empty($uid) ? $user->uid : $uid;
+  $uid = isset($uid) ? $uid : $user->uid;
   // Bail out if the user's trying to vote on an invalid object.
   if (!$skip_validation && !fivestar_validate_target($entity_type, $id, $tag, $uid)) {
     return array();
@@ -313,9 +313,11 @@ function fivestar_fivestar_access($entity_type, $id, $tag, $uid) {
  *   file for a fivestar widget. Each value should be the name of the widget.
  */
 function fivestar_fivestar_widgets() {
-  $widgets_directory = drupal_get_path('module', 'fivestar') .'/widgets';
-  $files = file_scan_directory($widgets_directory, '/\.css$/');
-
+  $files = &drupal_static(__FUNCTION__);
+  if (!isset($files)) {
+    $widgets_directory = drupal_get_path('module', 'fivestar') .'/widgets';
+    $files = file_scan_directory($widgets_directory, '/\.css$/');
+  }
   $widgets = array();
   foreach ($files as $file) {
     if (strpos($file->filename, '-rtl.css') === FALSE) {
@@ -406,6 +408,7 @@ function fivestar_form_submit($form, &$form_state) {
  * AJAX submit handler for fivestar_custom_widget
  */
 function fivestar_ajax_submit($form, $form_state) {
+  _fivestar_update_field_value($form_state['settings']['content_type'], $form_state['settings']['entity'], $form_state['settings']['field_name'], $form_state['settings']['langcode'], $form_state['values']['vote']);
   $votes = _fivestar_cast_vote($form_state['settings']['content_type'], $form_state['settings']['content_id'], $form_state['values']['vote'], $form_state['settings']['tag']);
 
   $values = array();
@@ -413,9 +416,12 @@ function fivestar_ajax_submit($form, $form_state) {
   $values['average'] = isset($votes['average']['value']) ? $votes['average']['value'] : 0;
   $values['count'] = isset($votes['count']['value']) ? $votes['count']['value'] : 0;
 
+  // We need to process the 'fivestar' element with the new values.
   $form['vote']['#values'] = $values;
-  // TODO: why does passing in NULL works, yet passing in the actual form-id doesn't work.
-  drupal_process_form(NULL, $form, $form_state);
+  $new_element = fivestar_expand($form['vote']);
+  // Update the description. Since it doesn't account of our cast vote above.
+  // TODO: Look into all this, I honestly don't like it and it's a bit weird.
+  $form['vote']['vote']['#description'] = $new_element['vote']['#description'];
 
   return array(
     '#type' => 'ajax',
@@ -628,12 +634,18 @@ function _fivestar_get_element_default_value($element) {
     switch ($element['#settings']['style']) {
       case 'average':
         $default_value = $element['#values']['average'];
+        break;
       case 'user':
         $default_value = $element['#values']['user'];
+        break;
       case 'smart':
         $default_value = (!empty($element['#values']['user']) ? $element['#values']['user'] : $element['#values']['average']);
+        break;
       case 'dual':
         $default_value = $element['#values']['user'];
+        break;
+      default:
+        $default_value = $element['#values']['average'];
     }
   }
 
@@ -771,4 +783,3 @@ function _fivestar_target_comment_parent_node($entity, $field, $instance, $langc
     'entity_type' => 'node',
   );
 }
-

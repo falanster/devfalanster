@@ -19,7 +19,7 @@ function i18n_page_menu_items() {
     if (!empty($info['translate tab'])) {
       $path = $info['translate tab'];
       $localize = module_exists('i18n_string') && !empty($info['string translation']);
-      $translate = module_exists('i18n_translation') && !empty($info['translation set']);
+      $translate = module_exists('i18n_translation') && i18n_translation_set_info($type);
       if ($translate && $localize) {
         $page_callback = 'i18n_page_translate_tab';
       }
@@ -47,14 +47,14 @@ function i18n_page_menu_items() {
         );
       }
       if ($localize) {
-        $items[$path . '/%language'] = array(
+        $items[$path . '/%i18n_language'] = array(
           'title' => 'Translate',
           'page callback' => $page_callback,
           'page arguments' => array($type, $position, count($parts)),
           'access callback' => 'i18n_object_translate_access',
           'access arguments' => array($type, $position),
           'type' => MENU_CALLBACK,
-          'field' => 'i18n.pages.inc',
+          'file' => 'i18n.pages.inc',
         );
       }
     }

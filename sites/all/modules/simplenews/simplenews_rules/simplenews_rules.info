@@ -5,9 +5,9 @@ dependencies[] = rules
 package = Mail
 core = 7.x
 
-; Information added by drupal.org packaging script on 2011-12-24
-version = "7.x-1.0-alpha2"
+; Information added by drupal.org packaging script on 2012-02-23
+version = "7.x-1.0-beta2"
 core = "7.x"
 project = "simplenews"
-datestamp = "1324686393"
+datestamp = "1329988254"
 

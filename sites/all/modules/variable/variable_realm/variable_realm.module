@@ -6,7 +6,7 @@
 
 /**
  * Implementation of hook_boot()
- * 
+ *
  * We set variable realm and language code as early as possible in the page request.
  */
 function variable_realm_boot() {
@@ -16,21 +16,82 @@ function variable_realm_boot() {
 }
 
 /**
+ * Implements hook_hook_info().
+ */
+function variable_realm_hook_info() {
+  $hooks['variable_realm_info'] = array(
+    'group' => 'variable',
+  );
+  return $hooks;
+}
+
+/**
+ * Get information about variable realms.
+ */
+function variable_realm_info($realm = NULL) {
+  return _variable_info('realm', $realm);
+}
+
+/**
+ * Get keys for realm
+ */
+function variable_realm_keys($realm) {
+  $info = variable_realm_info($realm);
+  return isset($info['keys']) ? $info['keys'] : array();
+}
+
+/**
+ * Implements hook_variable_realm_controller().
+ */
+function variable_realm_variable_realm_controller() {
+  $realm['global'] = array(
+    'weight' => -10,
+    'class' => 'VariableRealmGlobal',
+  );
+  return $realm;
+}
+
+/**
+ * Get class and weight information for variable realm.
+ */
+function variable_realm_controller_data($realm) {
+  $data = &drupal_static(__FUNCTION__);
+  if (!isset($keys)) {
+    $data = module_invoke_all('variable_realm_controller');
+  }
+  return isset($data[$realm]) ? $data[$realm] : NULL;
+}
+
+/**
+ * Create realm controller object.
+ */
+function variable_realm_controller_build($realm, $key, $variables = NULL) {
+  $info = variable_realm_controller_data($realm);
+  $class = isset($info['class']) ? $info['class'] : 'VariableRealmDefaultController';
+  $weight = isset($info['weight']) ? $info['weight'] : 0;
+  // Set realm weight if not set before.
+  variable_realm_weight($realm, NULL, $weight);
+  return new $class($realm, $key, $variables);
+}
+
+/**
  * Get variable realm data by reference.
- * 
- * The first time this function is inoked we initialize the realm system and store global variables
- * 
+ *
+ * The first time this function is invoked we initialize the realm system and store global variables
+ *
  * @param $realm
  *   Optional realm to get
  * @param $key
  *   Optional realm key to get
  */
 function &variable_realm($realm = NULL, $key = NULL) {
-  static $variable_realm;
-  if (!isset($variable_realm)) {
-    $variable_realm = &drupal_static(__FUNCTION__);
-    $variable_realm['global']['default'] = $GLOBALS['conf'];
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['realm'] = &drupal_static(__FUNCTION__);
+    $drupal_static_fast['realm']['global']['default'] = $GLOBALS['conf'];
   }
+  $variable_realm = &$drupal_static_fast['realm'];
+
   if ($realm && $key) {
     if (!isset($variable_realm[$realm][$key])) {
       $variable_realm[$realm][$key] = array();
@@ -43,14 +104,21 @@ function &variable_realm($realm = NULL, $key = NULL) {
 }
 
 /**
+ * Get list of variables and values for realm
+ */
+function variable_realm_values($realm, $key) {
+  return variable_realm($realm, $key);
+}
+
+/**
  * Build current realm
- * 
+ *
  * Buids an array of variables for the current realm with higher weights overriding lower weights.
  */
 function variable_realm_build() {
   $variables = array();
   foreach (variable_realm_current() as $realm => $key) {
-    if ($values = variable_realm($realm, $key)) {
+    if ($key !== FALSE && ($values = variable_realm_values($realm, $key))) {
       $variables = array_merge($variables, $values);
     }
   }
@@ -67,7 +135,7 @@ function variable_realm_get($realm, $key, $name = NULL, $default = NULL) {
 
 /**
  * Set values for variable realm
- * 
+ *
  * @param $realm
  *   Realm name
  * @param $key
@@ -102,7 +170,7 @@ function variable_realm_add($realm, $key, $values = array(), $weight = NULL, $re
 function variable_realm_set($realm, $key, $name, $value, $rebuild = TRUE) {
   $variables = &variable_realm();
 
-  $variable_realm[$realm][$key][$name] = $value;
+  $variables[$realm][$key][$name] = $value;
   $serialize = !is_int($value) && !is_string($value);
   if ($rebuild) {
     variable_realm_rebuild($realm, $key);
@@ -124,7 +192,7 @@ function variable_realm_del($realm, $key, $name, $rebuild = TRUE) {
 
 /**
  * Get current realm values ordered by weights
- * 
+ *
  * @return array
  *   Ordered array of name => value pairs, only realms that are set
  */
@@ -144,7 +212,7 @@ function variable_realm_global_get($name, $default = NULL) {
 
 /**
  * Switch global variable
- * 
+ *
  * @param $name
  *   Optional global variable name. If not set, it will reset all global variables to its original value.
  * @param $value
@@ -154,16 +222,17 @@ function variable_realm_global_get($name, $default = NULL) {
  */
 function variable_realm_global_set($name, $value = NULL, $rebuild = TRUE) {
   variable_set($name, $value);
-  variable_realm_set_value('global', 'default', $name, $value, $rebuild);
+  variable_realm_set('global', 'default', $name, $value, $rebuild);
 }
 
 /**
  * Set / get current realm values
- * 
+ *
  * @param $realm
  *   Optional realm name
  * @param $key
- *   Optional realm value to set a status for this realm. FALSE to disable this realm.
+ *   Optional realm value to set a status for this realm.
+ *   FALSE to disable this realm.
  */
 function variable_realm_status($realm = NULL, $key = NULL) {
   $status = &drupal_static(__FUNCTION__, array());
@@ -182,18 +251,25 @@ function variable_realm_status($realm = NULL, $key = NULL) {
 
 /**
  * Switch current variable realms
+ *
+ * @see variable_realm_weight()
+ *
+ * @param $realm
+ *   Realm name. Example 'language'.
+ * @param $key
+ *   Realm key. Example, for language will be a language code, 'en
+ *   FALSE to unset the realm.
  */
-function variable_realm_switch($realm, $key, $variables = NULL, $weight = NULL) {
-  variable_realm_add($realm, $key, $variables, $weight, FALSE);
+function variable_realm_switch($realm, $key) {
   variable_realm_status($realm, $key);
   variable_realm_rebuild();
 }
 
 /**
  * Get / set realm weights
- * 
+ *
  * The default realm will have a weight of 0. Realms with higher weights will override global variables.
- * 
+ *
  * @param $realm
  *   Realm name
  * @param $weight
@@ -207,7 +283,7 @@ function variable_realm_weight($realm = NULL, $weight = NULL, $default = 10) {
   $current = &drupal_static(__FUNCTION__, array());
   if ($realm && !isset($current[$realm]) || isset($weight)) {
     $current[$realm] = isset($weight) ? $weight : $default;
-    ksort($current);
+    asort($current);
   }
   // This will always return ordered keys
   return array_keys($current);
@@ -215,9 +291,9 @@ function variable_realm_weight($realm = NULL, $weight = NULL, $default = 10) {
 
 /**
  * Rebuild current variable realm
- * 
+ *
  * If there are $realm and $key parameters, the rebuild will happen only if this is the current realm key
- * 
+ *
  * @param $realm
  *   Optional realm name that has been set
  * @param $key
@@ -231,7 +307,7 @@ function variable_realm_rebuild($realm = NULL, $key = NULL) {
 
 /**
  * Reset realms, deleting currently set ones
- * 
+ *
  * If no parameters passed, it will reset global variables to original values
  */
 function variable_realm_reset($realms = array()) {
@@ -239,4 +315,35 @@ function variable_realm_reset($realms = array()) {
   // We need at least some value for the global realm
   $status = $realms + array('global', 'default');
   variable_realm_rebuild();
+}
+
+/**
+ * Implements hook_variable_delete().
+ */
+function variable_realm_variable_delete($variable) {
+  // Delete each variable for each current realm/key
+  foreach (variable_children($variable['name']) as $name) {
+    foreach (variable_realm() as $realm => $realm_data) {
+      foreach (array_keys($realm_data) as $key) {
+        variable_realm_del($realm, $key, $name);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_features_api().
+ */
+function variable_realm_features_api() {
+  $components = array(
+    'variable_realm' => array(
+      'name' => t('Realm variables'),
+      'default_hook' => 'variable_realm_default_variables',
+      'default_file' => FEATURES_DEFAULTS_CUSTOM,
+      'default_filename' => 'variable',
+      'features_source' => TRUE,
+      'file' => drupal_get_path('module', 'variable_realm') .'/variable_realm.features.inc',
+    ),
+  );
+  return $components;
 }

@@ -6,7 +6,7 @@
  */
 
 /**
- * Implement hook_schema().
+ * Implements hook_schema().
  */
 function simplenews_schema() {
   $schema['simplenews_category'] = array(
@@ -174,6 +174,11 @@ function simplenews_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'changes' => array(
+        'description' => 'Contains the requested subscription changes',
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
     ),
     'primary key' => array('snid'),
     'indexes' => array(
@@ -331,7 +336,7 @@ function simplenews_schema() {
 }
 
 /**
- * Implement hook_install().
+ * Implements hook_install().
  */
 function simplenews_install() {
   _simplenews_init_simplenews_vocabulary();
@@ -342,7 +347,7 @@ function simplenews_install() {
 }
 
 /**
- * Implement hook_uninstall().
+ * Implements hook_uninstall().
  */
 function simplenews_uninstall() {
   db_query("DELETE FROM {variable} WHERE name LIKE 'simplenews_%%'");
@@ -502,9 +507,6 @@ function _simplenews_convert_tokens_in_variable($variables) {
  * Delete deprecated simplenews variables.
  */
 function simplenews_update_7000() {
-  // @todo Test schema update !!
-  // See: http://api.drupal.org/api/function/db_change_field/7
-  // @todo Test data update !!
 
   // Convert tokens in variables to D7 format.
   $variables = array('simplenews_confirm_subscribe_subject', 'simplenews_confirm_subscribe_unsubscribed', 'simplenews_confirm_subscribe_subscribed', 'simplenews_confirm_unsubscribe_subscribed', 'simplenews_confirm_unsubscribe_unsubscribed');
@@ -662,19 +664,6 @@ function simplenews_update_7000() {
     'default' => 0,
   ));
 
-
-  // Add the {simplenews_mail_spool}.snid field if it doesn't exist yet (added
-  // in 6.x-2.x).
-  if (!db_field_exists('simplenews_mail_spool', 'snid')) {
-    db_add_field('simplenews_mail_spool', 'snid', array(
-      'description' => 'Foreign key for subscriber table ({simplenews_subscriptions}.snid)',
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ));
-  }
-
-
   // Delete deprecated variables.
   foreach ($tids as $tid) {
     variable_del('simplenews_from_name_' . $tid);
@@ -695,6 +684,17 @@ function simplenews_update_7000() {
  * Create key snid_tid on simplenews_mail_spool table.
  */
 function simplenews_update_7001() {
+  // Add the {simplenews_mail_spool}.snid field if it doesn't exist yet (added
+  // in 6.x-2.x).
+  if (!db_field_exists('simplenews_mail_spool', 'snid')) {
+    db_add_field('simplenews_mail_spool', 'snid', array(
+      'description' => 'Foreign key for subscriber table ({simplenews_subscriptions}.snid)',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+  }
+
   if (!db_index_exists('simplenews_mail_spool', 'snid_tid')) {
     db_add_index('simplenews_mail_spool', 'snid_tid', array('snid', 'tid'));
   }
@@ -719,3 +719,32 @@ function simplenews_update_7003() {
   drupal_set_message(t('The [simplenews-newsletter] tokens have been removed in favor of [node] tokens. Existing newsletters might need to be updated accordingly.'), 'warning');
 }
 
+/**
+ * Add the status field to {simplenews_subscription}.
+ */
+function simplenews_update_7004() {
+  if (!db_field_exists('simplenews_subscription', 'status')) {
+    db_add_field('simplenews_subscription', 'status', array(
+      'description' => 'A flag indicating whether the user is subscribed (1) or unsubscribed (0).',
+      'type' => 'int',
+      'size' => 'small',
+      'not null' => TRUE,
+      'default' => 1
+      )
+    );
+  }
+}
+
+/**
+ * Add support for combined confirmation mails.
+ */
+function simplenews_update_7005() {
+  db_add_field('simplenews_subscriber', 'changes', array(
+    'description' => 'Contains the requested subscription changes',
+    'type' => 'text',
+    'serialize' => TRUE,
+  ));
+  // To keep existing installations consistent, disable combined confirmation
+  // mails.
+  variable_set('simplenews_use_combined', 'never');
+}

@@ -34,6 +34,7 @@ function fivestar_field_schema() {
  * Fixes the axis value stored for fivestar fields
  */
 function fivestar_update_7201() {
+  drupal_load('module', 'fivestar');
   $fields = field_read_fields(array('module' => 'fivestar'));
   $tags_numeric = array_values(fivestar_get_tags());
   
@@ -203,6 +204,26 @@ function fivestar_update_7204() {
       }
       // Update the instance
       field_update_instance($instance);
+    }
+  }
+}
+
+/**
+ * Rename fivestar 'select' widget to 'fivestar_select'
+ * @see http://drupal.org/node/1285456
+ */
+function fivestar_update_7205() {
+  $fields = field_read_fields(array('type' => 'fivestar'));
+  foreach($fields as $field) {
+    // Iterate through the instances of the field.
+    $instances = field_read_instances(array('field_name' => $field['field_name']));
+    foreach($instances as $instance) {
+      // If the widget type is select, lets change it.
+      if ($instance['widget']['type'] == 'select') {
+        $instance['widget']['type'] = 'fivestar_select';
+        // Update the instance
+        field_update_instance($instance);
+      }
     }
   }
 }

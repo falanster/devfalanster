@@ -2,7 +2,7 @@ name = Simplenews
 description = Send newsletters to subscribed email addresses.
 package = Mail
 core = 7.x
-configure = admin/config/simplenews
+configure = admin/config/services/simplenews
 dependencies[] = taxonomy
 
 test_dependencies[] = i18n_taxonomy
@@ -14,15 +14,16 @@ files[] = includes/views/handlers/simplenews_handler_field_newsletter_priority.i
 files[] = includes/views/handlers/simplenews_handler_field_category_hyperlinks.inc
 files[] = includes/views/handlers/simplenews_handler_field_category_new_account.inc
 files[] = includes/views/handlers/simplenews_handler_field_category_opt_inout.inc
+files[] = includes/views/handlers/simplenews_handler_field_newsletter_send.inc
 files[] = includes/views/handlers/simplenews_handler_filter_newsletter_status.inc
 files[] = includes/views/handlers/simplenews_handler_filter_newsletter_priority.inc
 files[] = includes/views/handlers/simplenews_handler_filter_category_hyperlinks.inc
 files[] = includes/views/handlers/simplenews_handler_filter_category_new_account.inc
 files[] = includes/views/handlers/simplenews_handler_filter_category_opt_inout.inc
 
-; Information added by drupal.org packaging script on 2011-12-24
-version = "7.x-1.0-alpha2"
+; Information added by drupal.org packaging script on 2012-02-23
+version = "7.x-1.0-beta2"
 core = "7.x"
 project = "simplenews"
-datestamp = "1324686393"
+datestamp = "1329988254"
 

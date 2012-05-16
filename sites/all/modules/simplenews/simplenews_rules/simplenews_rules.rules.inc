@@ -206,7 +206,7 @@ function simplenews_rules_map_confirmation($args) {
       $confirmation = FALSE;
       break;
     case SIMPLENEWS_RULES_CONFIRMATION_DEFAULT:
-      $account = _simplenews_user_load($args['mail']);
+      $account = simplenews_load_user_by_mail($args['mail']);
       $confirmation = simplenews_require_double_opt_in($args['tid'], $account);
       break;
   }

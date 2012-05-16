@@ -49,7 +49,7 @@ function system_variable_info($options) {
     'group' => 'site_information',
   );
   $variables['default_nodes_main'] = array(
-    'type' => 'select_number', 
+    'type' => 'select_number',
     'title' => t('Number of posts on main page', array(), $options),
     'default' => 10,
     'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30),
@@ -71,8 +71,8 @@ function system_variable_info($options) {
     'description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.', array(), $options),
     'group' => 'site_information',
   );
-  
-  // Feed settings. Group 'feed_settings'. 
+
+  // Feed settings. Group 'feed_settings'.
   $variables['feed_description'] = array(
     'type' => 'text',
     'title' => t('Feed description'),
@@ -101,7 +101,7 @@ function system_variable_info($options) {
     'group' => 'feed_settings',
   );
 
-  // Regional settings. Group 'regional_settings'. 
+  // Regional settings. Group 'regional_settings'.
   $variables['site_default_country'] = array(
     'type' => 'select',
     'options' => 'country',
@@ -158,7 +158,7 @@ function system_variable_info($options) {
       'options' => 'date_format',
     ),
     'group' => 'regional_settings',
-  );  
+  );
   // Maintenance mode. Group 'site_information'
   $variables['maintenance_mode'] = array(
     'type' => 'boolean',
@@ -256,7 +256,7 @@ function system_variable_type_info() {
   );
   $type['country'] = array(
     'title' => t('Country'),
-    'type' => 'select', 
+    'type' => 'select',
     'options callback' => 'system_variable_option_country',
     'cache' => TRUE,
   );
@@ -287,14 +287,14 @@ function system_variable_option_theme($variable, $options) {
   foreach (list_themes() as $theme) {
     $list[$theme->name] = $theme->info['name'];
   }
-  return $list;  
+  return $list;
 }
 
 /**
  * Callback for weekday options
  */
 function system_variable_option_weekday($variable, $options) {
-  return array (
+  return array(
     0 => t('Sunday', array(), $options),
     1 => t('Monday', array(), $options),
     2 => t('Tuesday', array(), $options),
@@ -302,7 +302,7 @@ function system_variable_option_weekday($variable, $options) {
     4 => t('Thursday', array(), $options),
     5 => t('Friday', array(), $options),
     6 => t('Saturday', array(), $options)
-  );  
+  );
 }
 
 /**
@@ -318,7 +318,7 @@ function system_variable_option_date_type($variable, $options) {
 
 /**
  * Callback for date types
- * 
+ *
  * @todo These should be different for some variables
  */
 function system_variable_option_date_format($variable, $options) {
@@ -349,9 +349,9 @@ function system_variable_option_country($variable, $options) {
  */
 function system_variable_theme_defaults($variable, $options) {
   return array(
-    'default_logo' => 1, 
-    'logo_path' => '', 
-    'default_favicon' => 1, 
+    'default_logo' => 1,
+    'logo_path' => '',
+    'default_favicon' => 1,
     'favicon_path' => '',
     'favicon_mimetype' => 'image/vnd.microsoft.icon',
   );
@@ -362,7 +362,7 @@ function system_variable_theme_defaults($variable, $options) {
  */
 function system_variable_path_element($variable, $options) {
   $element = variable_form_element_default($variable, $options) +array(
-    '#type' => 'textfield', 
+    '#type' => 'textfield',
     '#size' => 40,
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
   );

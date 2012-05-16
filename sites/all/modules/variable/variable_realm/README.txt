@@ -2,7 +2,7 @@
 Drupal module: Variable Realms
 ============================================
 This is an API module that works as an arbitrator for multiple modules overriding global variables. It can
-handle multiple realms defined by different modules. Examples: 'global', 'language', 'country', 
+handle multiple realms defined by different modules. Examples: 'global', 'language', 'country',
 
 Each realm has a weight and a current status. Realms with higher weights will override realms with lower weight.
 
@@ -20,14 +20,14 @@ The resulting variable set will be a combination of these two, with the second o
 because of a higher weight. This is how we calculate the resulting variables when using variable_realm_switch()
 
  $conf = $variables['global/default'] + $variables['mymodule/key']
- 
+
 API Example
 -----------
 This is an example of how realms work:
 
 // We add a language realm with some variables and immediately switch to it
-
-  variable_realm_switch('language', 'es', $spanish_variables);
+  variable_realm_add('language', 'es', $spanish_variables);
+  variable_realm_switch('language', 'es');
 
 // We add a country realm on top of it with some more variables but don't switch to it yet.
 // Note the first time we add a domain we can set the weight for it.
@@ -46,10 +46,10 @@ This is an example of how realms work:
 // Or we can use the 'spanish/mexico' set
 
   variable_realm_switch('country', 'mexico');
-  
+
 // Still we can add one more realm which will override some variables for the current node's content type
 // These will override all the others because of its higher weight
-
-  variable_realm_switch('nodetype', 'story', $story_variables, 200)
+  variable_realm_add('nodetype', 'story', $story_variables, 200)
+  variable_realm_switch('nodetype', 'story')
 
 An example of a module using this API is Internationalization's i18n_variable module.

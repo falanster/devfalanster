@@ -111,6 +111,12 @@ function google_geocode_info() {
  */
 function google_geocode_location($location = array()) {
 
+  $delay_trigger = &drupal_static(__FUNCTION__);
+  $delay = variable_get('location_geocode_google_delay', 0);
+  if ($delay > 0 && $delay_trigger) {
+    usleep($delay * 1000);
+  }
+
   if (function_exists('gmap_get_key')) {
     $key = gmap_get_key();
   }
@@ -134,6 +140,7 @@ function google_geocode_location($location = array()) {
   ));
 
   $http_reply = drupal_http_request($url);
+  $delay_trigger = TRUE;
 
   $status_code_match = array();
   preg_match('/<code>(.*)<\/code>/', $http_reply->data, $status_code_match);
@@ -188,6 +195,14 @@ function google_geocode_settings() {
       '#description' => t('In order to use the Google Maps API geocoding web-service, you will need a Google Maps API Key.  You can obtain one at the !sign_up_link for the !google_maps_api.  PLEASE NOTE: You will <em>not</em> have to re-enter your API key for each country for which you have selected Google Maps for geocoding.  This setting is global.', array('!sign_up_link' => '<a href="http://www.google.com/apis/maps/signup.html">sign-up page</a>', '!google_maps_api' => '<a href="http://www.google.com/apis/maps/">Google Maps API</a>'))
     );
   }
+
+  $form['location_geocode_google_delay'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Delay between geocoding requests (is milliseconds)'),
+    '#description' => t('To avoid a 620 error (denial of service) from Google, you can add a delay between geocoding requests. 200ms is recommended.'),
+    '#default_value' => variable_get('location_geocode_google_delay', 0),
+    '#size' => 10,
+  );
 
   $country = arg(5);
   if ($country) {

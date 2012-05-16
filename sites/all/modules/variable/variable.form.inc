@@ -17,7 +17,7 @@ function variable_form_element($variable, $options = array()) {
     $element = variable_form_element_options($variable, $options);
   }
   else {
-    $element = variable_form_element_default($variable, $options); 
+    $element = variable_form_element_default($variable, $options);
   }
   if (!empty($variable['validate callback'])) {
     $element['#validate'][] = $variable['validate callback'];
@@ -57,7 +57,7 @@ function variable_form_element_array($variable, $options = array()) {
     }
     else {
       $element[$key] = $item['element'] + array('#title' => $title, '#default_value' => isset($value[$key]) ? $value[$key] : '');
-    }  
+    }
   }
   return $element;
 }
@@ -97,7 +97,7 @@ function variable_form_element_default($variable, $options = array()) {
 
 /**
  * Build form element for unknown variable.
- * 
+ *
  * This is not an editable form element but a form item.
  */
 function variable_form_element_unknown($variable, $options = array()) {
@@ -108,6 +108,28 @@ function variable_form_element_unknown($variable, $options = array()) {
     '#description' => $variable['description'],
     '#markup' => variable_format_value($variable, $options),
   ) + $type['element'];
+  return $element;
+}
+
+/**
+ * Build form element for text_format variable.
+ */
+function variable_form_element_text_format($variable, $options = array()) {
+  $variable += array('element' => array(), 'title' => '', 'description' => '');
+  $type = variable_get_type($variable['type']) + array('element' => array());
+  $element = $variable['element'] + array(
+    '#title' => $variable['title'],
+    '#description' => $variable['description'],
+  ) + $type['element'];
+  $value = variable_get_value($variable, $options);
+  if (isset($value) && is_array($value)) {
+    if (isset($value['value'])) {
+      $element['#default_value'] = $value['value'];
+    }
+    if (isset($value['format'])) {
+      $element['#format'] = $value['format'];
+    }
+  }
   return $element;
 }
 
@@ -150,6 +172,6 @@ function theme_variable_table_select($variables) {
   // Add a "Select all" checkbox.
   drupal_add_js('misc/tableselect.js');
   $header['element'] = array('class' => array('select-all'));
-  
+
   return theme('table', array('header' => array_values($header), 'rows' => $rows));
 }

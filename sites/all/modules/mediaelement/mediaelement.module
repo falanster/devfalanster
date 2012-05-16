@@ -103,6 +103,9 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
   $element = array();
   $path = drupal_get_path('module', 'mediaelement');
   foreach ($items as $delta => $item) {
+    // Support the link field type which stores it's data in 'url'.
+    $src = ($field['type'] == 'link_field') ? $item['url'] : $item['uri'];
+
     $settings = $display['settings'];
     $js_settings = array();
     $js_settings['opts'] = array();
@@ -119,7 +122,7 @@ function mediaelement_field_formatter_view($entity_type, $entity, $field, $insta
     $class = 'mediaelement-formatter-identifier-' . time() . '-' . $id++;
     $element[$delta] = array(
       '#attributes' => array(
-        'src' => file_create_url($item['uri']),
+        'src' => file_create_url($src),
         'class' => $class,
       ),
       '#settings' => $settings,
@@ -187,39 +190,39 @@ function theme_mediaelement_audio($variables) {
 function mediaelement_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
+  $element = array();
 
-  $form['controls'] = array(
+  $element['controls'] = array(
     '#title' => t('Controls'),
     '#type' => 'checkbox',
     '#default_value' => $settings['controls'],
   );
 
-  $form['width'] = array(
+  $element['width'] = array(
     '#title' => t('Width'),
     '#type' => 'textfield',
     '#default_value' => $settings['width'],
-    '#options' => $link_types,
   );
 
-  $form['height'] = array(
+  $element['height'] = array(
     '#title' => t('Height'),
     '#type' => 'textfield',
     '#default_value' => $settings['height'],
   );
 
-  $form['download_link'] = array(
+  $element['download_link'] = array(
     '#title' => t('Download Link'),
     '#type' => 'checkbox',
     '#default_value' => $settings['download_link'],
   );
 
-  $form['download_text'] = array(
+  $element['download_text'] = array(
     '#title' => t('Download Link Text'),
     '#type' => 'textfield',
     '#default_value' => $settings['download_text'],
   );
 
-  return $form;
+  return $element;
 }
 
 /**

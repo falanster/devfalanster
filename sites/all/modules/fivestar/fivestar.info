@@ -4,11 +4,12 @@ package = Voting
 core = 7.x
 dependencies[] = votingapi
 configure = admin/config/content/fivestar
-files[] = fivestar.test
+files[] = test/fivestar.base.test
+files[] = test/fivestar.field.test
 
-; Information added by drupal.org packaging script on 2011-09-19
-version = "7.x-2.0-alpha1"
+; Information added by drupal.org packaging script on 2012-03-28
+version = "7.x-2.0-alpha2"
 core = "7.x"
 project = "fivestar"
-datestamp = "1316447804"
+datestamp = "1332954347"
 

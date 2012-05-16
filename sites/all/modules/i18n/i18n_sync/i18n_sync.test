@@ -6,7 +6,7 @@
 
 class i18nSyncTestCase extends Drupali18nTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Synchronize translations',
       'group' => 'Internationalization',
@@ -35,16 +35,16 @@ class i18nSyncTestCase extends Drupali18nTestCase {
     $this->drupalPost(NULL, array(), t('Save settings'));
 
     // Create some content and check selection modes
-    $this->drupalLogin($this->translator);
+    $this->drupalLogin($this->content_editor);
 
     // variable_set('language_content_type_story', 1);
     $source = $this->createNode('page', $this->randomName(), $this->randomString(20), language_default('language'), array('field_tags[und]' => $tag_name = $this->randomName()));
     $this->drupalGet('node/' . $source->nid . '/translate');
     $translations = $this->createNodeTranslationSet($source);
-    
+
     drupal_static_reset('translation_node_get_translations');
     $this->assertEqual(count(translation_node_get_translations($source->tnid)), $language_count, "Created $language_count $source->type translations.");
-    
+
     // Set up fields for synchronization: promoted, field_tags
     $this->drupalLogin($this->admin_user);
     $edit = array(
@@ -52,7 +52,7 @@ class i18nSyncTestCase extends Drupali18nTestCase {
       'i18n_sync_node_type[promote]' => 1,
       'i18n_sync_node_type[field_tags]' => 1,
     );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));   
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/page');
     // Update source fields and check translations have been updated.
     $new_title = $this->randomName();
@@ -60,7 +60,7 @@ class i18nSyncTestCase extends Drupali18nTestCase {
     $edit = array(
       'promote' => 1,
       'sticky' => 1,
-    	'field_tags[und]' => $new_tag,
+      'field_tags[und]' => $new_tag,
     );
     $this->drupalPost('node/' . $source->nid . '/edit', $edit, t('Save'));
     $terms = taxonomy_get_term_by_name($new_tag);

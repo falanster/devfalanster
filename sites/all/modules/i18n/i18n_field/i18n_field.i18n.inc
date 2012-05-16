@@ -5,13 +5,14 @@
  */
 
 /**
- * Implements hook i18n_object_info()
+ * Implements hook_i18n_object_info().
  */
 function i18n_field_i18n_object_info() {
   $info['field'] = array(
     'title' => t('Field'),
     'class' => 'i18n_field',
     'key' => 'field_name',
+    'load callback' => 'field_info_field',
     'placeholders' => array(
     	'%field_ui_menu' => 'field_name',
       '%field_type' => 'type',
@@ -26,7 +27,7 @@ function i18n_field_i18n_object_info() {
           'title' => t('Label'),
         ),
       ),
-      //'translate path' => 'admin/structure/block/manage/%module/%delta/translate/%language',
+      //'translate path' => 'admin/structure/block/manage/%module/%delta/translate/%i18n_language',
     )
   );
   $info['field_instance'] = array(
@@ -56,7 +57,7 @@ function i18n_field_i18n_object_info() {
           'format' => 'format',
         ),
       ),
-      //'translate path' => 'admin/structure/types/manage/%bundle/fields/%field_ui_menu/translate/%language',
+      //'translate path' => 'admin/structure/types/manage/%bundle/fields/%field_ui_menu/translate/%i18n_language',
     )
   );
   return $info;

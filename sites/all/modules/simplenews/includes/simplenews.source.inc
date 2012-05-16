@@ -7,6 +7,8 @@
 
 /**
  * The source used to build a newsletter mail.
+ *
+ * @ingroup source
  */
 interface SimplenewsSourceInterface {
 
@@ -112,6 +114,8 @@ interface SimplenewsSourceInterface {
  * This is the interface that needs to be implemented to be compatible with
  * the default simplenews spool implementation and therefore exposed in
  * hook_simplenews_source_cache_info().
+ *
+ * @ingroup source
  */
 interface SimplenewsSourceNodeInterface extends SimplenewsSourceInterface {
 
@@ -124,12 +128,19 @@ interface SimplenewsSourceNodeInterface extends SimplenewsSourceInterface {
    * Returns the actually used node of this source.
    */
   function getNode();
+
+  /**
+   * Returns the subscriber object.
+   */
+  function getSubscriber();
 }
 
 /**
  * Interface for a simplenews source cache implementation.
  *
- * This is only compatible with the SimplenewsSpoolSourceInterface interface.
+ * This is only compatible with the SimplenewsSourceNodeInterface interface.
+ *
+ * @ingroup source
  */
 interface SimplenewsSourceCacheInterface {
 
@@ -188,6 +199,8 @@ interface SimplenewsSourceCacheInterface {
  * mail rows after a source was sent.
  *
  * @todo: Move spool functions into this interface.
+ *
+ * @ingroup spool
  */
 interface SimplenewsSpoolInterface {
 
@@ -226,7 +239,9 @@ interface SimplenewsSpoolInterface {
 }
 
 /**
- * Abstract base class for simplenews sources.
+ * Simplenews Spool implementation.
+ *
+ * @ingroup spool
  */
 class SimplenewsSpool implements SimplenewsSpoolInterface {
 
@@ -280,7 +295,7 @@ class SimplenewsSpool implements SimplenewsSpoolInterface {
       $subscriber = $spool_data->data;
     }
     else {
-      $subscriber = simplenews_get_subscription(_simplenews_user_load($spool_data->mail));
+      $subscriber = simplenews_subscriber_load_by_mail($spool_data->mail);
     }
 
     $source_class = $this->getSourceImplementation($spool_data);
@@ -311,6 +326,8 @@ class SimplenewsSpool implements SimplenewsSpoolInterface {
 
 /**
  * Simplenews source implementation based on nodes for a single subscriber.
+ *
+ * @ingroup source
  */
 class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
 
@@ -519,7 +536,7 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
       return $this->getFromAddress();
     }
     else {
-      return '"' . mime_header_encode($name) . '" <' . $this->getFromAddress() . '>';
+      return '"' . $name . '" <' . $this->getFromAddress() . '>';
     }
 
     return $formatted_address;
@@ -565,7 +582,11 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
    */
   function getSubject() {
     // Build email subject and perform some sanitizing.
-    $subject = token_replace($this->getCategory()->email_subject, $this->getTokenContext(), array('sanitize' => FALSE));
+    $langcode = $this->getLanguage();
+    $language_list = language_list();
+    // Use the requested language if enabled.
+    $language = isset($language_list[$langcode]) ? $language_list[$langcode] : NULL;
+    $subject = token_replace($this->getCategory()->email_subject, $this->getTokenContext(), array('sanitize' => FALSE, 'language' => $language));
 
     // Line breaks are removed from the email subject to prevent injection of
     // malicious data into the email header.
@@ -574,22 +595,46 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
   }
 
   /**
-   * Overwrites the current content language for i18n_select.
+   * Set up the necessary language and user context.
    */
-  protected function setContentLanguage($language) {
-    if (module_exists('i18n_select')) {
-      $this->original_language = $GLOBALS['language_content'];
-      $languages = language_list();
-      $GLOBALS['language_content'] = $languages[$language];
+  protected function setContext() {
+
+    // Switch to the user
+    if ($this->uid = $this->getSubscriber()->uid) {
+      simplenews_impersonate_user($this->uid);
+    }
+
+    // Change language if the requested language is enabled.
+    $language = $this->getLanguage();
+    $languages = language_list();
+    if (isset($languages[$language])) {
+      $this->original_language = $GLOBALS['language'];
+      $GLOBALS['language'] = $languages[$language];
+      $GLOBALS['language_url'] = $languages[$language];
+      // Overwrites the current content language for i18n_select.
+      if (module_exists('i18n_select')) {
+        $GLOBALS['language_content'] = $languages[$language];
+      }
     }
   }
 
   /**
-   * Reset the content language back to the previous value.
+   * Reset the context.
    */
-  protected function resetContentLanguage() {
-    if (module_exists('i18n_select')) {
-      $GLOBALS['language_content'] = $this->original_language;
+  protected function resetContext() {
+
+    // Switch back to the previous user.
+    if ($this->uid) {
+      simplenews_revert_user();
+    }
+
+    // Switch language back.
+    if (!empty($this->original_language)) {
+      $GLOBALS['language'] = $this->original_language;
+      $GLOBALS['language_url'] = $this->original_language;
+      if (module_exists('i18n_select')) {
+        $GLOBALS['language_content'] = $this->original_language;
+      }
     }
   }
 
@@ -608,11 +653,6 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
       return $this->build[$format];
     }
 
-    // Set the active language to the node's language.
-    // This needs to be done as otherwise the language used to send the mail
-    // is the language of the user logged in.
-    $this->setContentLanguage($this->node->language);
-
     // Build message body
     // Supported view modes: 'email_plain', 'email_html', 'email_textalt'
     $build = node_view($this->node, 'email_' . $format);
@@ -623,8 +663,6 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
         $build[$field_name]['#theme'] = 'simplenews_field';
       }
     }
-
-    $this->resetContentLanguage();
 
     $this->build[$format] = $build;
     return $this->build[$format];
@@ -643,7 +681,7 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
     if ($cache = $this->cache->get('build', 'body:' . $format)) {
       return $cache;
     }
-    $body = theme('simplenews_newsletter_body', array('build' => $this->build($format), 'category' => $this->getCategory(), 'language' => $this->getLanguage()));
+    $body = theme('simplenews_newsletter_body', array('build' => $this->build($format), 'category' => $this->getCategory(), 'language' => $this->getLanguage(), 'simplenews_subscriber' => $this->getSubscriber()));
     $this->cache->set('build', 'body:' . $format, $body);
     return $body;
   }
@@ -672,16 +710,14 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
    *   The rendered mail body as a string.
    */
   protected function getBodyWithFormat($format) {
-    // Impersonate the subscriber if he is a user.
-    if ($uid = $this->getSubscriber()->uid) {
-      simplenews_impersonate_user($uid);
-    }
+    // Switch to correct user and language context.
+    $this->setContext();
 
     if ($cache = $this->cache->get('final', 'body:' . $format)) {
       return $cache;
     }
 
-    $body = $this->buildBody();
+    $body = $this->buildBody($format);
 
     // Build message body, replace tokens.
     $body = token_replace($body, $this->getTokenContext(), array('sanitize' => FALSE));
@@ -690,11 +726,7 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
       $body = simplenews_html_to_text($body, $this->getCategory()->hyperlinks);
     }
     $this->cache->set('final', 'body:' . $format, $body);
-
-    // Switch back to the previous user.
-    if ($uid) {
-      simplenews_revert_user();
-    }
+    $this->resetContext();
     return $body;
   }
 
@@ -721,8 +753,8 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
       'context' => $this->getTokenContext(),
       'key' => $this->getKey(),
       'language' => $this->getLanguage(),
-      )
-    );
+      'format' => $format,
+    ));
     $this->cache->set('build', 'footer:' . $format, $footer);
     return $footer;
   }
@@ -731,31 +763,34 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
    * Implements SimplenewsSourceInterface::getFooter().
    */
   public function getFooter() {
-    if ($cache = $this->cache->get('final', 'footer')) {
-      return $cache;
-    }
-
-    if ($this->category->opt_inout != SIMPLENEWS_OPT_INOUT_HIDDEN) {
-      $final_footer = token_replace($this->buildFooter(), $this->getTokenContext(), array('sanitize' => FALSE));
-    }
-
-    $this->cache->set('build', 'footer', $final_footer);
-    return $final_footer;
+    return $this->getFooterWithFormat($this->getFormat());
   }
 
   /**
    * Implements SimplenewsSourceInterface::getPlainFooter().
    */
   public function getPlainFooter() {
-    if ($cache = $this->cache->get('final', 'footer:plain')) {
+    return $this->getFooterWithFormat('plain');
+  }
+
+  /**
+   * Get the footer in the specified format.
+   *
+   * @param $format
+   *   Either html or plain.
+   *
+   * @return
+   *   The footer for the requested format.
+   */
+  protected function getFooterWithFormat($format) {
+    // Switch to correct user and language context.
+    $this->setContext();
+    if ($cache = $this->cache->get('final', 'footer:' . $format)) {
       return $cache;
     }
-
-    if ($this->category->opt_inout != SIMPLENEWS_OPT_INOUT_HIDDEN) {
-      $final_footer = token_replace($this->buildFooter('plain'), $this->getTokenContext(), array('sanitize' => FALSE));
-    }
-
-    $this->cache->set('build', 'footer:plain', $final_footer);
+    $final_footer = token_replace($this->buildFooter($format), $this->getTokenContext(), array('sanitize' => FALSE));
+    $this->cache->set('build', 'footer:' . $format, $final_footer);
+    $this->resetContext();
     return $final_footer;
   }
 
@@ -777,7 +812,7 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
       $field = field_info_field($field_name);
       if ($field['type'] == 'file' && isset($build[$field_name])) {
 
-        if ($items = field_get_items('node', $node, $field_name)) {
+        if ($items = field_get_items('node', $this->node, $field_name)) {
           foreach ($items as $item) {
             $fids[] = $item['fid'];
           }
@@ -798,6 +833,8 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
  *
  * Subclasses need to implement the abstract function isCacheable() to decide
  * what should be cached.
+ *
+ * @ingroup source
  */
 abstract class SimplenewsSourceCacheStatic implements SimplenewsSourceCacheInterface {
 
@@ -823,6 +860,8 @@ abstract class SimplenewsSourceCacheStatic implements SimplenewsSourceCacheInter
    */
   public function __construct(SimplenewsSourceNodeInterface $source) {
     $this->source = $source;
+
+    self::$cache = &drupal_static(__CLASS__, array());
   }
 
   /**
@@ -870,6 +909,8 @@ abstract class SimplenewsSourceCacheStatic implements SimplenewsSourceCacheInter
 
 /**
  * Cache implementation that does not cache anything at all.
+ *
+ * @ingroup source
  */
 class SimplenewsSourceCacheNone extends SimplenewsSourceCacheStatic {
 
@@ -884,6 +925,8 @@ class SimplenewsSourceCacheNone extends SimplenewsSourceCacheStatic {
 
 /**
  * Source cache implementation that caches build and data element.
+ *
+ * @ingroup source
  */
 class SimplenewsSourceCacheBuild extends SimplenewsSourceCacheStatic {
 
@@ -905,6 +948,8 @@ class SimplenewsSourceCacheBuild extends SimplenewsSourceCacheStatic {
 
 /**
  * Example source implementation used for tests.
+ *
+ * @ingroup source
  */
 class SimplenewsSourceTest implements SimplenewsSourceInterface {
 

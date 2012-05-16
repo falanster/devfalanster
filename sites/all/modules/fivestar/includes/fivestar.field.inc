@@ -20,7 +20,10 @@ function fivestar_field_info() {
       ),
       'instance_settings' => array(
         'stars' => 5,
-      )
+      ),
+      'property_type' => 'fivestar',
+      'property_callbacks' => array('fivestar_property_info_callback'),
+      'microdata' => TRUE,
     ),
   );
 }
@@ -117,7 +120,7 @@ function _fivestar_field_helper($entity_type, $entity, $field, $instance, $langc
     }
     $target = _fivestar_field_target($entity, $field, $instance, $item, $langcode);
     if (!empty($target)) {
-      _fivestar_cast_vote($target['entity_type'], $target['entity_id'], $rating, $field['settings']['axis'], $entity->uid, FALSE, TRUE);
+      _fivestar_cast_vote($target['entity_type'], $target['entity_id'], $rating, $field['settings']['axis'], $entity->uid, TRUE);
       votingapi_recalculate_results($target['entity_type'], $target['entity_id']);
     }
   }
@@ -142,6 +145,15 @@ function _fivestar_field_target($entity, $field, $instance, $item, $langcode) {
     );
   }
   return $target;
+}
+
+/**
+ * Helper function to store a rating into the field storage.
+ */
+function _fivestar_update_field_value($entity_type, $entity, $field_name, $langcode, $value) {
+  $entity->{$field_name}[$langcode][0]['rating'] = $value;
+  field_attach_presave($entity_type, $entity);
+  field_attach_update($entity_type, $entity);
 }
 
 /**
@@ -171,7 +183,7 @@ function fivestar_field_widget_info() {
         )
       )
     ),
-    'select' => array(
+    'fivestar_select' => array(
       'label' => t('Select list (rated while editing)'),
       'field types' => array('fivestar'),
       'behaviors' => array('multiple values' => FIELD_BEHAVIOR_NONE),
@@ -229,7 +241,7 @@ function fivestar_previews_expand($element) {
 function fivestar_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $element['#tree'] = TRUE;
 
-  if ($instance['widget']['type'] == 'select' || ($instance['widget']['type'] == 'stars' && isset($form['#title']) && $form['#title'] == 'Default value')) {
+  if ($instance['widget']['type'] == 'fivestar_select' || ($instance['widget']['type'] == 'stars' && isset($form['#title']) && $form['#title'] == 'Default value')) {
     $options = array(0 => t('No stars'));
     if (empty($instance['settings']['stars'])) {
       $instance['settings']['stars'] = 5;
@@ -459,6 +471,12 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
     $tag = (isset($field['settings']['axis'])) ? $field['settings']['axis'] : 'vote';
     list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     $settings = _fivestar_custom_widget_settings($entity_type, $instance, $display, $id, $tag, $widget);
+    // Store entity and field data for later reuse.
+    $settings += array(
+      'entity' => $entity,
+      'field_name' => $instance['field_name'],
+      'langcode' => $langcode,
+    );
     $element[0] = drupal_get_form('fivestar_custom_widget', $values, $settings);
     // Our work here is done.
     return $element;
@@ -525,6 +543,9 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
     'stars' => $instance['settings']['stars'],
     'votes' => NULL,
   );
+
+ $summary_options['microdata'] = _fivestar_get_microdata_property_info($entity_type, $entity, $field, $instance);
+
   // If we're displaying both user and average ratings, add a description to
   // both the 'user' and 'average' elements.
   if ($style === 'dual') {
@@ -610,6 +631,12 @@ function _fivestar_custom_widget_settings($entity_type, $instance, $display, $id
  *  Array. $widget = array('name' => 'my widget', 'css' => 'sites/all/mymodule/mywidget.css');
  */
 function _fivestar_get_widget($widgets, $display, $instance) {
+  // If the type doesn't required widgets lets get out of here.
+  // TODO: Implement this WAY better.
+  if (in_array($display['type'], array('fivestar_formatter_rating', 'fivestar_formatter_percentage'))) {
+    return FALSE;
+  }
+
   // Stars (rated while viewing) is $type = 'exposed'.
   // Stars (rated while editing) is $type = 'stars'.
   $type = $instance['widget']['type'];
@@ -670,4 +697,93 @@ function fivestar_field_prepare_view($entity_type, $entities, $field, $instances
       $items[$id] = array($values);
     }
   }
+}
+
+/**
+ * Implements hook_microdata_value_type_alter().
+ */
+function fivestar_microdata_value_type_alter(&$types) {
+  $types['fivestar'] = 'item';
+}
+
+/**
+ * Callback to alter the property info of fivestar fields.
+ */
+function fivestar_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $name = $field['field_name'];
+  $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$name];
+
+  $property['property info'] = array(
+    'average_rating' => array(
+      'label' => t('Average Rating'),
+      'type' => 'text',
+      'microdata' => TRUE,
+    ),
+    'user_rating' => array(
+      'label' => t('User\'s Rating'),
+      'type' => 'text',
+      'microdata' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Get microdata attributes for Fivestar field.
+ */
+function _fivestar_get_microdata_property_info($entity_type, $entity, $field, $instance) {
+  // If microdata module is enabled, attach the microdata attributes the module
+  // adds to the entity object.
+  if (module_exists('microdata')) {
+    $microdata = $entity->microdata[$field['field_name']];
+  }
+  // If microdata is not enabled, add empty arrays for each property so we
+  // don't have to check later in the theme functions.
+  else {
+    $microdata = array(
+      '#attributes' => array(),
+    );
+    // If Entity API is enabled, we can use that to get the properties.
+    // Otherwise, replicate the Entity API logic for getting the properties.
+    if (module_exists('entity')) {
+      $entity_info = entity_get_all_property_info($entity_type);
+    }
+    else {
+      $info = array();
+      $info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']] = array();
+      fivestar_property_info_callback($info, $entity_type, $field, $instance, 'fivestar');
+      $entity_info = $info[$entity_type]['bundles'][$instance['bundle']]['properties'];
+
+      foreach ($entity_info[$field['field_name']]['property info'] as $property_name => $property) {
+        $microdata[$property_name]['#attributes'] = array();
+      }
+    }
+  }
+
+  return $microdata;
+}
+
+
+/**
+ * Implements hook_microdata_field_defaults.
+ *
+ * Sets default mappings for different vocabularies; for example, schema.org.
+ * This enables fields to provide mappings for different use cases.
+ */
+function fivestar_microdata_field_defaults() {
+  $field_settings = array();
+
+  // Add the vocabulary terms that are used to describe the data. Multiple
+  // schemes can be defined, allowing the user to choose which mapping to use.
+  // The array key is used to choose which mapping to use in the field instance
+  // settings form.
+  $field_settings['default_mappings']['schema.org'] = array(
+    '#itemprop'    => array('aggregateRating'),
+    '#itemtype'    => 'http://schema.org/AggregateRating',
+    'average_rating' => array(
+      '#itemprop' => array('ratingValue'),
+    ),
+  );
+
+  return $field_settings;
+
 }

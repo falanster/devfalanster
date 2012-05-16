@@ -5,12 +5,13 @@
  */
 
 /**
- * Implements hook i18n_object_info()
+ * Implements hook_i18n_object_info().
  */
 function i18n_block_i18n_object_info() {
   $info['block'] = array(
     'title' => t('Block'),
     'class' => 'i18n_block_object',
+    'load callback' => 'block_load',
     'key' => array('module', 'delta'),
     'placeholders' => array(
     	'%module' => 'module',
@@ -29,7 +30,7 @@ function i18n_block_i18n_object_info() {
           'format' => 'format',
         ),
       ),
-      'translate path' => 'admin/structure/block/manage/%module/%delta/translate/%language',
+      'translate path' => 'admin/structure/block/manage/%module/%delta/translate/%i18n_language',
     )
   );
   return $info;

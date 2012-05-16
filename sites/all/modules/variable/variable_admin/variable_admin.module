@@ -17,7 +17,7 @@ function variable_admin_menu() {
   );
   $items['admin/config/system/variable/group'] = array(
     'title' => 'Groups',
-    'description' => 'Variable groups.',
+    'description' => 'Variables per group.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/system/variable/module'] = array(

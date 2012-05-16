@@ -26,6 +26,8 @@ function i18n_contact_i18n_object_info() {
     'title' => t('Contact category'),
     // The object key field.
     'key' => 'cid',
+    // The object load callback.
+    'load callback' => 'contact_load',
     // Placeholders for automatic paths.
     'placeholders' => array(
       '%contact' => 'cid',
@@ -48,7 +50,7 @@ function i18n_contact_i18n_object_info() {
         'reply' => t('Auto-reply'),
       ),
       // Path to translate strings to every language.
-      'translate path' => 'admin/structure/contact/edit/%contact/translate/%language',
+      'translate path' => 'admin/structure/contact/edit/%contact/translate/%i18n_language',
     )
   );
   return $info;

@@ -6,12 +6,13 @@
 
 
 /**
- * Implements hook i18n_object_info()
+ * Implements hook_i18n_object_info().
  */
 function i18n_node_i18n_object_info() {
   $info['node_type'] = array(
     'title' => t('Node type'),
     'key' => 'type',
+    'load callback' => 'node_type_get_type',
     'placeholders' => array(
     	'%node_type' => 'type',
     ),
@@ -29,7 +30,7 @@ function i18n_node_i18n_object_info() {
         'description' => t('Description'),
         'help' => t('Help text'),
       ),
-      'translate path' => 'admin/structure/types/manage/%node_type/translate/%language',
+      'translate path' => 'admin/structure/types/manage/%node_type/translate/%i18n_language',
     )
   );
   return $info;

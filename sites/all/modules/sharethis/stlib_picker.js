@@ -25,7 +25,7 @@ stlib_picker.setupPicker = function(jQElement, newDefaults, callback) {
 		var answer = [];
 		var lis = jQElement.children(".stp_pickerLeft").find(".stp_li");
 		lis.each(function() {
-			answer.push($(this).attr("id").substring(6));
+			answer.push(jQuery(this).attr("id").substring(6));
 		});
 		return answer;
 	};
@@ -49,8 +49,8 @@ stlib_picker.setupPicker = function(jQElement, newDefaults, callback) {
 	}
 	
 	//Add all the services to the picker:
-	$.each(_all_services, function(key, value) {
-		if($.inArray(key, pickerDefaults) == -1) {
+	jQuery.each(_all_services, function(key, value) {
+		if(jQuery.inArray(key, pickerDefaults) == -1) {
 			var ul = jQElement.children(".stp_pickerRight").children(".stp_ulRight");
 			ul.append("<li id='st_li_" + key + "' class='stp_li'><img src='http://w.sharethis.com/images/"+key+"_32.png'></img><span class='stp_liText'>" + value.title + "</span></li>");
 		}
@@ -64,7 +64,7 @@ stlib_picker.setupPicker = function(jQElement, newDefaults, callback) {
 	//Need to make sure that we don't get confused when there are multiple pickers
 	jQElement.find(".stp_li").click(function() {
 		jQElement.find(".stp_select").removeClass("stp_select");
-		$(this).addClass("stp_select");
+		jQuery(this).addClass("stp_select");
 		stlib_picker.pickerList[jQElement.attr("id")]["isSelect"] = true;
 	});
 	

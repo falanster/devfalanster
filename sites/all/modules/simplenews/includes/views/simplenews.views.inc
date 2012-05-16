@@ -294,6 +294,14 @@ function simplenews_views_data() {
     ),
   );
 
+  $data['simplenews_newsletter']['send'] = array(
+    'field' => array(
+      'title' => t('Send newsletter'),
+      'help' => t('Provides a link to send the simplenews newsletter if not sent yet.'),
+      'handler' => 'simplenews_handler_field_newsletter_send',
+    ),
+  );
+
 /* ------------ Definitions for Simplenews subscriber ----------------------*/
 
   $data['simplenews_subscriber']['table'] = array(
