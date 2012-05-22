@@ -182,9 +182,9 @@ $databases = array (
   array (
     'default' => 
     array (
-      'database' => 'dev_falanster',
-      'username' => 'root',
-      'password' => 'root',
+      'database' => 'falanster_dev',
+      'username' => 'falanster',
+      'password' => '7Q2pntmQ3Dwa2Xsq',
       'host' => 'localhost',
       'port' => '',
       'driver' => 'mysql',
