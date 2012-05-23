@@ -1,8 +1,0 @@
-[09-Jan-2012 17:27:38] PHP Fatal error:  Call to undefined function token_element_validate() in /home/falanga/public_html/dev2/includes/form.inc on line 1828
-[12-Jan-2012 15:50:59] PHP Fatal error:  Exception thrown without a stack frame in Unknown on line 0
-[16-Jan-2012 14:13:31] PHP Fatal error:  Out of memory (allocated 62652416) (tried to allocate 30720 bytes) in /home/falanga/public_html/dev2/sites/all/modules/views/handlers/views_handler_filter.inc on line 515
-[16-Jan-2012 15:06:28] PHP Fatal error:  Out of memory (allocated 62652416) (tried to allocate 80 bytes) in /home/falanga/public_html/dev2/includes/cache.inc on line 418
-[16-Jan-2012 15:25:00] PHP Fatal error:  Out of memory (allocated 62652416) (tried to allocate 29306 bytes) in /home/falanga/public_html/dev2/includes/cache.inc on line 418
-[16-Jan-2012 17:50:02] PHP Fatal error:  Out of memory (allocated 62652416) (tried to allocate 4947 bytes) in /home/falanga/public_html/dev2/includes/cache.inc on line 418
-[16-Jan-2012 17:58:14] PHP Fatal error:  Out of memory (allocated 62652416) (tried to allocate 24 bytes) in /home/falanga/public_html/dev2/includes/database/database.inc on line 718
-[23-Jan-2012 16:30:41] PHP Fatal error:  Out of memory (allocated 62390272) (tried to allocate 49346 bytes) in /home/falanga/public_html/dev2/includes/bootstrap.inc on line 2982
