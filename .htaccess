@@ -139,4 +139,6 @@ DirectoryIndex index.php index.html index.htm
 AuthType Basic
 AuthName "for admins only"
 AuthUserFile /etc/httpd/falanster.passwords
-Require valid-user 
+Require valid-user
+
+php_value max_file_uploads 50 
