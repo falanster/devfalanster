@@ -1,0 +1,81 @@
+/*
+ * This is an example CSS file for gcal_events. In this example, the list bullets are removed and margin/padding reduced to zero.
+ */
+
+ul.gcal_events {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events li {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events li.first {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_today {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_tomorrow {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_thisweek {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_thismonth {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_other {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_today li {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_tomorrow li {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_thisweek li {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_thismonth li {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul.gcal_events_other li {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}

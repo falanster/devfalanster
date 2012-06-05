@@ -1,0 +1,12 @@
+name = GCal Events
+description = Upcoming events blocks for Google Calendar. 
+package = Date/Time
+core = 7.x
+
+files[] = gcal_events.module
+; Information added by drupal.org packaging script on 2011-04-19
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "gcal_events"
+datestamp = "1303172277"
+
