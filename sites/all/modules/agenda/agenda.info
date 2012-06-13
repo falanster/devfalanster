@@ -1,0 +1,15 @@
+name = Agenda
+description = Show an agenda of events from a remote source
+core = 7.x
+configure = admin/config/services/agenda
+dependencies[] = block
+files[] = agenda.admin.php
+files[] = agenda.install
+files[] = agenda.module
+
+; Information added by drupal.org packaging script on 2011-04-19
+version = "7.x-1.3"
+core = "7.x"
+project = "agenda"
+datestamp = "1303246614"
+

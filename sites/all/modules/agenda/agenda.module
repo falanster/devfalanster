@@ -1,0 +1,473 @@
+<?php
+
+/**
+ * The google calendar feed address
+ */
+define('AGENDA_SOURCEPATTERN', 'http://www.google.com/calendar/feeds/%s/%s/full?hl=en&singleevents=true&sortorder=ascending&orderby=starttime&start-min=%s&start-max=%s&max-results=%d&ctz=%s');
+
+
+/**
+ * Implements hook_menu().
+ */
+function agenda_menu() {
+
+  $items = array();
+
+  $items['admin/config/services/agenda'] = array(
+    'title'            => 'Agenda',
+    'type'             => MENU_NORMAL_ITEM,
+    'description'      => 'Create and configure agenda blocks which utilise Google Calendar\'s web service.',
+    'page callback'    => 'agenda_admin',
+    'page arguments'   => array('agenda_admin'),
+    'access arguments' => array('configure agenda blocks'),
+    'file'             => 'agenda.admin.php',
+  );
+
+  $items['admin/config/services/agenda/%/configure'] = array(
+    'title'            => 'Configure agenda block',
+    'type'             => MENU_CALLBACK,
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('agenda_admin_configure', 4),
+    'access arguments' => array('configure agenda blocks'),
+    'file'             => 'agenda.admin.php',
+  );
+
+  $items['admin/config/services/agenda/%/delete'] = array(
+    'title'            => 'Delete agenda block',
+    'type'             => MENU_CALLBACK,
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('agenda_admin_delete', 4),
+    'access arguments' => array('configure agenda blocks'),
+    'file'             => 'agenda.admin.php',
+  );
+
+  $items['admin/config/services/agenda/%/debug'] = array(
+    'title'            => 'Test settings',
+    'type'             => MENU_CALLBACK,
+    'page callback'    => 'agenda_debug',
+    'page arguments'   => array(4),
+    'access arguments' => array('configure agenda blocks'),
+    'file'             => 'agenda.admin.php',
+  );
+
+  $items['admin/config/services/agenda/%/clear'] = array(
+    'type'             => MENU_CALLBACK,
+    'page callback'    => 'agenda_clear',
+    'page arguments'   => array(4),
+    'access arguments' => array('configure agenda blocks'),
+    'file'             => 'agenda.admin.php',
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_permission().
+ */
+function agenda_permission() {
+  return array(
+    'access agenda content' => array(
+      'title' => t('access agenda content'),
+      'description' => t('View blocks created by Agenda module'),
+    ),
+    'configure agenda blocks' => array(
+      'title' => t('configure agenda blocks'),
+      'description' => t('Create and edit Agenda blocks'),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_block_info().
+ */
+function agenda_block_info() {
+  $res = db_query("SELECT bid, value FROM {agenda} WHERE name = :name", array(':name' => 'title'));
+  $blocks = array();
+  while ($block = $res->fetchObject()) {
+    $blocks[$block->bid] = array(
+      'info'  => t('Agenda: @title', array('@title' => agenda_variable_get($block->bid, 'title', 'New block'))),
+      'cache' => DRUPAL_CACHE_GLOBAL,
+    );
+  }
+  return $blocks;
+}
+
+
+/**
+ * Implements hook_block_view().
+ */
+function agenda_block_view($delta) {
+
+  // Load the block and do a sanity check
+  $markup = agenda_display_block($delta);
+  if (!$markup) {
+    return FALSE;
+  }
+
+  // Render it
+  $basepath = drupal_get_path('module', 'agenda');
+  return array(
+    'subject' => t('Agenda'),
+    'content' => array(
+      '#markup'   => $markup,
+      '#attached' => array(
+        'css' => array($basepath . '/agenda.css'),
+        'js'  => array($basepath . '/agenda.js'),
+      ),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function agenda_theme($existing, $type, $theme, $path) {
+  $theme = array(
+    'agenda_block' => array(
+      'variables' => array('events' => array(), 'block' => new stdClass),
+      'template'  => 'agenda-block',
+    ),
+    'agenda_admin' => array(
+      'variables' => array('table' => ''),
+      'template'  => 'agenda-admin',
+    )
+  );
+
+  return $theme;
+}
+
+
+/**
+ * Generate the themed agenda block
+ *
+ * @return string
+ */
+function agenda_display_block($delta = 0) {
+
+  // Check block exists
+  if ($delta === 0 || !($block = agenda_settings($delta))) {
+    return false;
+  }
+
+  // Group the events by date
+  $events = agenda_get_events($block);
+  $groupedevents = array();
+  foreach ($events as $event) {
+    $groupedevents[$event['when']][] = $event;
+  }
+  ksort($groupedevents);
+
+  // Filter the events based on their date
+  $datelimit = $block->datelimit;
+  $count     = 0;
+  $events    = array();
+  foreach ($groupedevents as $date => $eventdata) {
+    if ($count >= $datelimit) {
+      break;
+    }
+    $events[$date] = $eventdata;
+    $count++;
+  }
+
+  // Render
+  if (count($events)) {
+    $output = theme('agenda_block', array('events' => $events, 'block' => $block));
+  }
+  elseif (empty($block->noeventstext)) {
+    $output = NULL;
+  }
+  else {
+    $output = filter_xss($block->noeventstext);
+  }
+
+  return $output;
+}
+
+
+/**
+ * Retrieve the settings for a block
+ *
+ * @param int $delta The ID of the agenda
+ * @param string $parameter The parameter required
+ */
+function agenda_settings($delta) {
+
+  $res = db_query('SELECT name, value FROM {agenda} WHERE bid = :bid', array(':bid' => $delta));
+
+  $settings      = new stdClass;
+  $settings->bid = $delta;
+  while ($row = $res->fetchAssoc()) {
+    $settings->{$row['name']} = $row['value'];
+  }
+
+  if (!count($settings) || !isset($settings->title)) {
+    $settings = FALSE;
+  }
+
+  return $settings;
+}
+
+
+/**
+ * Get a variable
+ *
+ * @param int $delta The ID of the agenda
+ * @param string $parameter The parameter required
+ * @param string $default_value (optional) The default value
+ */
+function agenda_variable_get($delta, $parameter, $default_value) {
+  $value = db_query("SELECT value FROM {agenda} WHERE bid = :bid AND name = :name",
+      array(':bid' => $delta, ':name' => $parameter))
+    ->fetchField();
+
+  if ($value === FALSE) {
+    $value = $default_value;
+  }
+
+  return $value;
+}
+
+
+/**
+ * Set a variable
+ *
+ * @param int $bid The ID of the agenda block
+ * @param string $name The parameter required
+ * @param string $value The value
+ */
+function agenda_variable_set($bid, $name, $value) {
+  return db_merge('agenda')
+    ->key(array('bid' => $bid, 'name' => $name))
+    ->fields(array('value' => $value))
+    ->execute();
+}
+
+
+/**
+ * Given a list of calendar IDs, parse out and return any event data
+ *
+ * @param array $block The block settings object
+ * @param bool $cacheaction Whether to interact with the cache
+ * @access private
+ */
+function agenda_get_events($block, $cache = TRUE) {
+
+  // Check the cache
+  if ($cache) {
+    $cache_key = 'agenda_block_' . $block->bid;
+    $eventdata = cache_get($cache_key, 'cache');
+    if ($eventdata && $eventdata->expire > REQUEST_TIME) {
+      return $eventdata->data;
+    }
+  }
+
+  // Get the calendars
+  $calendars = preg_split('@\r\n?|\n@', $block->calendars);
+  $calendars = array_map('trim', $calendars);
+  if (empty($calendars)) {
+    return FALSE;
+  }
+
+  // Otherwise parse the calendars
+  $eventdata = array();
+  foreach ($calendars as $calindex => $googleid) {
+    list ($address, $token) = _agenda_parse_googleid($googleid);
+    $calendar = _agenda_load_xml($address, $token, $block);
+
+    // If we fail to load the XML, handle it
+    if (!$calendar) {
+      watchdog('agenda', 'Unable to load the calendar feed (@feed) for block @bid', array('@feed' => $googleid, '@bid' => $block->bid));
+      continue;
+    }
+
+    // Parse out the event details
+    foreach ($calendar->entry as $eventxml) {
+      $event = _agenda_parse_event($eventxml, $block);
+      if (!$event) {
+        continue;
+      }
+
+      $event['index']    = (int) $calindex;
+      $event['calendar'] = (string) $calendar->title;
+      $eventdata[] = $event;
+    }
+  }
+
+  // Sort the events by date
+  $timestamps = array();
+  foreach ($eventdata as $event) {
+    $timestamps[] = $event['start timestamp'];
+  }
+  array_multisort($timestamps, SORT_NUMERIC, $eventdata);
+
+  // Cache our data
+  if ($cache) {
+    $expires = REQUEST_TIME + $block->cachetime;
+    cache_set($cache_key, $eventdata, 'cache', $expires);
+  }
+
+  return $eventdata;
+}
+
+
+/**
+ * Read useful event information from XML chunk
+ *
+ * @param SimpleXMLElement $xml An event node from a gData feed
+ * @param object $block The settings object
+ * @return array Associative array of information about the event
+ * @access private
+ */
+function _agenda_parse_event($xml, $block) {
+  $gd = $xml->children('http://schemas.google.com/g/2005');
+
+  // Timezone
+  $tz = new DateTimeZone($block->timezone);
+
+  // Parse the timestamps
+  $updated = new DateTime($xml->updated, $tz);
+  $start   = new DateTime((string) $gd->when->attributes()->startTime, $tz);
+  $end     = new DateTime((string) $gd->when->attributes()->endTime, $tz);
+
+  // Work around a bug in Google Calendar which reports
+  //   dates as "<published>0001-12-30T19:04:00.000-04:56</published>"
+  try {
+    $published = new DateTime((string) $xml->published, $tz);
+  } catch (Exception $e) {
+    $published = new DateTime('now', $tz);
+  }
+
+  // Build up information about the event
+  $event = array();
+  $event['title']           = htmlspecialchars((string) $xml->title);
+  $event['where']           = htmlspecialchars((string) $gd->where->attributes()->valueString);
+  $event['description']     = _filter_autop(filter_xss((string) $xml->content));
+  $event['timezone']        = $block->timezone;
+
+  $event['start original']  = (string) $gd->when->attributes()->startTime;
+  $event['start date']      = $start->format($block->dateformat);
+  $event['start time']      = $start->format($block->timeformat);
+  $event['start timestamp'] = strtotime($start->format('c')); // Use strtotime instead of getTimestamp for < PHP5.3
+
+  $event['end original']    = (string) $gd->when->attributes()->endTime;
+  $event['end date']        = $end->format($block->dateformat);
+  $event['end time']        = $end->format($block->timeformat);
+  $event['end timestamp']   = strtotime($end->format('c'));
+
+  $event['published']       = $published->format($block->dateformat);
+  $event['updated']         = $updated->format($block->dateformat);
+
+  $link                     = (array) $xml->link[0];
+  $event['url']             = (string) $link['@attributes']['href'];
+  $event['link']            = l($block->linktext, $event['url']);
+
+  // The day the event occurs on (without time) used for grouping
+  $event['when']            = $start->format('Y-m-d');
+
+  // Hide the start and end times for full day events
+  if (strlen($gd->when->attributes()->startTime) === 10) {
+    $event['start time'] = '';
+    $event['end time']   = '';
+  }
+
+  // Hide end date if it's the same as the start date
+  if ($event['start timestamp'] === $event['end timestamp'] - 86400) {
+    $event['end date'] = '';
+  }
+
+  return $event;
+}
+
+
+/**
+ * Because we use keys for our public configuration, we want to
+ * keep these keys in english, but display them translated. This function
+ * provides a wrapper for this.
+ */
+function _agenda_translate($field) {
+  $t['title']           = t('Title');
+  $t['where']           = t('Where');
+  $t['description']     = t('Description');
+  $t['start original']  = t('Start original');
+  $t['start timestamp'] = t('Start timestamp');
+  $t['start date']      = t('Start date');
+  $t['start time']      = t('Start time');
+  $t['end original']    = t('End original');
+  $t['end timestamp']   = t('End timestamp');
+  $t['end date']        = t('End date');
+  $t['end time']        = t('End time');
+  $t['published']       = t('Published');
+  $t['updated']         = t('Updated');
+  $t['url']             = t('URL');
+  $t['link']            = t('Link');
+  $t['when']            = t('When');
+  $t['calendar']        = t('Calendar');
+  $t['timezone']        = t('Timezone');
+  return $t[$field];
+}
+
+
+/**
+ * Fetch the gData feed and parse the XML
+ *
+ * @param string $googleid The calendars Google ID
+ * @param object $block The agenda block settings
+ * @return object An object containing the status, request and result
+ * @access private
+ */
+function _agenda_load_xml($address, $key, $block) {
+  $url = _agenda_feed_url($address, $key, $block);
+  $xml = drupal_http_request($url);
+
+  $data = FALSE;
+  if ($xml->code === '200') {
+    $data = simplexml_load_string($xml->data);
+  }
+
+  return $data;
+}
+
+
+/**
+ * Return the remote path to the google feed
+ *
+ * @param string $googleid The calendars Google ID
+ * @param object $block The agenda block settings
+ * @return object An object containing the status, request and result
+ * @access private
+ */
+function _agenda_feed_url($address, $key, $block) {
+
+  $url = sprintf(AGENDA_SOURCEPATTERN,
+    urlencode(check_plain($address)),
+    urlencode(check_plain($key)),
+    date('Y-m-d', strtotime($block->start)),
+    date('Y-m-d', strtotime($block->end)),
+    $block->maxevents,
+    $block->timezone);
+
+  return $url;
+}
+
+
+/**
+ * Parse a Google ID into the email address and token components
+ *
+ * e.g. p54126mdgs4r1jeqrjcrp4big4@group.calendar.google.com/private-181818aa271006f5de8919ac93fc04f7
+ */
+function _agenda_parse_googleid($googleid) {
+  $parts = explode('/', $googleid);
+  if (!valid_email_address($parts[0])) {
+    return FALSE;
+  }
+
+  $token = 'public';
+  if (count($parts) === 2) {
+    $token = $parts[1];
+  }
+
+  return array($parts[0], $token);
+}

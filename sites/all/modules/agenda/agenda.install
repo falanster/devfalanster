@@ -1,0 +1,92 @@
+<?php
+
+
+/**
+ * @file
+ * Install, uninstall and scheme functions for the agenda module.
+ */
+
+
+/**
+ * Implements hook_install().
+ */
+function agenda_install() {
+  agenda_install_fixtures();
+}
+
+
+/**
+ * Install an example block
+ */
+function agenda_install_fixtures() {
+  $records = array(
+    array(1, 'noeventstext', '<p>No upcoming events</p>'),
+    array(1, 'timeformat',   'h:ia'),
+    array(1, 'dateformat',   'l, F jS'),
+    array(1, 'maxevents',    '60'),
+    array(1, 'datelimit',    '60'),
+    array(1, 'start',        'Jan 1st, 2009'),
+    array(1, 'end',          'April 1st, 2009'),
+    array(1, 'title',        'Example agenda block'),
+    array(1, 'linktext',     'View this event in Google Calendar'),
+    array(1, 'cachetime',    '3600'),
+    array(1, 'display_keys', 'start time, end date, end time, published, description, link'),
+    array(1, 'hide_labels',  'description, link'),
+    array(1, 'calendars',    'drupalagenda@gmail.com'),
+    array(1, 'timezone',     'UTC'),
+  );
+
+  $query = db_insert('agenda')
+    ->fields(array('bid', 'name', 'value'));
+  foreach ($records as $record) {
+    $query->values($record);
+  }
+  $query->execute();
+}
+
+
+/**
+ * Implements hook_schema().
+ */
+function agenda_schema() {
+  $schema['agenda'] = array(
+    'description' => t('Hold agenda settings'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('ID'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'disp-width' => '11',
+      ),
+      'bid' => array(
+        'description' => t('Block ID'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'disp-width' => '11',
+      ),
+      'name' => array(
+        'description' => t('Name of the setting'),
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ),
+      'value' => array(
+        'description' => t('Value of the setting'),
+        'type' => 'varchar',
+        'length' => 1024,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'kvp' => array('bid', 'name')
+    ),
+    'indexes' => array(
+      'bid' => array('bid'),
+    ),
+  );
+
+  return $schema;
+}
