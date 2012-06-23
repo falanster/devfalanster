@@ -58,6 +58,8 @@
 
 img {
   vertical-align: bottom;
+  float: left;
+  margin: 10px;
 }
 
 .field-label-inline .field-label,
