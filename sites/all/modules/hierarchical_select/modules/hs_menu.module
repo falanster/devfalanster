@@ -34,6 +34,15 @@ function hs_menu_form_node_form_alter(&$form, &$form_state) {
     unset($form['menu']['link']['parent']['#options']);
     $form['menu']['link']['parent']['#type'] = 'hierarchical_select';
     _hs_menu_apply_config($form['menu']['link']['parent'], NULL);
+
+  // http://drupal.org/node/1304002
+    // Add submit handler to fix return value set as an array by the master hs 
+    // module.
+    array_unshift($form['#submit'], 'hs_menu_node_form_submit');
+    // Change the loaded default value into an array so we can populate the 
+    // hierarchical select element.
+    $form['menu']['link']['parent']['#default_value'] = array($form['menu']['link']['parent']['#default_value']);
+ 
   }
 }
 
@@ -65,6 +74,14 @@ function hs_menu_menu_edit_item_form_submit(&$form, &$form_state) {
   $form_state['values']['parent'] = $form_state['values']['parent'][0];
 }
 
+/**
+ * Submit callback for node forms
+ *
+ */
+function hs_menu_node_form_submit(&$form, &$form_state) {
+  // Don't return an array, but a single item.
+  $form_state['values']['menu']['parent'] = $form_state['values']['menu']['parent'][0];
+}
 
 //----------------------------------------------------------------------------
 // Menu callbacks.
