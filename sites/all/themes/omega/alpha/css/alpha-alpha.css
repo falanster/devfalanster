@@ -60,6 +60,12 @@ img {
   vertical-align: bottom;
 }
 
+.field-label-inline .field-label,
+.field-label-inline .field-items,
+.field-label-inline .field-item {
+  display: inline;
+}
+
 /* Gallery view */
 
 .field-name-field-image img {
@@ -69,23 +75,44 @@ img {
 
 .views-field-field-image img {
   float: none;  
+  margin-top: -30px;
 }
 
 .view-gallery .views-field-body .field-content p {
   width: 420px;
-  height: 150px;
-  margin-top: -170px;
+  height: 120px;
+  margin-top: -130px;
   margin-left: 200px;
 }
 
-.node-gallery .field-name-body p {
+.node-gallery .field-name-field-open-tag .lineage-item {
   clear:left;
 }
 
-/* @end Gallery view */
-
-.field-label-inline .field-label,
-.field-label-inline .field-items,
-.field-label-inline .field-item {
-  display: inline;
+.view-gallery .views-field-field-open-tag span {
+  float: left;
+  padding-right: 10px;
+  margin-left: 200px;
 }
+
+.view-gallery .views-field-field-open-tag .field-content {
+  margin: -27px 0 15px 200px;
+}
+
+.view-gallery .views-field-field-related-node span {
+  float: left;
+  padding-right: 10px;
+  margin-left: 200px;
+}
+
+.view-gallery .views-field-field-date span{
+  margin-left: 200px;
+  margin-top: 30px;
+}
+
+.view-gallery .views-row {
+  padding-bottom: 25px;
+}
+
+
+/* @end Gallery view */
