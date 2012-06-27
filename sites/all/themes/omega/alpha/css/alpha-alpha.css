@@ -78,6 +78,10 @@ img {
   margin-left: 200px;
 }
 
+.node-gallery .field-name-body p {
+  clear:left;
+}
+
 /* @end Gallery view */
 
 .field-label-inline .field-label,
