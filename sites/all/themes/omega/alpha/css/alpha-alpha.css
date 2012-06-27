@@ -58,9 +58,27 @@
 
 img {
   vertical-align: bottom;
+}
+
+/* Gallery view */
+
+.field-name-field-image img {
   float: left;
   margin: 10px;
 }
+
+.views-field-field-image img {
+  float: none;  
+}
+
+.view-gallery .views-field-body .field-content p {
+  width: 420px;
+  height: 150px;
+  margin-top: -170px;
+  margin-left: 200px;
+}
+
+/* @end Gallery view */
 
 .field-label-inline .field-label,
 .field-label-inline .field-items,
