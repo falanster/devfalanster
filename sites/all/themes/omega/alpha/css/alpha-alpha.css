@@ -114,5 +114,15 @@ img {
   padding-bottom: 25px;
 }
 
+.node-gallery .field-name-field-open-tag {
+  clear:left;
+  margin-left: 10px;
+}
+
+.node-gallery .field-name-field-open-tag .field-item {
+  float:left;
+  margin-left: 8px;
+}
+
 
 /* @end Gallery view */
