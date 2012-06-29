@@ -11,7 +11,3 @@
  * for more information on this topic.
  */
  
- function isl_preprocess_page(&$variables, $hook) {
-    /* Add custom Colorbox script */
-    drupal_add_js(drupal_get_path('theme', 'falanster') . '/js/colorbox-behaviour.js', array('group' => 'JS_THEME', 'type' => 'file'));
-}
