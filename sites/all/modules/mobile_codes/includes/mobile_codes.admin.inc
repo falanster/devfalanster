@@ -6,7 +6,7 @@
 /**
  *
  */
-function mobile_codes_settings_form(&$form_state) {
+function mobile_codes_settings_form() {
   $form = array('#tree' => TRUE);
 
   $defaults = variable_get('mobile_codes_settings', array(
