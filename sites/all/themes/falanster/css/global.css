@@ -1,2 +1,18 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
+
+/*MENU PART*/
+
+/* DISABLE NORMAL MAIN MENU FOR MOBILE DEVICES */
+
+#block-nice-menus-1, #block-nice-menus-2, #block-nice-menus-3 {
+	display: none;
+}
+
+/* ENABLE MOBILE MENU */
+
+#block-menu-menu-mobile-menu {
+	display: block;
+}
+
+/*END MENU PART*/
