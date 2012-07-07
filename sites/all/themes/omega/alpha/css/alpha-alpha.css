@@ -130,6 +130,15 @@ img {
 /* anketa*/
 
 #edit-profile-queeze .fieldset-legend {
+  float: left;
+  font-size:24px;
+  
 }
+
+#profile-queeze-field-birth-date-add-more-wrapper .fieldset-legend{
+  font-weight: bold;
+  font-size: 13px;
+}
+
 
 /* @end anketa */
