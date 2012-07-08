@@ -458,8 +458,8 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
 
     // If receipt is requested, add headers.
     if ($this->category->receipt) {
-      $headers['Disposition-Notification-To'] = $from;
-      $headers['X-Confirm-Reading-To'] = $from;
+      $headers['Disposition-Notification-To'] = $this->getFromAddress();
+      $headers['X-Confirm-Reading-To'] = $this->getFromAddress();
     }
 
     // Add priority if set.
@@ -492,8 +492,8 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
     }
 
     // Add user specific header data.
-    $message['headers']['From'] = $this->getFromFormatted();
-    $message['headers']['List-Unsubscribe'] = '<' . token_replace('[simplenews-subscriber:unsubscribe-url]', $this->getTokenContext(), array('sanitize' => FALSE)) . '>';
+    $headers['From'] = $this->getFromFormatted();
+    $headers['List-Unsubscribe'] = '<' . token_replace('[simplenews-subscriber:unsubscribe-url]', $this->getTokenContext(), array('sanitize' => FALSE)) . '>';
 
     // Add general headers
     $headers['Precedence'] = 'bulk';
@@ -789,7 +789,7 @@ class SimplenewsSourceNode implements SimplenewsSourceNodeInterface {
       return $cache;
     }
     $final_footer = token_replace($this->buildFooter($format), $this->getTokenContext(), array('sanitize' => FALSE));
-    $this->cache->set('build', 'footer:' . $format, $final_footer);
+    $this->cache->set('final', 'footer:' . $format, $final_footer);
     $this->resetContext();
     return $final_footer;
   }

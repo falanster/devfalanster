@@ -1,6 +1,12 @@
 <?php
 /**
- * Field handler to present a link to close or open commenting on a node.
+ * @file
+ *
+ * Views handler that displays a link to send a newsletter.
+ */
+
+/**
+ * Views handler that displays a link to send a newsletter.
  */
 class simplenews_handler_field_newsletter_send extends views_handler_field_node_link {
 

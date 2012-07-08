@@ -398,7 +398,7 @@ function simplenews_get_spool($limit = SIMPLENEWS_UNLIMITED, $conditions = array
       $query->range(0, $limit);
     }
     foreach ($query->execute() as $message) {
-      if (strlen($message->data)) {
+      if (drupal_strlen($message->data)) {
         $message->data = unserialize($message->data);
       }
       else {
@@ -472,7 +472,28 @@ function simplenews_count_spool(array $conditions = array()) {
   $query = db_select('simplenews_mail_spool');
   // Add conditions.
   foreach ($conditions as $field => $value) {
-    $query->condition($field, $value);
+    if ($field == 'status') {
+      if (!is_array($value)) {
+        $value = array($value);
+      }
+      $status_or = db_or();
+      foreach ($value as $status) {
+        // Do not count pending entries unless they are expired.
+        if ($status == SIMPLENEWS_SPOOL_IN_PROGRESS) {
+          $status_or->condition(db_and()
+            ->condition('status', $status)
+            ->condition('timestamp', simplenews_get_expiration_time(), '<')
+          );
+        }
+        else {
+          $status_or->condition('status', $status);
+        }
+      }
+      $query->condition($status_or);
+    }
+    else {
+      $query->condition($field, $value);
+    }
   }
 
   $query->addExpression('COUNT(*)', 'count');
@@ -596,7 +617,7 @@ function _simplenews_set_from() {
   $name = variable_get('simplenews_from_name', $name_default);
 
   // Windows based PHP systems don't accept formatted emails.
-  $formatted_address = substr(PHP_OS, 0, 3) == 'WIN' ? $address : '"' . $name . '" <' . $address . '>';
+  $formatted_address = drupal_substr(PHP_OS, 0, 3) == 'WIN' ? $address : '"' . $name . '" <' . $address . '>';
 
   return array(
     'address' => $address,
@@ -654,9 +675,9 @@ function _simplenews_absolute_mail_urls($match) {
 
     // If the link is formed by Drupal's URL filter, we only return the URL.
     // The URL filter generates a label out of the original URL.
-    if (strpos($label, '...') === strlen($label) - 3) {
+    if (strpos($label, '...') === drupal_strlen($label) - 3) {
       // Remove ellipsis from end of label.
-      $label = substr($label, 0, strlen($label) - 3);
+      $label = drupal_substr($label, 0, drupal_strlen($label) - 3);
     }
     if (strpos($url, $label) !== FALSE) {
       return $url;

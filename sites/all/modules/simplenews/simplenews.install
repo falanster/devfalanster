@@ -179,6 +179,13 @@ function simplenews_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
+      'created' => array(
+        'description' => 'UNIX timestamp of when the subscription record was added.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('snid'),
     'indexes' => array(
@@ -747,4 +754,18 @@ function simplenews_update_7005() {
   // To keep existing installations consistent, disable combined confirmation
   // mails.
   variable_set('simplenews_use_combined', 'never');
+}
+
+/**
+ * Add support for subscriber create date
+ */
+function simplenews_update_7006() {
+
+  db_add_field('simplenews_subscriber', 'created', array(
+    'description' => 'UNIX timestamp of when the subscription record was added.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ));
 }
