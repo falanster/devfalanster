@@ -142,3 +142,26 @@ img {
 
 
 /* @end anketa */
+
+/* social networks */
+
+#block-views-twitter-list-block {
+  float: left;
+  width: 300px;
+  border: blue 5px solid;
+  margin-right:15px;
+}
+
+#block-block-3 {
+  float: left;
+  width: 300px;
+   margin-right:15px;
+}
+
+
+#block-block-4 {
+  float: left;
+  width: 300px;
+}
+
+/* @end social networks */
