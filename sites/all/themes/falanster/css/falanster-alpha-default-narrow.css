@@ -13,7 +13,7 @@
 
 /* DISABLE MOBILE MENU */
 
-#block-menu-menu-mobile-menu, #block-menu-menu-mobile-menu-english, #block-menu-menu-mobile-menu-bel {
+#block-menu-menu-mobile-menu {
 	display: none;
 }
 
