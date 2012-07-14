@@ -165,3 +165,21 @@ img {
 }
 
 /* @end social networks */
+
+/* Afisha na glavnoj */
+
+
+#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img{
+  float:left;
+}
+
+#views_slideshow_cycle_main_afishi-block_1 .views-field-body .field-content {
+  margin: 5px 0 0 210px;
+  width: 250px;
+}
+
+#views_slideshow_controls_text_afishi-block_1 {
+  display: none;
+}
+
+/* @end afisha na glavnoj */
