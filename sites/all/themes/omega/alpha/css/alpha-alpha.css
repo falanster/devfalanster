@@ -148,9 +148,21 @@ img {
 #block-views-twitter-list-block {
   float: left;
   width: 300px;
-  border: blue 5px solid;
+  border: blue 1px solid;
   margin-right:15px;
+  height:290px;
+  overflow: scroll;
 }
+
+#block-views-twitter-list-block .views-field-profile-image-url {
+  float: left;
+  padding: 5px;
+}
+
+#block-views-twitter-list-block .views-field-text {
+  margin-top: 20px;
+}
+
 
 #block-block-3 {
   float: left;
