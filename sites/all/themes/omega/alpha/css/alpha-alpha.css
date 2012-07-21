@@ -145,33 +145,33 @@ img {
 
 /* social networks */
 
-.region-footer-first-inner #block-views-twitter-list-block {
+#block-views-twitter-list-block {
   float: left;
   width: 300px;
   border: blue 1px solid;
-  margin-right:15px;
-  height:290px;
-  overflow: scroll;
+  margin-right: 15px;
+  height: 350px;
 }
 
 #block-views-twitter-list-block .views-field-profile-image-url {
   float: left;
-  padding: 5px;
+  padding: 0 10px 0 5px;
 }
 
 #block-views-twitter-list-block .views-field-screen-name span {
   font-weight: bold;
+  font-size: 12px;
 }
 
 #block-views-twitter-list-block .views-field-text {
-  margin-top: 20px;
+  font-size: 10px;
 }
 
 
 #block-block-3 {
   float: left;
   width: 300px;
-   margin-right:15px;
+  margin-right:15px;
 }
 
 
