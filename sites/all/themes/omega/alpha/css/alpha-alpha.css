@@ -145,7 +145,7 @@ img {
 
 /* social networks */
 
-#block-views-twitter-list-block {
+.region-footer-first-inner #block-views-twitter-list-block {
   float: left;
   width: 300px;
   border: blue 1px solid;
@@ -157,6 +157,10 @@ img {
 #block-views-twitter-list-block .views-field-profile-image-url {
   float: left;
   padding: 5px;
+}
+
+#block-views-twitter-list-block .views-field-screen-name span {
+  font-weight: bold;
 }
 
 #block-views-twitter-list-block .views-field-text {
