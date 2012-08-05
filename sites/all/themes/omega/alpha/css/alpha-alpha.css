@@ -231,3 +231,11 @@ img {
 }
 
 /* @end Tablica baza znanij */
+
+/* Poll */
+
+#block-poll-recent .links ul {
+  display: none;
+}
+
+/* @end Poll */
