@@ -1,109 +1,7 @@
 /*here is all custom style for falanster theme*/
 
-
-/* Gallery view */
-
-.field-name-field-image img {
-  float: left;
-  margin: 10px;
-}
-
-.view-gallery .views-field-field-image img {
-  float: none;  
-  margin-top: -30px;
-}
-
-.view-gallery .views-field-body .field-content p {
-  width: 420px;
-  height: 120px;
-  margin-top: -130px;
-  margin-left: 200px;
-}
-
-.node-gallery .field-name-field-open-tag .lineage-item {
-  clear:left;
-}
-
-.view-gallery .views-field-field-open-tag span {
-  float: left;
-  padding-right: 10px;
-  margin-left: 200px;
-}
-
-.view-gallery .views-field-field-open-tag .field-content {
-  margin: -27px 0 15px 200px;
-}
-
-.view-gallery .views-field-field-related-node span {
-  float: left;
-  padding-right: 10px;
-  margin-left: 200px;
-}
-
-.view-gallery .views-field-field-date span{
-  margin-left: 200px;
-  margin-top: 30px;
-}
-
-.view-gallery .views-row {
-  padding-bottom: 25px;
-}
-
-.node-gallery .field-name-field-open-tag {
-  clear:left;
-  margin-left: 10px;
-}
-
-.node-gallery .field-name-field-open-tag .field-item {
-  float:left;
-  margin-left: 8px;
-}
-
-/* @end Gallery view */
-
-
-/* anketa*/
-
-#edit-profile-queeze .fieldset-legend {
-  float: left;
-  font-size:24px;
-  
-}
-
-#profile-queeze-field-birth-date-add-more-wrapper .fieldset-legend{
-  font-weight: bold;
-  font-size: 13px;
-}
-
-
-/* @end anketa */
-
-/* social networks */
-
-#block-views-twitter-list-block {
-  float: left;
-  width: 250px;
-  margin: 0 25px;
-  height: 350px;
-}
-
-#block-views-twitter-list-block .views-field-profile-image-url {
-  float: left;
-  padding: 0 10px 0 5px;
-}
-
-#block-views-twitter-list-block .views-field-profile-image-url img {
-  height: 45px;
-  width: 45px;
-}
-
-#block-views-twitter-list-block .views-field-screen-name span {
-  font-weight: bold;
-  font-size: 13px;
-}
-
-#block-views-twitter-list-block .views-field-created-time span {
-  font-size: 11px;
+body {
+ background: #2f2f2f;
 }
 
 #block-views-twitter-list-block .views-field-text {
@@ -172,3 +70,4 @@
 }
 
 /* @end Poll */
+
