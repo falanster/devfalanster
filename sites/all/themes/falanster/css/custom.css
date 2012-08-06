@@ -1,11 +1,38 @@
 /*here is all custom style for falanster theme*/
-
+/*
 body {
  background: #2f2f2f;
-}
+} 
+*/
 
 #block-views-twitter-list-block .views-field-text {
   font-size: 12px;
+}
+
+#block-views-twitter-list-block .views-field-profile-image-url img {
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+
+#block-views-twitter-list-block .views-field-screen-name span {
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+#block-views-twitter-list-block .views-field-created-time span {
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+#block-views-twitter-list-block .views-field-text span {
+  margin-left: 5px;
+}
+
+#block-views-twitter-list-block .views-row-odd,
+#block-views-twitter-list-block .views-row-even {
+  margin-bottom: 5px;
 }
 
 #block-block-3 {
@@ -13,7 +40,6 @@ body {
   width: 250px;
   margin: 0 25px;
 }
-
 
 #block-block-4 {
   float: left;
