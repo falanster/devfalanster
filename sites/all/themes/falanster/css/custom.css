@@ -5,6 +5,14 @@ body {
 } 
 */
 
+#block-views-twitter-list-block {
+  width: 250px;
+  height: 350px;
+  margin: 0 25px;
+  float: left;
+  border: 1px solid #999999;
+}
+
 #block-views-twitter-list-block .views-field-text {
   font-size: 12px;
 }
@@ -19,6 +27,7 @@ body {
   font-size: 13px;
   font-weight: bold;
   margin-left: 5px;
+  float: left;
 }
 
 #block-views-twitter-list-block .views-field-created-time span {
