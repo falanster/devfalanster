@@ -1273,6 +1273,7 @@ function fonts_com_ajax_render_alter(&$commands) {
       array(
         'type' => 'inline',
         'data' => $css,
+        'browsers' => array(),
         'media' => 'all',
         'preprocess' => TRUE,
       ),

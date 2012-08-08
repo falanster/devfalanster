@@ -67,17 +67,19 @@ function google_fonts_api_preprocess_html(&$vars) {
         $metadata = unserialize($used_font->metadata);
 
         $path_parts = explode(':', $metadata['path']);
-        $subsets[$metadata['subset']] = $metadata['subset'];
+
+        $subsets[$path_parts[0]][$metadata['subset']] = $metadata['subset'];
+        $all_subsets[$metadata['subset']] = $metadata['subset'];
 
         if (!isset($paths[$path_parts[0]])) {
           $paths[$path_parts[0]] = array();
         } // if
 
         if (count($path_parts) > 1) {
-          $paths[$path_parts[0]][] = $path_parts[1];
+          $paths[$path_parts[0]][$path_parts[1]] = $path_parts[1];
         } // if
         else {
-          $paths[$path_parts[0]][] = 'regular';
+          $paths[$path_parts[0]]['regular'] = 'regular';
         } // else
 
       } // if
@@ -89,24 +91,16 @@ function google_fonts_api_preprocess_html(&$vars) {
       $families = array();
 
       foreach ($paths as $family => $variants) {
-        $families[] = urlencode($family) . ':' . implode(',', $variants);
+        $families[$family] = urlencode($family) . ':' . implode(',', $variants);
       } // foreach
 
-      $base = 'http://fonts.googleapis.com/css?family=';
-
-      if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-        $base = 'https://fonts.googleapis.com/css?family=';
-      } // if
-
-      $url = $base . implode('|', $families) . '&subset=' . implode(',', $subsets);
-      
       if (module_exists('google_webfont_loader_api')) {
 
-        foreach ($families as $family) {
+        foreach ($families as $family => $family_with_variants) {
 
           $font_info = array(
             'name' => 'Google ' . $family,
-            'google_families' => array($family),
+            'google_families' => array($family_with_variants . ':' . implode(',', $subsets[$family])),
           );
 
           _google_webfont_loader_api_load_font($font_info);
@@ -115,7 +109,17 @@ function google_fonts_api_preprocess_html(&$vars) {
 
       } // if
       else {
+
+        $base = 'http://fonts.googleapis.com/css?family=';
+
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+          $base = 'https://fonts.googleapis.com/css?family=';
+        } // if
+
+        $url = $base . implode('|', $families) . '&subset=' . implode(',', $all_subsets);
+
         fontyourface_add_css_in_preprocess($vars, $url, 'remote');
+
       } // else
 
     } // if

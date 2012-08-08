@@ -97,7 +97,9 @@ class delta_injection {
           $this->delta->settings[$variable] = delta_reduce($this->delta->settings[$variable], $base[$variable]);
         }
         else {
-          $this->delta->settings[$variable] = delta_reduce($this->delta->settings[$variable], variable_get($variable));
+          $this->delta->settings[$variable] = delta_reduce(
+            is_array($this->delta->settings[$variable]) ? $this->delta->settings[$variable] : array(),
+            is_array(variable_get($variable)) ? variable_get($variable) : array());
         }
       }
     }
