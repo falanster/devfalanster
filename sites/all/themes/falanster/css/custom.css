@@ -1,10 +1,44 @@
 /*here is all custom style for falanster theme*/
-/*
-body {
- background: #2f2f2f;
-} 
-*/
 
+
+body {
+ background: #fefdfa;
+} 
+
+/* Front page */
+
+/* Language block */
+
+.block-locale {
+  background: red;
+  width: 150px;
+}
+
+.block-locale .content ul li {
+  display: inline;
+  text-decoration: none;
+  margin-right: 13px;
+  margin-left: 13px;
+  background: yellow;
+  
+}
+
+/* @end language block */
+
+.block-title {
+  color: #c72c29;
+}
+
+#region-content .content,
+#region-sidebar-second .content,
+#block-agenda-1 .content, 
+#block-views-last-video-or-podcast-block .content,
+.block-poll .poll {
+  background-color: #f3f4f5;
+}
+
+
+/* Social networks */
 #block-views-twitter-list-block {
   width: 250px;
   height: 350px;
@@ -78,6 +112,17 @@ body {
 
 /* @end afisha na glavnoj */
 
+/* Poll */
+
+#block-poll-recent .links ul {
+  display: none;
+}
+
+/* @end Poll */
+
+/* @end Front page */
+
+
 /* Tablica baza znanij */
 
 .views-table .views-field-title {
@@ -97,12 +142,4 @@ body {
 }
 
 /* @end Tablica baza znanij */
-
-/* Poll */
-
-#block-poll-recent .links ul {
-  display: none;
-}
-
-/* @end Poll */
 
