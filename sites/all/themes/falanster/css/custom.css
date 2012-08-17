@@ -37,6 +37,10 @@ body {
   background-color: #f3f4f5;
 }
 
+.navigation {
+  display: none;
+}
+
 /* Afisha na glavnoj */
 #views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img{
   float:left;
@@ -133,6 +137,22 @@ body {
   margin: 0;
 }
 /* @end social networks */
+
+#block-block-10 img {
+  margin-top: 30px;
+  margin-left: 140px;
+}
+
+#block-menu-menu-hor-bottom-menu ul li {
+  list-style: none;
+  display: inline;
+  float: right;
+}
+
+#block-menu-menu-hor-bottom-menu ul li a{
+  text-decoration: none;
+}
+
 
 /* @end Footer*/
 
