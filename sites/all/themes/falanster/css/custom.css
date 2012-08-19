@@ -30,6 +30,37 @@ body {
 
 /* @end language block */
 
+/* Nice menu */
+
+#block-nice-menus-2 {
+  float: left;
+  width: 450px;
+  margin-top: -90px;
+  margin-left: 200px;  
+}
+
+#block-nice-menus-2 li {
+  border: none;
+  background: none;
+  padding-right: 5px;
+}
+
+
+#block-nice-menus-2 li a {
+  text-decoration: none;
+  color: #605d5c;
+}
+
+#block-nice-menus-2 li a:hover {
+  color: #000000;
+}
+
+#block-nice-menus-2 li ul li a:hover {
+  color: #c72c29;
+}
+
+/* @end Nice menu */
+
 .block-title {
   color: #c72c29;
 }
