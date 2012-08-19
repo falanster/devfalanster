@@ -20,7 +20,7 @@ ErrorDocument 404 /index.php
 DirectoryIndex index.php index.html index.htm
 
 # Override PHP settings that cannot be changed at runtime. See
-# sites/default/default.settings.php and drupal_initialize_variables() in
+# sites/default/default.settings.php and drupal_environment_initialize() in
 # includes/bootstrap.inc for settings that can be changed at runtime.
 
 # PHP 5, Apache 1 and 2.
@@ -32,11 +32,6 @@ DirectoryIndex index.php index.html index.htm
   php_value mbstring.http_input             pass
   php_value mbstring.http_output            pass
   php_flag mbstring.encoding_translation    off
-</IfModule>
-
-
-<IfModule mod_php.c>
-     php_value max_execution_time 60
 </IfModule>
 
 # Requires mod_expires to be enabled.
@@ -133,12 +128,4 @@ DirectoryIndex index.php index.html index.htm
       Header append Vary Accept-Encoding
     </FilesMatch>
   </IfModule>
-
 </IfModule>
-
-#AuthType Basic
-#AuthName "for admins only"
-#AuthUserFile /etc/httpd/falanster.passwords
-#Require valid-user
-
-php_value max_file_uploads 50 

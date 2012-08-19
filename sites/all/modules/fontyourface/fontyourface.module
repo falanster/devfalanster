@@ -209,12 +209,7 @@ function fontyourface_rewrite_css($css) {
   $destination_directory = dirname($destination);
 
   if (file_prepare_directory($destination_directory, FILE_CREATE_DIRECTORY)) {
-
-    // Only overwrite the CSS when it differs.
-    if ($css != file_get_contents($destination)) {
-      file_unmanaged_save_data($css, $destination, FILE_EXISTS_REPLACE);
-    } // if
-
+    file_unmanaged_save_data($css, $destination, FILE_EXISTS_REPLACE);
   } // if
   
 } // fontyourface_rewrite_css
@@ -574,7 +569,13 @@ function fontyourface_font_css($font) {
 
   if ($font->css_family) {
 
-    $family_list = "'" . $font->css_family . "'";
+    // Enclose font family definition in single quotes if not already enclosed.
+    if ($font->css_family[0] === "'") {
+      $family_list = $font->css_family;
+    } // if
+    else {
+      $family_list = "'" . $font->css_family . "'";
+    } // else
 
     if ($font->css_fallbacks) {
       $family_list .= ', ' . $font->css_fallbacks;

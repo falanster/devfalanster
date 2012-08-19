@@ -1,6 +1,190 @@
 /*here is all custom style for falanster theme*/
 
+<<<<<<< HEAD
 #zone-footer {
   width: 100%;
   background: red;  
 }
+=======
+
+body {
+ background: #fefdfa;
+} 
+
+/* Front page */
+
+/* Language block */
+
+.block-locale {
+  width: 150px;
+}
+
+.block-locale .content ul li {
+  display: inline;
+  margin-right: 13px;
+  margin-left: 13px;
+}
+
+.block-locale .content ul li a{
+  text-decoration: none;
+}
+
+/* @end language block */
+
+.block-title {
+  color: #c72c29;
+}
+
+.page-frontpage #region-content .content,
+.page-frontpage #region-sidebar-second .content,
+.page-frontpage #block-agenda-1 .content, 
+.page-frontpage #block-views-last-video-or-podcast-block .content,
+.page-frontpage .block-poll .poll {
+  background-color: #f3f4f5;
+}
+
+.navigation {
+  display: none;
+}
+
+/* Afisha na glavnoj */
+#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img{
+  float:left;
+}
+
+#views_slideshow_cycle_main_afishi-block_1 .views-field-body .field-content {
+  margin: 5px 0 0 210px;
+  width: 250px;
+}
+
+#views_slideshow_controls_text_afishi-block_1 {
+  display: none;
+}
+
+/* @end afisha na glavnoj */
+
+/* Poll */
+
+#block-poll-recent .links ul {
+  display: none;
+}
+
+/* @end Poll */
+
+/* Footer */
+
+#region-footer-first {
+  background: #848589;
+}
+
+/* Social networks */
+#block-views-twitter-list-block {
+  width: 250px;
+  height: 350px;
+  margin: 0 25px;
+  float: left;
+  border: 1px solid #999999;
+}
+
+#block-views-twitter-list-block .views-field-text {
+  font-size: 12px;
+}
+
+#block-views-twitter-list-block .views-field-profile-image-url img {
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+
+#block-views-twitter-list-block .views-field-screen-name span {
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 5px;
+  float: left;
+}
+
+#block-views-twitter-list-block .views-field-created-time span {
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+#block-views-twitter-list-block .views-field-text span {
+  margin-left: 5px;
+}
+
+#block-views-twitter-list-block .views-row-odd,
+#block-views-twitter-list-block .views-row-even {
+  margin-bottom: 5px;
+}
+
+#block-block-3 {
+  float: left;
+  width: 250px;
+  margin: 0 25px;
+}
+
+#block-block-3 #vk_groups #vkwidget1 .community_head {
+  background: red !important;
+}
+
+#block-block-4 {
+  float: left;
+  width: 250px;
+  margin: 0 25px 0 40px;
+}
+
+.fbConnectWidgetHeaderTitleBranded {
+  background: #c2c1c1;
+
+}
+
+.region-sidebar-second-inner #block-views-twitter-list-block {
+  width: 300px;
+  margin: 0;
+}
+/* @end social networks */
+
+#block-block-10 img {
+  margin-top: 30px;
+  margin-left: 140px;
+}
+
+#block-menu-menu-hor-bottom-menu ul li {
+  list-style: none;
+  display: inline;
+  float: right;
+}
+
+#block-menu-menu-hor-bottom-menu ul li a{
+  text-decoration: none;
+}
+
+
+/* @end Footer*/
+
+
+
+/* @end Front page */
+
+
+/* Tablica baza znanij */
+
+.views-table .views-field-title {
+  width: 450px;
+}
+
+.views-table .views-field-field-author {
+  width: 250px;
+}
+
+.views-table .views-field-name {
+  width: 150px;
+}
+
+.views-table .views-field-field-fivestar {
+  width: 200px;
+}
+
+/* @end Tablica baza znanij */
+
+>>>>>>> dca05af84ceb71ac853c2b008f4f8b0087c792d4
