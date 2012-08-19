@@ -1,1 +1,6 @@
 /*here is all custom style for falanster theme*/
+
+#zone-footer {
+  width: 100%;
+  background: red;  
+}
