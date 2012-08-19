@@ -9,6 +9,11 @@
   width: 100%;
   background: green;
 }
+#region-footer-first .region-footer-first-inner {
+  width: 960px;
+  margin: 0 auto;
+}
+
 
 body {
  background: #fefdfa;
