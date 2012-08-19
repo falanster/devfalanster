@@ -24,14 +24,13 @@ body {
 /* Language block */
 
 .block-locale {
-  width: 150px;
   float: right;
 }
 
 .block-locale .content ul li {
   display: inline;
   margin-right: 13px;
-  margin-left: 13px;
+  margin-left: 25px;
 }
 
 .block-locale .content ul li a {
@@ -53,20 +52,21 @@ body {
 #block-nice-menus-2 {
   float: left;
   width: 450px;
-  margin-top: -90px;
-  margin-left: 200px;  
+  margin-top: -110px;
+  margin-left: 300px;  
 }
 
 #block-nice-menus-2 li {
   border: none;
   background: none;
-  padding-right: 5px;
+  padding-right: 25px;
 }
 
 
 #block-nice-menus-2 li a {
   text-decoration: none;
   color: #605d5c;
+  text-transform: lowercase; /* force text to lowercase */
 }
 
 #block-nice-menus-2 li a:hover {
