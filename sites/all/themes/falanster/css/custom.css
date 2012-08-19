@@ -2,15 +2,13 @@
 
 #zone-footer {
   width: 100%;
-  background: red;
-  height: 400px;
 }
 
 #region-footer-first {
   margin: 0 auto;
-  width: 960px;
+  width: 100%;
+  background: green;
 }
-
 
 body {
  background: #fefdfa;
