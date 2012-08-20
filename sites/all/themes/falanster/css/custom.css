@@ -21,6 +21,18 @@ body {
 
 /* Front page */
 
+/*logo*/
+#block-block-11 {
+  margin: 100px 0 10px 0;
+}
+
+/*header line*/
+#zone-branding {
+  border-top: 3px red solid;
+  padding: 0 40px;
+  margin: 0 0 30px 0;
+}
+
 /* Language block */
 
 .block-locale {
@@ -59,6 +71,7 @@ body {
 #block-nice-menus-3 {
   float: right;
   margin-right: 180px;  
+  float: right;  
 }
 
 #block-nice-menus-1 li,
@@ -66,7 +79,7 @@ body {
 #block-nice-menus-3 li {
   border: none;
   background: none;
-  padding-right: 25px;
+  padding: 5px 0 0 12px;
 }
 
 #block-nice-menus-1 li a,
@@ -94,6 +107,8 @@ body {
 #block-nice-menus-3 li ul li a:hover {
   color: #c72c29;
 }
+
+.nice-menu 
 
 /* @end Nice menu */
 
