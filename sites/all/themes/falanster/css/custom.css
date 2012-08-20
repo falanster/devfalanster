@@ -21,6 +21,18 @@ body {
 
 /* Front page */
 
+/*logo*/
+#block-block-11 {
+  margin: 150px 0 10px 0;
+}
+
+/*header line*/
+#zone-branding {
+  border-bottom: 2px red solid;
+  width: 100%;
+  padding: 0 40px;
+}
+
 /* Language block */
 
 .block-locale {
