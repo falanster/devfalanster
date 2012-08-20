@@ -50,12 +50,12 @@ body {
 }
 
 #block-block-11 p {
-  margin: 0;
+  margin: 0;  
 }
 
 
 /*header line*/
-#zone-branding {
+#zone-branding { 
   border-top: 3px red solid;
   padding: 0 3% 0;
 }
