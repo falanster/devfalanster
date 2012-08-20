@@ -30,7 +30,7 @@ body {
 .block-locale .content ul li {
   display: inline;
   margin-right: 13px;
-  margin-left: 25px;
+  margin-left: 18px;
 }
 
 .block-locale .content ul li a {
@@ -58,7 +58,6 @@ body {
 #block-nice-menus-2,
 #block-nice-menus-3 {
   float: right;
-  margin-top: -110px;
   margin-right: 180px;  
 }
 
@@ -87,7 +86,7 @@ body {
 #block-nice-menus-1 li ul li,
 #block-nice-menus-2 li ul li, 
 #block-nice-menus-3 li ul li {
-  background: #f3f4f5;
+  background: #DFDCDF;
 }
 
 #block-nice-menus-1 li ul li a:hover,
