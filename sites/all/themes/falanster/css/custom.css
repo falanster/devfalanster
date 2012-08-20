@@ -1,17 +1,49 @@
 /*here is all custom style for falanster theme*/
 
+/*common style*/
+h2.block-title {
+  margin: 0 0 15px 0;
+  color: #c72c29;
+  text-transformation: lowercase;
+}
+
+/*Footer region*/
+
 #zone-footer {
   width: 100%;
 }
-
 #region-footer-first {
-  margin: 0 auto;
+  margin: 0 auto 0;
   width: 100%;
-  background: green;
+  padding: 25px 0 0 0;
+  background: #848589;
 }
-#region-footer-first .region-footer-first-inner {
+#region-footer-first .region-footer-first-inner,
+#region-footer-second .region-footer-second-inner {
   width: 960px;
   margin: 0 auto;
+}
+#region-footer-second {
+  margin: 0 auto;
+  width: 100%;
+}
+
+#region-footer-second .region-footer-second-inner {
+  height: 100px;
+}
+
+#block-menu-menu-hor-bottom-menu .menu a {
+  font-size: 16px;
+  color: #848589;
+  text-transform: lowercase;
+  margin: 10px 0 0 15px;
+}
+#block-menu-menu-hor-bottom-menu .menu {
+  margin: 0px 0 0 25px;
+
+
+  	
+
 }
 
 
@@ -26,28 +58,44 @@ body {
   margin: 100px 0 10px 0;
 }
 
+#block-block-11 p {
+  margin: 0;  
+}
+
+
 /*header line*/
-#zone-branding {
+#zone-branding { 
   border-top: 3px red solid;
-  padding: 0 40px;
-  margin: 0 0 30px 0;
+  padding: 0 3% 0;
+}
+
+#block-block-7 {
+  padding: 10px 0;
+  float: right;
+}
+
+#block-block-5 p {
+  margin: 0;
+  padding: 0;
+  float: right;
 }
 
 /* Language block */
 
 .block-locale {
   float: right;
+  margin: 30px 0 35px 0;
 }
 
 .block-locale .content ul li {
   display: inline;
-  margin-right: 13px;
-  margin-left: 18px;
+  margin: 0 8px;
 }
 
 .block-locale .content ul li a {
   text-decoration: none;
   color: #383431;
+  text-transform: lowercase;
 }
 
 .block-locale .content ul li a.active {
@@ -56,21 +104,13 @@ body {
 
 /* @end language block */
 
-#block-block-5 {
-  float: right;
-}
-
-#block-block-7 {
-  float:right;
-}
-
 /* Nice menu */
 
 #block-nice-menus-1,
 #block-nice-menus-2,
 #block-nice-menus-3 {
   float: right;
-  margin-right: 180px;  
+  margin: 120px 0 10px 0;
 }
 
 #block-nice-menus-1 li,
@@ -111,6 +151,20 @@ body {
 
 /* @end Nice menu */
 
+/*agenda block*/
+#block-agenda-1 ol {
+  position: relative;
+  width: 100%;
+  margin: 0 -25px;  
+}
+
+#block-views-last-video-or-podcast-block .views-field-colorbox {
+  position: relative;
+  width: 100%;
+  margin: 0 -25px;
+}
+
+
 .block-title {
   color: #c72c29;
 }
@@ -119,8 +173,17 @@ body {
 .page-frontpage #region-sidebar-second .content,
 .page-frontpage #block-agenda-1 .content, 
 .page-frontpage #block-views-last-video-or-podcast-block .content,
-.page-frontpage .block-poll .poll {
+.page-frontpage .block-poll .poll,
+#block-agenda-1 .content,
+#block-block-1 .content,
+#block-views-twitter-list-block .content,
+#block-simplenews-1 .content {
   background-color: #f3f4f5;
+  padding: 25px;
+}
+
+#block-views-twitter-list-block .content {
+  padding: 10px;
 }
 
 .navigation {
@@ -151,12 +214,6 @@ body {
 
 /* @end Poll */
 
-/* Footer */
-
-#region-footer-first {
-  background: #848589;
-}
-
 /* Social networks */
 #block-views-twitter-list-block {
   width: 250px;
@@ -181,6 +238,7 @@ body {
   font-weight: bold;
   margin-left: 5px;
   float: left;
+  
 }
 
 #block-views-twitter-list-block .views-field-created-time span {
@@ -226,7 +284,7 @@ body {
 
 #block-block-10 img {
   margin-top: 30px;
-  margin-left: 140px;
+  float: right;
 }
 
 #block-menu-menu-hor-bottom-menu ul li {
@@ -267,4 +325,7 @@ body {
 
 /* @end Tablica baza znanij */
 
-
+/*section interval*/
+#zone-postscript-wrapper {
+  padding: 70px 0;
+}
