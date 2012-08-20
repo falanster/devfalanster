@@ -28,8 +28,7 @@ body {
 
 /*header line*/
 #zone-branding {
-  border-bottom: 2px red solid;
-  width: 100%;
+  border-top: 3px red solid;
   padding: 0 40px;
 }
 
