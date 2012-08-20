@@ -26,6 +26,7 @@
 
 #block-menu-menu-hor-bottom-menu .menu a {
   font-size: 18px;
+  color: #848589;
   text-transform: lowercase;
 }
 
@@ -40,6 +41,11 @@ body {
 #block-block-11 {
   margin: 100px 0 10px 0;
 }
+
+#block-block-11 p {
+  margin: 0;
+}
+
 
 /*header line*/
 #zone-branding {
@@ -62,7 +68,7 @@ body {
 
 .block-locale {
   float: right;
-  margin: 50px 0 20px 0;
+  margin: 30px 0 40px 0;
 }
 
 .block-locale .content ul li {
@@ -73,6 +79,7 @@ body {
 .block-locale .content ul li a {
   text-decoration: none;
   color: #383431;
+  text-transform: lowercase;
 }
 
 .block-locale .content ul li a.active {
@@ -277,3 +284,8 @@ body {
 }
 
 /* @end Tablica baza znanij */
+
+/*section interval*/
+#zone-postscript-wrapper {
+  padding: 70px 0;
+}
