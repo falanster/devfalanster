@@ -1,13 +1,19 @@
 /*here is all custom style for falanster theme*/
 
+/*common style*/
+h2 {
+  margin: 0 0 15px 0	;
+}
+
 /*Footer region*/
 
 #zone-footer {
   width: 100%;
 }
 #region-footer-first {
-  margin: 25px auto 0;
+  margin: 0 auto 0;
   width: 100%;
+  padding: 25px 0 0 0;
   background: #848589;
 }
 #region-footer-first .region-footer-first-inner,
@@ -25,9 +31,10 @@
 }
 
 #block-menu-menu-hor-bottom-menu .menu a {
-  font-size: 18px;
+  font-size: 16px;
   color: #848589;
   text-transform: lowercase;
+  magin: 10px 0 0 15px;
 }
 
 
