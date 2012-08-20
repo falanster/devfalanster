@@ -48,14 +48,21 @@ body {
 }
 
 #block-block-7 {
-  pagging: 7px 0;
+  pagging: 15px 0;
+  float: right;
+}
+
+#block-block-5 p {
+  margin: 0;
+  padding: 0;
+  float: right;
 }
 
 /* Language block */
 
 .block-locale {
   float: right;
-  margin: 80px 0 0 0;
+  margin: 50px 0 20px 0;
 }
 
 .block-locale .content ul li {
@@ -73,14 +80,6 @@ body {
 }
 
 /* @end language block */
-
-#block-block-5 {
-  float: right;
-}
-
-#block-block-7 {
-  float:right;
-}
 
 /* Nice menu */
 
