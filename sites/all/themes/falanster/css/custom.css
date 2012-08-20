@@ -1,8 +1,8 @@
 /*here is all custom style for falanster theme*/
 
 /*common style*/
-h2 {
-  margin: 0 0 15px 0	;
+h2.block-title {
+  margin: 0 0 15px 0;
 }
 
 /*Footer region*/
@@ -211,6 +211,7 @@ body {
   font-weight: bold;
   margin-left: 5px;
   float: left;
+  
 }
 
 #block-views-twitter-list-block .views-field-created-time span {
