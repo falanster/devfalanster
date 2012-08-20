@@ -3,6 +3,8 @@
 /*common style*/
 h2.block-title {
   margin: 0 0 15px 0;
+  color: #c72c29;
+  text-transformation: lowercase;
 }
 
 /*Footer region*/
@@ -34,7 +36,14 @@ h2.block-title {
   font-size: 16px;
   color: #848589;
   text-transform: lowercase;
-  magin: 10px 0 0 15px;
+  margin: 10px 0 0 15px;
+}
+#block-menu-menu-hor-bottom-menu .menu {
+  margin: 0px 0 0 25px;
+
+
+  	
+
 }
 
 
@@ -142,6 +151,20 @@ body {
 
 /* @end Nice menu */
 
+/*agenda block*/
+#block-agenda-1 ol {
+  position: relative;
+  width: 100%;
+  margin: 0 -25px;  
+}
+
+#block-views-last-video-or-podcast-block .views-field-colorbox {
+  position: relative;
+  width: 100%;
+  margin: 0 -25px;
+}
+
+
 .block-title {
   color: #c72c29;
 }
@@ -157,6 +180,10 @@ body {
 #block-simplenews-1 .content {
   background-color: #f3f4f5;
   padding: 25px;
+}
+
+#block-views-twitter-list-block .content {
+  padding: 10px;
 }
 
 .navigation {
@@ -257,7 +284,7 @@ body {
 
 #block-block-10 img {
   margin-top: 30px;
-  margin-left: 140px;
+  float: right;
 }
 
 #block-menu-menu-hor-bottom-menu ul li {
