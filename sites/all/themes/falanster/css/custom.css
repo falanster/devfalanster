@@ -21,9 +21,10 @@ h2.block-title {
 }
 #region-footer-first .region-footer-first-inner,
 #region-footer-second .region-footer-second-inner,
-#region-postscript-first {
+#region-postscript-first, {
   width: 960px;
   margin: 0 auto;
+  float: none;
 }
 #region-footer-second {
   margin: 0 auto;
@@ -48,7 +49,8 @@ h2.block-title {
 }
 
 #block-block-12 img {
-  float: right;  
+  float: right;
+  margin: 50px 0 0 0;  
 }
 #block-block-12 p {
   margin: 0;
