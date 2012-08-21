@@ -12,14 +12,16 @@ h2.block-title {
 #zone-footer {
   width: 100%;
 }
-#region-footer-first {
+#region-footer-first,
+#zone-postscript-wrapper {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
   background: #848589;
 }
 #region-footer-first .region-footer-first-inner,
-#region-footer-second .region-footer-second-inner {
+#region-footer-second .region-footer-second-inner,
+#region-postscript-first {
   width: 960px;
   margin: 0 auto;
 }
@@ -342,9 +344,9 @@ body {
 /* @end Tablica baza znanij */
 
 /*section interval*/
-#zone-postscript-wrapper {
+/*#zone-postscript-wrapper {
   padding: 70px 0;
-}
+}*/
 
 /*Not front page*/
  .not-front #section-content .block {
