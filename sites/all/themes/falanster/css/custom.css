@@ -13,6 +13,10 @@ h2.block-title {
 .not-front #zone-footer-wrapper {
   width: 100%;
 }
+.not-front #zone-footer-wrapper {
+  height: 120px;
+}
+
 .not-front #zone-footer {
   width: 960px;
   margin: 0 auto;
@@ -172,20 +176,17 @@ body {
 #block-nice-menus-3 li ul li a:hover {
   color: #c72c29;
 }
-
-.nice-menu 
-
 /* @end Nice menu */
 
 /*agenda block*/
 
 .agenda-block {
   position: relative;
-  width: 300px;
+  width: 100%;
   margin: 0 -25px;
+  float: left;
   background: red !important;
 }
-
 .agenda-block p {
 }
 
@@ -193,11 +194,6 @@ body {
   position: relative;
   width: 100%;
   margin: 0 -25px;
-}
-
-
-.block-title {
-  color: #c72c29;
 }
 
 .page-frontpage #region-content .content,
@@ -377,4 +373,22 @@ body {
  .not-front #block-views-twitter-list-block {
    height: auto;
  }
+
+/*bottom inner menu*/
+#block-menu-menu-hot-pages .menu {
+  float: right;
+  list-style: none;
+  margin: 20px 0 0 0;
+}
+
+#block-menu-menu-hot-pages .menu li {
+  display: inline;
+  float: left;
+}
+#block-menu-menu-hot-pages .menu li a {
+  color: #888888;
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: lowercase;
+}	 
 
