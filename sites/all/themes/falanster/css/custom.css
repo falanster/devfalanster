@@ -408,3 +408,41 @@ body {
   text-transform: lowercase;
 }	 
 
+/* Gallery styles */
+
+.view-gallery .views-row{
+  width:100%;
+  background: red;
+  clear: left;
+  height: 250px;
+}
+
+.view-gallery .views-row .views-field-title a {
+  text-decoration: none;
+  font-size: 14px; 
+  color: #383431;
+}
+
+.view-gallery .views-row .views-field-field-date {
+  color: #72706F;
+}
+
+.view-gallery .views-row .views-label-field-related-node {
+  float: left;
+  padding-right: 5px;
+}
+
+.view-gallery .views-row .views-field-field-image {
+  float: left;
+  padding-right: 10px;
+  margin-bottom: 15px;
+}
+
+.view-gallery .views-row .views-field-body {
+}
+
+.view-gallery .views-row .views-label-field-open-tag {
+  float: left;
+  padding-right: 5px;
+}
+/* @end gallery styles */
