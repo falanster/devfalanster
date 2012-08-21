@@ -146,6 +146,13 @@ body {
   color: #000000;
 }
 
+#block-nice-menus-1 li ul,
+#block-nice-menus-2 li ul, 
+#block-nice-menus-3 li ul {
+  margin-top: 5px;
+}
+
+
 #block-nice-menus-1 li ul li,
 #block-nice-menus-2 li ul li, 
 #block-nice-menus-3 li ul li {
