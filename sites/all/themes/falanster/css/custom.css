@@ -9,20 +9,20 @@ h2.block-title {
 
 /*Footer region*/
 
-#zone-footer {
+#zone-footer,
+.not-front #zone-footer-wrapper {
   width: 100%;
 }
+
 #region-footer-first,
-#zone-postscript-wrapper,
-.not-front #zone-footer-wrapper {
+#zone-postscript-wrapper {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
   background: #848589;
 }
 #region-footer-first .region-footer-first-inner,
-#region-footer-second .region-footer-second-inner,
-#region-postscript-first {
+#region-footer-second .region-footer-second-inner {
   width: 960px;
   margin: 0 auto;
   float: none;
@@ -183,7 +183,6 @@ body {
 }
 
 .agenda-block p {
-  color: blue;
 }
 
 #block-views-last-video-or-podcast-block .views-field-colorbox {
