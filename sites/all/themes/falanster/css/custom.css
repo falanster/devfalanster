@@ -13,7 +13,8 @@ h2.block-title {
   width: 100%;
 }
 #region-footer-first,
-#zone-postscript-wrapper {
+#zone-postscript-wrapper,
+.not-front #zone-footer-wrapper {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
@@ -21,7 +22,7 @@ h2.block-title {
 }
 #region-footer-first .region-footer-first-inner,
 #region-footer-second .region-footer-second-inner,
-#region-postscript-first, {
+#region-postscript-first {
   width: 960px;
   margin: 0 auto;
   float: none;
@@ -176,9 +177,9 @@ body {
 
 .agenda-block {
   position: relative;
-  width: 100%;
+  width: 300px;
   margin: 0 -25px;
-  background: red;
+  background: red !important;
 }
 
 .agenda-block p {
