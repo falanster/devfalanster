@@ -26,14 +26,15 @@ a:hover {
 }
 
 #region-footer-first,
-.not-front #zone-postscript-wrapper {
+.not-front #zone-postscript-wrapper,
+.front #region-preface-first {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
   background: #848589;
+  
 }
-.front .zone-postscript-wrapper,
-.front .region-preface-first {
+.front .zone-postscript-wrapper {
   margin: 0 auto 0;
   width: 100%;
 }
@@ -329,13 +330,16 @@ body {
 /* @end social networks */
 
 #block-block-10 img {
-  margin-top: 0px;
+  margin-top: -50px;
   margin-right: -50px;
   float: right;
   position: relative;
 }
 #block-block-10 {
 	float: right;
+}
+#block-block-10 p {
+  margin: 0;
 }
 
 #block-menu-menu-hor-bottom-menu ul li {
