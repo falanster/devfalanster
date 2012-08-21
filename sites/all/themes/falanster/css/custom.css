@@ -186,7 +186,7 @@ body {
 .agenda-block {
   position: relative;
   width: 100%;
-  margin: 0 -25px 0 -25px;
+  /*margin: 0 -25px 0 -25px;*/
   background: red;
 }
 .agenda-block p {
