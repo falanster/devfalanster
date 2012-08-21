@@ -104,6 +104,10 @@ body {
   float: right;
 }
 
+#block-block-5 {
+  height: 70px;
+}
+
 #block-block-5 p {
   margin: 0;
   padding: 0;
