@@ -26,7 +26,7 @@ a:hover {
 }
 
 #region-footer-first,
-.front #zone-postscript-wrapper {
+.front .zone-postscript-wrapper {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
