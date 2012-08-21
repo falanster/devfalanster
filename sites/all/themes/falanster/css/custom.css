@@ -139,7 +139,7 @@ body {
 #block-nice-menus-3 li {
   border: none;
   background: none;
-  padding: 5px 12px 0 12px;
+  padding: 5px 8px 0 8px;
 }
 
 #block-nice-menus-1 li a,
@@ -168,7 +168,7 @@ body {
 #block-nice-menus-2 li ul li, 
 #block-nice-menus-3 li ul li {
   background: #DFDCDF;
-  width: 100px;
+  width: 90px;
 }
 
 #block-nice-menus-1 li ul li a:hover,
