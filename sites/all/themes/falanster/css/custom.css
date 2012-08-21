@@ -152,7 +152,7 @@ body {
 /* @end Nice menu */
 
 /*agenda block*/
-.block .agenda-block ol {
+.block-agenda .block-inner ol {
   position: relative;
   width: 100%;
   margin: 0 -25px;  
@@ -219,8 +219,7 @@ body {
   width: 250px;
   height: 350px;
   margin: 0 25px;
-  float: left;
-  border: 1px solid #999999;
+  float: left;  
 }
 
 #block-views-twitter-list-block .views-field-text {
@@ -333,7 +332,7 @@ body {
 }
 
 /*Not front page*/
- .not-front .block {
-   padding: 0 0 30px;
+ .not-front #section-content .block {
+   padding: 0 0 30px 0;
  }
 
