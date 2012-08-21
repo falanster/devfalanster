@@ -152,7 +152,7 @@ body {
 /* @end Nice menu */
 
 /*agenda block*/
-.agenda-block ol {
+#block-agenda-1 .agenda-block ol {
   position: relative;
   width: 100%;
   margin: 0 -25px;  
