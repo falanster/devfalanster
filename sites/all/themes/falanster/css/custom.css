@@ -152,10 +152,11 @@ body {
 /* @end Nice menu */
 
 /*agenda block*/
-.block-agenda .block-inner .agenda-block {
+.agenda-block {
   position: relative;
   width: 100%;
-  margin: 0 -25px;  
+  margin: 0 -25px;
+  background: red;  
 }
 
 #block-views-last-video-or-podcast-block .views-field-colorbox {
