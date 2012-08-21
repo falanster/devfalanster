@@ -237,7 +237,7 @@ body {
 
 /* Poll */
 
-#block-poll-recent .links ul {
+#block-poll-recent .links {
   display: none;
 }
 
