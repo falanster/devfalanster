@@ -248,6 +248,9 @@ body {
   margin: 0 25px;
   float: left;  
 }
+.not-front #block-views-twitter-list-block {
+   height: auto;
+ }
 
 #block-views-twitter-list-block .views-field-text {
   font-size: 12px;
@@ -361,5 +364,12 @@ body {
 /*Not front page*/
  .not-front #section-content .block {
    padding: 0 0 30px 0;
+ }
+ .not-front #section-content #block-block-12 {
+   padding: 0 0 15px 0;
+ }
+ 
+ .not-front #block-views-twitter-list-block {
+   height: auto;
  }
 
