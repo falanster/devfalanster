@@ -126,6 +126,7 @@ body {
 #block-nice-menus-3 li a {
   text-decoration: none;
   color: #605d5c;
+  font-size: 14px;
   text-transform: lowercase; /* force text to lowercase */
 }
 
