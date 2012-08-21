@@ -65,7 +65,7 @@ body {
 
 /*header line*/
 #zone-branding { 
-  border-top: 3px red solid;
+  border-top: 3px #C72C29 solid;
   padding: 0 3% 0;
 }
 
@@ -152,7 +152,7 @@ body {
 /* @end Nice menu */
 
 /*agenda block*/
-#block-agenda-1 .agenda-block ol {
+.block .agenda-block ol {
   position: relative;
   width: 100%;
   margin: 0 -25px;  
