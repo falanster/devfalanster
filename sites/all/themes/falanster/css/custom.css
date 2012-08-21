@@ -25,13 +25,18 @@ a:hover {
   margin: 0 auto;
 }
 
-#region-footer-first,
-.front .zone-postscript-wrapper {
+#region-footer-first {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
   background: #848589;
 }
+.front .zone-postscript-wrapper {
+  margin: 0 auto 0;
+  width: 100%;
+  padding: 25px 0 0 0;
+}
+
 #region-footer-first .region-footer-first-inner,
 #region-footer-second .region-footer-second-inner {
   width: 960px;
@@ -185,8 +190,8 @@ body {
 
 .agenda-block {
   position: relative;
-  width: 100%;
-  /*margin: 0 -25px 0 -25px;*/
+  width: auto;
+  margin: 0 -25px 0 -25px;
   background: red;
 }
 .agenda-block p {
