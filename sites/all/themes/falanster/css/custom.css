@@ -390,11 +390,12 @@ body {
 }
 
 #block-menu-menu-hot-pages .menu li {
-  display: inline
+  display: inline;
   float: left;
 }
 #block-menu-menu-hot-pages .menu li a {
   color: #888888;
   font-size: 14px;
-}	
+  text-decoration: none;
+}	 
 
