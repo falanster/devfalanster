@@ -185,11 +185,11 @@ body {
 
 .agenda-block {
   position: relative;
-  width: 300px;
+  width: 100%;
   margin: 0 -25px;
+  float: left;
   background: red !important;
 }
-
 .agenda-block p {
 }
 
@@ -197,11 +197,6 @@ body {
   position: relative;
   width: 100%;
   margin: 0 -25px;
-}
-
-
-.block-title {
-  color: #c72c29;
 }
 
 .page-frontpage #region-content .content,
@@ -386,7 +381,7 @@ body {
 #block-menu-menu-hot-pages .menu {
   float: right;
   list-style: none;
-  margin: 40px 0 0 0;
+  margin: 20px 0 0 0;
 }
 
 #block-menu-menu-hot-pages .menu li {
@@ -395,7 +390,8 @@ body {
 }
 #block-menu-menu-hot-pages .menu li a {
   color: #888888;
-  font-size: 14px;
+  font-size: 16px;
   text-decoration: none;
+  text-transform: lowercase;
 }	 
 
