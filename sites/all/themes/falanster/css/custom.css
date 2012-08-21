@@ -43,8 +43,16 @@ h2.block-title {
 
 #block-menu-menu-hor-bottom-menu .menu {
   margin: 0px 0 0 25px; 	
-
 }
+
+#block-block-12 img {
+  float: right;  
+}
+#block-block-12 p {
+  margin: 0;
+}
+
+/*@end footer*/
 
 
 body {
@@ -152,11 +160,16 @@ body {
 /* @end Nice menu */
 
 /*agenda block*/
+
 .agenda-block {
   position: relative;
   width: 100%;
   margin: 0 -25px;
-  background: red;  
+  background: red;
+}
+
+.agenda-block p {
+  color: blue;
 }
 
 #block-views-last-video-or-podcast-block .views-field-colorbox {
