@@ -4,7 +4,7 @@
 h2.block-title {
   margin: 0 0 15px 0;
   color: #c72c29;
-  text-transformation: lowercase;
+  text-transform: lowercase;
 }
 
 /*Footer region*/
@@ -39,10 +39,7 @@ h2.block-title {
   margin: 10px 0 0 15px;
 }
 #block-menu-menu-hor-bottom-menu .menu {
-  margin: 0px 0 0 25px;
-
-
-  	
+  margin: 0px 0 0 25px; 	
 
 }
 
@@ -284,7 +281,9 @@ body {
 
 #block-block-10 img {
   margin-top: 30px;
+  margin-right: -50px;
   float: right;
+  position: relative
 }
 
 #block-menu-menu-hor-bottom-menu ul li {
@@ -329,3 +328,9 @@ body {
 #zone-postscript-wrapper {
   padding: 70px 0;
 }
+
+/*Not front page*/
+ .not-front .block {
+   padding: 0 0 30px;
+ }
+
