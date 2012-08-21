@@ -108,6 +108,8 @@ body {
 
 #block-block-5 {
   height: 70px;
+  float: left;
+  backround: red;
 }
 
 #block-block-5 p {
@@ -330,7 +332,7 @@ body {
 /* @end social networks */
 
 #block-block-10 img {
-  margin-top: -50px;
+  margin-top: -70px;
   margin-right: -50px;
   float: right;
   position: relative;
