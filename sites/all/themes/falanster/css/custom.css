@@ -25,7 +25,8 @@ a:hover {
   margin: 0 auto;
 }
 
-#region-footer-first {
+#region-footer-first,
+.not-front #zone-postscript-wrapper {
   margin: 0 auto 0;
   width: 100%;
   padding: 25px 0 0 0;
@@ -192,9 +193,9 @@ body {
   position: relative;
   width: auto;
   margin: 0 -25px 0 -25px;
-  background: red;
 }
 .agenda-block p {
+	margin: 0 10px;	
 }
 
 #block-views-last-video-or-podcast-block .views-field-colorbox {
@@ -214,6 +215,10 @@ body {
 #block-simplenews-1 .content {
   background-color: #f3f4f5;
   padding: 25px;
+}
+
+.page-frontpage .block-poll-recent {
+	padding: 0 0 30px 0;	
 }
 
 #block-views-twitter-list-block .content {
