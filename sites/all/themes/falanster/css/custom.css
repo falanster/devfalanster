@@ -16,13 +16,13 @@ h2.block-title a {
 a,
 #block-system-main a,
 #block-block-7 a {
-	color: #c72c29;
+	color: #D43E44;
 	text-decoration: underline;
 }
 
 a:hover,
 .content a {
-	color: #c72c29;
+	color: #D43E44;
 }
 
 
@@ -145,7 +145,7 @@ body {
   text-transform: lowercase; 
 }
 #zone-content-wrapper .breadcrumb a:hover {
-	color: #b2382d;
+	color: #D43E44;
 }
 
 /*title*/
@@ -426,7 +426,8 @@ h1 {
   float: right;
   position: relative;
 }
-.i18n-by #block-block-10 img {
+.i18n-be #block-block-10 img,
+.i18n-en #block-block-10 img {
 	margin-bottom: 15px;
 }
 
