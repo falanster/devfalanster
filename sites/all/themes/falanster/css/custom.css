@@ -126,11 +126,11 @@ body {
 
 /*breadcrumb*/
 
-.breadcrumb a {
+#zone-content-wrapper .breadcrumb a {
   color: #bcbcbc;
   text-decoration: none; 
 }
-.breadcrumb a:hover {
+#zone-content-wrapper .breadcrumb a:hover {
 	color: #b2382d
 }
 
@@ -224,10 +224,10 @@ h1 {
   margin: 0 -25px 0 -25px;
 }
 .agenda-block p {
-	margin: 0 10px;
+	padding: 0px 10px 3px;
 }
 
-.agenda-block .cal_0 {
+.block .agenda-block ol li {
 	color: #dc6f6a;
 }
 
@@ -252,6 +252,17 @@ h1 {
 #block-simplenews-1 .content {
   background-color: #f3f4f5;
   padding: 25px;
+}
+
+#block-views-twitter-list-block {
+	background-color: #f3f4f5;
+}
+
+.view-headernews .views-field-title a {
+	font-size: 16px;
+	font-weight: bold;
+	color: #444243;
+	line-height: 32px;	
 }
 
 .page-frontpage .block-poll-recent {
