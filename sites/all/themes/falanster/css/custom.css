@@ -270,6 +270,7 @@ h1 {
 }
 .page-frontpage #block-views-last-video-or-podcast-block .content {
 	padding-bottom: 0px;
+	margin: 30px;
 }
 
 .view-headernews .views-field-title a,
@@ -403,6 +404,9 @@ h1 {
   width: 250px;
   background: #F3F4F5;
   margin: 0 25px 0 40px;
+}
+#block-block-4 p {
+	margin: 0;	
 }
 
 .fbConnectWidgetHeaderTitleBranded {
