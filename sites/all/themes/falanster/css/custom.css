@@ -13,6 +13,10 @@ h2.block-title a {
 	text-decoration: none;
 }
 
+a {
+	color: #000;
+	text-decoration: underline;
+}
 
 a:hover {
 	color: #c72c29;
@@ -124,11 +128,17 @@ body {
   float: right;
 }
 
+#block-simplenews-1 {
+  float: left;
+}
+
 /*breadcrumb*/
 
 #zone-content-wrapper .breadcrumb a {
   color: #bcbcbc;
-  text-decoration: none; 
+  text-decoration: none;
+  font-size: 15px;
+  text-transform: lowercase; 
 }
 #zone-content-wrapper .breadcrumb a:hover {
 	color: #b2382d
@@ -228,7 +238,7 @@ h1 {
 }
 
 .block .agenda-block ol li {
-	color: #dc6f6a;
+	background: #dc6f6a;
 }
 
 #block-views-last-video-or-podcast-block .views-field-colorbox {
@@ -258,12 +268,20 @@ h1 {
 	background-color: #f3f4f5;
 }
 
-.view-headernews .views-field-title a {
+.view-headernews .views-field-title a,
+.view-afishi .views-field-title a,
+.poll .title,
+.view-last-video-or-podcast .views-field-title a {
 	font-size: 16px;
 	font-weight: bold;
 	color: #444243;
-	line-height: 32px;	
+	line-height: 22px;
+	text-decoration: none;
 }
+
+ {
+}
+
 
 .page-frontpage .block-poll-recent {
 	padding: 0 0 30px 0;	
@@ -355,8 +373,12 @@ h1 {
   float: left;
 }
 
-
-
+#block-views-headernews-block .content {
+	padding: 0;	
+}
+#block-views-headernews-block .content .field-content {
+	margin: 5px 0;
+}
 
 #block-block-3 {
   float: left;
@@ -525,3 +547,13 @@ h1 {
   padding-right: 5px;
 }
 /* @end gallery styles */
+
+/*falanster calendar*/
+.view-gcalendar table {
+	border: none;
+}
+
+.fc-event-inner {
+	background-color: #C72C29;
+  border-color: #C72C29;
+}
