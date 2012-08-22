@@ -631,14 +631,14 @@ h1 {
 	padding: 0 0 20px 0;
 }
 
-.view-mediateka .views-summary a {
+#block-system-mai .view-mediateka .views-summary a {
 	font-size: 16px;
 	font-weight: bold;
 	text-decoration: none;
 	color: #BCBCBC;
 }
 
-.view-mediateka .view-content a {
+#block-system-mai .view-mediateka .view-content a {
 	color: #000;
 }
 
