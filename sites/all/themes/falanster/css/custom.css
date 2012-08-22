@@ -6,9 +6,24 @@ h2.block-title {
   color: #c72c29;
   text-transform: lowercase;
 }
-a:hover {
+
+h2.block-title a {
+	color: #363636;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+a {
+	color: #000;
+	text-decoration: underline;
+}
+
+a:hover,
+.content a {
 	color: #c72c29;
 }
+
+
 
 /*Footer region*/
 
@@ -116,6 +131,23 @@ body {
   float: right;
 }
 
+/*breadcrumb*/
+
+#zone-content-wrapper .breadcrumb a {
+  color: #bcbcbc;
+  text-decoration: none;
+  font-size: 15px;
+  text-transform: lowercase; 
+}
+#zone-content-wrapper .breadcrumb a:hover {
+	color: #b2382d
+}
+
+/*title*/
+h1 {
+	color: #1e1a17;
+}
+
 /* Language block */
 
 .block-locale {
@@ -200,14 +232,22 @@ body {
   width: auto;
   margin: 0 -25px 0 -25px;
 }
-.agenda-block p {
-	margin: 0 10px;
+.block .agenda-block p {
+	padding: 0px 10px 3px;
+}
+
+.block .agenda-block ol li {
+	background: #dc6f6a;
 }
 
 #block-views-last-video-or-podcast-block .views-field-colorbox {
   position: relative;
   width: 100%;
   margin: 0 -25px;
+}
+/*share block*/
+.sharethis-buttons {
+	margin: 30px 0 0 0;
 }
 
 .page-frontpage #region-content .content,
@@ -222,6 +262,21 @@ body {
   background-color: #f3f4f5;
   padding: 25px;
 }
+
+.view-headernews .views-field-title a,
+.view-afishi .views-field-title a,
+.poll .title,
+.view-last-video-or-podcast .views-field-title a {
+	font-size: 16px;
+	font-weight: bold;
+	color: #444243;
+	line-height: 22px;
+	text-decoration: none;
+}
+
+ {
+}
+
 
 .page-frontpage .block-poll-recent {
 	padding: 0 0 30px 0;	
@@ -260,12 +315,16 @@ body {
 /* @end Poll */
 
 /* Social networks */
-#block-views-twitter-list-block {
+.front #block-views-twitter-list-block {
   width: 250px;
   height: 350px;
   margin: 0 25px;
   float: left;  
 }
+#block-views-twitter-list-block {
+	background-color: #f3f4f5;	
+}
+
 .not-front #block-views-twitter-list-block {
    height: auto;
  }
@@ -313,8 +372,12 @@ body {
   float: left;
 }
 
-
-
+#block-views-headernews-block .content {
+	padding: 0;	
+}
+#block-views-headernews-block .content .field-content {
+	margin: 5px 0;
+}
 
 #block-block-3 {
   float: left;
@@ -406,13 +469,25 @@ body {
 .not-front #section-content .block {
    padding: 0 0 30px 0;
 }
+.not-front  #section-content #block-views-twitter-list-block {
+  height: auto;
+  padding: 0 0 0px 0;
+}
+.not-front  #section-content #block-simplenews-1 {
+	padding: 30px 0 30px 0;
+}
 
 .not-front #section-content #block-block-12 {
    padding: 0 0 15px 0;
 }
  
- .not-front #block-views-twitter-list-block {
-   height: auto;
+ .field-name-field-open-tag .field-item {
+   float: left;
+   display: inline; 
+ }
+ .date-display-single {
+   color: #c2c2c2;
+   font-size: 12px;
  }
 
 /*bottom inner menu*/
@@ -432,7 +507,7 @@ body {
   text-decoration: none;
   text-transform: lowercase;
 }
-#block-menu-menu-hot-pages .menu li a {
+#block-menu-menu-hot-pages .menu li a:hover {
   color: #000;
 }
 
@@ -480,3 +555,17 @@ body {
   padding-right: 5px;
 }
 /* @end gallery styles */
+
+/*falanster calendar*/
+.view-gcalendar table {
+	border: none;
+}
+
+#block-views-gcalendar-block h2 {
+	padding: 0 0 10px 0; 
+}
+.fc-event-default, .fc-event-default .fc-event-skin, .fc-event-default .fc-event-time, .fc-event-default a,
+.fc-event-inner {
+	background-color: #DC6F6A;
+  border-color: #DC6F6A;
+}
