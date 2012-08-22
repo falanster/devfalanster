@@ -413,7 +413,7 @@ h1 {
   position: relative;
 }
 #block-block-10 {
-	float: right;
+  float: right;
 }
 #block-block-10 p {
   margin: 0;
@@ -531,8 +531,11 @@ h1 {
 }
 
 .view-gallery .views-row .views-label-field-related-node {
-  float: left;
   padding-right: 5px;
+}
+
+.view-gallery .views-row .views-label-field-related-node span a {
+  float: left;
 }
 
 .view-gallery .views-row .views-field-field-image {
@@ -542,6 +545,9 @@ h1 {
 }
 
 .view-gallery .views-row .views-field-body {
+}
+
+.view-gallery .views-field-field-open-tag {
 }
 
 .view-gallery .views-row .views-label-field-open-tag {
@@ -563,6 +569,7 @@ h1 {
 	background-color: #DC6F6A;
   border-color: #DC6F6A;
 }
+<<<<<<< HEAD
 
 /*mediateka*/
 .view-mediateka .view-content {
@@ -598,3 +605,5 @@ tr.odd td {
 } 
 
 
+=======
+>>>>>>> 035ce2d5fcd8c734a5bafb00e938bf5e7b05e58d
