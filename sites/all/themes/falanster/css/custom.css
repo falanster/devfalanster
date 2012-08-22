@@ -18,9 +18,12 @@ a {
 	text-decoration: underline;
 }
 
-a:hover {
+a:hover,
+.content a {
 	color: #c72c29;
 }
+
+
 
 /*Footer region*/
 
@@ -233,7 +236,7 @@ h1 {
   width: auto;
   margin: 0 -25px 0 -25px;
 }
-.agenda-block p {
+.block .agenda-block p {
 	padding: 0px 10px 3px;
 }
 
@@ -553,6 +556,10 @@ h1 {
 	border: none;
 }
 
+#block-views-gcalendar-block h2 {
+	padding: 0 0 10px 0; 
+}
+.fc-event-default, .fc-event-default .fc-event-skin, .fc-event-default .fc-event-time, .fc-event-default a,
 .fc-event-inner {
 	background-color: #C72C29;
   border-color: #C72C29;
