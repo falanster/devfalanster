@@ -532,6 +532,7 @@ h1 {
 
 .view-gallery .views-row .views-label-field-related-node {
   padding-right: 5px;
+  float: left;
 }
 
 .view-gallery .views-row .views-label-field-related-node span a {
@@ -544,15 +545,24 @@ h1 {
   margin-bottom: 15px;
 }
 
+.view-gallery .views-row .views-field-field-image img {
+  clear: left;
+}
+
 .view-gallery .views-row .views-field-body {
 }
 
-.view-gallery .views-field-field-open-tag {
+.view-gallery .views-row .views-field-field-open-tag {
+  clear: left;
 }
 
 .view-gallery .views-row .views-label-field-open-tag {
   float: left;
   padding-right: 5px;
+}
+
+.view-gallery .views-row .views-field-view-node {
+   margin-bottom: 10px;
 }
 /* @end gallery styles */
 
