@@ -183,7 +183,7 @@ body {
 #block-nice-menus-2 li ul li, 
 #block-nice-menus-3 li ul li {
   background: #DFDCDF;
-  width: 90px;
+  width: 100px;
 }
 
 #block-nice-menus-1 li ul li a:hover,
@@ -278,14 +278,14 @@ body {
   width: 50px;
   height: 50px;
   float: left;
+  padding-right: 5px;
 }
 
 #block-views-twitter-list-block .views-field-screen-name span {
   font-size: 13px;
   font-weight: bold;
   margin-left: 5px;
-  float: left;
-  
+  float: left;  
 }
 
 #block-views-twitter-list-block .views-field-created-time span {
@@ -294,12 +294,12 @@ body {
 }
 
 #block-views-twitter-list-block .views-field-text span {
-  margin-left: 5px;
 }
 
 #block-views-twitter-list-block .views-row-odd,
 #block-views-twitter-list-block .views-row-even {
   margin-bottom: 5px;
+  float: left;
 }
 
 #block-block-3 {
