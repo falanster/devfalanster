@@ -6,6 +6,14 @@ h2.block-title {
   color: #c72c29;
   text-transform: lowercase;
 }
+
+h2.block-title a {
+	color: #363636;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+
 a:hover {
 	color: #c72c29;
 }
@@ -116,6 +124,21 @@ body {
   float: right;
 }
 
+/*breadcrumb*/
+
+.breadcrumb a {
+  color: #bcbcbc;
+  text-decoration: none; 
+}
+.breadcrumb a:hover {
+	color: #b2382d
+}
+
+/*title*/
+h1 {
+	color: #1e1a17;
+}
+
 /* Language block */
 
 .block-locale {
@@ -204,10 +227,18 @@ body {
 	margin: 0 10px;
 }
 
+.agenda-block .cal_0 {
+	color: #dc6f6a;
+}
+
 #block-views-last-video-or-podcast-block .views-field-colorbox {
   position: relative;
   width: 100%;
   margin: 0 -25px;
+}
+/*share block*/
+.sharethis-buttons {
+	margin: 30px 0 0 0;
 }
 
 .page-frontpage #region-content .content,
@@ -414,6 +445,15 @@ body {
  .not-front #block-views-twitter-list-block {
    height: auto;
  }
+ 
+ .field-name-field-open-tag .field-item {
+   float: left;
+   display: inline; 
+ }
+ .date-display-single {
+   color: #c2c2c2;
+   font-size: 12px;
+ }
 
 /*bottom inner menu*/
 #block-menu-menu-hot-pages .menu {
@@ -432,7 +472,7 @@ body {
   text-decoration: none;
   text-transform: lowercase;
 }
-#block-menu-menu-hot-pages .menu li a {
+#block-menu-menu-hot-pages .menu li a:hover {
   color: #000;
 }
 
