@@ -350,7 +350,7 @@ body {
   position: relative;
 }
 #block-block-10 {
-	float: right;
+  float: right;
 }
 #block-block-10 p {
   margin: 0;
@@ -456,8 +456,11 @@ body {
 }
 
 .view-gallery .views-row .views-label-field-related-node {
-  float: left;
   padding-right: 5px;
+}
+
+.view-gallery .views-row .views-label-field-related-node span a {
+  float: left;
 }
 
 .view-gallery .views-row .views-field-field-image {
@@ -467,6 +470,9 @@ body {
 }
 
 .view-gallery .views-row .views-field-body {
+}
+
+.view-gallery .views-field-field-open-tag {
 }
 
 .view-gallery .views-row .views-label-field-open-tag {
