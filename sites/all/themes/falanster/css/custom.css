@@ -13,14 +13,16 @@ h2.block-title a {
 	text-decoration: none;
 }
 
-a {
-	color: #000;
+a,
+#block-system-main a,
+#block-block-7 a {
+	color: #D43E44;
 	text-decoration: underline;
 }
 
 a:hover,
 .content a {
-	color: #c72c29;
+	color: #D43E44;
 }
 
 
@@ -143,7 +145,7 @@ body {
   text-transform: lowercase; 
 }
 #zone-content-wrapper .breadcrumb a:hover {
-	color: #b2382d;
+	color: #D43E44;
 }
 
 /*title*/
@@ -163,7 +165,8 @@ h1 {
   margin: 0 8px;
 }
 
-.block-locale .content ul li a {
+.block-locale .content ul li a,
+.block-locale .content ul li .locale-untranslated {
   text-decoration: none;
   color: #383431;
   text-transform: lowercase;
@@ -264,6 +267,10 @@ h1 {
 #block-simplenews-1 .content {
   background-color: #f3f4f5;
   padding: 25px;
+}
+.page-frontpage #block-views-last-video-or-podcast-block .content {
+	padding-bottom: 0px;
+	margin: 0 0 30px 0;
 }
 
 .view-headernews .views-field-title a,
@@ -395,7 +402,11 @@ h1 {
 #block-block-4 {
   float: left;
   width: 250px;
+  background: #F3F4F5;
   margin: 0 25px 0 40px;
+}
+#block-block-4 p {
+	margin: 0;	
 }
 
 .fbConnectWidgetHeaderTitleBranded {
@@ -410,11 +421,16 @@ h1 {
 /* @end social networks */
 
 #block-block-10 img {
-  margin-top: -70px;
-  margin-right: -50px;
+  margin-top: -20px;
+  margin-right: -50px;  
   float: right;
   position: relative;
 }
+.i18n-be #block-block-10 img,
+.i18n-en #block-block-10 img {
+	margin-bottom: 15px;
+}
+
 #block-block-10 {
   float: right;
 }
@@ -621,7 +637,7 @@ h1 {
 	color: #b2382d;
 }
 .add_content {
-	text-align: right;
+	float: right;
 }
 .view-mediateka .view-header a:hover {
 	
@@ -630,14 +646,14 @@ h1 {
 	padding: 0 0 20px 0;
 }
 
-.view-mediateka .views-summary a {
+#block-system-main .view-mediateka .views-summary a {
 	font-size: 16px;
 	font-weight: bold;
 	text-decoration: none;
 	color: #BCBCBC;
 }
 
-.view-mediateka .view-content a {
+#block-system-main .view-mediateka .view-content a {
 	color: #000;
 }
 
