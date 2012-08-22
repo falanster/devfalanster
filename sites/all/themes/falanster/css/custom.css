@@ -131,10 +131,6 @@ body {
   float: right;
 }
 
-#block-simplenews-1 {
-  float: left;
-}
-
 /*breadcrumb*/
 
 #zone-content-wrapper .breadcrumb a {
@@ -267,10 +263,6 @@ h1 {
   padding: 25px;
 }
 
-#block-views-twitter-list-block {
-	background-color: #f3f4f5;
-}
-
 .view-headernews .views-field-title a,
 .view-afishi .views-field-title a,
 .poll .title,
@@ -323,12 +315,16 @@ h1 {
 /* @end Poll */
 
 /* Social networks */
-#block-views-twitter-list-block {
+.front #block-views-twitter-list-block {
   width: 250px;
   height: 350px;
   margin: 0 25px;
   float: left;  
 }
+#block-views-twitter-list-block {
+	background-color: #f3f4f5;	
+}
+
 .not-front #block-views-twitter-list-block {
    height: auto;
  }
@@ -473,14 +469,17 @@ h1 {
 .not-front #section-content .block {
    padding: 0 0 30px 0;
 }
+.not-front  #section-content #block-views-twitter-list-block {
+  height: auto;
+  padding: 0 0 0px 0;
+}
+.not-front  #section-content #block-simplenews-1 {
+	padding: 30px 0 30px 0;
+}
 
 .not-front #section-content #block-block-12 {
    padding: 0 0 15px 0;
 }
- 
- .not-front #block-views-twitter-list-block {
-   height: auto;
- }
  
  .field-name-field-open-tag .field-item {
    float: left;
@@ -561,6 +560,6 @@ h1 {
 }
 .fc-event-default, .fc-event-default .fc-event-skin, .fc-event-default .fc-event-time, .fc-event-default a,
 .fc-event-inner {
-	background-color: #C72C29;
-  border-color: #C72C29;
+	background-color: #DC6F6A;
+  border-color: #DC6F6A;
 }
