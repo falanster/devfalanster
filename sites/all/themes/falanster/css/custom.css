@@ -132,6 +132,9 @@ body {
 }
 
 /*breadcrumb*/
+#zone-content-wrapper .breadcrumb {
+	color: #bcbcbc;
+}
 
 #zone-content-wrapper .breadcrumb a {
   color: #bcbcbc;
@@ -589,3 +592,34 @@ h1 {
 	background-color: #DC6F6A;
   border-color: #DC6F6A;
 }
+
+/*mediateka*/
+.view-mediateka .view-content {
+	padding: 15px 0;
+}
+
+.view-mediateka .view-header {
+	float: right;	
+	width: 100%;
+}
+.view-mediateka .view-header a {	
+	color: #BCBCBC;
+}
+.view-display-id-attachment_2 .view-header {
+	padding: 0 0 20px 0;
+}
+
+.view-mediateka .views-summary a {
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #BCBCBC;
+}
+
+.view-mediateka .view-content a {
+	color: #000;
+}
+
+tr.odd td {
+	background: #F3F4F5;
+} 
