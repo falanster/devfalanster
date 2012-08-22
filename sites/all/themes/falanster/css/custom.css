@@ -270,6 +270,17 @@ body {
    height: auto;
  }
 
+#block-views-twitter-list-block .block-inner {
+  background: #e9eaec;
+}
+
+#block-views-twitter-list-block .block-title {
+  color: #383431;
+  font-size: 15px;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
 #block-views-twitter-list-block .views-field-text {
   font-size: 12px;
 }
@@ -301,6 +312,9 @@ body {
   margin-bottom: 5px;
   float: left;
 }
+
+
+
 
 #block-block-3 {
   float: left;
