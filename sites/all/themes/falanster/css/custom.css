@@ -270,7 +270,7 @@ h1 {
 }
 .page-frontpage #block-views-last-video-or-podcast-block .content {
 	padding-bottom: 0px;
-	margin: 30px;
+	margin: 0 0 30px 0;
 }
 
 .view-headernews .views-field-title a,
@@ -421,12 +421,12 @@ h1 {
 /* @end social networks */
 
 #block-block-10 img {
-  margin-top: -90px;
+  margin-top: -20px;
   margin-right: -50px;  
   float: right;
   position: relative;
 }
-i18n-by #block-block-10 img {
+.i18n-by #block-block-10 img {
 	margin-bottom: 15px;
 }
 
