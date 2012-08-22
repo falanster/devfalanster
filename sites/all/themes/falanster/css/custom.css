@@ -132,6 +132,9 @@ body {
 }
 
 /*breadcrumb*/
+#zone-content-wrapper .breadcrumb {
+	color: #bcbcbc;
+}
 
 #zone-content-wrapper .breadcrumb a {
   color: #bcbcbc;
@@ -579,9 +582,7 @@ h1 {
 	float: right;	
 	width: 100%;
 }
-.view-mediateka .view-header a {
-	clear: right;
-	float: right;	
+.view-mediateka .view-header a {	
 	color: #BCBCBC;
 }
 .view-display-id-attachment_2 .view-header {
