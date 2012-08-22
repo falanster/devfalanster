@@ -16,7 +16,7 @@ h2.block-title a {
 a,
 #block-system-main a,
 #block-block-7 a {
-	color: #000;
+	color: #c72c29;
 	text-decoration: underline;
 }
 
@@ -268,6 +268,9 @@ h1 {
   background-color: #f3f4f5;
   padding: 25px;
 }
+.page-frontpage #block-views-last-video-or-podcast-block .content {
+	padding-bottom: 0px;
+}
 
 .view-headernews .views-field-title a,
 .view-afishi .views-field-title a,
@@ -413,11 +416,15 @@ h1 {
 /* @end social networks */
 
 #block-block-10 img {
-  margin-top: -70px;
-  margin-right: -50px;
+  margin-top: -90px;
+  margin-right: -50px;  
   float: right;
   position: relative;
 }
+i18n-by #block-block-10 img {
+	margin-bottom: 15px;
+}
+
 #block-block-10 {
   float: right;
 }
@@ -609,7 +616,7 @@ h1 {
 	color: #b2382d;
 }
 .add_content {
-	text-align: right;
+	float: right;
 }
 .view-mediateka .view-header a:hover {
 	
