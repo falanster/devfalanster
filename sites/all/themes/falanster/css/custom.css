@@ -593,7 +593,7 @@ h1, h3 {
 }
 
 .view-gallery .views-row .views-field-title a {
-  text-decoration: none;
+  text-decoration: none !important;
   font-size: 16px !important; 
   font-weight: bold;
   color: #444243 !important;
