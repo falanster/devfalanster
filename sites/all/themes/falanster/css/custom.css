@@ -65,6 +65,11 @@ a:visited,
   color: #9F498C;
 }
 
+.field-name-field-open-tag .field-item a {
+  margin-right: 5px;
+}
+
+
 /*Footer region*/
 
 #zone-footer,
