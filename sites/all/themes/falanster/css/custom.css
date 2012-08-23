@@ -566,10 +566,10 @@ h1, h3 {
   width: 200px;
 }
 
-th.views-table .views-field-title a,
-th.views-table .views-field-field-author a,
-th.views-table .views-field-name a,
-th.views-table .views-field-field-fivestar a {
+.views-table th.views-field-title a,
+.views-table th.views-field-field-author a,
+.views-table th.views-field-name a,
+.views-table th.views-field-field-fivestar a {
   color: #4d4948;
 }
 
