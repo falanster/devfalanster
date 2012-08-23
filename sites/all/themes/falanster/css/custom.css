@@ -305,18 +305,24 @@ h1, h3 {
 	line-height: 22px;
 	text-decoration: none;	
 }
-#block-views-headernews-english-block-1 .view-footer a {
+#block-views-headernews-english-block-1 .view-footer a,
+#block-views-headernews-block-1 .view-footer a {
 	float: right;
   color: #D43E44;
   text-decoration: underline;
 }
-#block-views-headernews-english-block-1 .view-footer a:hover {
+#block-views-headernews-english-block-1 .view-footer a:hover,
+#block-views-headernews-block-1 .view-footer a:hover {
   color: #000;
   
 }
 
 #block-views-headernews-block-1 .content {
 	padding-top: 0;
+}
+
+#block-views-headernews-block-1 .content {
+	padding-bottom: 0;
 }
 
 
@@ -331,11 +337,11 @@ h1, h3 {
 	padding: 25px;	
 }
 .not-front #block-views-twitter-list-block .block-title {
-	color: #C72C29;
-  margin: 0 0 15px;
+	color: #C72C29;  
   text-transform: lowercase;
   font-size: 18px;
   margin: 0;
+  background: none;  
 }
 
 .navigation {
@@ -465,6 +471,9 @@ h1, h3 {
 .region-sidebar-second-inner #block-views-twitter-list-block {
   width: 300px;
   margin: 0;
+}
+.region-sidebar-second .block {
+	margin: 0 0 30px 0;
 }
 /* @end social networks */
 
