@@ -14,25 +14,44 @@ h2.block-title a {
 }
 
 a,
-a:link, 
-a:visited,
+/* a:link, 
+a:visited, */
 #block-system-main a,
 #block-block-7 a,
 .views-field-body p a,
 #block-views-headernews-block .content a,
 .view-footer a,
 #dsq-content a {
-	color: #D43E44;
-	text-decoration: underline;
+	color: #D25D5E;
+/*	text-decoration: underline; */
+    text-decoration: none;
 }
 
-a:hover,
+/* a:hover, */
 .front .content a,
 .not-front .content a {
 	color: #D43E44;
 }
 
+a:hover,
+#block-system-main a:hover,
+#block-block-7 a:hover,
+.views-field-body p a:hover,
+#block-views-headernews-block .content a:hover,
+.view-footer a:hover,
+#dsq-content a:hover  {
+  text-decoration: underline;
+}
 
+a:visited,
+#block-system-main a:visited,
+#block-block-7 a:visited,
+.views-field-body p a:visited,
+#block-views-headernews-block .content a:visited,
+.view-footer a:visited,
+#dsq-content a:visited {
+  color: #9F498C;
+}
 
 /*Footer region*/
 
@@ -514,6 +533,10 @@ h1, h3 {
 
 
 /* Tablica baza znanij */
+
+#block-views-mediateka-block-2 .block-title a{
+  color: #4d4948;
+}
 
 .views-table .views-field-title {
   width: 450px;
