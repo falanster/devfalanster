@@ -18,7 +18,7 @@ a:link,
 a:visited,
 #block-system-main a,
 #block-block-7 a,
-.views-field-body a,
+.views-field-body p a,
 #block-views-headernews-block .content a,
 .view-footer a,
 #dsq-content a {
@@ -349,8 +349,9 @@ h1, h3 {
 }
 
 /* Afisha na glavnoj */
-#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img{
+#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
   float:left;
+  margin: 0 10px 10px 0;
 }
 
 #views_slideshow_cycle_main_afishi-block_1 .views-field-body .field-content {
@@ -379,10 +380,6 @@ h1, h3 {
   margin: 0 25px;
   float: left;  
 }
-#block-views-twitter-list-block {
-	background-color: #f3f4f5;	
-}
-
 .not-front #block-views-twitter-list-block {
    height: auto;
  }
