@@ -22,6 +22,8 @@ a:visited, */
 #block-views-headernews-block .content a,
 .view-footer a,
 #dsq-content a,
+.front .content a,
+.not-front .content a,
 .view-mediateka a,
 .views-field-title a {
 	color: #D25D5E;
@@ -29,11 +31,11 @@ a:visited, */
     text-decoration: none;
 }
 
-/* a:hover, */
+/* a:hover, 
 .front .content a,
 .not-front .content a {
 	color: #D43E44;
-}
+}*/
 
 a:hover,
 #block-system-main a:hover,
@@ -43,7 +45,9 @@ a:hover,
 .view-footer a:hover,
 #dsq-content a:hover,
 .view-mediateka a:hover,
-.views-field-title a:hover  {
+.views-field-title a:hover,
+.front .content a:hover,
+.not-front .content a:hover  {
   text-decoration: underline;
 }
 
@@ -55,7 +59,9 @@ a:visited,
 .view-footer a:visited,
 #dsq-content a:visited,
 .view-mediateka a:visited,
-.views-field-title a:visited {
+.views-field-title a:visited,
+.front .content a:visited,
+.not-front .content a:visited {
   color: #9F498C;
 }
 
@@ -559,6 +565,15 @@ h1, h3 {
 .views-table .views-field-field-fivestar {
   width: 200px;
 }
+
+th.views-table .views-field-title a,
+th.views-table .views-field-field-author a,
+th.views-table .views-field-name a,
+th.views-table .views-field-field-fivestar a {
+  color: #4d4948;
+}
+
+
 
 /* @end Tablica baza znanij */
 
