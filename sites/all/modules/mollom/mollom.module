@@ -300,7 +300,10 @@ function mollom_menu() {
  *   FALSE otherwise.
  */
 function _mollom_access($permission = FALSE) {
-  return variable_get('mollom_public_key', '') && variable_get('mollom_private_key', '') && (!$permission || user_access($permission));
+  $mollom = mollom();
+  $public_key = $mollom->loadConfiguration('publicKey');
+  $private_key = $mollom->loadConfiguration('privateKey');
+  return !empty($public_key) && !empty($private_key) && (!$permission || user_access($permission));
 }
 
 /**
@@ -738,8 +741,8 @@ function mollom_form_alter(&$form, &$form_state, $form_id) {
         $form['mollom']['privacy'] = array(
           '#prefix' => '<div class="description mollom-privacy">',
           '#suffix' => '</div>',
-          '#markup' => t('By submitting this form, you accept the <a href="@privacy-policy-url">Mollom privacy policy</a>.', array(
-            '@privacy-policy-url' => 'http://mollom.com/web-service-privacy-policy',
+          '#markup' => t('By submitting this form, you accept the <a href="@privacy-policy-url" class="mollom-target">Mollom privacy policy</a>.', array(
+            '@privacy-policy-url' => '//mollom.com/web-service-privacy-policy',
           )),
           '#weight' => 10,
         );
@@ -759,6 +762,24 @@ function mollom_form_alter(&$form, &$form_state, $form_id) {
     $mollom_form_id = $forms['delete'][$form_id];
     $module = $forms['protected'][$mollom_form_id];
     $form_info = mollom_form_load($mollom_form_id, $module);
+
+    // For entities, there is only one delete confirmation form per entity type.
+    // But not all of its bundles may be protected. We therefore need to figure
+    // out whether the bundle of the entity being deleted is protected - which
+    // is a reverse-mapping that does not exist in D7.
+    $is_protected = TRUE;
+    $is_entity = !empty($form_info['entity']);
+    $has_entity_argument = isset($form_state['build_info']['args'][0]) && is_object($form_state['build_info']['args'][0]);
+    if ($is_entity && $has_entity_argument) {
+      list(, , $bundle) = entity_extract_ids($form_info['entity'], $form_state['build_info']['args'][0]);
+      $is_protected = db_query_range('SELECT 1 FROM {mollom_form} WHERE entity = :entity AND bundle = :bundle', 0, 1, array(
+        ':entity' => $form_info['entity'],
+        ':bundle' => $bundle,
+      ))->fetchField();
+    }
+    if (!$is_protected) {
+      return;
+    }
     // Check access, if there is a 'report access' permission list.
     if (isset($form_info['report access'])) {
       $access = FALSE;
@@ -877,12 +898,26 @@ function mollom_form_list() {
  *   The form id to return information for.
  * @param $module
  *   The module name $form_id belongs to.
+ * @param array $form_list
+ *   (optional) The return value of hook_mollom_form_list() of $module, if
+ *   already kown. Primarily used by mollom_form_list().
  */
-function mollom_form_info($form_id, $module) {
-  $form_info = module_invoke($module, 'mollom_form_info', $form_id);
-  if (empty($form_info)) {
-    $form_info = array();
+function mollom_form_info($form_id, $module, $form_list = NULL) {
+  $form_info = array();
+
+  // Fetch the basic form information from hook_mollom_form_list() first.
+  // This makes the integrating module (needlessly) rebuild all of its available
+  // forms, but the base properties are absolutely required here, so we can
+  // apply the default properties below.
+  if (!isset($form_list)) {
+    $form_list = module_invoke($module, 'mollom_form_list');
   }
+  if (isset($form_list[$form_id])) {
+    $form_info += $form_list[$form_id];
+  }
+
+  // Any information in hook_mollom_form_info() overrides the list info.
+  $form_info = array_merge($form_info, module_invoke($module, 'mollom_form_info', $form_id));
 
   // Ensure default properties.
   $form_info += array(
@@ -891,6 +926,7 @@ function mollom_form_info($form_id, $module) {
     'title' => $form_id,
     'module' => $module,
     'entity' => NULL,
+    'bundle' => NULL,
     // Configuration properties.
     'mode' => NULL,
     'checks' => array(),
@@ -960,7 +996,7 @@ function mollom_form_new($form_id) {
   if (isset($form_list[$form_id])) {
     $mollom_form += $form_list[$form_id];
   }
-  $mollom_form += mollom_form_info($form_id, $form_list[$form_id]['module']);
+  $mollom_form += mollom_form_info($form_id, $form_list[$form_id]['module'], $form_list);
 
   // Enable all fields for textual analysis by default.
   if (!empty($mollom_form['elements'])) {
@@ -986,11 +1022,22 @@ function mollom_form_load($form_id) {
       $mollom_form['enabled_fields'] = unserialize($mollom_form['enabled_fields']);
 
       // Attach form registry information.
-      $form_list = module_invoke($mollom_form['module'], 'mollom_form_list');
-      if (isset($form_list[$form_id])) {
-        $mollom_form += $form_list[$form_id];
-      }
-      $mollom_form += mollom_form_info($form_id, $mollom_form['module']);
+      $form_info = mollom_form_info($form_id, $mollom_form['module']);
+      $mollom_form += $form_info;
+
+      // Override entity type and bundle information with current values from
+      // the form registry. These properties were originally not stored in
+      // {mollom_form} and only introduced in 7.x-2.2. The update path is only
+      // able to map entity types/bundles in Drupal core. Any other form
+      // protections need to be updated manually. That is the situation in which
+      // $mollom_form has NULL values from the database, but the form registry
+      // actually contains the proper values.
+      // @todo Remove in later versions.
+      // @todo Clean up _list() + _info() hook API design and pass the base
+      //   $form_info from _list() into _info(), so that it extends that
+      //   definition instead of replacing it.
+      $mollom_form['entity'] = $form_info['entity'];
+      $mollom_form['bundle'] = $form_info['bundle'];
 
       cache_set($cid, $mollom_form);
     }
@@ -1587,9 +1634,6 @@ function mollom_form_add_captcha(&$element, &$form_state) {
   // Otherwise, we have a communication or configuration error.
   else {
     $element['captcha']['#access'] = FALSE;
-    $element['captcha']['#required'] = FALSE;
-    $form_state['mollom']['require_analysis'] = FALSE;
-    $form_state['mollom']['require_captcha'] = FALSE;
     // Trigger fallback mode.
     _mollom_fallback();
   }
@@ -2377,6 +2421,7 @@ function mollom_get_captcha(&$form_state) {
 
     case 'image':
       $captcha = theme('image', array('path' => $url, 'alt' => t('Type the characters you see in this picture.'), 'getsize' => FALSE));
+      $captcha = '<a href="//mollom.com/captcha" class="mollom-target">' . $captcha . '</a>';
       $output = '<span class="mollom-captcha-content mollom-image-captcha">' . $captcha . '</span>';
       $output .= ' (<a href="#" class="mollom-switch-captcha mollom-audio-captcha">' . t('verify using audio') . '</a>)';
       break;
@@ -2593,6 +2638,9 @@ function mollom_moderate_access($data, $action) {
  * Returns whether the OAuth request signature is valid.
  */
 function mollom_moderate_validate_oauth() {
+  // For inbound moderation requests, only the production API keys are valid.
+  // The testing mode API keys cannot be trusted. Therefore, this validation
+  // is based on the the stored variables only.
   $publicKey = variable_get('mollom_public_key', '');
   $privateKey = variable_get('mollom_private_key', '');
   if ($publicKey === '' || $privateKey === '') {

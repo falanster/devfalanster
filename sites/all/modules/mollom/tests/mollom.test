@@ -139,6 +139,7 @@ class MollomWebTestCase extends DrupalWebTestCase {
         'administer content types',
         'administer permissions',
         'administer users',
+        'bypass node access',
       );
       if (module_exists('comment')) {
         $permissions[] = 'access comments';
@@ -1679,6 +1680,13 @@ class MollomFallbackModeTestCase extends MollomWebTestCase {
     $this->drupalGet('user/password', array('watchdog' => WATCHDOG_EMERGENCY));
     $this->assertNoCaptchaField();
     $this->assertText($this->fallback_message);
+
+    // Verify that the form cannot be submitted.
+    $edit = array(
+      'name' => $this->admin_user->name,
+    );
+    $this->drupalPost(NULL, $edit, t('E-mail new password'), array('watchdog' => WATCHDOG_EMERGENCY));
+    $this->assertNoText(t('Further instructions have been sent to your e-mail address.'));
   }
 
   /**
@@ -2591,6 +2599,72 @@ class MollomNodeFormTestCase extends MollomWebTestCase {
     $this->assertEqual($this->node->status, 0, t('Node containing profanity was retained as unpublished.'));
     $this->assertUrl('node/' . $this->node->nid);
     $this->assertMollomData('node', $this->node->nid);
+  }
+
+  /**
+   * Tests appearance of feedback options on node delete forms.
+   */
+  function testFeedback() {
+    // Create a second node type, which is not protected.
+    $this->drupalCreateContentType(array('type' => 'unprotected', 'name' => 'Unprotected'));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array(
+      'create unprotected content',
+      'delete own unprotected content',
+      'delete own article content',
+    ));
+
+    // Protect the article node type.
+    $this->drupalLogin($this->admin_user);
+    $this->setProtection('article_node_form', MOLLOM_MODE_ANALYSIS);
+    $this->drupalLogout();
+
+    // Login and submit a protected article node.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/add/article');
+    $edit = array(
+      'title' => 'protected ham',
+      'body[und][0][value]' => 'ham',
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertUrl('node/' . $this->node->nid);
+    $this->assertMollomData('node', $this->node->nid);
+
+    // Verify that no feedback options appear on the delete confirmation form
+    // for the node author.
+    $this->drupalGet('node/' . $this->node->nid . '/delete');
+    $this->assertResponse(200);
+    $this->assertNoText(t('Report as inappropriate'));
+
+    // Verify that feedback options appear for the admin user.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('node/' . $this->node->nid . '/delete');
+    $this->assertResponse(200);
+    $this->assertText(t('Report as inappropriate'));
+
+    // Login and submit an unprotected node.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/add/unprotected');
+    $edit = array(
+      'title' => 'unprotected spam',
+      'body[und][0][value]' => 'spam',
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertUrl('node/' . $this->node->nid);
+    $this->assertNoMollomData('node', $this->node->nid);
+
+    // Verify that no feedback options appear on the delete confirmation form
+    // for the node author.
+    $this->drupalGet('node/' . $this->node->nid . '/delete');
+    $this->assertResponse(200);
+    $this->assertNoText(t('Report as inappropriate'));
+
+    // Verify that no feedback options appear for the admin user.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('node/' . $this->node->nid . '/delete');
+    $this->assertResponse(200);
+    $this->assertNoText(t('Report as inappropriate'));
   }
 }
 

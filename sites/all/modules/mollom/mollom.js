@@ -1,13 +1,13 @@
 (function ($) {
 
 /**
- * Open Mollom privacy policy link in a new window.
+ * Open links to Mollom.com in a new window.
  *
  * Required for valid XHTML Strict markup.
  */
-Drupal.behaviors.mollomPrivacy = {
+Drupal.behaviors.mollomTarget = {
   attach: function (context) {
-    $('.mollom-privacy a', context).click(function () {
+    $(context).find('.mollom-target').click(function () {
       this.target = '_blank';
     });
   }
