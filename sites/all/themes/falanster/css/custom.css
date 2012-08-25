@@ -578,6 +578,9 @@ h1, h3 {
   color: #4d4948;
 }
 
+.views-table td.views-field-name a {
+  color: #4d4948;
+}
 
 
 /* @end Tablica baza znanij */
