@@ -763,7 +763,12 @@ h1, h3 {
 }
 
 #block-system-main .view-mediateka .view-content a {
-	color: #000;
+/*	color: #000; */
+  color: #D25D5E;
+}
+
+#block-system-main .view-mediateka .view-content a.active {
+  color: #9F498C;
 }
 
 tr.odd td {
