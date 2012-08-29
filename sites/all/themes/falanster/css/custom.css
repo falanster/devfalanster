@@ -23,8 +23,8 @@ h2.node-title a:visited {
 
 a,
 /* a:link, 
-a:visited, */
-#block-system-main a,
+a:visited, 
+#block-system-main a,*/
 #block-block-7 a,
 .views-field-body p a,
 #block-views-headernews-block .content a,
@@ -46,7 +46,7 @@ a:visited, */
 }*/
 
 a:hover,
-#block-system-main a:hover,
+/*#block-system-main a:hover, */
 #block-block-7 a:hover,
 .views-field-body p a:hover,
 #block-views-headernews-block .content a:hover,
@@ -60,7 +60,7 @@ a:hover,
 }
 
 a:visited,
-#block-system-main a:visited,
+/*#block-system-main a:visited,*/
 #block-block-7 a:visited,
 .views-field-body p a:visited,
 #block-views-headernews-block .content a:visited,
