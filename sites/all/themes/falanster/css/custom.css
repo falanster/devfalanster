@@ -16,9 +16,9 @@ h2.block-title a {
 h2.node-title a,
 h2.node-title a:hover,
 h2.node-title a:visited,
-.views-field-title span a,
-.views-field-title span a:hover,
-.views-field-title span a:visited{
+.views-field-title a,
+.views-field-title a:hover,
+.views-field-title a:visited{
   color: #383431;
 }
 
