@@ -332,7 +332,9 @@ h1, h3 {
 .view-afishi .views-field-title a:visited,
 .poll .title,
 .view-last-video-or-podcast .views-field-title a,
-.block-views-headernews-block .views-field-title a {
+.block-views-headernews-block .views-field-title a,
+.block-views-headernews-block .views-field-title a:hover,
+.block-views-headernews-block .views-field-title a:visited {
 	font-size: 16px;
 	font-weight: bold;
 	color: #444243;
