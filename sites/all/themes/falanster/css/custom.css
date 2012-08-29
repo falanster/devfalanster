@@ -20,6 +20,7 @@ h2.block-title a {
 .view-clubs h2.node-title a:hover,
 .view-clubs h2.node-title a:visited {
   color: #383431;
+  text-decoration: none;
 }
 
 a,
