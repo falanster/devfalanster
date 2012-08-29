@@ -15,10 +15,7 @@ h2.block-title a {
 
 h2.node-title a,
 h2.node-title a:hover,
-h2.node-title a:visited,
-.view-afishi .views-field-title a,
-.view-afishi .views-field-title a:hover,
-.view-afishi .views-field-title a:visited{
+h2.node-title a:visited {
   color: #383431;
 }
 
@@ -331,6 +328,8 @@ h1, h3 {
 }
 
 .view-afishi .views-field-title a,
+.view-afishi .views-field-title a:hover,
+.view-afishi .views-field-title a:visited,
 .poll .title,
 .view-last-video-or-podcast .views-field-title a,
 .block-views-headernews-block .views-field-title a {
