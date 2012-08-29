@@ -13,8 +13,6 @@ h2.block-title a {
 	text-decoration: none;
 }
 
-
-
 h2.node-title a,
 h2.node-title a:hover,
 h2.node-title a:visited {
@@ -32,8 +30,7 @@ a:visited,
 #dsq-content a,
 .front .content a,
 .not-front .content a,
-.view-mediateka a,
-.views-field-title a {
+.view-mediateka a {
 	color: #D25D5E;
 /*	text-decoration: underline; */
     text-decoration: none;
@@ -53,7 +50,6 @@ a:hover,
 .view-footer a:hover,
 #dsq-content a:hover,
 .view-mediateka a:hover,
-.views-field-title a:hover,
 .front .content a:hover,
 .not-front .content a:hover  {
   text-decoration: underline;
@@ -67,7 +63,6 @@ a:visited,
 .view-footer a:visited,
 #dsq-content a:visited,
 .view-mediateka a:visited,
-.views-field-title a:visited,
 .front .content a:visited,
 .not-front .content a:visited {
   color: #D43E44;
