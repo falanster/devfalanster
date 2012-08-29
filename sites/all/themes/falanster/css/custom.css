@@ -332,6 +332,8 @@ h1, h3 {
 .view-afishi .views-field-title a:visited,
 .poll .title,
 .view-last-video-or-podcast .views-field-title a,
+.view-last-video-or-podcast .views-field-title a:hover,
+.view-last-video-or-podcast .views-field-title a:visited,
 .block-views-headernews-block .views-field-title a,
 .block-views-headernews-block .views-field-title a:hover,
 .block-views-headernews-block .views-field-title a:visited {
