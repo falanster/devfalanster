@@ -13,9 +13,12 @@ h2.block-title a {
 	text-decoration: none;
 }
 
-h2.node-title a,
-h2.node-title a:hover,
-h2.node-title a:visited {
+.view-projects h2.node-title a,
+.view-projects h2.node-title a:hover,
+.view-projects h2.node-title a:visited,
+.view-clubs h2.node-title a,
+.view-clubs h2.node-title a:hover,
+.view-clubs h2.node-title a:visited {
   color: #383431;
 }
 
