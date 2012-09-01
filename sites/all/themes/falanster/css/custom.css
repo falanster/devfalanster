@@ -779,15 +779,12 @@ h1, h3 {
 	color: #BCBCBC;
 }
 
-#block-system-main .view-mediateka .view-content a {
+#block-system-main .view-mediateka .view-content a,
+#block-system-main .view-mediateka .view-content a.active  {
 /*	color: #000; */
   color: #D25D5E;
   font-size: 100%;
   font-weight: normal;
-}
-
-#block-system-main .view-mediateka .view-content a.active {
-  color: #9F498C;
 }
 
 tr.odd td {
