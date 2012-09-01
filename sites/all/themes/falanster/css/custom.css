@@ -1,6 +1,10 @@
 /*here is all custom style for falanster theme*/
 
 /*common style*/
+img {
+  margin: 5px;
+}
+
 h2.block-title {
   margin: 0 0 15px 0;
   color: #c72c29;
