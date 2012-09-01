@@ -72,7 +72,8 @@ a:visited,
   color: #D25D5E;
 }
 
-.field-name-field-open-tag .field-item a {
+.field-name-field-open-tag .field-item a,
+.field-name-field-open-tag .field-item span {
   margin-right: 5px;
 }
 
