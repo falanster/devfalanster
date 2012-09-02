@@ -243,7 +243,7 @@ h1, h3 {
 #block-nice-menus-3 li {
   border: none;
   background: none;
-  padding: 5px 8px 0 8px;
+  padding: 5px 6px 0 6px;
 }
 
 #block-nice-menus-1 li a,
@@ -605,9 +605,9 @@ h1, h3 {
 }*/
 
 /*Not front page*/
-.not-front #section-content .block {
+/*.not-front #section-content .block {
    padding: 0 0 30px 0;
-}
+}*/
 .not-front  #section-content #block-views-twitter-list-block {
   height: auto;
   padding: 0 0 0px 0;
@@ -620,7 +620,12 @@ h1, h3 {
    padding: 0 0 15px 0;
 }
  
- .field-name-field-open-tag .field-item {
+.field-name-field-open-tag {
+  float: left;
+  margin: 15px 0 0 0;
+}
+ 
+.field-name-field-open-tag .field-item {
    float: left;
    display: inline; 
  }
