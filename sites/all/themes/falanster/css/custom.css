@@ -1,10 +1,6 @@
 /*here is all custom style for falanster theme*/
 
 /*common style*/
-img {
-  margin: 10px !important;
-}
-
 h2.block-title {
   margin: 0 0 15px 0;
   color: #c72c29;
@@ -850,3 +846,8 @@ tr.odd td {
 
 
 /*discus style*/
+
+/*image for news and announce */
+#region-sidebar-second
+#
+
