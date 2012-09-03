@@ -184,6 +184,10 @@ body {
   float: right;
 }
 
+#zone-content {
+  margin: 0 0 30px 0;
+}
+
 /*breadcrumb*/
 #zone-content-wrapper .breadcrumb {
 	color: #bcbcbc;
