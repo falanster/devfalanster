@@ -424,6 +424,7 @@ h1, h3 {
 /* Novosti na glavnoj*/
 .block-views-headernews-block .views-field-field-image-news img {
   float:left;
+  margin: 0 10px 10px 0;
 }
 
 /* @end novosti na glavnoj*/
