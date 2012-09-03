@@ -312,6 +312,11 @@ h1, h3 {
 	clear: left;
 }
 
+.node-afishi .sharethis-buttons {
+  	margin: 50px 0 0 0;
+	clear: left;
+}
+
 .page-frontpage #region-content .content,
 .page-frontpage #region-sidebar-second .content,
 .page-frontpage #block-agenda-1 .content, 
