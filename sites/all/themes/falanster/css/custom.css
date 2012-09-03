@@ -621,7 +621,6 @@ h1, h3 {
 }
  
 .field-name-field-open-tag {
-  float: left;
   margin: 15px 0 0 0;
 }
  
@@ -629,6 +628,10 @@ h1, h3 {
    float: left;
    display: inline; 
  }
+
+.field-name-field-open-tag .field .field-label {
+  float:left;
+}
 
 .field-name-field-f-voc .field-item {
   margin-top: 35px;
