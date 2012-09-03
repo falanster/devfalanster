@@ -407,11 +407,11 @@ h1, h3 {
 } */
 
 .views-slideshow-cycle-main-frame-row-item .views-field-field-image img {
-  float:left;
+  float: left;
   margin: 0 10px 10px 0;
 }
 
-.views-slideshow-cycle-main-frame-row-item .views-field-body-1 .field-content {
+.views-slideshow-cycle-main-frame-row-item .views-field-body-1 .field-content p{
   margin: 5px 0 0 210px;
   width: 250px;
 }
