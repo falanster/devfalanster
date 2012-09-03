@@ -421,6 +421,13 @@ h1, h3 {
 
 /* @end afisha na glavnoj */
 
+/* Novosti na glavnoj*/
+.block-views-headernews-block .views-field-field-image-news img {
+  float:left;
+}
+
+/* @end novosti na glavnoj*/
+
 /* Poll */
 
 #block-poll-recent .links {
