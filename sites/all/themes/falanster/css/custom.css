@@ -631,7 +631,11 @@ h1, h3 {
  }
 
 .field-name-field-f-voc .field-item {
+<<<<<<< HEAD
   float:left;
+=======
+  margin-top: 35px;
+>>>>>>> ca80704cd9e30ec40b98653f61dca92a6311c0e3
 }
 
 .date-display-single {
