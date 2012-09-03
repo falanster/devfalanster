@@ -414,7 +414,7 @@ h1, h3 {
   margin: 0 10px 10px 0;
 } */
 
-#block-views-afishi-block-2 .views-field-field-image img {
+.views-slideshow-cycle-main-frame-row-item .views-field-field-image img {
   float:left;
   margin: 0 10px 10px 0;
 }
