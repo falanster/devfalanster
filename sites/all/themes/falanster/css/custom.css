@@ -400,12 +400,18 @@ h1, h3 {
 }
 
 /* Afisha na glavnoj */
-#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
+
+/*#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
+  float:left;
+  margin: 0 10px 10px 0;
+} */
+
+.views-slideshow-cycle-main-frame-row .views-field-field-image img {
   float:left;
   margin: 0 10px 10px 0;
 }
 
-#views_slideshow_cycle_main_afishi-block_1 .views-field-body .field-content {
+.views-slideshow-cycle-main-frame-row .field-content {
   margin: 5px 0 0 210px;
   width: 250px;
 }
