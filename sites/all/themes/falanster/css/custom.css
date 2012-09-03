@@ -629,7 +629,12 @@ h1, h3 {
    float: left;
    display: inline; 
  }
- .date-display-single {
+
+.field-name-field-f-voc .field-item {
+  float:left;
+}
+
+.date-display-single {
    color: #c2c2c2;
    font-size: 12px;
  }
