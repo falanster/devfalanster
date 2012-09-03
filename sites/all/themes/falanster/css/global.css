@@ -39,6 +39,20 @@
 	display: none;
 }
 
+/*Falanster block*/
+
+#block-block-10 img {
+  margin-top: -20px;
+  margin-right: -50px;  
+  position: relative;
+}
+
+#block-block-10 p {
+  margin: 0;
+}
+
+
+
 /*Social Footer*/
 #region-footer-first {
 	display: none;
