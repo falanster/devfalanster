@@ -16,3 +16,30 @@
 }
 
 /*END MENU PART*/
+
+/*Front page*/
+
+/*logo*/
+
+#block-block-11 {
+  margin: 10px 0 10px 0;
+}
+
+#block-block-11 p {
+  margin: 0;  
+}
+
+/*Afisha Block's*/
+
+#block-views-afishi-block-2 {
+	display: block;
+}
+
+#block-views-afishi-block-1 {
+	dispaly: none;
+}
+
+/*Social Footer*/
+#region-footer-first {
+	display: none;
+}
