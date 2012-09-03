@@ -153,15 +153,6 @@ body {
 
 /* Front page */
 
-/*logo*/
-#block-block-11 {
-  margin: 100px 0 10px 0;
-}
-
-#block-block-11 p {
-  margin: 0;  
-}
-
 
 /*header line*/
 #zone-branding { 
@@ -409,12 +400,7 @@ h1, h3 {
 }
 
 /* Afisha na glavnoj */
-/*#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
-  float:left;
-  margin: 0 10px 10px 0;
-} */
-
-.views-slideshow-cycle-main-frame-row-item .views-field-field-image img {
+#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
   float:left;
   margin: 0 10px 10px 0;
 }
@@ -547,24 +533,11 @@ h1, h3 {
 }
 /* @end social networks */
 
-#block-block-10 img {
-  margin-top: -20px;
-  margin-right: -50px;  
-  float: right;
-  position: relative;
-}
+
 .i18n-be #block-block-10 img,
 .i18n-en #block-block-10 img {
 	margin-bottom: 15px;
 }
-
-#block-block-10 {
-  float: right;
-}
-#block-block-10 p {
-  margin: 0;
-}
-
 #block-menu-menu-hor-bottom-menu ul li {
   list-style: none;
   display: inline;
