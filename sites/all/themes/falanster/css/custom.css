@@ -309,6 +309,7 @@ h1, h3 {
 /*share block*/
 .sharethis-buttons {
 	margin: 30px 0 0 0;
+	clear: left;
 }
 
 .page-frontpage #region-content .content,
@@ -629,7 +630,7 @@ h1, h3 {
    display: inline; 
  }
 
-.field-name-field-open-tag .field .field-label {
+.field-name-field-open-tag .field-label {
   float:left;
 }
 
