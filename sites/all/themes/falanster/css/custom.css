@@ -100,6 +100,17 @@ a:visited,
 #zone-content .view-news-list .pager {
   margin: 15px 0;
 }
+/*read more link*/
+.view-projects .node-links ul li a, .view-projects .comment-links ul li a {
+  border: none;
+  background: none;
+  font-weight: none;
+  margin: 0;
+  padding: 0;
+  text-shadow: none;
+}
+
+
 
 .field-name-field-open-tag .field-item a,
 .field-name-field-open-tag .field-item span {
@@ -884,15 +895,7 @@ div.feed-icon {
   text-align: right;
 }
 
-/*read more link*/
-.node-links ul li a, .comment-links ul li a {
-  border: none;
-  background: none;
-  font-weight: none;
-  margin: 0;
-  padding: 0;
-  text-shadow: none;
-}
+
 
 
 
