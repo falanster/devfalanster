@@ -325,12 +325,12 @@ h1, h3 {
   padding: 25px;
 }
 .page-frontpage #block-views-last-video-or-podcast-block .content {
-	padding-bottom: 0px;
-	margin: 0 0 30px 0;
+  padding-bottom: 0px;
+  margin: 0 0 30px 0;
 }
 
 .view-afishi .views-field-title {
-	padding: 0 0 15px 0;
+  padding: 0 0 15px 0;
 }
 
 .view-afishi .views-field-title a,
@@ -343,22 +343,25 @@ h1, h3 {
 .block-views-headernews-block .views-field-title a,
 .block-views-headernews-block .views-field-title a:hover,
 .block-views-headernews-block .views-field-title a:visited {
-	font-size: 16px;
-	font-weight: bold;
-	color: #444243;
-	line-height: 22px;
-	text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #444243;
+  line-height: 22px;
+  text-decoration: none;
 }
 
 #block-views-headernews-block-1 .views-field-title a {
-	font-size: 14px;
-	color: #444243;
-	line-height: 22px;
-	text-decoration: none;	
+  font-size: 12px;
+  color: #444243;
+  line-height: 16px;
+  text-decoration: none;		
+}
+#block-views-headernews-block-1 .views-field-title {
+  margin: 0 0 15px 0;	
 }
 #block-views-headernews-english-block-1 .view-footer a,
 #block-views-headernews-block-1 .view-footer a {
-	float: right;
+  float: right;
   color: #D43E44;
   text-decoration: underline;
 }
@@ -629,6 +632,12 @@ h1, h3 {
  
 .field-name-field-open-tag {
   margin: 15px 0 0 0;
+  float: left;
+  width: 100%;
+}
+.field-name-field-open-tag .field-items .field-item {
+  float: left;
+  padding: 0 10px 0;
 }
  
 .field-name-field-open-tag .field-item {
