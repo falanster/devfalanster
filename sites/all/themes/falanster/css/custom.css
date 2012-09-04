@@ -395,13 +395,16 @@ h1, h3 {
   text-decoration: none;
 }
 
-#block-views-headernews-block-1 .views-field-title a {
+#block-views-headernews-block-1 .views-field-title a,
+.view-headernews-english .views-field-title a {
+	
   font-size: 12px;
   color: #444243;
   line-height: 16px;
   text-decoration: none;		
 }
-#block-views-headernews-block-1 .views-field-title {
+#block-views-headernews-block-1 .views-field-title,
+.view-headernews-english .views-field-title a {
   margin: 0 0 15px 0;	
 }
 #block-views-headernews-english-block-1 .view-footer a,
@@ -850,10 +853,13 @@ tr.odd td {
 }
 .i18n-en .view-last-video-or-podcast .views-field-title,
 .view-last-video-or-podcast .views-field-title {
-	margin: 0 0 15px 0;
+  margin: 0 0 15px 0;
+}
+.i18n-en #block-views-headernews-english-block .views-field-title {
+  margin: 0 0 10px 0;
 }
 .i18n-en #block-views-headernews-english-block .views-field-title a {
-	color: #444243;
+  color: #444243;
   font-size: 16px;
   font-weight: bold;
   line-height: 22px;
