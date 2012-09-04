@@ -85,10 +85,9 @@ a:visited,
   margin: 15px 0 7px 0;
 }
 #zone-content .view-news-list .item-list {
-  padding: 20px 0 10px 0;
+  padding: 40px 0 10px 0;
   float: left;
   width: 100%;
-  background: red;
 }
 #zone-content .view-projects .views-field-title,
 #zone-content .view-clubs .views-field-title {
