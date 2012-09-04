@@ -633,24 +633,30 @@ h1, h3 {
    padding: 0 0 15px 0;
 }
  
-.not-front #page #block-system-main .field-name-field-open-tag {
+.not-front #page .field-name-field-open-tag {
+  margin: 15px 0 0 0;
+  float: left;
+  width: 100%;
+  background: red;
+}
+.field-name-field-open-tag {
   margin: 15px 0 0 0;
   float: left;
   width: 100%;
   background: red;
 }
 
-#block-system-main .field-name-field-open-tag .field-items .field-item {
+.not-front #page .field-name-field-open-tag .field-items .field-item {
   float: left;
   padding: 0 10px 0 0;
 }
  
-#block-system-main .field-name-field-open-tag .field-item {
+.not-front #page .field-name-field-open-tag .field-item {
    float: left;
    display: inline; 
  }
 
-#block-system-main .field-name-field-open-tag .field-label {
+.not-front #page .field-name-field-open-tag .field-label {
   float:left;
 }
 
