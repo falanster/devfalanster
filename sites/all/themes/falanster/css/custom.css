@@ -621,6 +621,7 @@ h1, h3 {
 /*.not-front #section-content .block {
    padding: 0 0 30px 0;
 }*/
+
 .not-front  #section-content #block-views-twitter-list-block {
   height: auto;
   padding: 0 0 0px 0;
@@ -639,6 +640,7 @@ h1, h3 {
   width: 100%;
   background: red;
 }
+
 .field-name-field-open-tag {
   margin: 15px 0 0 0;
   float: left;
@@ -888,6 +890,4 @@ tr.odd td {
 /*discus style*/
 
 /*image for news and announce */
-#region-sidebar-second
-#
 
