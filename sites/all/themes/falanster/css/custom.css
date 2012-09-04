@@ -891,3 +891,7 @@ tr.odd td {
 
 /*image for news and announce */
 
+.field-label {
+  color: green !important;
+}
+
