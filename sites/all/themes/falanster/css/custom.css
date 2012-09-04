@@ -403,23 +403,13 @@ h1, h3 {
 }
 
 /* Afisha na glavnoj */
-<<<<<<< HEAD
-#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
-#views_slideshow_cycle_teaser_section_afishi-block_1
-=======
-
-/*#views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
->>>>>>> 2f59e88d4261b572b6cab4b749acb59462852378
-  float:left;
-  margin: 0 10px 10px 0;
-} */
 
 .views-slideshow-cycle-main-frame-row-item .views-field-field-image img {
   float: left;
   margin: 0 10px 10px 0;
 }
 
-.views-slideshow-cycle-main-frame-row-item .views-field-body-1 .field-content p{
+.views-slideshow-cycle-main-frame-row-item .views-field-body-1 .field-content p {
   margin: 5px 0 0 210px;
   width: 210px;
 }
@@ -455,7 +445,7 @@ h1, h3 {
 }
 .not-front #block-views-twitter-list-block {
    height: auto;
- }
+}
 
 #block-views-twitter-list-block .block-inner {
   background: #e9eaec;
@@ -463,40 +453,33 @@ h1, h3 {
 .not-front #block-views-twitter-list-block .block-inner {
 	background: none;
 }
-
 #block-views-twitter-list-block .block-title {
   color: #383431;
   font-size: 15px;
   margin-left: 10px;
   font-weight: normal;
 }
-
 #block-views-twitter-list-block .views-field-text {
   font-size: 12px;
 }
-
 #block-views-twitter-list-block .views-field-profile-image-url img {
   width: 50px;
   height: 50px;
   float: left;
   padding-right: 5px;
 }
-
 #block-views-twitter-list-block .views-field-screen-name span {
   font-size: 13px;
   font-weight: bold;
   margin-left: 5px;
   float: left;  
 }
-
 #block-views-twitter-list-block .views-field-created-time span {
   margin-left: 5px;
   font-size: 11px;
 }
-
 #block-views-twitter-list-block .views-field-text span {
 }
-
 #block-views-twitter-list-block .views-row-odd,
 #block-views-twitter-list-block .views-row-even {
   margin-bottom: 5px;
@@ -538,9 +521,7 @@ h1, h3 {
 
 .fbConnectWidgetHeaderTitleBranded {
   background: #c2c1c1;
-
 }
-
 .region-sidebar-second-inner #block-views-twitter-list-block {
   width: 300px;
   margin: 0;
@@ -699,40 +680,30 @@ h1, h3 {
   clear: left;
   height: 270px;
 }
-
 .view-gallery .views-row .views-field-title a {
   text-decoration: none !important;
   font-size: 16px !important; 
   font-weight: bold;
   color: #444243 !important;
 }
-
 .view-gallery .views-row .views-field-field-date {
   color: #72706F;
 }
-
 .view-gallery .views-row .views-label-field-related-node {
   padding-right: 5px;
   float: left;
 }
-
 .view-gallery .views-row .views-label-field-related-node a { 
   width: 100%;
 }
-
 .view-gallery .views-row .views-field-field-image {
   float: left;
   padding-right: 10px;
   margin-bottom: 15px;
 }
-
 .view-gallery .views-row .views-field-field-image img {
   clear: left;
 }
-
-.view-gallery .views-row .views-field-body {
-}
-
 .view-gallery .views-row .views-field-field-open-tag {
   clear: left;
 }
@@ -828,7 +799,6 @@ h1, h3 {
   font-size: 100%;
   font-weight: normal;
 }
-
 tr.odd td {
 	background: #F3F4F5;
 }
@@ -844,7 +814,6 @@ tr.odd td {
 .view-last-video-or-podcast .views-field-title {
 	margin: 0 0 15px 0;
 }
-
 .i18n-en #block-views-headernews-english-block .views-field-title a {
 	color: #444243;
   font-size: 16px;
@@ -855,8 +824,6 @@ tr.odd td {
 .i18n-en #block-views-headernews-english-block .views-field-title a:hover {
 	text-decoration: underline;
 }
-
-
 .i18n-en .view-headernews-english .views-field-title a {
   color: #444243;
   font-size: 14px;
