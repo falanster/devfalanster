@@ -84,6 +84,11 @@ a:visited,
 #zone-content .view-news-list .views-field-title {
   margin: 10px 0 10px 0;
 }
+
+#zone-content .view-news-list .item-list {
+  pading: 20px 0 10px 0;
+}
+
 #zone-content .view-projects .views-field-title,
 #zone-content .view-clubs .views-field-title {
   margin: 30px 0 10px 0;
@@ -104,7 +109,7 @@ a:visited,
 .view-projects .node-links ul li a, .view-projects .comment-links ul li a {
   border: none;
   background: none;
-  font-weight: none;
+  font-weight: normal;
   margin: 0;
   padding: 0;
   text-shadow: none;
