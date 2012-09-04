@@ -72,6 +72,13 @@ a:visited,
   color: #D25D5E;
 }
 
+#zone-content .view-news-list .views-field-title a {
+  font-size: 28px;
+}
+#zone-content .view-news-list .views-field-title {
+  margin: 0 0 20px 0;
+}
+
 .field-name-field-open-tag .field-item a,
 .field-name-field-open-tag .field-item span {
   margin-right: 5px;
@@ -490,7 +497,7 @@ h1, h3 {
 	margin: 5px 0;
 }
 #block-views-headernews-block .content {
-	padding: 0 !important;	
+	padding: 25px 25px 0 25px !important;	
 }
 #block-views-headernews-block p {
   padding: 0;
@@ -504,7 +511,7 @@ h1, h3 {
 }
 
 #block-block-3 #vk_groups #vkwidget1 .community_head {
-  background: red !important;
+  background: red;
 }
 
 #block-block-4 {
@@ -619,14 +626,6 @@ h1, h3 {
   margin: 15px 0 0 0;
   float: left;
   width: 100%;
-  background: red;
-}
-
-.field-name-field-open-tag {
-  margin: 15px 0 0 0;
-  float: left;
-  width: 100%;
-  background: red;
 }
 
 .not-front #page .field-name-field-open-tag .field-items .field-item {
@@ -856,9 +855,11 @@ tr.odd td {
 
 /*discus style*/
 
-/*image for news and announce */
-
-.field-label {
-  color: green !important;
+/*region content onth inner page*/
+#region-content article {
+  padding: 0 0 30px 0;
 }
 
+div.feed-icon {
+  text-align: right;
+}
