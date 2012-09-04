@@ -870,8 +870,8 @@ tr.odd td {
 }
 .i18n-en .view-headernews-english .views-field-title a {
   color: #444243;
-  font-size: 14px;
-  line-height: 22px;
+  font-size: 12px;
+  line-height: 16px;
   text-decoration: none;
 }
 .i18n-en .view-headernews-english .views-field-title a:hover {
