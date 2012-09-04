@@ -410,6 +410,7 @@ h1, h3 {
 
 /* Afisha na glavnoj */
 #views_slideshow_cycle_main_afishi-block_1 .views-field-field-image img {
+#views_slideshow_cycle_teaser_section_afishi-block_1
   float:left;
   margin: 0 10px 10px 0;
 }
@@ -774,7 +775,7 @@ h1, h3 {
 }
 
 #block-views-gcalendar-block h2 {
-	padding: 0 0 10px 0; 
+	padding: 30px 0 10px 0; 
 }
 .fc-event-default, .fc-event-default .fc-event-skin, .fc-event-default .fc-event-time, .fc-event-default a,
 .fc-event-inner {
