@@ -73,8 +73,8 @@ a:visited,
 }
 
 #zone-content .view-news-list .views-field-title a {
-  font-size: 28px;
-  line-height: 32px;
+  font-size: 20px;
+  line-height: 24px;
 }
 #zone-content .view-news-list .views-field-title {
   margin: 30px 0 20px 0;
@@ -86,7 +86,7 @@ a:visited,
 #zone-content .view-news-list .views-row {
   float: left;
   width: 100%;
-  padding: 0 0 30px 0;
+  padding: 0 0 10px 0;
 }
 
 .field-name-field-open-tag .field-item a,
