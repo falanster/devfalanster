@@ -633,7 +633,7 @@ h1, h3 {
    padding: 0 0 15px 0;
 }
  
-#block-system-main .field-name-field-open-tag {
+.not-front #page #block-system-main .field-name-field-open-tag {
   margin: 15px 0 0 0;
   float: left;
   width: 100%;
