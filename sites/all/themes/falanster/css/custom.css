@@ -86,6 +86,8 @@ a:visited,
 }
 #zone-content .view-news-list .item-list {
   padding: 20px 0 10px 0;
+  float: left;
+  width: 100%;
 }
 #zone-content .view-projects .views-field-title,
 #zone-content .view-clubs .views-field-title {
