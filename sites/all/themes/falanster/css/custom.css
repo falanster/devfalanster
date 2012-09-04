@@ -72,15 +72,19 @@ a:visited,
   color: #D25D5E;
 }
 
-#zone-content .view-news-list .views-field-title a {
+#zone-content .view-news-list .views-field-title a,
+#zone-content .view-projects .views-field-title a,
+#zone-content .view-clubs .views-field-title a {
   color: #444243;
   font-size: 16px;
   font-weight: bold;
   text-decoration: none;
   line-height: 20px;
 }
-#zone-content .view-news-list .views-field-title {
-  margin: 30px 0 10px 0;
+#zone-content .view-news-list .views-field-title,
+#zone-content .view-projects .views-field-title,
+#zone-content .view-clubs .views-field-title {
+  margin: 10px 0 10px 0;
 }
 #zone-content .view-news-list .field-content img {
   float: left;
@@ -92,7 +96,7 @@ a:visited,
   padding: 0 0 10px 0;
 }
 #zone-content .view-news-list .pager {
-  padding: 15px 0;
+  margin: 15px 0;
 }
 
 .field-name-field-open-tag .field-item a,
@@ -326,14 +330,18 @@ h1, h3 {
 }
 /*share block*/
 .sharethis-buttons {
-	margin: 30px 0 0 0;
-	clear: left;
+  margin: 30px 0 0 0;
+  clear: left;
+}
+.node-afishi .sharethis-buttons {
+  margin: 50px 0 0 0;
+  clear: left;
+}
+.sharethis-wrapper {
+  margin: 15px 0; 
 }
 
-.node-afishi .sharethis-buttons {
-  	margin: 50px 0 0 0;
-	clear: left;
-}
+
 
 .page-frontpage #region-content .content,
 .page-frontpage #region-sidebar-second .content,
