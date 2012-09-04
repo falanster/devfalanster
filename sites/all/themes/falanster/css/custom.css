@@ -81,10 +81,12 @@ a:visited,
   text-decoration: none;
   line-height: 20px;
 }
-#zone-content .view-news-list .views-field-title,
+#zone-content .view-news-list .views-field-title {
+  margin: 10px 0 10px 0;
+}
 #zone-content .view-projects .views-field-title,
 #zone-content .view-clubs .views-field-title {
-  margin: 10px 0 10px 0;
+  margin: 30px 0 10px 0;
 }
 #zone-content .view-news-list .field-content img {
   float: left;
@@ -103,7 +105,6 @@ a:visited,
 .field-name-field-open-tag .field-item span {
   margin-right: 5px;
 }
-
 
 /*Footer region*/
 
@@ -872,12 +873,7 @@ tr.odd td {
 .i18n-en #block-views-headernews-english-block-1 {
 	margin: 0 0 25px 0;
 }
-
-
 /*.i18n-en*/
-
-
-/*discus style*/
 
 /*region content onth inner page*/
 #region-content article {
@@ -887,3 +883,16 @@ tr.odd td {
 div.feed-icon {
   text-align: right;
 }
+
+/*read more link*/
+.node-links ul li a, .comment-links ul li a {
+  border: none;
+  background: none;
+  font-weight: none;
+  margin: 0;
+  padding: 0;
+  text-shadow: none;
+}
+
+
+
