@@ -84,11 +84,9 @@ a:visited,
 #zone-content .view-news-list .views-field-title {
   margin: 10px 0 10px 0;
 }
-
 #zone-content .view-news-list .item-list {
-  pading: 20px 0 10px 0;
+  padding: 20px 0 10px 0;
 }
-
 #zone-content .view-projects .views-field-title,
 #zone-content .view-clubs .views-field-title {
   margin: 30px 0 10px 0;
@@ -101,9 +99,6 @@ a:visited,
   float: left;
   width: 100%;
   padding: 0 0 10px 0;
-}
-#zone-content .view-news-list .pager {
-  margin: 15px 0;
 }
 /*read more link*/
 .view-projects .node-links ul li a, .view-projects .comment-links ul li a {
