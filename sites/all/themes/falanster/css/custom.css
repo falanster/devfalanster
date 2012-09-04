@@ -82,12 +82,13 @@ a:visited,
   line-height: 20px;
 }
 #zone-content .view-news-list .views-field-title {
-  margin: 10px 0 10px 0;
+  margin: 15px 0 7px 0;
 }
 #zone-content .view-news-list .item-list {
   padding: 20px 0 10px 0;
   float: left;
   width: 100%;
+  background: red;
 }
 #zone-content .view-projects .views-field-title,
 #zone-content .view-clubs .views-field-title {
