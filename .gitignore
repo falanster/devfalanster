@@ -15,4 +15,6 @@ sites/*/private
 .project/*
 .settings/*
 
+# Ignore swp files
 
+*.swp
