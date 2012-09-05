@@ -338,11 +338,6 @@ h1, h3 {
 
 /*agenda block*/
 
-.agenda-block {
-  position: relative;
-  width: auto;
-  margin: 0 -25px 0 -25px;
-}
 .not-front .agenda-block {
 	margin: 0;
 }
