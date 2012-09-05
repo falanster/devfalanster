@@ -728,7 +728,7 @@ clear: none;
 }
 /* baza vedaj */
 
-.view-id-mediateka .view-header p {
+.view-id-mediateka .view-header p a{
   float: right;
 }
 /* @end baza vedaj */
