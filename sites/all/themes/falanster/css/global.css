@@ -424,12 +424,12 @@ h1, h3 {
 #block-views-headernews-block-1 .view-footer a {
   float: right;
   color: #D43E44;
-  text-decoration: underline;
+/*  text-decoration: underline; */
 }
 #block-views-headernews-english-block-1 .view-footer a:hover,
 #block-views-headernews-block-1 .view-footer a:hover {
-  color: #000;
-  
+/*  color: #000; */
+  text-decoration: underline;  
 }
 
 #block-views-headernews-block-1 .content {
