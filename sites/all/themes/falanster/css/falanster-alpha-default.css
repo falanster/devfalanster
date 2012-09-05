@@ -725,10 +725,10 @@ clear: none;
 
 #zone-content .view-news-list .field-content img {
   float: left;
-
+}
 /* baza vedaj */
 
-.view-id-mediateka .view-header p a {
+.view-id-mediateka .view-header p {
   float: right;
 }
 /* @end baza vedaj */
