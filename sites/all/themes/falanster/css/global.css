@@ -519,7 +519,11 @@ h1, h3 {
 }
 /* @end Footer*/
 
+/*Bottom Banner*/
 
+#views_slideshow_cycle_main_banner-block {
+	display: none;
+}
 
 /* @end Front page */
 
