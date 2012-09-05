@@ -1,8 +1,6 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 
-/*here is all custom style for falanster theme*/
-
 /*common styles*/
 h2.block-title {
   margin: 0 0 15px 0;
@@ -145,11 +143,11 @@ a:visited,
   height: 120px;
 }
 
-.not-front #zone-footer {
+/*.not-front #zone-footer {
   width: 960px;
   margin: 0 auto;
 }
-
+*/
 #region-footer-first,
 .not-front #zone-postscript-wrapper,
 .front #region-preface-first {
@@ -164,13 +162,6 @@ a:visited,
   width: 100%;
 }
 
-#region-footer-first .region-footer-first-inner,
-#region-footer-second .region-footer-second-inner,
-#region-preface-first .region-preface-first-inner {
-  width: 960px;
-  margin: 0 auto;
-  float: none;
-}
 #region-footer-second {
   margin: 0 auto;
   width: 100%;
@@ -178,6 +169,11 @@ a:visited,
 
 #region-footer-second .region-footer-second-inner {
   height: 100px;
+}
+
+#block-menu-menu-hor-bottom-menu
+{
+	margin-right: 20px;
 }
 
 #block-menu-menu-hor-bottom-menu .menu a {
@@ -201,6 +197,38 @@ a:visited,
   margin: 0;
 }
 
+/*Falanster logo footer block*/
+
+#block-block-10 img {
+  margin-top: -20px;
+  position: relative;
+  float: right;
+}
+
+#block-block-10 p {
+  margin: 0;
+}
+
+.i18n-be #block-block-10 img,
+.i18n-en #block-block-10 img {
+	margin-bottom: 15px;
+}
+
+
+#footer_logo_by img {
+	width: 320px;
+	height: 79px;
+}
+
+#footer_logo_ru img {
+	width: 320px;
+	height: 86px;
+}
+#footer_logo_en img {
+	width: 320px;
+	height: 72px;
+}
+
 /*@end footer*/
 
 
@@ -214,7 +242,7 @@ body {
 /*header line*/
 #zone-branding { 
   border-top: 3px #C72C29 solid;
-  padding: 0 3% 0;
+  padding: 0 10px 0 10px;
 }
 
 #block-block-7 {
@@ -223,8 +251,10 @@ body {
 }
 
 #block-block-5 {
-  float: right;
+  float: left;
+  margin-top: 20px;
 }
+
 
 #block-block-5 p {
   margin: 0;
@@ -293,7 +323,9 @@ h1, h3 {
 
 	#block-menu-menu-mobile-menu {
 		display: block;
+		padding: 0px 20px;
 	}
+
 
 	/*END MENU PART*/
 
@@ -465,23 +497,6 @@ h1, h3 {
 /*Social Footer*/
 #region-footer-first {
 	display: none;
-}
-
-/*Falanster logo footer block*/
-
-#block-block-10 img {
-  margin-top: -20px;
-  margin-right: -50px;  
-  position: relative;
-}
-
-#block-block-10 p {
-  margin: 0;
-}
-
-.i18n-be #block-block-10 img,
-.i18n-en #block-block-10 img {
-	margin-bottom: 15px;
 }
 
 
