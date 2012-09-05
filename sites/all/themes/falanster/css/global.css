@@ -143,11 +143,11 @@ a:visited,
   height: 120px;
 }
 
-.not-front #zone-footer {
+/*.not-front #zone-footer {
   width: 960px;
   margin: 0 auto;
 }
-
+*/
 #region-footer-first,
 .not-front #zone-postscript-wrapper,
 .front #region-preface-first {
@@ -162,13 +162,6 @@ a:visited,
   width: 100%;
 }
 
-#region-footer-first .region-footer-first-inner,
-#region-footer-second .region-footer-second-inner,
-#region-preface-first .region-preface-first-inner {
-  width: 960px;
-  margin: 0 auto;
-  float: none;
-}
 #region-footer-second {
   margin: 0 auto;
   width: 100%;
@@ -176,6 +169,11 @@ a:visited,
 
 #region-footer-second .region-footer-second-inner {
   height: 100px;
+}
+
+#block-menu-menu-hor-bottom-menu
+{
+	margin-right: 20px;
 }
 
 #block-menu-menu-hor-bottom-menu .menu a {
@@ -199,6 +197,38 @@ a:visited,
   margin: 0;
 }
 
+/*Falanster logo footer block*/
+
+#block-block-10 img {
+  margin-top: -20px;
+  position: relative;
+  float: right;
+}
+
+#block-block-10 p {
+  margin: 0;
+}
+
+.i18n-be #block-block-10 img,
+.i18n-en #block-block-10 img {
+	margin-bottom: 15px;
+}
+
+
+#footer_logo_by img {
+	width: 320px;
+	height: 79px;
+}
+
+#footer_logo_ru img {
+	width: 320px;
+	height: 86px;
+}
+#footer_logo_en img {
+	width: 320px;
+	height: 72px;
+}
+
 /*@end footer*/
 
 
@@ -212,13 +242,19 @@ body {
 /*header line*/
 #zone-branding { 
   border-top: 3px #C72C29 solid;
-  padding: 0 3% 0;
+  padding: 0 10px 0 10px;
 }
 
 #block-block-7 {
   padding: 10px 0;
   float: right;
 }
+
+#block-block-5 {
+  float: left;
+  margin-top: 20px;
+}
+
 
 #block-block-5 p {
   margin: 0;
@@ -461,23 +497,6 @@ h1, h3 {
 /*Social Footer*/
 #region-footer-first {
 	display: none;
-}
-
-/*Falanster logo footer block*/
-
-#block-block-10 img {
-  margin-top: -20px;
-  margin-right: -50px;  
-  position: relative;
-}
-
-#block-block-10 p {
-  margin: 0;
-}
-
-.i18n-be #block-block-10 img,
-.i18n-en #block-block-10 img {
-	margin-bottom: 15px;
 }
 
 
