@@ -1,8 +1,6 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 
-/*here is all custom style for falanster theme*/
-
 /*common styles*/
 h2.block-title {
   margin: 0 0 15px 0;
@@ -222,10 +220,6 @@ body {
   float: right;
 }
 
-#block-block-5 {
-  float: right;
-}
-
 #block-block-5 p {
   margin: 0;
   padding: 0;
@@ -293,7 +287,9 @@ h1, h3 {
 
 	#block-menu-menu-mobile-menu {
 		display: block;
+		padding: 0px 20px;
 	}
+
 
 	/*END MENU PART*/
 
