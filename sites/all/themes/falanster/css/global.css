@@ -122,6 +122,10 @@ a:visited,
 clear: both;
 }
 
+.field-item div {
+	clear: both;
+}
+
 /*@end common styles*/
 
 /*Site logo*/
