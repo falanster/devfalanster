@@ -728,7 +728,7 @@ clear: none;
 
 /* baza vedaj */
 
-.view-mediateka p a {
+.view-id-mediateka .view-header p a {
   float: right;
 }
 /* @end baza vedaj */
