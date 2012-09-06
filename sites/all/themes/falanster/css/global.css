@@ -586,7 +586,7 @@ h1, h3 {
  
 .not-front #page .field-name-field-open-tag {
   margin: 15px 0 0 0;
-  float: left;
+/*  float: left; */
   width: 100%;
 }
 
