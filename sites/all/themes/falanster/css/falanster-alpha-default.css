@@ -1,4 +1,3 @@
-
 /* This file will hold styles for all layouts using the alpha grid (i.e. not the mobile layout). */
 
 
@@ -18,11 +17,10 @@
 }
 
 
-
 /* Common Styles */
 
 .node p {
-clear: none;
+  clear: none;
 }
 
 .field-item div {
@@ -70,13 +68,13 @@ clear: none;
 /* ENABLE MAIN MENU */
 
 #block-nice-menus-1, #block-nice-menus-2, #block-nice-menus-3 {
-	display: block;
+  display: block;
 }
 
 /* DISABLE MOBILE MENU */
 
 #block-menu-menu-mobile-menu {
-	display: none;
+  display: none;
 }
 
 /* Nice menu settings */
@@ -136,11 +134,11 @@ clear: none;
 /*Afisha Block's*/
 
 #block-views-afishi-block-2 {
-	display: none;
+  display: none;
 }
 
 #block-views-afishi-block-1 {
-	display: block;
+  display: block;
 }
 
 .views-slideshow-cycle-main-frame-row-item .views-field-field-image img {
@@ -176,7 +174,7 @@ clear: none;
 /*Social Footer*/
 
 #region-footer-first {
-	display: block;
+  display: block;
 }
 
 #region-footer-first .region-footer-first-inner,
@@ -219,14 +217,14 @@ clear: none;
   float: left;  
 }
 .not-front #block-views-twitter-list-block {
-   height: auto;
+  height: auto;
 }
 
 #block-views-twitter-list-block .block-inner {
   background: #e9eaec;
 }
 .not-front #block-views-twitter-list-block .block-inner {
-	background: none;
+  background: none;
 }
 #block-views-twitter-list-block .block-title {
   color: #383431;
@@ -262,10 +260,10 @@ clear: none;
 }
 
 #block-views-headernews-block .content .field-content {
-	margin: 5px 0;
+  margin: 5px 0;
 }
 #block-views-headernews-block .content {
-	padding: 25px 25px 0 25px !important;	
+  padding: 25px 25px 0 25px !important;	
 }
 #block-views-headernews-block p {
   padding: 0;
@@ -289,9 +287,9 @@ clear: none;
   margin: 0 25px 0 40px;
 }
 #block-block-4 p {
-	margin: 0;
-	padding: 0;
-	line-height: 0;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
 }
 
 .fbConnectWidgetHeaderTitleBranded {
@@ -302,30 +300,24 @@ clear: none;
   margin: 0;
 }
 .region-sidebar-second .block {
-	margin: 0 0 30px 0;
+  margin: 0 0 30px 0;
 }
 /* @end social networks */
-
-
-
-
-
-
 
 /*falanster logo footer block*/
 
 #footer_logo_by img {
-	width: 395px;
-	height: 97px;
+  width: 395px;
+  height: 97px;
 }
 
 #footer_logo_ru img {
-	width: 435px;
-	height: 120px;
+  width: 435px;
+  height: 120px;
 }
 #footer_logo_en img {
-	width: 407px;
-	height: 95px;
+  width: 407px;
+  height: 95px;
 }
 
 #block-block-12 img {
@@ -355,7 +347,7 @@ clear: none;
 }
 
 .not-front #block-views-twitter-list-block .content {
-	padding: 25px;	
+  padding: 25px;	
 }
 
 /* Novosti na glavnoj*/

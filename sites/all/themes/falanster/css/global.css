@@ -360,6 +360,7 @@ h1, h3 {
 .sharethis-buttons {
   margin: 30px 0 0 0;
   clear: left;
+  clear: right;
 }
 .node-afishi .sharethis-buttons {
   margin: 50px 0 0 0;
