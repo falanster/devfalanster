@@ -51,6 +51,7 @@
 #block-block-5 {
   float: right;
   margin-top: 0;
+  margin-bottom: 0;
 }
 
 #block-block-5 p {
@@ -62,6 +63,14 @@
 #zone-content {
   padding: 0 0 30px 0;
 }
+
+/*Localization block*/
+.block-locale {
+  float: right;
+  margin: 30px 0 35px 0;
+}
+
+/*End localization block*/
 
 /*MENU PART*/
 
