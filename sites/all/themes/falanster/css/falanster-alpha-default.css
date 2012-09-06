@@ -376,3 +376,11 @@
 }
 
 /* @end video in afisha */
+
+/* video na glavnoj */
+
+.view-last-video-or-podcast .views-field-colorbox img {
+  margin-bottom: 20px;
+}
+
+/* @end video na glavnoj */
