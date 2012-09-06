@@ -369,3 +369,10 @@
   float: right;
 }
 /* @end baza vedaj */
+
+/* video in afisha */
+.node-afishi .field-name-field-video-youtube {
+  margin-top: 10px;
+}
+
+/* @end video in afisha */
