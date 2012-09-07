@@ -411,7 +411,7 @@ nav.links {
 
 .page-taxonomy-term .field-name-field-image .field-item img {
   float: left;
-  margin: 10px;
+  margin: 0 10px 0;
 }
 
 /* @end stranica po tegam */
