@@ -395,3 +395,9 @@
 
 /* @end video na glavnoj */
 
+nav.links {
+  float: left;
+  width: 100%;
+  margin: 15px 0 0 0;
+}
+
