@@ -352,10 +352,12 @@
   background: red;
 }
 
-#block-menu-menu-hor-bottom-menu .menu{
+#block-menu-menu-hor-bottom-menu ul{
   margin: 0;
-  float: left;
+  float: right;
   background: yellow;
+  height: 30px;
+  width: 100%;
 }
 
 /*Twitter block*/
