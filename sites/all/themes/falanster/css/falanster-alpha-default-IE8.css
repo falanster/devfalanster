@@ -1,2 +1,19 @@
 /* CSS Document */
 
+/* Footer menu */
+.region-inner region-footer-second-inner {
+  height: 0px;
+}
+
+#block-menu-menu-hor-bottom-menu ul{
+  margin: 0;
+  float: right;
+  background: yellow;
+  padding-bottom: 80px;
+}
+
+#block-menu-menu-hor-bottom-menu ul li{
+  padding-top: 0px;
+}
+
+/* @end footer menu */
