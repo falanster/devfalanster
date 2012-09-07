@@ -402,7 +402,7 @@
 
 /* Stranica po tegam */
 
-.term-listing-heading .field-name-field-image img {
+.term-listing-heading .field-name-field-image .field-item img {
   float: left;
   margin: 10px;
 }
