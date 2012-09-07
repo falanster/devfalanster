@@ -389,6 +389,11 @@
 
 /* video na glavnoj */
 
+.i18n-en .view-last-video-or-podcast .views-field-colorbox img{
+  margin-left: 0px;
+}
+
+
 .view-last-video-or-podcast .views-field-colorbox img {
   margin-left: -25px;
 }
