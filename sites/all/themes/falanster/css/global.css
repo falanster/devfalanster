@@ -595,6 +595,7 @@ h1, h3 {
 .not-front #page .field-name-field-open-tag .field-items .field-item {
   float: left;
   padding: 0 10px 0 0;
+  clear: right;
 }
  
 .not-front #page .field-name-field-open-tag .field-item {
@@ -604,6 +605,7 @@ h1, h3 {
 
 .not-front #page .field-name-field-open-tag .field-label {
   float:left;
+  clear: right;
 }
 
 /* .field-name-field-f-voc .field-item {
