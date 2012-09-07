@@ -351,4 +351,4 @@ settings[alpha_region_footer_second_css] = ''
 version = '1.x'
 
 stylesheets[all][] = css/custom.css
-stylesheets[all][] = css/falanster-alpha-default-IE8.css 
+# stylesheets[all][] = css/falanster-alpha-default-IE8.css 
