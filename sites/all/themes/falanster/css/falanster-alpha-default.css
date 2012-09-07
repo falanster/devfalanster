@@ -411,7 +411,11 @@ nav.links {
 
 .page-taxonomy-term .field-name-field-image .field-item img {
   float: left;
-  margin: 0 10px 0;
+  margin: 0px 10px 10px 10px;
+}
+
+.page-taxonomy-term .node-gallery .field-name-field-image .field-item img{
+  margin: 0px;
 }
 
 /* @end stranica po tegam */
