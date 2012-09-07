@@ -409,7 +409,7 @@ nav.links {
 
 /* Stranica po tegam */
 
-page-taxonomy-term .field-name-field-image .field-item img {
+.page-taxonomy-term .field-name-field-image .field-item img {
   float: left;
   margin: 10px;
 }
