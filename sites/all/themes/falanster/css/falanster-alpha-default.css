@@ -341,20 +341,9 @@
 
 /*hor bottom menu*/
 
-.region-inner region-footer-second-inner {
-  height: 0px\9; /* for IE 8*/
-}
-
-
 #block-menu-menu-hor-bottom-menu {
   margin: 0;
-  padding-bottom: 80px\9; /* for IE 8 */
 }
-
-#block-menu-menu-hor-bottom-menu ul li{
-  padding-top: 0px\9; /* for IE 8 */
-}
-
 
 /*Twitter block*/
 
