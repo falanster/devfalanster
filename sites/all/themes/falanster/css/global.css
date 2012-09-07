@@ -194,7 +194,7 @@ clear: both;
 }
 #block-menu-menu-hor-bottom-menu .menu li {
   padding: 10px 0 0 15px;
-  padding-top: 0px\9; /* for IE 8 */
+  padding-top: 6px\9; /* for IE 8 */
 }
 
 #block-menu-menu-hor-bottom-menu .menu {
