@@ -769,9 +769,8 @@ tr.odd td {
 /*english home page*/
 .i18n-en .view-last-video-or-podcast .views-field-colorbox {
 	position: relative;
-	margin: 0 0 -25px -25px;
+	margin: 0 0 -55px -25px;
 	float: left;
-	background: red;
 }
 .i18n-en .view-last-video-or-podcast .views-field-title,
 .view-last-video-or-podcast .views-field-title {
