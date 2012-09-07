@@ -345,21 +345,6 @@
   margin: 0;
 }
 
-/* for IE8*/
-
-#block-menu-menu-hor-bottom-menu {
-  float: right;
-  background: red;
-}
-
-#block-menu-menu-hor-bottom-menu ul{
-  margin: 0;
-  float: right;
-  background: yellow;
-  height: 30px;
-  width: 100%;
-}
-
 /*Twitter block*/
 
 .not-front #block-views-twitter-list-block .block-title {
