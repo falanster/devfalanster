@@ -343,8 +343,19 @@
 
 #block-menu-menu-hor-bottom-menu {
   margin: 0;
-  float: left;
+}
+
+/* for IE8*/
+
+#block-menu-menu-hor-bottom-menu {
+  float: right;
   background: red;
+}
+
+#block-menu-menu-hor-bottom-menu .menu{
+  margin: 0;
+  float: left;
+  background: yellow;
 }
 
 /*Twitter block*/
