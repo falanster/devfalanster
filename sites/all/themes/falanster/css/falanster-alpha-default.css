@@ -343,6 +343,8 @@
 
 #block-menu-menu-hor-bottom-menu {
   margin: 0;
+  float: left;
+  background: red;
 }
 
 /*Twitter block*/
