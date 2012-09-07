@@ -400,14 +400,13 @@
 
 /* @end video na glavnoj */
 
-<<<<<<< HEAD
 nav.links {
   float: left;
   width: 100%;
   margin: 15px 0 0 0;
 }
 
-=======
+
 /* Stranica po tegam */
 
 page-taxonomy-term .field-name-field-image .field-item img {
@@ -417,4 +416,4 @@ page-taxonomy-term .field-name-field-image .field-item img {
 
 /* @end stranica po tegam */
 
->>>>>>> 86ea86b7e99b58640a1cdac91dc8a51a08d27a68
+
