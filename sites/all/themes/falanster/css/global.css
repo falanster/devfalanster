@@ -626,6 +626,7 @@ h1, h3 {
  }
 
 .not-front #page .field-name-field-open-tag .field-label {
+  float: left;
   clear: left;
   clear: right;
 }
