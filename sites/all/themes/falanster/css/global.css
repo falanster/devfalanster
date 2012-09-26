@@ -610,7 +610,7 @@ h1, h3 {
  
 .not-front #page .field-name-field-open-tag {
   margin: 15px 0 0 0;
-/*  float: left; */
+  clear: left;
   width: 100%;
 }
 
@@ -627,7 +627,6 @@ h1, h3 {
 
 .not-front #page .field-name-field-open-tag .field-label {
   float: left;
-  clear: left;
   clear: right;
 }
 
