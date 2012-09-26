@@ -253,7 +253,6 @@
 #block-views-twitter-list-block .views-field-screen-name span {
   font-size: 13px;
   font-weight: bold;
-  margin-left: 5px;
   float: left;  
 }
 #block-views-twitter-list-block .views-field-created-time span {
