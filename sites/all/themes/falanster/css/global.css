@@ -106,7 +106,8 @@ a:visited,
   padding: 0 0 10px 0;
 }
 
-#zone-content .view-header {
+#zone-content .view-headernews .view-header,
+#zone-content .view-headernews-english .view-header {
   margin-bottom: 10px;
 }
 
@@ -438,7 +439,8 @@ h1, h3 {
   margin: 0 0 15px 0;	
 }
 
-#block-views-headernews-block-1 .views-field-title {
+#block-views-headernews-block-1 .views-field-title,
+.view-headernews-english .views-field-title {
   margin: 0 0 5px 0;
 }
 
