@@ -100,8 +100,7 @@ a:visited,
   margin: 0 15px 0 0;
 }
 #zone-content .view-news-list .views-row,
-#zone-content .view-headernews-english .views-row,
-#zone-content .view-headernews .views-row {
+#zone-content .view-headernews-english .views-row {
   float: left;
   width: 100%;
   padding: 0 0 10px 0;
@@ -109,6 +108,12 @@ a:visited,
 
 #zone-content .view-header {
   margin-bottom: 10px;
+}
+
+#zone-content .view-headernews .views-row {
+  float: left;
+  width: 100%;
+  padding: 0;
 }
 
 /*read more link*/
