@@ -849,5 +849,7 @@ div.feed-icon {
   text-align: right;
 }
 
-
+#region-content .field-name-field-image {
+  margin: 5px;
+}
 
