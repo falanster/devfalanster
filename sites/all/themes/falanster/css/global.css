@@ -100,14 +100,14 @@ a:visited,
   margin: 0 15px 0 0;
 }
 #zone-content .view-news-list .views-row,
-#zone-content .view-headernews-english .views-row {
+.view-headernews-english .views-row {
   float: left;
   width: 100%;
   padding: 0 0 10px 0;
 }
 
 #zone-content .view-headernews .view-header,
-#zone-content .view-headernews-english .view-header {
+.view-headernews-english .view-header {
   margin-bottom: 10px;
 }
 
