@@ -276,6 +276,7 @@ body {
   float: left;
   margin-top: 20px;
   margin-bottom: 10px;
+  width: 190px;
 }
 
 
@@ -283,6 +284,11 @@ body {
   margin: 0;
   padding: 0;
   float: right;
+}
+
+#block-block-5 img {
+  width: 35px;
+  height: 35px;
 }
 
 #zone-content {
