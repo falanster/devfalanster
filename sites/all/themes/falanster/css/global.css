@@ -276,15 +276,14 @@ body {
   float: left;
   margin-top: 20px;
   margin-bottom: 10px;
-  width: 190px;
+  width: 195px;
 }
-
-
+/*
 #block-block-5 p {
   margin: 0;
   padding: 0;
   float: right;
-}
+}*/
 
 #block-block-5 img {
   width: 35px;
