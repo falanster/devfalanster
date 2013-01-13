@@ -276,8 +276,8 @@ body {
   float: left;
   margin-top: 20px;
   margin-bottom: 10px;
-  width: 195px;
 }
+
 /*
 #block-block-5 p {
   margin: 0;
@@ -285,10 +285,6 @@ body {
   float: right;
 }*/
 
-#block-block-5 img {
-  width: 35px;
-  height: 35px;
-}
 
 #zone-content {
   padding: 0 0 30px 0;
@@ -717,6 +713,12 @@ h1, h3 {
    margin-bottom: 10px;
    margin-top: -30px;
    margin-left: 190px;
+}
+
+.field-name-field-related-node {
+  clear: left;
+  margin: 10px 0 0;
+  width: 100%;
 }
 
 /* gallery */
