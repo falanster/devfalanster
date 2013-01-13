@@ -721,6 +721,11 @@ h1, h3 {
   width: 100%;
 }
 
+.field-name-field-related-node .field-item {
+  margin-right: 10px;
+}
+
+
 /* gallery */
 
 .node-gallery .field-name-field-image .field-items img {
@@ -734,9 +739,8 @@ h1, h3 {
   padding-right: 5px;
 }
 
-.node-gallery .field-name-field-open-tag .field-item span {
+.node-gallery .field-name-field-open-tag .field-item span  {
   margin-right: 5px;
-
 }
 
 
