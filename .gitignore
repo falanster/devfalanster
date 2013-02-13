@@ -9,6 +9,7 @@ sites/*/private
 .metadata
 .project
 .settings
+.htaccess
 
 .buildpath/*
 .metadata/*
