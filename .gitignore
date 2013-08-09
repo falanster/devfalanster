@@ -16,6 +16,7 @@ sites/*/private
 .metadata/*
 .project/*
 .settings/*
+backup/
 
 # Ignore swp files
 
