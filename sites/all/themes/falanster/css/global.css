@@ -864,3 +864,7 @@ div.feed-icon {
   margin: 5px 0px;
 }
 
+blockquote {
+  width: 500px;
+  margin: -10px 0 0 10px;
+}
