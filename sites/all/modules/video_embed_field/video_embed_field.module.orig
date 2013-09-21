@@ -352,8 +352,7 @@ function template_preprocess_video_embed_field_embed_code(&$variables) {
 
   // Prepare embed code
   if ($handler && isset($handler['function']) && function_exists($handler['function'])) {
-    $embed_code = call_user_func($handler['function'], $variables['url'], $variables['style_settings']);
-    $variables['embed_code'] = drupal_render($embed_code);
+    $variables['embed_code'] = drupal_render(call_user_func($handler['function'], $variables['url'], $variables['style_settings']));
   }
   else {
     $variables['embed_code'] = l($variables['url'], $variables['url']);
@@ -557,4 +556,3 @@ function _video_embed_field_load_video($hash) {
 function _video_embed_field_hash($video_url, $video_style){
   return md5('vef' . $video_url . $video_style);
 }
-
