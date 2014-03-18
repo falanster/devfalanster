@@ -1,0 +1,12 @@
+name = Scroll to top
+description = Scroll to top module.
+package = Other
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2012-11-29
+version = "6.x-2.1"
+core = "6.x"
+project = "scroll_to_top"
+datestamp = "1354216117"
+
