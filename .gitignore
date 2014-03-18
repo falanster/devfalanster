@@ -24,6 +24,7 @@ backup/
 Thumbs.db
 *.swp
 
+settings.php
 .drush
 .lesshst
 .viminfo
