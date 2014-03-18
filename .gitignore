@@ -23,3 +23,8 @@ backup/
 # Ignore swp files
 Thumbs.db
 *.swp
+
+.drush
+.esshst
+.viminfo
+phpmyadmin
