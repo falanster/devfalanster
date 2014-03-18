@@ -55,9 +55,9 @@
  * @code
  * array(
  *   'driver' => 'mysql',
- *   'database' => 'databasename',
- *   'username' => 'username',
- *   'password' => 'password',
+ *   'database' => '',
+ *   'username' => '',
+ *   'password' => '',
  *   'host' => 'localhost',
  *   'port' => 3306,
  *   'prefix' => 'myprefix_',
@@ -105,9 +105,9 @@
  * @code
  * $databases['default']['default'] = array(
  *   'driver' => 'mysql',
- *   'database' => 'databasename',
- *   'username' => 'username',
- *   'password' => 'password',
+ *   'database' => 'falanster',
+ *   'username' => 'root',
+ *   'password' => 'rhbcnjath',
  *   'host' => 'localhost',
  *   'prefix' => 'main_',
  *   'collation' => 'utf8_general_ci',
@@ -494,9 +494,9 @@ $conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><titl
 
 $databases['default']['default'] = array(
   'driver' => 'mysql',
-  'database' => 'falanster_info',
-  'username' => 'falanster.info',
-  'password' => 'YpeNiodquDTZ7lWq',
+  'database' => 'falanster',
+  'username' => 'root',
+  'password' => 'rhbcnjath',
   'host' => 'localhost',
   'prefix' => '',
  );
