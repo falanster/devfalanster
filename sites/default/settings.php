@@ -494,9 +494,15 @@ $conf['404_fast_html'] = '<html xmlns="http://www.w3.org/1999/xhtml"><head><titl
 
 $databases['default']['default'] = array(
   'driver' => 'mysql',
+<<<<<<< HEAD
   'database' => 'falanster',
   'username' => 'root',
   'password' => 'rhbcnjath',
+=======
+  'database' => 'falanster_test',
+  'username' => 'falanster.info',
+  'password' => 'YpeNiodquDTZ7lWq',
+>>>>>>> 9f029b7d2b9cd5aa2f28360102b3ecf7f36dab53
   'host' => 'localhost',
   'prefix' => '',
  );
