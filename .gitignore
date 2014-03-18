@@ -21,3 +21,5 @@ backup/
 # Ignore swp files
 Thumbs.db
 *.swp
+
+settings.php
