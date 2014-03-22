@@ -1,6 +1,12 @@
 # Ignore configuration files that may contain sensitive information.
-sites/*/settings*.php
+sites/default/settings.php
 
 # Ignore paths that contain user-generated content.
-sites/*/files
+sites/default/files/styles
 sites/*/private
+
+phpmyadmin
+
+.drush
+.lesshst
+.viminfo

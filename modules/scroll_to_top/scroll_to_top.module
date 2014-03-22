@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Provide scroll to top link.
+ */
+
+/**
+ * Implementation of hook_init().
+ */
+function scroll_to_top_init(){
+ drupal_add_css(drupal_get_path('module', 'scroll_to_top') .'/scroll_to_top.css', 'module');
+ drupal_add_js(drupal_get_path('module', 'scroll_to_top') .'/scroll_to_top.js', 'module');
+  $position = "";
+ if (variable_get('scroll_to_top_position', 1)==1) {
+  $position = "$('#back-top').css('right','40px');";
+  }
+ if (variable_get('scroll_to_top_position', 1)==3) {
+  $position = "$('#back-top').css({'left':'50%','margin':'0px'});";
+  }
+ if (variable_get('scroll_to_top_display_text', TRUE)==FALSE) {
+  $display = "$('span#link').css('display','none');";
+  }
+ $bgcolor = "$('#back-top .icon').css('background-color','" . variable_get('scroll_to_top_bg_color_out', '#CCCCCC') . "').fadeTo('fast',0.5);";
+ $bgcolor .= " $('#back-top .icon').mouseover(function(){ $(this).css({'background-color':'" . variable_get('scroll_to_top_bg_color_hover', '#777777') . "','opacity':'1'}).fadeTo('slow',1);}).mouseout(function(){ $(this).css({'background-color':'" . variable_get('scroll_to_top_bg_color_out', '#CCCCCC') . "'}).fadeTo('fast',0.5);});";
+ $script = "$(document).ready(function() {";
+ $script .= $position;
+ $script .= $bgcolor;
+ $script .= $display;
+ $script .= "});";
+ drupal_add_js($script, 'inline');
+}
+
+ /**
+ * Implements hook_menu().
+ */
+function scroll_to_top_menu() {
+  $items = array();
+
+  $items['admin/settings/scrolltotop'] = array(
+    'title' => 'Scroll to top',
+    'description' => 'Scroll To Top settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('scroll_to_top_settings'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'scroll_to_top.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+

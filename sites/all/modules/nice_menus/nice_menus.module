@@ -532,12 +532,13 @@ function theme_nice_menus_build($variables) {
 
   // The number of children levels to display. Use -1 to display all children
   // and use 0 to display no children.
-  $depth = $variables['depth'];
+  $depth = isset($variables['depth']) ? $variables['depth'] : '-1';
 
   // An array of parent menu items.
-  $trail = $variables['trail'];
+  $trail = isset($variables['trail']) ? $variables['trail'] : array();
+
   // "Show as expanded" option.
-  $respect_expanded = $variables['respect_expanded'];
+  $respect_expanded = isset($variables['respect_expanded']) ? $variables['respect_expanded'] : 0;
 
   $output = '';
   // Prepare to count the links so we can mark first, last, odd and even.

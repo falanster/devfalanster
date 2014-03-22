@@ -1,0 +1,57 @@
+/*
+Back to top button 
+*/
+#back-top {
+	position: fixed;
+	bottom: 10px;
+	margin-left: 20px;
+	z-index:9990;
+	/*IE6 hack */
+		 _position: absolute;
+		 _top:expression(documentElement.scrollTop+body.scrollTop);
+		 _margin-top: 500px;
+
+}
+body { 
+	/*IE6 hack */
+		_background: url(null) fixed ;
+}
+#back-top a {
+	width: 50px;
+	display: block;
+	text-align: center;
+	font: 11px/100% Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #bbb;
+	/* background color transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+	
+}
+#back-top a:hover {
+	color: #000;
+}
+/* arrow icon (span tag) */
+#back-top span.icon {
+	width: 50px;
+	height: 50px;
+	display: block;
+	margin-bottom: 7px;
+	background: #ddd url(up-arrow.png) no-repeat center center;
+	/*opacity:0.8;
+	filter:alpha(opacity = 80);*/
+	/* rounded corners */
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	/* background color transition */
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+}
+#back-top a:hover span {
+	/*opacity:1;
+	filter:alpha(opacity = 100);*/
+}
