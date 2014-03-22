@@ -19,21 +19,7 @@ function profile2_regpath_menu() {
     // Set menu items for each registration path.
     foreach ($reg_paths as $key => $value) {
       $path = $value->path;
-      // We will use hook_menu_alter() to deal with the 'user' path later.
-      if ($path != 'user') {
-        $profile_types = profile2_regpath_get_profiles($path);
-        $registration_path = $path . '/register';
-
-        $items[$registration_path] = array(
-          'title' => 'Create new account',
-          'page callback' => '_profile2_regpath_user_register',
-          'page arguments' => array(
-            'profiles' => $profile_types,
-          ),
-          'access callback' => 'user_is_anonymous',
-          'file' => 'registration_form.inc',
-          'type' => MENU_LOCAL_TASK,
-        );
+      if ($profile_types = profile2_regpath_get_profiles($path)) {
         // Add profile-specific administrative 'add user' page.
         $items['admin/people/p2rp-create/' . $path] = array(
           'title' => 'Add user (' . $profile_types[0]->label . ' profile)',
@@ -45,38 +31,55 @@ function profile2_regpath_menu() {
           'type' => MENU_LOCAL_ACTION,
           'file' => 'registration_form.inc',
         );
-        $items[$path] = array(
-          'title' => 'Log in',
-          'page callback' => '_profile2_regpath_user_login',
-          'page arguments' => array(
-            'profiles' => $profile_types,
-          ),
-          'access callback' => 'user_is_anonymous',
-          'file' => 'registration_form.inc',
-          'menu_name' => 'user-menu',
-          'type' => MENU_CALLBACK,
-        );
-        $items[$path . '/login'] = array(
-          'title' => 'Log in',
-          'page callback' => '_profile2_regpath_user_login',
-          'page arguments' => array(
-            'profiles' => $profile_types,
-          ),
-          'access callback' => 'user_is_anonymous',
-          'file' => 'registration_form.inc',
-          'type' => MENU_DEFAULT_LOCAL_TASK,
-        );
 
-        $items[$path . '/password'] = array(
-          'title' => 'Request new password',
-          'type' => MENU_LOCAL_TASK,
-          'page callback' => '_profile2_regpath_user_password',
-          'page arguments' => array(
-            'profiles' => $profile_types,
-          ),
-          'access callback' => 'user_is_anonymous',
-          'file' => 'registration_form.inc',
-        );
+        // Create registration pages for each profile type.
+        // We will use hook_menu_alter() to deal with the 'user/' path later.
+        if ($path != 'user') {  
+          $registration_path = $path . '/register';
+
+          $items[$registration_path] = array(
+            'title' => 'Create new account',
+            'page callback' => '_profile2_regpath_user_register',
+            'page arguments' => array(
+              'profiles' => $profile_types,
+            ),
+            'access callback' => 'user_is_anonymous',
+            'file' => 'registration_form.inc',
+            'type' => MENU_LOCAL_TASK,
+          );
+          $items[$path] = array(
+            'title' => 'Log in',
+            'page callback' => '_profile2_regpath_user_login',
+            'page arguments' => array(
+              'profiles' => $profile_types,
+            ),
+            'access callback' => 'user_is_anonymous',
+            'file' => 'registration_form.inc',
+            'menu_name' => 'user-menu',
+            'type' => MENU_CALLBACK,
+          );
+          $items[$path . '/login'] = array(
+            'title' => 'Log in',
+            'page callback' => '_profile2_regpath_user_login',
+            'page arguments' => array(
+              'profiles' => $profile_types,
+            ),
+            'access callback' => 'user_is_anonymous',
+            'file' => 'registration_form.inc',
+            'type' => MENU_DEFAULT_LOCAL_TASK,
+          );
+
+          $items[$path . '/password'] = array(
+            'title' => 'Request new password',
+            'type' => MENU_LOCAL_TASK,
+            'page callback' => '_profile2_regpath_user_password',
+            'page arguments' => array(
+              'profiles' => $profile_types,
+            ),
+            'access callback' => 'user_is_anonymous',
+            'file' => 'registration_form.inc',
+          );
+        }
       }
     }
   }
@@ -109,22 +112,6 @@ function profile2_regpath_permission() {
       'description' => t('Enable and configure unique registration paths per Profile2 profile type.'),
     ),
   );
-  /*
-  // Partially completed http://drupal.org/node/1479212#comment-5790598
-  // Create permission for each profile type's administrative add user page.
-  if ($reg_paths = profile2_regpath_get_reg_paths()) {
-    foreach ($reg_paths as $key => $value) {
-      if ($value->path != 'user' && $profile_types = profile2_regpath_get_profiles($path)) {
-        $permissions = array(
-          'add user: ' . $profile_types[0]->type . ' profile' => array(
-            'title' => t('Create users :label', array(':label', $profile_types[0]->label)),
-            'description' => t('Enable and configure unique registration paths per Profile2 profile type.'),
-          ),
-        );
-      }
-    }
-  }
-  */
 
   return $permissions;
 }
@@ -432,17 +419,15 @@ function profile2_regpath_profile2_type_delete($type) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_alter().
  */
 function profile2_regpath_form_alter(&$form, &$form_state, $form_id) {
-  // Check to see if we're building this form for a block.
-  if (strpos($form_id, 'profile2_regpath_form_block_') === 0) {
-    $profile_types = profile2_regpath_get_profiles(NULL, NULL, $form_state['profile_type_id']);
-    profile2_regpath_attach_profile_fields($form, $form_state, $form_id, $profile_types);
-  }
-  elseif ($form_id == 'user_register_form') {
+  if ($form_id == 'user_register_form') {
     // Get profile2 profile types from current path.
-    $profile_types = _get_profile_types_by_path();
+    $url = drupal_parse_url($form['#action']);
+    $path = explode('/', str_replace('/register', '', $url['path']));
+    $path_key = end($path);
+    $profile_types = profile2_regpath_get_profiles($path_key);
     profile2_regpath_attach_profile_fields($form, $form_state, $form_id, $profile_types);
   }
 }
@@ -451,19 +436,18 @@ function profile2_regpath_form_alter(&$form, &$form_state, $form_id) {
  * Attach profile fields to form.
  */
 function profile2_regpath_attach_profile_fields(&$form, &$form_state, $form_id, $profile_types = NULL) {
-  // Check for $profile_types in $_SESSION in case form is being rebuilt after an AJAX request.
-  // For the record: I don't like this approach. I feel that there must be a better solution.
-  // See http://drupal.org/node/1117428.
-  $menu_item = menu_get_item();
 
-  if (!$profile_types && ($menu_item['path'] == 'system/ajax' || $menu_item['path'] == 'file/ajax') && isset($_SESSION['profile2_regpath']['profile_types'])) {
-    $profile_types = $_SESSION['profile2_regpath']['profile_types'];
+  // Check to see if the form is being rebuilt after an AJAX request.
+  // If so, we will have lost the $profile_types parameter, and need to reacquire it.
+  $menu_item = menu_get_item();
+  if (!$profile_types && ($menu_item['path'] == 'system/ajax' || $menu_item['path'] == 'file/ajax')) {
+    $url = drupal_parse_url($form['#action']);
+    $path = explode('/', str_replace('/register', '', $url['path']));
+    $path_key = end($path);
+    $profile_types = profile2_regpath_get_profiles($path);
   }
 
   if ($profile_types != NULL) {
-    // Accomodates subsequent form rebuilds after AJAX requests,
-    // which cannot properly access arg(0) in _get_profile_types_by_path().
-    $_SESSION['profile2_regpath']['profile_types'] = $profile_types;
 
     // Prepare variables for roles.
     $user_roles = user_roles(TRUE);
@@ -475,20 +459,26 @@ function profile2_regpath_attach_profile_fields(&$form, &$form_state, $form_id, 
       $type_name = (string) $profile_types[$key]->type;
       $profile_type = profile2_get_types($type_name);
 
-      // Add profile object to $form_state.
+      // If this profile has not already been attached.
       if (empty($form_state['profiles'][$type_name])) {
-        $form_state['profiles'][$type_name] = profile_create(array('type' => $type_name));
-      }
+        $profile = profile_create(array('type' => $type_name));
+        $form_state['profiles'][$type_name] = $profile;
 
-      // Trigger Profile2 to attach fields from profile defined in $form_state.
-      profile2_attach_form($form, $form_state);
-      $misc = unserialize($profile_types[$key]->misc);
-      if ($misc['fieldset_wrap']) {
-        // Wrap each profile form in a fieldset.
-        $form['profile_' . $type_name] += array(
-          '#type' => 'fieldset',
-          '#title' => check_plain($profile_type->label),
-        );
+        $misc = unserialize($profile_types[$key]->misc);
+        if ($misc['fieldset_wrap']) {
+          // Wrap each profile form in a fieldset.
+          $form['profile_' . $type_name] = array(
+            '#type' => 'fieldset',
+            '#title' => check_plain($profile_type->label),
+          );
+        }
+        // Set Form API #weight attribute for profile.
+        $form['profile_' . $type_name]['#weight'] = $profile_type->weight;
+
+        // Attach custom confirmation message to form for later display.
+        if (isset($misc['confirmation_display'])) {
+          $_SESSION['profile2_regpath']['confirmation_message'] = $misc['confirmation_message'];
+        }
       }
 
       // Add appropriate user roles.
@@ -505,11 +495,10 @@ function profile2_regpath_attach_profile_fields(&$form, &$form_state, $form_id, 
         }
       }
 
-      // Attach custom confirmation message to form for later display.
-      if (isset($misc['confirmation_display'])) {
-        $_SESSION['profile2_regpath']['confirmation_message'] = $misc['confirmation_message'];
-      }
     }
+    // Attach the profile fields via profile2.
+    // @todo Add test for AJAX fields after profile2_attach_form() has been called.
+    profile2_attach_form($form, $form_state);
   }
 }
 
@@ -536,23 +525,6 @@ function profile2_regpath_user_insert(&$edit, $account, $category) {
 function profile2_regpath_get_profile_id($profile_type) {
   $profile_id = db_query("SELECT id FROM {profile_type} WHERE type = :profile_type", array(':profile_type' => $profile_type))->fetchField();
   return $profile_id;
-}
-
-/**
- * Returns profile2 profile types from the current path.
- *
- * @return object
- *   An object containing all matching profile2 registration path enabled
- *   profile types.
- */
-function _get_profile_types_by_path() {
-  $profile_types = NULL;
-  if ($menu_item = menu_get_item()) {
-    if (isset($menu_item['page_arguments']['profiles'])) {
-      $profile_types = $menu_item['page_arguments']['profiles'];
-    }
-  }
-  return $profile_types;
 }
 
 /**

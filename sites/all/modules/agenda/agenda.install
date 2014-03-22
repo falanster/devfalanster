@@ -63,7 +63,7 @@ function agenda_schema() {
         'description' => t('Block ID'),
         'type' => 'int',
         'unsigned' => TRUE,
-        'not null' => FALSE,
+        'not null' => TRUE,
         'disp-width' => '11',
       ),
       'name' => array(

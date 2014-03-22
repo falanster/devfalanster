@@ -43,7 +43,7 @@ function simplenews_schema() {
       ),
       'from_name' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Sender name for newsletter emails.',
@@ -375,7 +375,7 @@ function _simplenews_install_nodetype() {
       'locked' => 0,
       'custom' => 1,
       'modified' => 1,
-    ));
+      ));
     node_type_save($type);
     node_add_body_field($type);
   }
@@ -555,7 +555,7 @@ function simplenews_update_7000() {
       'from_name' => array(
         'description' => 'Sender name for newsletter emails.',
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -615,20 +615,40 @@ function simplenews_update_7000() {
   foreach ($tids as $tid) {
     _simplenews_convert_tokens_in_variable('simplenews_email_subject_' . $tid);
 
+    // check string lengths: variables can be an arbitrary length but the new table has limits
+    $from_name = variable_get('simplenews_from_name_' . $tid, variable_get('simplenews_from_name', variable_get('site_name', 'Drupal')));
+    $email_subject = variable_get('simplenews_email_subject_' . $tid, '[[simplenews-newsletters-name]] [title-raw]');
+    $from_address = variable_get('simplenews_from_address_' . $tid, variable_get('simplenews_from_address', variable_get('site_mail', ini_get('sendmail_from'))));
+    if (strlen($from_name) > 128) {
+      drupal_set_message(t('The from_name field for simplenews list @tid (@value) was too long and has been truncated to 128 characters.',
+            array('@tid' => $tid, '@value' => $from_name)), 'warning');
+      $from_name = substr($from_name, 0, 128);
+    }
+    if (strlen($email_subject) > 255) {
+      drupal_set_message(t('The email_subject field for simplenews list @tid (@value) was too long and has been truncated to 255 characters.',
+            array('@tid' => $tid, '@value' => $email_subject)), 'warning');
+      $from_name = substr($email_subject, 0, 255);
+    }
+    if (strlen($from_address) > 64) {
+      drupal_set_message(t('The from_address field for simplenews list @tid (@value) was too long and has been truncated to 64 characters.',
+            array('@tid' => $tid, '@value' => $from_address)), 'warning');
+      $from_name = substr($from_address, 0, 64);
+    }
+
     db_insert('simplenews_category')
       ->fields(array(
         'tid' => $tid,
         'format' => 'plain',
         'priority' => '0',
         'receipt' => '0',
-        'from_name' => variable_get('simplenews_from_name_' . $tid, variable_get('simplenews_from_name', variable_get('site_name', 'Drupal'))),
-        'email_subject' => variable_get('simplenews_email_subject_' . $tid, '[[simplenews-newsletters-name]] [title-raw]'),
-        'from_address' => variable_get('simplenews_from_address_' . $tid, variable_get('simplenews_from_address', variable_get('site_mail', ini_get('sendmail_from')))),
+        'from_name' => $from_name,
+        'email_subject' => $email_subject,
+        'from_address' => $from_address,
         'hyperlinks' => variable_get('simplenews_hyperlinks_' . $tid, 1),
         'new_account' => variable_get('simplenews_new_account_' . $tid, 'none'),
         'opt_inout' => variable_get('simplenews_opt_inout_' . $tid, 'double'),
         'block' => isset($blocks[$tid]) ? 1 : 0,
-        ))
+      ))
       ->execute();
   }
 
@@ -662,7 +682,7 @@ function simplenews_update_7000() {
     'description' => 'A serialized array of name value pairs that are related to the email address.',
   ));
 
- // Rename field {simplenews_mail_spool}.s_status to "status".
+  // Rename field {simplenews_mail_spool}.s_status to "status".
   db_change_field('simplenews_newsletter', 's_status', 'status', array(
     'description' => 'sent status of the newsletter issue (0 = not sent; 1 = pending; 2 = sent). ',
     'type' => 'int',
@@ -685,6 +705,34 @@ function simplenews_update_7000() {
 
   // @todo Add return text about checking of Newsletter Category settings.
   // @todo Add return text about Block checkboxes
+
+  // Convert old content type settings.
+  module_load_include('module', 'node');
+  module_load_include('module', 'simplenews');
+
+  // Update the machine name of the simplenews vocabulary.
+  if ($vid = variable_get('simplenews_vid', '')) {
+    db_update('taxonomy_vocabulary')
+      ->fields(array(
+        'machine_name' => 'newsletter',
+      ))
+      ->condition('vid', $vid)
+      ->execute();
+    $field_name = 'taxonomy_vocabulary_' . $vid;
+    variable_set('simplenews_category_field', $field_name);
+    $field = field_info_field($field_name);
+    $field['settings']['allowed_values'][0]['vocabulary'] = 'newsletter';
+    field_update_field($field);
+  }
+  variable_del('simplenews_vid');
+
+  $content_types = variable_get('simplenews_content_types');
+  if (!empty($content_types)) {
+    foreach ($content_types as $simplenews_content_type) {
+      variable_set('simplenews_content_type_' . $simplenews_content_type, TRUE);
+    }
+  }
+  variable_del('simplenews_content_types');
 }
 
 /**
@@ -768,4 +816,78 @@ function simplenews_update_7006() {
     'not null' => TRUE,
     'default' => 0,
   ));
+}
+
+/**
+ * Allow longer from_name field values.
+ */
+function simplenews_update_7007() {
+
+  db_change_field('simplenews_category', 'from_name', 'from_name', array(
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Sender name for newsletter emails.',
+  ));
+}
+
+/**
+ * Add the timestamp and source columns to {simplenews_subscription} if missing.
+ */
+function simplenews_update_7008() {
+  if (!db_field_exists('simplenews_subscription', 'timestamp')) {
+    db_add_field('simplenews_subscription', 'timestamp', array(
+      'description' => 'UNIX timestamp of when the user is (un)subscribed.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+  }
+  if (!db_field_exists('simplenews_subscription', 'source')) {
+    db_add_field('simplenews_subscription', 'source', array(
+      'description' => 'The source via which the user is (un)subscription.',
+      'type' => 'varchar',
+      'length' => 24,
+      'not null' => TRUE,
+      'default' => '',
+    ));
+  }
+}
+
+/**
+ * Add the sent_subsriber_countcolumn to {simplenews_newsletter} if missing.
+ */
+function simplenews_update_7009() {
+  if (!db_field_exists('simplenews_newsletter', 'sent_subscriber_count')) {
+    db_add_field('simplenews_newsletter', 'sent_subscriber_count', array(
+      'description' => 'The count of subscribers to the newsletter when it was sent.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+  }
+}
+
+/**
+ * Update empty sent subscriber count column to current subscriber count.
+ */
+function simplenews_update_7010() {
+  // Assume that already sent newsletters that have a sent subscriber count of
+  // 0 have been sent to all subscribers. Do a update query per newsletter
+  // category, to avoid having to re-execute the subquery on every row.
+  $tids = db_query('SELECT tid FROM {simplenews_category}')->fetchCol();
+  foreach ($tids as $tid) {
+    $count = db_query('SELECT COUNT(*) FROM {simplenews_subscription} ss WHERE status = 1 AND tid = :tid', array(':tid' => $tid))->fetchField();
+    db_update('simplenews_newsletter')
+      ->fields(array(
+        'sent_subscriber_count' => $count,
+      ))
+      // 2 equals SIMPLENEWS_STATUS_SEND_READY.
+      ->condition('status', 2)
+      ->condition('sent_subscriber_count', 0)
+      ->condition('tid', $tid)
+      ->execute();
+  }
 }

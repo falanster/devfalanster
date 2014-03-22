@@ -13,7 +13,6 @@ Since FileField Sources does not have its own widget, but rather extends the
 core File field and other contributed widgets, this offers great flexibility
 in widget selections.
 
-This module is built by New Reach AS. Visit us at http://newreach.no/
 Author: Atle Andersen (atlea)
 
 Installation
@@ -34,6 +33,13 @@ Installation
    Make sure the field can have more than one file. See "Number of values".
 
 4) Create a piece of content that uses your file field and try it out.
+
+Suhosin limitations
+-------------------
+Plupload-widget can in some circumstances exceed Suhosins default post-variable limit of 64, resulting in misc errors. To solve this, the folowing needs to be added to your php.ini-file:
+
+suhosin.request.max_varname_length = 128
+suhosin.post.max_name_length = 128
 
 Support
 -------

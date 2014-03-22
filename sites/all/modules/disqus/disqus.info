@@ -11,9 +11,9 @@ files[] = disqus.views.inc
 
 configure = admin/config/services/disqus
 
-; Information added by drupal.org packaging script on 2011-09-02
-version = "7.x-1.9"
+; Information added by  packaging script on 2013-11-17
+version = "7.x-1.10"
 core = "7.x"
 project = "disqus"
-datestamp = "1314928617"
+datestamp = "1384712905"
 

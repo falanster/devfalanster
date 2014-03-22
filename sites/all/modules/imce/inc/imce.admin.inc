@@ -16,7 +16,8 @@ function imce_admin() {
   $rows = array();
 
   foreach ($profiles as $pid => $profile) {
-    $rows[] = array($profile['name'],
+    $rows[] = array(
+      check_plain($profile['name']),
       l(t('Edit'), 'admin/config/media/imce/profile/edit/' . $pid),
       $pid == 1 ? '' : l(t('Delete'), 'admin/config/media/imce/profile/delete/' . $pid),
     );
@@ -116,7 +117,7 @@ function imce_admin_theme($variables) {
   $swrappers = file_get_stream_wrappers(STREAM_WRAPPERS_VISIBLE);
   foreach ($swrappers as $scheme => $info) {
     $header[] = l($info['name'], 'imce/' . $scheme);
-    $rows[0][] = $profile1['name'];
+    $rows[0][] = check_plain($profile1['name']);
     $keys[] = $scheme . '_pid';
   }
 
@@ -249,7 +250,7 @@ function imce_profile_form($form, &$form_state, $pid = 0) {
   );
   $form['dimensions'] = array(
     '#type' => 'textfield',
-    '#title' => t('Maximum image resolution'),
+    '#title' => t('Maximum image dimensions'),
     '#default_value' => $profile['dimensions'],
     '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/config/media/image-toolkit'))),
     '#field_suffix' => '<kbd>' . t('WIDTHxHEIGHT') . '</kbd>',
@@ -482,7 +483,7 @@ function imce_thumbnails_theme($variables) {
  */
 function imce_role_form($role, $weight = TRUE, $core = TRUE) {
   $form['name'] = array(
-    '#markup' => $role['name'],
+    '#markup' => check_plain($role['name']),
   );
   if ($weight) {
     $form['weight'] = $core ? array(

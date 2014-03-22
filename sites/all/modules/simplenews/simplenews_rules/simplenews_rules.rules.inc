@@ -72,7 +72,8 @@ function simplenews_rules_rules_action_info() {
     ),
     'simplenews_rules_action_unsubscribe' => array(
       'label' => t('Unsubscribe an e-mail adress from a newsletter'),
-      'group' => t('Simplenews'),      'named parameter' => TRUE,
+      'group' => t('Simplenews'),
+      'named parameter' => TRUE,
       'parameter' => array(
         'mail' => array(
           'type' => 'text',
@@ -82,7 +83,7 @@ function simplenews_rules_rules_action_info() {
         'tid' => array(
           'type' => 'integer',
           'label' => t('Simplenews category'),
-          'descrption' => t('For which newsletter category the unsubscription should happen.'),
+          'description' => t('For which newsletter category the unsubscription should happen.'),
           'options list' => 'simplenews_category_list',
         ),
         'confirmation' => array(
@@ -106,6 +107,36 @@ function simplenews_rules_rules_action_info() {
           'options list' => 'entity_metadata_language_list',
           'optional' => TRUE,
           'default value' => LANGUAGE_NONE,
+        ),
+      ),
+    ),
+    'simplenews_rules_action_subscription_delete' => array(
+      'label' => t('Delete an e-mail address from a newsletter'),
+      'group' => t('Simplenews'),
+      'named parameter' => TRUE,
+      'parameter' => array(
+        'mail' => array(
+          'type' => 'text',
+          'label' => t('E-mail'),
+          'description' => t('The e-mail address that should be permanently deleted from the newsletter. Note, use the unsubscribe action to temporarily unsubscribe an email address.'),
+        ),
+        'tid' => array(
+          'type' => 'integer',
+          'label' => t('Simplenews category'),
+          'description' => t('For which newsletter category the delete should happen.'),
+          'options list' => 'simplenews_category_list',
+        ),
+      ),
+    ),
+    'simplenews_rules_action_subscriber_delete' => array(
+      'label' => t('Delete an e-mail address from all newsletters'),
+      'group' => t('Simplenews'),
+      'named parameter' => TRUE,
+      'parameter' => array(
+        'mail' => array(
+          'type' => 'text',
+          'label' => t('E-mail'),
+          'description' => t('The e-mail address that should be permanently deleted from all newsletters. Note, use the unsubscribe action to temporarily unsubscribe an email address.'),
         ),
       ),
     ),
@@ -193,6 +224,24 @@ function simplenews_rules_action_unsubscribe($args, $settings) {
   simplenews_unsubscribe_user($args['mail'], $args['tid'], $confirmation, $args['source'], $args['language']);
 }
 
+/**
+ * Action Implementation: Delete an email address from a specific Simplenews newsletter
+ */
+function simplenews_rules_action_subscription_delete($args, $settings) {
+  if (!empty($args['mail']) && !empty($args['tid'])){
+    simplenews_subscription_delete(array('mail' => $args['mail'], 'tid' => $args['tid']));
+  }
+}
+
+/**
+ * Action Implementation: Delete an email address from all Simplenews newsletters
+ */
+function simplenews_rules_action_subscriber_delete($args, $settings) {
+  $subscriber = simplenews_subscriber_load_by_mail($args['mail']);
+  if ($subscriber) {
+    simplenews_subscriber_delete($subscriber);
+  }
+}
 
 /**
  * Map args to the confrmation argument for subscribing/unsubscribing.

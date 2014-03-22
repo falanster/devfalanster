@@ -9,7 +9,7 @@
  * Implements hook_views_data_alter().
  */
 function disqus_views_data_alter(&$data) {
- // Number of Disqus comments made on the given node.
+  // Number of Disqus comments made on the given node.
   $data['node']['disqus_comment_count'] = array(
     'field' => array(
       'title' => t('Disqus Comment Count'),
@@ -76,4 +76,3 @@ class views_handler_field_node_disqus_comment_count extends views_handler_field 
     }
   }
 }
-
