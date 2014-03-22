@@ -188,7 +188,7 @@ CKFinder is an Ajax-based file manager created by CKEditor developers: http://ck
         require_once '../../../../includes/filemanager.config.php';
 
         - for CKFinder installed in the "sites/all/libraries/ckfinder" directory:
-        require_once '../../../includes/filemanager.config.php';
+        require_once '../../../../../modules/ckeditor/includes/filemanager.config.php';
 
         straight below the following line:
 
@@ -268,7 +268,7 @@ The "Security" section lists all the security filters that are currently support
 The CKEditor for Drupal module has built-in support for some popular security filter modules which you will need to download and install by yourself first. Visit the official websites for each module in order to get the files and find installation and configuration instructions.
 
 When a filter module is installed, you will be able to configure its security filters and enable for a given text format. The list of active text formats is displayed in the "Security" section along with the links that will take you to the "Administration panel > Configuration > Content authoring > Text formats" section where you will be able to configure the filters for each of the text formats. The filters will then be run on the content during the filtering process.
- 
+
 The "Security Settings" option in the "Security" section lets you choose whether to always run the security filters on CKEditor content (recommended and default option) or run them only when CKEditor is set to start automatically. If you change this setting to only run the filters when CKEditor starts automatically, you will not be protected when toggling manually between a plain textarea and the WYSIWYG editor.
 
 The following security filter modules are currently supported:

@@ -139,9 +139,11 @@ function webform_conditional_form_alter(&$form, $form_state, $form_id) {
     $form['#after_build'][] = 'webform_conditional_add_js';
     $js_settings = array(
       // Rewrite previous settings if the form is being rebuilt.
-      'fields' => isset($js_fields) ? $js_fields : FALSE,
-      'nid' => $nid,
-      'showSpeed' => NULL, //'fast',
+      'webform_conditional_' . $form_id => array(
+        'fields' => isset($js_fields) ? $js_fields : FALSE,
+        'nid' => $nid,
+        'showSpeed' => NULL, //'fast',
+      )
     );
     //store JavaScript variable for the webform_conditional_add_js function
     $form['#webform_conditional_js'] = $js_settings;
@@ -254,7 +256,7 @@ function _webform_conditional_get_css_id($nid, $cid) {
 }
 
 /**
- * Function run #after_build on webform.  This ensures that Javascript is added even if form is built from cache. 
+ * Function run #after_build on webform.  This ensures that Javascript is added even if form is built from cache.
  * @param array $form
  * @param array $form_state
  * @return array
@@ -270,7 +272,7 @@ function webform_conditional_add_js(&$form, $form_state) {
       break;
     }
   }
-  drupal_add_js(array('webform_conditional' => $form['#webform_conditional_js']), array('type' => "setting", 'scope' => JS_DEFAULT));
+  drupal_add_js($form['#webform_conditional_js'], array('type' => "setting", 'scope' => JS_DEFAULT));
   drupal_add_js(drupal_get_path('module', 'webform_conditional') . '/webform_conditional.js');
   return $form;
 }

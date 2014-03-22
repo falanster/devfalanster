@@ -43,9 +43,12 @@ function getMollomCaptcha() {
     path += '/' + mollomContentId;
   }
 
-  // Retrieve a CAPTCHA:
-  $.getJSON(Drupal.settings.basePath + path,
-    function (data) {
+  // Retrieve a new CAPTCHA.
+  $.ajax({
+    url: Drupal.settings.basePath + Drupal.settings.pathPrefix + path,
+    type: 'POST',
+    dataType: 'json',
+    success: function (data) {
       if (!(data && data.content)) {
         return;
       }
@@ -56,9 +59,17 @@ function getMollomCaptcha() {
       // Add an onclick-event handler for the new link.
       Drupal.attachBehaviors(context);
       // Focus on the CAPTCHA input.
-      $('input[name="mollom[captcha]"]', context).focus();
+      if (newCaptchaType == 'image') {
+          $('input[name="mollom[captcha]"]', context).focus();
+      } else {
+         // Focus on audio player.
+         // Fallback player code is responsible for setting focus upon embed.
+         if ($('#mollom_captcha_audio').is(":visible")) {
+             $('#mollom_captcha_audio').focus();
+         }
+      }
     }
-  );
+  });
   return false;
 }
 

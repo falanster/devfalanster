@@ -37,6 +37,9 @@ function simplenews_add_node_to_spool($node) {
 
   // Update simplenews newsletter status to send pending.
   simplenews_newsletter_update_sent_status($node);
+
+  // Notify other modules that a newsletter was just spooled.
+  module_invoke_all('simplenews_spooled', $node);
 }
 
 /**
@@ -221,6 +224,7 @@ function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED, array $conditions 
     simplenews_impersonate_user(drupal_anonymous_user());
 
     $count_fail = $count_success = 0;
+    $sent = array();
 
     _simplenews_measure_usec(TRUE);
 
@@ -237,6 +241,12 @@ function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED, array $conditions 
         simplenews_update_spool(array($msid), $row_result);
         if ($row_result['status'] == SIMPLENEWS_SPOOL_DONE) {
           $count_success++;
+          if (!isset($sent[$row->actual_nid])) {
+            $sent[$row->actual_nid] = 1;
+          }
+          else {
+            $sent[$row->actual_nid]++;
+          }
         }
         if ($row_result['error']) {
           $count_fail++;
@@ -255,19 +265,35 @@ function simplenews_mail_spool($limit = SIMPLENEWS_UNLIMITED, array $conditions 
           break;
         }
       }
+    }
 
-      // It is possible that all or at the end some results failed to get
-      // prepared, report them separately.
-      foreach ($spool->getProcessed() as $msid => $row) {
-        $row_result = isset($row->result) ? $row->result : $result;
-        simplenews_update_spool(array($msid), $row_result);
-        if ($row_result['status'] == SIMPLENEWS_SPOOL_DONE) {
-          $count_success++;
-        }
-        if ($row_result['error']) {
-          $count_fail++;
+    // It is possible that all or at the end some results failed to get
+    // prepared, report them separately.
+    foreach ($spool->getProcessed() as $msid => $row) {
+      $row_result = $row->result;
+      simplenews_update_spool(array($msid), $row_result);
+      if ($row_result['status'] == SIMPLENEWS_SPOOL_DONE) {
+        $count_success++;
+        if (isset($row->actual_nid)) {
+          if (!isset($sent[$row->actual_nid])) {
+            $sent[$row->actual_nid] = 1;
+          }
+          else {
+            $sent[$row->actual_nid]++;
+          }
         }
       }
+      if ($row_result['error']) {
+        $count_fail++;
+      }
+    }
+
+    // Update subscriber count.
+    foreach ($sent as $nid => $count) {
+      db_update('simplenews_newsletter')
+        ->condition('nid', $nid)
+        ->expression('sent_subscriber_count', 'sent_subscriber_count + :count', array(':count' => $count))
+        ->execute();
     }
 
     // Report sent result and elapsed time. On Windows systems getrusage() is
@@ -616,8 +642,8 @@ function _simplenews_set_from() {
   $address = variable_get('simplenews_from_address', $address_default);
   $name = variable_get('simplenews_from_name', $name_default);
 
-  // Windows based PHP systems don't accept formatted emails.
-  $formatted_address = drupal_substr(PHP_OS, 0, 3) == 'WIN' ? $address : '"' . $name . '" <' . $address . '>';
+  // Windows based PHP systems don't accept formatted email addresses.
+  $formatted_address = (drupal_substr(PHP_OS, 0, 3) == 'WIN') ? $address : '"'. addslashes(mime_header_encode($name)) .'" <'. $address .'>';
 
   return array(
     'address' => $address,

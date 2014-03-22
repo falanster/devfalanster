@@ -117,15 +117,10 @@ imce.firstSort = function() {
 //sort file list according to column index.
 imce.columnSort = function(cid, dsc) {
   if (imce.findex.length < 2) return;
-  if (cid == imce.vars.cid && dsc != imce.vars.dsc) {
-    imce.findex.reverse();
-  }
-  else {
-    var func = 'sort'+ (cid == 0 ? 'Str' : 'Num') + (dsc ? 'Dsc' : 'Asc');
-    var prop = cid == 2 || cid == 3 ? 'innerHTML' : 'id';
-    //sort rows
-    imce.findex.sort(cid ? function(r1, r2) {return imce[func](r1.cells[cid][prop], r2.cells[cid][prop])} : function(r1, r2) {return imce[func](r1.id, r2.id)});
-  }
+  var func = 'sort'+ (cid == 0 ? 'Str' : 'Num') + (dsc ? 'Dsc' : 'Asc');
+  var prop = cid == 2 || cid == 3 ? 'innerHTML' : 'id';
+  //sort rows
+  imce.findex.sort(cid ? function(r1, r2) {return imce[func](r1.cells[cid][prop], r2.cells[cid][prop])} : function(r1, r2) {return imce[func](r1.id, r2.id)});
   //insert sorted rows
   for (var row, i=0; row = imce.findex[i]; i++) {
     imce.tbody.appendChild(row);
@@ -197,7 +192,7 @@ imce.recallDimensions = function() {
 //set row heights with respect to window height
 imce.recallHeights = function(bwFixedHeight) {
   //window & body dimensions
-  var winHeight = $.browser.opera ? window.innerHeight : $(window).height();
+  var winHeight = window.opera ? window.innerHeight : $(window).height();
   var bodyHeight = $(document.body).outerHeight(true);
   var diff = winHeight - bodyHeight;
   var bwHeight = $(imce.BW).height(), pwHeight = $(imce.PW).height();
@@ -264,12 +259,12 @@ imce.imagestyleURL = function (url, stylename) {
 // replace table view with box view for file list
 imce.boxView = function () {
   var w = imce.vars.boxW, h = imce.vars.boxH;
-  if (!w || !h || $.browser.msie && parseFloat($.browser.version) < 8) return;
+  if (!w || !h || imce.ie && imce.ie < 8) return;
   var $body = $(document.body);
   var toggle = function() {
     $body.toggleClass('box-view');
     // refresh dom. required by all except FF.
-    !$.browser.mozilla && $('#file-list').appendTo(imce.FW).appendTo(imce.FLW);
+    $('#file-list').appendTo(imce.FW).appendTo(imce.FLW);
   };
   $body.append('<style type="text/css">.box-view #file-list td.name {width: ' + w + 'px;height: ' + h + 'px;} .box-view #file-list td.name span {width: ' + w + 'px;word-wrap: normal;text-overflow: ellipsis;}</style>');
   imce.hooks.load.push(function() {

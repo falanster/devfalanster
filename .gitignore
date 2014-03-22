@@ -1,31 +1,6 @@
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
-sites/default/settings.php
-*settings.php
 
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
-
-.buildpath
-.metadata
-.project
-.settings
-.htaccess
-.ftpquota
-
-.buildpath/*
-.metadata/*
-.project/*
-.settings/*
-backup/
-
-# Ignore swp files
-Thumbs.db
-*.swp
-
-settings.php
-.drush
-.lesshst
-.viminfo
-phpmyadmin
