@@ -141,3 +141,7 @@ DirectoryIndex index.php index.html index.htm
     </FilesMatch>
   </IfModule>
 </IfModule>
+AuthUserFile "/home/falanster.info/domains/test.falanster.info/public_html/.htpasswd"
+AuthType Basic
+AuthName "dev-zone"
+require valid-user
