@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the preview-main-page feature.
+ */
+
+include_once 'preview_main_page.features.inc';
