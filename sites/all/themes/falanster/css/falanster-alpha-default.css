@@ -151,14 +151,9 @@
   display: block;
 }
 
-.views-slideshow-cycle-main-frame-row-item .views-field-field-image img {
+.views-slideshow-cycle-main-frame-row-item .views-field-field-preview img {
   float: left;
   margin: 0 10px 10px 0;
-}
-
-.views-slideshow-cycle-main-frame-row-item .views-field-body-1 .field-content p {
-  margin: 5px 0 0 210px;
-  width: 210px;
 }
 
 #views_slideshow_controls_text_afishi-block_1 {
