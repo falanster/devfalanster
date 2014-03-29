@@ -499,7 +499,13 @@ h1, h3 {
 }
 
 /* Novosti na glavnoj*/
+
+.views-field-field-preview {
+  float: left;
+}
+
 .block-views-headernews-block .views-field-field-image-news img,
+.block-views-headernews-block .views-field-field-preview img,
 .view-headernews-english .field-content img {
   margin: 0 10px 10px 0;
 }
