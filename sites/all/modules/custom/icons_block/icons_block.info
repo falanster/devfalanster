@@ -1,0 +1,16 @@
+name = Icons block
+description = Block contains references to our services
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = icons_block
+dependencies[] = beautytips
+dependencies[] = beautytips_manager
+dependencies[] = beautytips_ui
+dependencies[] = fe_block
+features[fe_block_boxes][] = social_network_links_inner
+features[fe_block_boxes][] = social_networks_links_main
+features[fe_block_settings][] = block-social_network_links_inner
+features[fe_block_settings][] = block-social_networks_links_main
+features[features_api][] = api:2
+project path = sites/all/modules/custom
