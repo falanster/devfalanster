@@ -202,12 +202,29 @@
 .page-frontpage #block-views-last-video-or-podcast-block .content,
 .page-frontpage .block-poll .poll,
 #block-agenda-1 .content,
-#block-block-1 .content,
+/*#block-block-1 .content, */
 /*#block-views-twitter-list-block .content,*/
 #block-simplenews-1 .content {
   background-color: #f3f4f5;
   padding: 25px;
 }
+
+#block-block-1 .content {
+  background-color: #f3f4f5;
+  padding: 20px 20px 5px 25px;
+}
+
+#block-block-1 .content img{
+  margin-right: 5px;
+  margin-bottom: 4px;
+}
+
+#block-block-16 .content{
+  float: left;
+  background-color: #f3f4f5;
+  padding: 25px 8px 5px 8px;
+}
+
 .page-frontpage #block-views-last-video-or-podcast-block .content {
   padding-bottom: 0px;
   margin: 0 0 30px 0;
@@ -274,27 +291,60 @@
   margin: 0;
 }
 
-#block-block-3 {
+/*#block-block-3 {
   float: left;
   width: 250px;
   margin: 0 25px;
+}
+*/
+#block-block-3 {
+  float: left;
+  width: 290px;
+  height: 300px;
+  margin: 0 20px;
 }
 
 #block-block-3 #vk_groups #vkwidget1 .community_head {
   background: red;
 }
 
-#block-block-4 {
+/*#block-block-4 {
   float: left;
   width: 250px;
   height: 350px;
   background: #F3F4F5;
   margin: 0 25px 0 40px;
 }
+*/
+#block-block-4 {
+  float: left;
+  width: 300px;
+  height: 270px;
+  background: #F3F4F5;
+  margin: 0 0px 0 10px;
+}
 #block-block-4 p {
   margin: 0;
   padding: 0;
   line-height: 0;
+}
+
+#block-block-15 {
+  float: left;
+  width: 300px;
+  height: 270px;
+  background: #F3F4F5;
+  margin: 0 0px 0 20px;
+}
+
+#block-block-15 .content{
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+#block-block-15 .content img{
+  margin-right: 5px;
+  margin-bottom: 4px;
 }
 
 .fbConnectWidgetHeaderTitleBranded {
@@ -338,7 +388,24 @@
 /*hor bottom menu*/
 
 #block-menu-menu-hor-bottom-menu {
-  margin: 0;
+  float: right;
+  margin-right: 10px;
+  width: 200px;
+}
+
+/* Footer CC and social networks*/
+#block-block-14 {
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 150px;
+}
+
+#block-block-5 {
+  float: left;
+  margin-top: 10px;
+/*  margin-left: 30px; */
+  width: 250px;
 }
 
 /*Twitter block*/
