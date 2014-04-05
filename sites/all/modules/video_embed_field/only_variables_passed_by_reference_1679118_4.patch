@@ -1,0 +1,22 @@
+diff --git a/video_embed_field.module b/video_embed_field.module
+index 54491d4..8a45ebb 100755
+--- a/video_embed_field.module
++++ b/video_embed_field.module
+@@ -354,7 +354,8 @@ function template_preprocess_video_embed_field_embed_code(&$variables) {
+ 
+   // Prepare embed code
+   if ($handler && isset($handler['function']) && function_exists($handler['function'])) {
+-    $variables['embed_code'] = drupal_render(call_user_func($handler['function'], $variables['url'], $variables['style_settings']));
++    $embed_code = call_user_func($handler['function'], $variables['url'], $variables['style_settings']);
++    $variables['embed_code'] = drupal_render($embed_code);
+   }
+   else {
+     $variables['embed_code'] = l($variables['url'], $variables['url']);
+@@ -557,4 +558,5 @@ function _video_embed_field_load_video($hash) {
+  */
+ function _video_embed_field_hash($video_url, $video_style){
+   return md5('vef' . $video_url . $video_style);
+-}
+\ No newline at end of file
++}
++
