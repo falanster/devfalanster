@@ -11,3 +11,4 @@ phpmyadmin
 .lesshst
 .viminfo
 .htaccess
+/sites/default/settings.php
