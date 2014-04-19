@@ -5896,7 +5896,8 @@ function drupal_render(&$elements) {
   // for speed.
   if ($elements['#children'] == '') {
     foreach ($children as $key) {
-      $elements['#children'] .= drupal_render($elements[$key]);
+      if (is_array($children[$key]))
+        $elements['#children'] .= drupal_render($elements[$key]);
     }
   }
 
