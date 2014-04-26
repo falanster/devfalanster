@@ -1,9 +1,19 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 
+/* Font settings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    font-family: arial, sans-serif;
+}
+
+p, div, body {
+    font-family: arial, sans-serif;
+}
+
 /*common styles*/
 h2.block-title {
-/*  margin: 0 0 15px 0; */
+  /* font-weight: normal; */
   color: #c72c29;
   text-transform: lowercase;
 }
@@ -305,9 +315,10 @@ body {
 	color: #D43E44;
 }
 
-/*title*/
+/*titles*/
+
 h1, h3 {
-	color: #4d4948;
+    color: #4d4948;
 }
 
 /* Language block */
