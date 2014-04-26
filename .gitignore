@@ -10,3 +10,5 @@ phpmyadmin
 .drush
 .lesshst
 .viminfo
+.htaccess
+/sites/default/settings.php
