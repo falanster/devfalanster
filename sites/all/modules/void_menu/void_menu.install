@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains uninstall for functions used by void_menu
+ */
+
+/**
+ * Implements of hook_uninstall().
+ */
+function void_menu_uninstall() {
+  variable_del('void_menu_link_value');
+  $i = 1;
+  while ($i < 10) {
+    variable_del('void_menu_link_value' . $i);
+    $i++;
+  }
+}
