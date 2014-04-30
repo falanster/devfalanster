@@ -1,0 +1,185 @@
+<?php
+/**
+ * @file
+ * Creates placeholders for menu items to use special paths, including but not limited to javascript function calls.
+ * ------------------------------------------
+ * Written by William Hall - www.mrtheme.com
+ * Based off of special_menu_items and parent_firstchild modules.
+ */
+  
+/**
+ * Implements hook_menu().
+ */
+function void_menu_menu() {
+
+/**
+ * Set up our base array for Void items.
+ */
+  $base = array(
+    'page callback' => '_void_menu_menu',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'external' => TRUE,
+  );
+
+/**
+ * Invoke our void items with the $base array.
+ */
+  $items['<void>'] = $base;
+  $i = 1;
+  while ($i < 10) {  
+    $items['<void' . $i . '>'] = $base;
+    $i++;
+  }
+ 
+/**
+ * Calling our Admin Menu item.
+ */
+  $items['admin/config/user-interface/void_menu'] = array(
+    'title' => 'Void Menu',
+    'description' => 'Configure Void Menu.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('void_menu_admin_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Empty callback ensures Drupal menu system accepts Void placeholders.
+ */
+function _void_menu_menu() {
+  return drupal_not_found();
+}
+
+/**
+ * Implements hook_menu_link_alter().
+ */
+function void_menu_menu_link_alter(&$item, $menu) {
+  //(/<void[0-9]>/g)
+  if(preg_match('/(<void)/is', $item['link_path'])) {
+    $item['options']['alter'] = TRUE;
+    $item['options']['unaltered_hidden'] = $item['hidden'];
+    $item['options']['external'] = TRUE;
+  }
+  else {
+    unset($item['options']['unaltered_hidden']);
+    $item['options']['external'] = (url_is_external($item['link_path']) || $item['link_path'] == '<front>') ? 1 : 0;
+  }
+}
+
+/**
+ * Implements hook_translated_menu_link_alter().
+ */
+function void_menu_translated_menu_link_alter(&$item, $map) {
+  if ($item['module'] == 'menu') {
+    $href = $item['href'];
+
+/**
+ * Sets variable matching for menu items.
+ */
+    if (preg_match('/(<void)/is', $item['link_path'])) {
+      $item['options']['alter'] = TRUE;
+      $item['options']['external'] = TRUE;
+
+      if($item['link_path'] == '<void>') {
+        $href = variable_get('void_menu_link_value', 'javascript: void(0);');
+      } else {
+        if (preg_match('/.*?(\\d+)/is', $item['link_path'], $i)) {
+          $href = variable_get('void_menu_link_value' . $i[1], $i[1] == 1 ? '#' : '');
+        }
+      }
+    }
+    else {
+      unset($item['options']['unaltered_hidden']);
+      $item['options']['external'] = (url_is_external($item['link_path']) || $item['link_path'] == '<front>') ? 1 : 0;
+    }
+
+    $item['href'] = $href;
+  }
+
+}
+
+/**
+ * Void Menu admin settings form.
+ *
+ * @return
+ * The settings form used by Void Menu.
+ */
+function void_menu_admin_settings_form() {
+
+  $formbase = array(
+    '#type' => 'textfield',
+  );
+
+  $form['void_menu_link_value'] = $formbase + array(
+    '#title' => check_plain('HTML value for <void>'),
+    '#description' => check_plain('You can use this field to customize the value of the <void> tag, defaults to javascript: void(0);'),
+    '#default_value' => variable_get('void_menu_link_value', 'javascript: void(0);'),
+  );
+
+  $i = 1;
+  while ($i < 10) {
+    $form['void_menu_link_value' . $i] = $formbase + array(
+      '#title' => check_plain('HTML value for <void' . $i . '>'),
+      '#description' => check_plain('You can use this field to customize the value of the <void' . $i . '> tag', array('!item' => $i)),
+      '#default_value' => variable_get('void_menu_link_value' . $i, $i == 1 ? '#' : ''),
+    );
+  $i++;
+  }
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function void_menu_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'menu_overview_form') {
+    foreach ($form as $key => $value) {
+      if (isset($value['#item']['href']) && (drupal_substr($value['#item']['href'], 0, 5) == '<void')) {
+        $item = $value['#item'];
+        $unaltered_hidden = $item['options']['unaltered_hidden'];
+        $form[$key]['#item']['hidden'] = $unaltered_hidden;
+        $form[$key]['hidden']['#default_value'] = !$unaltered_hidden;
+        $form[$key]['#attributes']['class'] = $unaltered_hidden ? array('menu-disabled') : array('menu-enabled');
+        $form[$key]['title']['#markup'] = check_plain($item['title']) . ($unaltered_hidden ? ' (' . t('disabled') . ')' : '');
+      }
+    }
+  }
+  elseif (($form_id == 'menu_edit_item') && isset($form['link_path']['#description'])) {
+    global $base_url;
+    $form['link_path']['#description'] .= '<br />***Enter <strong>&lt;void&gt;</strong> or <strong>&lt;void[1-9]&gt;</strong> to use your <a href="' . $base_url . '/admin/config/user-interface/void_menu">Custom Links</a>***';
+    if (isset($form['options']['#value']['unaltered_hidden'])) {
+      $form['enabled']['#default_value'] = !$form['options']['#value']['unaltered_hidden'];
+    }
+  }
+}
+
+function void_menu_url_outbound_alter(&$path, &$options, $original_path) {
+  if($original_path === '' || $original_path === null || $original_path === '<front>') {
+    return;
+  }  
+  $items = array();
+  $items[0] = variable_get('void_menu_link_value');
+  if($items[0] === $original_path) {
+    $path = $original_path;
+    $options['alias'] = $path;
+    $options['external'] = TRUE;
+    return;
+  }
+
+  $i = 1;
+  while($i < 10) {
+    $items[$i] = variable_get('void_menu_link_value' . $i);
+    if($items[$i] === $original_path) {
+      $path = $original_path;
+      $options['alias'] = $path;
+      $options['external'] = TRUE;
+      break;
+    }
+    $i++;
+  }
+}

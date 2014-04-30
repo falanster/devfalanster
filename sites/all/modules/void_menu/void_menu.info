@@ -1,0 +1,14 @@
+name = Void Menu
+description = Provides a series of new menu items that will accept any custom values.
+package = Menu
+core = "7.x"
+dependencies[] = menu
+files[] = void_menu.module
+files[] = void_menu.install
+configure = admin/config/user-interface/void_menu
+; Information added by Drupal.org packaging script on 2014-04-09
+version = "7.x-1.8"
+core = "7.x"
+project = "void_menu"
+datestamp = "1397033053"
+
