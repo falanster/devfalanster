@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the webform and register form feature.
+ */
+
+include_once 'webform_and_register_form.features.inc';
