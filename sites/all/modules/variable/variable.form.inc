@@ -20,12 +20,18 @@ function variable_form_element($variable, $options = array()) {
     $element = variable_form_element_default($variable, $options);
   }
   if (!empty($variable['validate callback'])) {
-    $element['#validate'][] = $variable['validate callback'];
+    $element['#element_validate'][] = 'variable_form_element_validate';
+  }
+  if (!empty($options['form parents'])) {
+    $element['#parents'] = $options['form parents'];
+    $element['#parents'][] = $variable['name'];
   }
   $element += array('#access' => variable_access($variable));
   if (!empty($variable['required'])) {
     $element += array('#required' => TRUE);
   }
+  // Add variable data to element so we can use it later fo validation, etc..
+  $element['#variable'] = $variable;
   return $element;
 }
 
@@ -148,6 +154,23 @@ function variable_form_element_options($variable, $options = array()) {
 }
 
 /**
+ * Execute submit callbacks for variables in form.
+ */
+function variable_form_submit_callback($form, &$form_state) {
+  if (isset($form['#variable_edit_form'])) {
+    // This may contain some realm options.
+    $options = isset($form['#variable_options']) ? $form['#variable_options'] : array();
+    foreach ($form['#variable_edit_form'] as $name) {
+      $variable = variable_get_info($name);
+      if ($variable && isset($variable['submit callback'])) {
+        variable_include($variable);
+        $variable['submit callback']($variable, $options, $form, $form_state);
+      }
+    }
+  }
+}
+
+/**
  * Form to select variables
  */
 function theme_variable_table_select($variables) {
@@ -156,7 +179,12 @@ function theme_variable_table_select($variables) {
   $fields = array_keys($header);
   $rows = array();
   foreach (element_children($element) as $name) {
-    $variable_name = isset($element[$name]['#variable_name']) ? $element[$name]['#variable_name'] : $name;
+    if (isset($element[$name]['#variable_name'])) {
+      $variable_name = $element[$name]['#variable_name'];
+    }
+    else {
+      $variable_name = str_replace(array('<', '>'), array('[', ']'), $name);
+    }
     $variable = _variable_variable($variable_name);
     $row = array();
     foreach ($fields as $field) {

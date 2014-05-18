@@ -14,7 +14,6 @@ function variable_build_info($type, $options) {
       return variable_build_list_info($options);
     case 'group':
     case 'type':
-    case 'realm':
       $info = variable_invoke_all('variable_' . $type . '_info');
       drupal_alter('variable_' . $type . '_info', $info);
       return $info;
@@ -52,29 +51,6 @@ function variable_build_list_info($options) {
   drupal_alter('variable_info', $variables, $options);
   return $variables;
 }
-
-/**
- * Invoke hook on all modules, adding 'module' property
- */
-function variable_invoke_all() {
-  $args = func_get_args();
-  $hook = $args[0];
-  unset($args[0]);
-  $return = array();
-  foreach (module_implements($hook) as $module) {
-    $function = $module . '_' . $hook;
-    if (function_exists($function)) {
-      $result = call_user_func_array($function, $args);
-      if (isset($result) && is_array($result)) {
-        foreach ($result as $key => $value) {
-          $return[$key] = $value + array('module' => $module);
-        }
-      }
-    }
-  }
-  return $return;
-}
-
 
 /**
  * Build multiple variables
