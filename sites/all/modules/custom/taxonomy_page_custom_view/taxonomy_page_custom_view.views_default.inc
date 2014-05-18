@@ -109,6 +109,8 @@ function taxonomy_page_custom_view_views_default_views() {
   $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['exception']['title'] = 'Усе';
   $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['title_enable'] = TRUE;
   $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['title'] = 'Taxonomy view %1';
+  $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['breadcrumb_enable'] = TRUE;
+  $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['breadcrumb'] = 'Taxonomy view %1';
   $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['term_node_tid_depth_i18n']['summary']['format'] = 'default_summary';
