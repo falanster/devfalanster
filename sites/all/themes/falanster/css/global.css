@@ -1,9 +1,19 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 
+/* Font settings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    font-family: arial, sans-serif;
+}
+
+p, div, body {
+    font-family: arial, sans-serif;
+}
+
 /*common styles*/
 h2.block-title {
-/*  margin: 0 0 15px 0; */
+  /* font-weight: normal; */
   color: #c72c29;
   text-transform: lowercase;
 }
@@ -305,9 +315,10 @@ body {
 	color: #D43E44;
 }
 
-/*title*/
+/*titles*/
+
 h1, h3 {
-	color: #4d4948;
+    color: #4d4948;
 }
 
 /* Language block */
@@ -399,6 +410,25 @@ h1, h3 {
   background-color: #f3f4f5;
   padding: 10px;
 }
+
+#block-agenda-1{
+	position: relative;
+}
+
+#block-block-18{
+	position: absolute;
+}
+
+#block-block-18 .content{
+	margin-top: -60px;
+	margin-left: 235px;
+}
+
+.page-frontpage #block-block-18 .content{
+	margin-top: -30px;
+	margin-left: 245px;
+}
+
 .page-frontpage #block-views-last-video-or-podcast-block .content {
   padding-bottom: 0px;
   margin: 0 0 30px 0;
