@@ -188,9 +188,14 @@ clear: both;
   background: #848589;
   
 }
+
 .front .zone-postscript-wrapper {
   margin: 0 auto 0;
   width: 100%;
+}
+
+.front .zone-postscript {
+    padding-bottom: 30px;
 }
 
 #region-footer-second {
@@ -429,12 +434,6 @@ h1, h3 {
 	margin-left: 245px;
 }
 
-.page-frontpage #block-views-last-video-or-podcast-block .content {
-  padding-bottom: 0px;
-  margin: 0 0 30px 0;
-}
-
-
 .view-afishi .views-field-title {
   padding: 0 0 15px 0;
 }
@@ -494,11 +493,6 @@ h1, h3 {
 
 #block-views-headernews-block-1 .content {
 	padding-bottom: 0;
-}
-
-
-.page-frontpage .block-poll-recent {
-	padding: 0 0 30px 0;	
 }
 
 #block-views-twitter-list-block .content {
