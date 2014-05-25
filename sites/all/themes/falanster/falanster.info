@@ -350,5 +350,6 @@ settings[alpha_region_footer_second_weight] = '2'
 settings[alpha_region_footer_second_css] = ''
 version = '1.x'
 
-stylesheets[all][] = css/custom.css
-# stylesheets[all][] = css/falanster-alpha-default-IE8.css 
+css[main_page.css][name] = 'Main page styles'
+css[main_page.css][description] = 'This file contains styles for main page only.'
+css[main_page.css][options][weight] = '11'

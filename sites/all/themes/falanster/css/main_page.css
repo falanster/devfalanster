@@ -1,0 +1,33 @@
+/* This file contains main-page specific styles */
+
+.page-frontpage #region-content .content,
+.page-frontpage #region-sidebar-second .content,
+.page-frontpage #block-agenda-1 .content, 
+.page-frontpage #block-views-last-video-or-podcast-block .content,
+.page-frontpage .block-poll .poll {
+    background-color: #f3f4f5;
+    padding: 10px;
+}
+
+.page-frontpage #block-block-18 .content{
+	margin-top: -30px;
+	margin-left: 245px;
+}
+
+/* Front page */
+
+.front #region-preface-first {
+  margin: 0 auto 0;
+  width: 100%;
+  padding: 25px 0 0 0;
+  background-color: #848589; 
+}
+
+.front .zone-postscript-wrapper {
+  margin: 0 auto 0;
+  width: 100%;
+}
+
+.front .zone-postscript {
+    padding-bottom: 30px;
+}
