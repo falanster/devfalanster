@@ -353,3 +353,11 @@ version = '1.x'
 css[main_page.css][name] = 'Main page styles'
 css[main_page.css][description] = 'This file contains styles for main page only.'
 css[main_page.css][options][weight] = '11'
+
+css[gallery.css][name] = 'Gallery page styles'
+css[gallery.css][description] = 'This file contains styles for gallery pages and nodes.'
+css[gallery.css][options][weight] = '12'
+
+css[knowledge_base.css][name] = 'Knowledge base styles'
+css[knowledge_base.css][description] = 'This file contains styles for knowledge base pages: library, mediateka.'
+css[knowledge_base.css][options][weight] = '13'

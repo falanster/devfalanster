@@ -1,51 +1,38 @@
 /* This file will hold styles for all layouts using the alpha grid (i.e. not the mobile layout). */
 
+/* Common position styles */
 
-/*Falanster block*/
+/*Social Footer*/
 
-#block-block-10 img {
-  float: right;
-  position: relative;
+#region-footer-first {
+  display: block;
+  margin: 0 auto 0;
+  width: 100%;
+  padding: 25px 0 0 0;
+  background-color: #848589; 
 }
 
-#block-block-10 {
-  float: right;
+#region-footer-first .region-footer-first-inner,
+#region-footer-second .region-footer-second-inner,
+#region-preface-first .region-preface-first-inner {
+  width: 960px;
+  margin: 0 auto;
+  float: none;
 }
 
-#block-block-10 p {
-  margin: 0;
+/* HEADER */
+
+/* Language selector block */
+
+.block-locale {
+  margin: 30px 0 35px 0;
 }
 
-
-/* Common Styles */
-
-.node p {
-  clear: none;
-}
-
-.field-item div {
-	clear: none;
-}
-/*End common styles*/
-/*Front page*/
-
-/*header line*/
-
-/*logo*/
-#block-block-11 {
-  margin: 100px 0 10px 0;
-}
-
-/*end logo*/
-
-#block-block-7 {
-  padding: 10px 0;
-  float: right;
-}
+/* Block with social services */
 
 #block-block-5 {
   float: right;
-  margin-top: 5px;
+  margin-top: 10px;
   margin-bottom: 0;
   width: 195px;
 }
@@ -56,84 +43,14 @@
   float: right;
 }
 
-/*Localization block*/
-
-.block-locale {
-  float: right;
-  margin: 30px 0 35px 0;
+/* Site Logo */
+#block-block-11 {
+  margin: 100px 0 10px 0;
 }
 
-/*End localization block*/
+/* CONTENT */
 
-/*MENU PART*/
-
-/* ENABLE MAIN MENU */
-
-#block-nice-menus-1, #block-nice-menus-2, #block-nice-menus-3 {
-  display: block;
-}
-
-/* DISABLE MOBILE MENU */
-
-#block-menu-menu-mobile-menu {
-  display: none;
-}
-
-/* Nice menu settings */
-
-#block-nice-menus-1,
-#block-nice-menus-2,
-#block-nice-menus-3 {
-  float: right;
-  margin: 120px 0 10px 0;
-}
-
-#block-nice-menus-1 li,
-#block-nice-menus-2 li,
-#block-nice-menus-3 li {
-  border: none;
-  background: none;
-  padding: 5px 6px 0 6px;
-}
-
-#block-nice-menus-1 li a,
-#block-nice-menus-2 li a, 
-#block-nice-menus-3 li a {
-  text-decoration: none;
-  color: #605d5c;
-  font-size: 13px;
-  text-transform: lowercase; /* force text to lowercase */
-}
-
-#block-nice-menus-1 li a:hover,
-#block-nice-menus-2 li a:hover, 
-#block-nice-menus-3 li a:hover {
-  color: #000000;
-}
-
-#block-nice-menus-1 li ul,
-#block-nice-menus-2 li ul, 
-#block-nice-menus-3 li ul {
-  margin-top: 5px;
-}
-
-
-#block-nice-menus-1 li ul li,
-#block-nice-menus-2 li ul li, 
-#block-nice-menus-3 li ul li {
-  background: #DFDCDF;
-  width: 100px;
-}
-
-#block-nice-menus-1 li ul li a:hover,
-#block-nice-menus-2 li ul li a:hover, 
-#block-nice-menus-3 li ul li a:hover {
-  color: #c72c29;
-}
-
-/* @end Nice menu */
-
-/*Afisha Block's*/
+/*Afisha Blocks*/
 
 #block-views-afishi-block-2 {
   display: none;
@@ -156,7 +73,37 @@
   float: right;
 }
 
-/* @end afisha na glavnoj */
+/* FOOTER */
+
+/* Bottom horizontal menu*/
+
+#block-menu-menu-hor-bottom-menu {
+  float: right;
+  margin-right: 10px;
+  width: 200px;
+}
+
+/* STYLES FOR DESKTOPS */
+
+/* END OF PROCESSED PART */
+
+
+
+
+/* Common Styles */
+
+.node p {
+  clear: none;
+}
+
+.field-item div {
+	clear: none;
+}
+/*End common styles*/
+
+
+/*end logo*/
+
 
 /*Agenda block*/
 
@@ -167,20 +114,6 @@
 }
 
 /*End Agenda block*/
-
-/*Social Footer*/
-
-#region-footer-first {
-  display: block;
-}
-
-#region-footer-first .region-footer-first-inner,
-#region-footer-second .region-footer-second-inner,
-#region-preface-first .region-preface-first-inner {
-  width: 960px;
-  margin: 0 auto;
-  float: none;
-}
 
 
 .not-front #zone-footer {
@@ -374,13 +307,6 @@
   display: block;
 }
 
-/*hor bottom menu*/
-
-#block-menu-menu-hor-bottom-menu {
-  float: right;
-  margin-right: 10px;
-  width: 200px;
-}
 
 /* Footer CC and social networks*/
 #block-block-14 {
@@ -388,13 +314,6 @@
   margin-top: 10px;
   margin-left: 10px;
   width: 150px;
-}
-
-#block-block-5 {
-  float: left;
-  margin-top: 10px;
-/*  margin-left: 30px; */
-  width: 250px;
 }
 
 /*Twitter block*/
@@ -423,13 +342,6 @@
   float: left;
 }
 
-
-/* baza vedaj */
-
-.view-id-mediateka .view-header .add_content{
-  float: right;
-}
-/* @end baza vedaj */
 
 /* video in afisha */
 .node-afishi .field-name-field-video-youtube {
@@ -471,5 +383,75 @@ nav.links {
 }
 
 /* @end stranica po tegam */
+
+
+
+/*UNNECESSARY STYLES*/
+
+/* ENABLE MAIN MENU */
+
+#block-nice-menus-1, #block-nice-menus-2, #block-nice-menus-3 {
+  display: block;
+}
+
+/* DISABLE MOBILE MENU */
+
+#block-menu-menu-mobile-menu {
+  display: none;
+}
+
+/* Nice menu settings */
+
+#block-nice-menus-1,
+#block-nice-menus-2,
+#block-nice-menus-3 {
+  float: right;
+  margin: 120px 0 10px 0;
+}
+
+#block-nice-menus-1 li,
+#block-nice-menus-2 li,
+#block-nice-menus-3 li {
+  border: none;
+  background: none;
+  padding: 5px 6px 0 6px;
+}
+
+#block-nice-menus-1 li a,
+#block-nice-menus-2 li a, 
+#block-nice-menus-3 li a {
+  text-decoration: none;
+  color: #605d5c;
+  font-size: 13px;
+  text-transform: lowercase; /* force text to lowercase */
+}
+
+#block-nice-menus-1 li a:hover,
+#block-nice-menus-2 li a:hover, 
+#block-nice-menus-3 li a:hover {
+  color: #000000;
+}
+
+#block-nice-menus-1 li ul,
+#block-nice-menus-2 li ul, 
+#block-nice-menus-3 li ul {
+  margin-top: 5px;
+}
+
+
+#block-nice-menus-1 li ul li,
+#block-nice-menus-2 li ul li, 
+#block-nice-menus-3 li ul li {
+  background: #DFDCDF;
+  width: 100px;
+}
+
+#block-nice-menus-1 li ul li a:hover,
+#block-nice-menus-2 li ul li a:hover, 
+#block-nice-menus-3 li ul li a:hover {
+  color: #c72c29;
+}
+
+/* @end Nice menu */
 
 
