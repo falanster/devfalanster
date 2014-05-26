@@ -23,6 +23,10 @@
     margin: 0 10px 10px 0;
 }
 
+.headernews-image img {
+    max-width: 100%;
+}
+
 .headernews-date {
     color: #c2c2c2;
     font-size: 12px;
@@ -62,6 +66,10 @@
     margin: 0 10px 10px 0;
 }
 
+.afishi-image img {
+    max-width: 100%;
+}
+
 .afishi-block .view-footer {
     text-align: right;
 }
@@ -96,6 +104,10 @@
 
 .last-video-or-podcast-block {
     padding: 10px;
+}
+
+.last-video-or-podcast-image img {
+    max-width: 100%;
 }
 
 /* Poll block */
