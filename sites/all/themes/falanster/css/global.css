@@ -33,6 +33,10 @@ h1, h3 {
     color: #4d4948;
 }
 
+h2 {
+    font-size: 26px;
+}
+
 p, div, body {
     font-family: arial, sans-serif;
 }
@@ -96,7 +100,7 @@ h2.block-title a {
 
 .block-locale {
     float: right;
-    margin: 30px 0 5px 0;
+    margin: 25px 0;
 }
 
 .block-locale .content ul li {
@@ -107,7 +111,6 @@ h2.block-title a {
 .block-locale .content ul li a,
 .block-locale .content ul li .locale-untranslated {
     text-decoration: none;
-    color: #383431;
     text-transform: lowercase;
 }
 
@@ -136,12 +139,6 @@ h2.block-title a {
 }
 
 /* Block with social services */
-
-#block-block-5 {
-    float: left;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
 
 /* CONTENT */
 
@@ -198,6 +195,7 @@ h2.block-title a {
 
 #block-block-14 {
   float: left;
+  margin-right: 5px;
 }
 
 

@@ -11,7 +11,7 @@
 /* News block */
 
 .headernews-block {
-    padding: 25px;
+    padding: 10px;
     overflow: auto;
 }
 
@@ -32,7 +32,7 @@
 /* Related news block */
 
 .related-news-block {
-    padding: 25px;
+    padding: 0 10px 10px 10px;
 }
 
 .related-news-block .view-header {
@@ -43,6 +43,11 @@
     margin-bottom: 5px;
 }
 
+.related-news-block .view-footer {
+    text-align: right;
+}
+
+
 /* Afisha blocks */
 
 #block-views-afishi-block-1 {
@@ -50,19 +55,21 @@
 }
 
 .afishi-block {
-    padding: 25px;
+    padding: 10px;
 }
 
 .afishi-image {
     margin: 0 10px 10px 0;
 }
 
-
+.afishi-block .view-footer {
+    text-align: right;
+}
 
 /* Google calendar block */
 
 .block-agenda-1 .content {
-    padding-top: 25px;
+    padding-top: 10px;
     background-color: #f3f4f5;
 }
 
@@ -74,21 +81,28 @@
     background-color: #dc6f6a;
 }
 
+.block-block-18 .content {
+    text-align: right;
+    padding: 0 25px 20px 25px;
+    background-color: #f3f4f5;
+}
+
+.block-block-18 p {
+    margin: 0;
+    padding: 0;
+}
+
 /* Last video or podcast */
 
 .last-video-or-podcast-block {
-    padding-top: 25px;
-}
-
-.view-last-video-or-podcast .views-field-title {
-    padding: 0 25px;
+    padding: 10px;
 }
 
 /* Poll block */
 
 #block-poll-recent .poll { 
     background-color: #f3f4f5;
-    padding: 25px;
+    padding: 10px;
 }
 
 #block-poll-recent .title {
@@ -97,6 +111,7 @@
     color: #444243;
     line-height: 22px;
     text-decoration: none;
+    margin-bottom: 20px;
  }
 
 #block-poll-recent .links {

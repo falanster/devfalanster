@@ -361,3 +361,4 @@ css[gallery.css][options][weight] = '12'
 css[knowledge_base.css][name] = 'Knowledge base styles'
 css[knowledge_base.css][description] = 'This file contains styles for knowledge base pages: library, mediateka.'
 css[knowledge_base.css][options][weight] = '13'
+
