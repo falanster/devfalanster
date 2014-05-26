@@ -1,188 +1,280 @@
 /* This file contains main-page specific styles */
 
-.front .content a {
-	color: #D25D5E;
-    text-decoration: none;
-}
-
-.front .content a:hover {
-  text-decoration: underline;
-}
-
-.front .content a:visited {
-  color: #D25D5E;
-}
-
-.page-frontpage #region-content .content,
-.page-frontpage #region-sidebar-second .content,
-.page-frontpage #block-agenda-1 .content, 
-.page-frontpage #block-views-last-video-or-podcast-block .content,
-.page-frontpage .block-poll .poll {
-    background-color: #f3f4f5;
-    padding: 10px;
-}
-
-.page-frontpage #block-block-18 .content {
-	margin-top: -30px;
-	margin-left: 245px;
-}
-
-.front #region-preface-first {
-  margin: 0 auto 0;
-  width: 100%;
-  padding: 25px 0 0 0;
-  background-color: #848589; 
-}
-
-.front .zone-postscript-wrapper {
-  margin: 0 auto 0;
-  width: 100%;
-}
+/* Zone and region positioning */
 
 .front .zone-postscript {
     padding-bottom: 30px;
 }
 
-/*english home page*/
-.i18n-en .view-last-video-or-podcast .views-field-colorbox {
-	position: relative;
-	margin: 0 0 -55px -25px;
-	float: left;
+/* CONTENT */
+
+/* News block */
+
+.headernews-block {
+    padding: 25px;
+    overflow: auto;
 }
-.i18n-en .view-last-video-or-podcast .views-field-title,
+
+.headernews-block .view-header {
+    margin-bottom: 10px;
+}
+
+.headernews-image {
+    margin: 0 10px 10px 0;
+}
+
+.headernews-date {
+    color: #c2c2c2;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+/* Related news block */
+
+.related-news-block {
+    padding: 25px;
+}
+
+.related-news-block .view-header {
+    margin-bottom: 10px;
+}
+
+.related-news-block .views-row {
+    margin-bottom: 5px;
+}
+
+/* Afisha blocks */
+
+#block-views-afishi-block-1 {
+    display: none;
+}
+
+.afishi-block {
+    padding: 25px;
+}
+
+.afishi-image {
+    margin: 0 10px 10px 0;
+}
+
+
+
+/* Google calendar block */
+
+.block-agenda-1 .content {
+    padding-top: 25px;
+    background-color: #f3f4f5;
+}
+
+.block .agenda-block p {
+    padding: 0 10px 3px;
+}
+
+.block .agenda-block ol li {
+    background-color: #dc6f6a;
+}
+
+/* Last video or podcast */
+
+.last-video-or-podcast-block {
+    padding-top: 25px;
+}
+
 .view-last-video-or-podcast .views-field-title {
-  margin: 0 0 15px 0;
-}
-.i18n-en #block-views-headernews-english-block .views-field-title {
-  margin: 0 0 10px 0;
-}
-.i18n-en #block-views-headernews-english-block .views-field-title a {
-  color: #444243;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 22px;
-  text-decoration: none;
-}
-.i18n-en #block-views-headernews-english-block .views-field-title a:hover {
-	text-decoration: underline;
-}
-.i18n-en .view-headernews-english .views-field-title a {
-  color: #444243;
-  font-size: 12px;
-  line-height: 16px;
-  text-decoration: none;
-}
-.i18n-en .view-headernews-english .views-field-title a:hover {
-  text-decoration: underline;
+    padding: 0 25px;
 }
 
-.i18n-en #block-views-headernews-english-block .content,
-.i18n-en #block-views-headernews-english-block-1 {
-  background-color: #f3f4f5;
-  padding: 25px 25px 0 25px;
-}
-.i18n-en #block-views-headernews-english-block-1 {
-	padding-bottom: 25px;
-}
-.i18n-en #block-views-last-video-or-podcast-block-1 {
-  padding: 0 0 30px 0;
+/* Poll block */
+
+#block-poll-recent .poll { 
+    background-color: #f3f4f5;
+    padding: 25px;
 }
 
-.i18n-en #block-views-headernews-english-block-1 {
-	margin: 0 0 25px 0;
-}
-/*.i18n-en*/
-
-
-.view-afishi .views-field-title a,
-.view-afishi .views-field-title a:hover,
-.view-afishi .views-field-title a:visited,
-.poll .title,
-.view-last-video-or-podcast .views-field-title a,
-.view-last-video-or-podcast .views-field-title a:hover,
-.view-last-video-or-podcast .views-field-title a:visited
-.block-views-headernews-block .views-field-title a,
-.block-views-headernews-block .views-field-title a:hover,
-.block-views-headernews-block .views-field-title a:visited {
+#block-poll-recent .title {
     font-size: 16px;
     font-weight: bold;
     color: #444243;
     line-height: 22px;
     text-decoration: none;
-}
-
-#block-views-headernews-block-1 .views-field-title a,
-.view-headernews-english .views-field-title a {
-	
-    font-size: 12px;
-    color: #444243;
-    line-height: 16px;
-    text-decoration: none;		
-}
-
-/*#block-views-headernews-block-1 .views-field-title, */
-.view-headernews-english .views-field-title a {
-    margin: 0 0 15px 0;	
-}
-
-#block-views-headernews-block-1 .views-field-title,
-.view-headernews-english .views-field-title {
-    margin: 0 0 5px 0;
-}
-
-#block-views-headernews-english-block-1 .view-footer a,
-#block-views-headernews-block-1 .view-footer a {
-    float: right;
-    color: #D43E44;
-/*  text-decoration: underline; */
-}
-
-#block-views-headernews-english-block-1 .view-footer a:hover,
-#block-views-headernews-block-1 .view-footer a:hover {
-    /*  color: #000; */
-    text-decoration: underline;  
-}
-
-#block-views-headernews-block-1 .content {
-	padding-top: 0;
-}
-
-#block-views-headernews-block-1 .content {
-	padding-bottom: 0;
-}
-
-/* Novosti na glavnoj*/
-
-.views-field-field-preview {
-    float: left;
-}
-
-.block-views-headernews-block .views-field-field-image-news img,
-.block-views-headernews-block .views-field-field-preview img,
-.view-headernews-english .field-content img {
-    margin: 0 10px 10px 0;
-}
-
-/* @end novosti na glavnoj*/
-
-/* Poll */
+ }
 
 #block-poll-recent .links {
     display: none;
 }
 
-/* @end Poll */
+/* FOOTER */
 
-/* Afisha na glavnoj */
+/* Facebook block */
 
-#block-views-afishi-block-2 {
-	display: block;
-}
 
-#block-views-afishi-block-1 {
-	display: none;
-}
 
-.view-afishi .views-field-title {
-    padding: 0 0 15px 0;
-}
+/* .front .content a {
+/* 	color: #D25D5E; */
+/*     text-decoration: none; */
+/* } */
+
+/* .front .content a:hover { */
+/*   text-decoration: underline; */
+/* } */
+
+/* .front .content a:visited { */
+/*   color: #D25D5E; */
+/* } */
+
+/* .page-frontpage #region-content .content, */
+/* .page-frontpage #region-sidebar-second .content, */
+/* .page-frontpage #block-agenda-1 .content,  */
+/* .page-frontpage #block-views-last-video-or-podcast-block .content, */
+/* .page-frontpage .block-poll .poll { */
+/*     background-color: #f3f4f5; */
+/*     padding: 10px; */
+/* } */
+
+/* .page-frontpage #block-block-18 .content { */
+/* 	margin-top: -30px; */
+/* 	margin-left: 245px; */
+/* } */
+
+
+/* .front .zone-postscript-wrapper { */
+/*   margin: 0 auto 0; */
+/*   width: 100%; */
+/* } */
+
+/* .front .zone-postscript { */
+/*     padding-bottom: 30px; */
+/* } */
+
+/* /\*english home page*\/ */
+/* .i18n-en .view-last-video-or-podcast .views-field-colorbox { */
+/* 	position: relative; */
+/* 	margin: 0 0 -55px -25px; */
+/* 	float: left; */
+/* } */
+/* .i18n-en .view-last-video-or-podcast .views-field-title, */
+/* .view-last-video-or-podcast .views-field-title { */
+/*   margin: 0 0 15px 0; */
+/* } */
+/* .i18n-en #block-views-headernews-english-block .views-field-title { */
+/*   margin: 0 0 10px 0; */
+/* } */
+/* .i18n-en #block-views-headernews-english-block .views-field-title a { */
+/*   color: #444243; */
+/*   font-size: 16px; */
+/*   font-weight: bold; */
+/*   line-height: 22px; */
+/*   text-decoration: none; */
+/* } */
+/* .i18n-en #block-views-headernews-english-block .views-field-title a:hover { */
+/* 	text-decoration: underline; */
+/* } */
+/* .i18n-en .view-headernews-english .views-field-title a { */
+/*   color: #444243; */
+/*   font-size: 12px; */
+/*   line-height: 16px; */
+/*   text-decoration: none; */
+/* } */
+/* .i18n-en .view-headernews-english .views-field-title a:hover { */
+/*   text-decoration: underline; */
+/* } */
+
+/* .i18n-en #block-views-headernews-english-block .content, */
+/* .i18n-en #block-views-headernews-english-block-1 { */
+/*   background-color: #f3f4f5; */
+/*   padding: 25px 25px 0 25px; */
+/* } */
+/* .i18n-en #block-views-headernews-english-block-1 { */
+/* 	padding-bottom: 25px; */
+/* } */
+/* .i18n-en #block-views-last-video-or-podcast-block-1 { */
+/*   padding: 0 0 30px 0; */
+/* } */
+
+/* .i18n-en #block-views-headernews-english-block-1 { */
+/* 	margin: 0 0 25px 0; */
+/* } */
+
+/* .poll .title, */
+/* .view-last-video-or-podcast .views-field-title a, */
+/* .view-last-video-or-podcast .views-field-title a:hover, */
+/* .view-last-video-or-podcast .views-field-title a:visited */
+/* .block-views-headernews-block .views-field-title a, */
+/* .block-views-headernews-block .views-field-title a:hover, */
+/* .block-views-headernews-block .views-field-title a:visited { */
+/*     font-size: 16px; */
+/*     font-weight: bold; */
+/*     color: #444243; */
+/*     line-height: 22px; */
+/*     text-decoration: none; */
+/* } */
+
+/* #block-views-headernews-block-1 .views-field-title a, */
+/* .view-headernews-english .views-field-title a { */
+	
+/*     font-size: 12px; */
+/*     color: #444243; */
+/*     line-height: 16px; */
+/*     text-decoration: none;		 */
+/* } */
+
+/* /\*#block-views-headernews-block-1 .views-field-title, *\/ */
+/* .view-headernews-english .views-field-title a { */
+/*     margin: 0 0 15px 0;	 */
+/* } */
+
+/* #block-views-headernews-block-1 .views-field-title, */
+/* .view-headernews-english .views-field-title { */
+/*     margin: 0 0 5px 0; */
+/* } */
+
+/* #block-views-headernews-english-block-1 .view-footer a, */
+/* #block-views-headernews-block-1 .view-footer a { */
+/*     float: right; */
+/*     color: #D43E44; */
+/* /\*  text-decoration: underline; *\/ */
+/* } */
+
+/* #block-views-headernews-english-block-1 .view-footer a:hover, */
+/* #block-views-headernews-block-1 .view-footer a:hover { */
+/*     /\*  color: #000; *\/ */
+/*     text-decoration: underline;   */
+/* } */
+
+/* #block-views-headernews-block-1 .content { */
+/* 	padding-top: 0; */
+/* } */
+
+/* #block-views-headernews-block-1 .content { */
+/* 	padding-bottom: 0; */
+/* } */
+
+/* /\* Novosti na glavnoj*\/ */
+
+/* .views-field-field-preview { */
+/*     float: left; */
+/* } */
+
+/* /\* @end novosti na glavnoj*\/ */
+
+/* /\* Poll *\/ */
+
+/* #block-poll-recent .links { */
+/*     display: none; */
+/* } */
+
+/* /\* @end Poll *\/ */
+
+/* /\* Afisha na glavnoj *\/ */
+
+/* #block-views-afishi-block-2 { */
+/* 	display: block; */
+/* } */
+
+/* #block-views-afishi-block-1 { */
+/* 	display: none; */
+/* } */
+
+/* .view-afishi .views-field-title { */
+/*     padding: 0 0 15px 0; */
+/* } */
