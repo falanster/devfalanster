@@ -29,12 +29,17 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 20px;
 }
 
-h1, h3 {
+h1 {
+    font-size: 36px;
     color: #4d4948;
 }
 
 h2 {
     font-size: 26px;
+}
+
+h3 {
+    color: #4d4948;
 }
 
 p, div, body {
@@ -64,10 +69,6 @@ h2.block-title a {
 #zone-branding { 
     border-top: 3px #C72C29 solid;
     padding: 0 10px 0 10px;
-}
-
-#zone-content {
-    padding-bottom: 25px;
 }
 
 #zone-footer-wrapper {
@@ -196,34 +197,6 @@ h2.block-title a {
 #block-block-14 {
   float: left;
   margin-right: 5px;
-}
-
-
-/* Bottom horizontal menu*/
-
-#block-menu-menu-hor-bottom-menu {
-    float: right;
-} 
-
-#block-menu-menu-hor-bottom-menu .menu a {
-    font-size: 16px;
-    color: #848589;
-    text-transform: lowercase;  
-}
-
-#block-menu-menu-hor-bottom-menu ul li {
-    list-style: none;
-    display: inline;
-    float: right;
-}
-
-#block-menu-menu-hor-bottom-menu ul li a {
-    text-decoration: none;
-}
-
-#block-menu-menu-hor-bottom-menu ul li a:hover {
-    text-decoration: none;
-    color: #000;
 }
 
 /* Custom styles for tweaking content on all pages */

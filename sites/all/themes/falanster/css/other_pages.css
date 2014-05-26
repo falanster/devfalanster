@@ -1,0 +1,124 @@
+/* This file contains styles for all pages except main */
+
+/* Common position settings */
+
+#region-sidebar-second .block {
+    margin-bottom: 25px;
+}
+
+/* CONTENT */
+
+/* Google calendar block */
+
+.block-agenda-1 {
+    margin-bottom: 0 !important;
+}
+
+.block-agenda-1 .content {
+    padding: 10px;
+    background-color: #f3f4f5;
+}
+
+.block .agenda-block p {
+    padding: 0 10px 3px;
+}
+
+.block .agenda-block ol li {
+    background-color: #dc6f6a;
+}
+
+.block-block-18 .content {
+    text-align: right;
+    padding: 0 25px 20px 25px;
+    background-color: #f3f4f5;
+}
+
+.block-block-18 p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Social links in sidebar */
+
+.block-block-16 .content {
+    background-color: #f3f4f5;
+    padding: 25px 5px;
+}
+
+.block-block-16 .content p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Donation block in sidebar */
+
+.block-block-1 .content {
+    background-color: #f3f4f5;
+    padding: 25px;
+}
+
+/* Subscribe block in sidebar */
+
+.block-simplenews-1 .content {
+    background-color: #f3f4f5;
+    padding: 25px;   
+}
+
+/* Node styles */
+
+article {
+    margin-bottom: 25px;
+}
+
+article .field-type-taxonomy-term-reference {
+    margin-top: 5px;
+    float: left;
+}
+
+article .field-type-taxonomy-term-reference .field-item {
+    float: left;
+    margin-right: 1.2em;
+}
+
+/* FOOTER */
+
+/* Falanster logo block */
+
+.block-block-12 .content {
+    float: right;
+    margin-top: 30px;
+}
+
+.block-block-12 .content p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Hot pages menu */
+
+#block-menu-menu-hot-pages {
+    float: right;
+} 
+
+#block-menu-menu-hot-pages .menu a {
+    font-size: 16px;
+    color: #848589;
+    text-transform: lowercase;  
+}
+
+#block-menu-menu-hot-pages ul li {
+    list-style: none;
+    display: inline;
+    float: right;
+}
+
+#block-menu-menu-hot-pages ul li a {
+    text-decoration: none;
+}
+
+#block-menu-menu-hot-pages ul li a:hover {
+    text-decoration: none;
+    color: #000;
+}
+

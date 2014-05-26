@@ -2,9 +2,18 @@
 
 /* Common position styles */
 
-#region-footer-first {
+#region-footer-first,
+#region-footer-second {
   display: block;
   padding: 25px 0;
+}
+
+#zone-postscript .block {
+    margin-bottom: 0;
+}
+
+#zone-postscript {
+    padding-bottom: 30px;
 }
 
 /* HEADER */

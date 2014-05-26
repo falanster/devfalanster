@@ -2,13 +2,19 @@
 
 /* Zone and region positioning */
 
-.front .zone-postscript {
-    padding-bottom: 30px;
+#region-content .block,
+#region-sidebar-second .block,
+#zone-postscript .block {
+    margin-bottom: 25px;
 }
 
 /* CONTENT */
 
 /* News block */
+
+.block-headernews-block {
+    margin-bottom: 0 !important;
+}
 
 .headernews-block {
     padding: 10px;
@@ -133,7 +139,32 @@
 
 /* FOOTER */
 
-/* Facebook block */
+/* Bottom horizontal menu*/
+
+#block-menu-menu-hor-bottom-menu {
+    float: right;
+} 
+
+#block-menu-menu-hor-bottom-menu .menu a {
+    font-size: 16px;
+    color: #848589;
+    text-transform: lowercase;  
+}
+
+#block-menu-menu-hor-bottom-menu ul li {
+    list-style: none;
+    display: inline;
+    float: right;
+}
+
+#block-menu-menu-hor-bottom-menu ul li a {
+    text-decoration: none;
+}
+
+#block-menu-menu-hor-bottom-menu ul li a:hover {
+    text-decoration: none;
+    color: #000;
+}
 
 
 
