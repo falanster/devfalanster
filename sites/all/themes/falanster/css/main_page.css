@@ -23,7 +23,8 @@
     margin: 0 10px 10px 0;
 }
 
-.headernews-image img {
+.headernews-image img,
+.headernews-block .views-field-colorbox img {
     max-width: 100%;
 }
 
