@@ -23,8 +23,7 @@
     margin: 0 10px 10px 0;
 }
 
-.headernews-image img,
-.headernews-block .views-field-colorbox img {
+.headernews-image img {
     max-width: 100%;
 }
 
@@ -107,7 +106,8 @@
     padding: 10px;
 }
 
-.last-video-or-podcast-image img {
+.last-video-or-podcast-image img,
+.last-video-or-podcast-block .views-field-colorbox img {
     max-width: 100%;
 }
 
