@@ -122,9 +122,16 @@ article .field-type-taxonomy-term-reference .field-item {
     margin-right: 1.2em;
 }
 
+/* Views list of teasers */
 
-/* News and anounce english page */
-
-.headernews-page .grey-title {
+.teasers .grey-title {
     margin-bottom: 10px;
 }
+
+/* Views content grid */
+
+.content-grid .grey-title {
+    margin-bottom: 10px;
+}
+
+

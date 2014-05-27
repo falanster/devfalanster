@@ -231,6 +231,14 @@ a.grey title,
     max-width: 100%;
 }
 
+.grid-image {
+    margin: 0 10px 10px 0;
+}
+
+.grid-image img {
+    max-width: 100%;
+}
+
 a.black-link,
 .black-link a {
     color: #444243;
