@@ -8,17 +8,15 @@ body {
     font: 13px/1.5 Verdana, Helvetica, Arial, sans-serif;
 } 
 
-a {
+a,
+a:link,
+a:visited {
 	color: #D25D5E;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-}
-
-a:visited {
-    color: #D25D5E;
 }
 
 /* Font settings */
@@ -212,6 +210,25 @@ a.grey title,
 
 .grey-background {
     background-color: #f3f4f5;
+}
+
+.grey-date {
+    color: #c2c2c2;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.teaser-row {
+    overflow: auto;
+    margin-bottom: 25px;
+}
+
+.teaser-image {
+    margin: 0 10px 10px 0;
+}
+
+.teaser-image img {
+    max-width: 100%;
 }
 
 a.black-link,

@@ -12,6 +12,7 @@
 
 /* News block */
 
+.block-headernews-english-block,
 .block-headernews-block {
     margin-bottom: 0 !important;
 }
@@ -31,12 +32,6 @@
 
 .headernews-image img {
     max-width: 100%;
-}
-
-.headernews-date {
-    color: #c2c2c2;
-    font-size: 12px;
-    margin: 5px 0;
 }
 
 /* Related news block */

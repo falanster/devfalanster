@@ -64,22 +64,6 @@
     padding: 25px;   
 }
 
-/* Node styles */
-
-article {
-    margin-bottom: 25px;
-}
-
-article .field-type-taxonomy-term-reference {
-    margin-top: 5px;
-    float: left;
-}
-
-article .field-type-taxonomy-term-reference .field-item {
-    float: left;
-    margin-right: 1.2em;
-}
-
 /* FOOTER */
 
 /* Falanster logo block */
@@ -122,3 +106,25 @@ article .field-type-taxonomy-term-reference .field-item {
     color: #000;
 }
 
+/* Node styles */
+
+article {
+    margin-bottom: 25px;
+}
+
+article .field-type-taxonomy-term-reference {
+    margin-top: 5px;
+    float: left;
+}
+
+article .field-type-taxonomy-term-reference .field-item {
+    float: left;
+    margin-right: 1.2em;
+}
+
+
+/* News and anounce english page */
+
+.headernews-page .grey-title {
+    margin-bottom: 10px;
+}
