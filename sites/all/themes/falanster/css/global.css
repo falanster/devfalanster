@@ -223,12 +223,20 @@ a.grey title,
     margin-bottom: 25px;
 }
 
+.teaser-title {
+    margin-bottom: 10px;
+}
+
 .teaser-image {
     margin: 0 10px 10px 0;
 }
 
 .teaser-image img {
     max-width: 100%;
+}
+
+.grid-title {
+    margin-bottom: 10px;
 }
 
 .grid-image {

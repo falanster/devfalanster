@@ -121,17 +121,3 @@ article .field-type-taxonomy-term-reference .field-item {
     float: left;
     margin-right: 1.2em;
 }
-
-/* Views list of teasers */
-
-.teasers .grey-title {
-    margin-bottom: 10px;
-}
-
-/* Views content grid */
-
-.content-grid .grey-title {
-    margin-bottom: 10px;
-}
-
-
