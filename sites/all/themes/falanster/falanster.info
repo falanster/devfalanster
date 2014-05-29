@@ -350,6 +350,10 @@ settings[alpha_region_footer_second_weight] = '2'
 settings[alpha_region_footer_second_css] = ''
 version = '1.x'
 
+css[common.css][name] = 'Common styles'
+css[common.css][description] = 'This file contains common styles for all pages.'
+css[common.css][options][weight] = '11'
+
 css[main_page.css][name] = 'Main page styles'
 css[main_page.css][description] = 'This file contains styles for main page only.'
 css[main_page.css][options][weight] = '11'
