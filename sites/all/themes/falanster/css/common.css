@@ -28,7 +28,28 @@ a.black-link,
     font-size: 12px;
 }
 
+/* Views pager styles */
+
+.view .pager li {
+    padding: 0;
+    margin: 0 5px;
+}
+
+.view .pager li a {
+    color: #444243;
+}
+
+.view .pager .pager-current {
+    color: #D25D5E;
+    font-size: 18px;
+    font-weight: bold;
+}
+
 /* Views list styles */
+
+.list-page {
+    margin-bottom: 25px;
+}
 
 .list-row {
     overflow: auto;

@@ -38,15 +38,6 @@
     padding: 0;
 }
 
-/* Google calendar block in Agenda page*/
-
-.fc-event-red .fc-event-skin {
-    border-color: #dc6f6a;
-    background-color: #dc6f6a;
-    color: #fff;
-    border-style: solid;
-}
-
 /* Social links in sidebar */
 
 .block-block-16 .content {
@@ -114,7 +105,7 @@
     color: #000;
 }
 
-/* Node styles */
+/* NODE STYLES */
 
 article {
     margin-bottom: 25px;
@@ -128,4 +119,25 @@ article .field-type-taxonomy-term-reference {
 article .field-type-taxonomy-term-reference .field-item {
     float: left;
     margin-right: 1.2em;
+}
+
+/* AGENDA PAGE */
+
+/* Google calendar block in Agenda page*/
+
+.fc-event-red .fc-event-skin {
+    border-color: #dc6f6a;
+    background-color: #dc6f6a;
+    color: #fff;
+    border-style: solid;
+}
+
+/* GALLERY PAGE */
+
+.gallery-page .views-label {
+    margin-right: 0.3em;
+}
+
+.gallery-page .views-field-body {
+    margin-bottom: 10px;
 }
