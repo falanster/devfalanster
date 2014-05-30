@@ -49,6 +49,17 @@ a.black-link,
 
 /* Views grid styles */
 
+.grid-page table {
+    border-collapse: separate;
+    border-spacing: 15px;
+    position: relative;
+    left: -15px;
+}
+
+.grid-cell {
+    padding: 15px;
+}
+
 .grid-title {
     margin-bottom: 10px;
 }
