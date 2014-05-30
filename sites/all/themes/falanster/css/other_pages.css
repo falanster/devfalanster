@@ -57,6 +57,13 @@
     padding: 25px;
 }
 
+.block-block-1 img {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+
+
 /* Subscribe block in sidebar */
 
 .block-simplenews-1 .content {
