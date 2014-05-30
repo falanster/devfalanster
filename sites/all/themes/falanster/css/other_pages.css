@@ -107,18 +107,39 @@
 
 /* NODE STYLES */
 
-article {
+.node {
     margin-bottom: 25px;
 }
 
-article .field-type-taxonomy-term-reference {
-    margin-top: 5px;
-    float: left;
+.node .field-type-datetime {
+    color: #c2c2c2;
+    font-size: 12px;
+    margin: 5px 0;
 }
 
-article .field-type-taxonomy-term-reference .field-item {
+.node .field-type-node-reference,
+.node .field-type-taxonomy-term-reference {
     float: left;
-    margin-right: 1.2em;
+    margin-top: 5px;
+}
+
+.node .field-type-node-reference.field-label-inline,
+.node .field-type-taxonomy-term-reference.field-label-inline {
+    clear: both;
+    float: left;
+    margin-top: 5px;
+}
+
+.node .field-type-node-reference.field-label-hidden,
+.node .field-type-taxonomy-term-reference.field-label-hidden {
+    float: left;
+    margin-top: 5px;
+}
+
+.node .field-type-node-reference .field-item,
+.node .field-type-taxonomy-term-reference .field-item {
+    float: left;
+    margin-right: 0.5em;
 }
 
 /* AGENDA PAGE */
@@ -132,7 +153,7 @@ article .field-type-taxonomy-term-reference .field-item {
     border-style: solid;
 }
 
-/* GALLERY PAGE */
+/* GALLERY VIEWS PAGE */
 
 .gallery-page .views-label {
     margin-right: 0.3em;
@@ -140,4 +161,16 @@ article .field-type-taxonomy-term-reference .field-item {
 
 .gallery-page .views-field-body {
     margin-bottom: 10px;
+}
+
+/* GALLERY NODE PAGE */
+
+.node-gallery .field-type-image .field-item {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.node-gallery .field-type-image .field-item {
+    float: left;
+    margin: 0 10px 10px 0;
 }
