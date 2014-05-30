@@ -198,7 +198,28 @@ h2.block-title a {
   margin-right: 5px;
 }
 
-/* END OF PROCESSED PART */
+/* COMMON VIEWS STYLES */
+
+/* Views pager styles */
+
+.view .pager {
+    margin: 10px 0 0 0;
+}
+
+.view .pager li {
+    padding: 0;
+    margin: 0 5px;
+}
+
+.view .pager li a {
+    color: #4d4948;
+}
+
+.view .pager .pager-current {
+    color: #D25D5E;
+    font-size: 18px;
+    font-weight: bold;
+}
 
 
 

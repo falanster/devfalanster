@@ -2,32 +2,32 @@
 
 /* Knowledge base tables */
 
-.views-table .views-field-title {
-  width: 450px;
-}
+/* .views-table .views-field-title { */
+/*   width: 450px; */
+/* } */
 
-.views-table .views-field-field-author {
-  width: 250px;
-}
+/* .views-table .views-field-field-author { */
+/*   width: 250px; */
+/* } */
 
-.views-table .views-field-name {
-  width: 150px;
-}
+/* .views-table .views-field-name { */
+/*   width: 150px; */
+/* } */
 
-.views-table .views-field-field-fivestar {
-  width: 200px;
-}
+/* .views-table .views-field-field-fivestar { */
+/*   width: 200px; */
+/* } */
 
-.views-table th.views-field-title a,
-.views-table th.views-field-field-author a,
-.views-table th.views-field-name a,
-.views-table th.views-field-field-fivestar a {
-  color: #4d4948;
-}
+/* .views-table th.views-field-title a, */
+/* .views-table th.views-field-field-author a, */
+/* .views-table th.views-field-name a, */
+/* .views-table th.views-field-field-fivestar a { */
+/*   color: #4d4948; */
+/* } */
 
-.views-table td.views-field-name a {
-  color: #4d4948;
-}
+/* .views-table td.views-field-name a { */
+/*   color: #4d4948; */
+/* } */
 
 /* Mediateka pages */
 

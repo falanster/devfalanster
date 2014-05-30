@@ -174,3 +174,25 @@
     float: left;
     margin: 0 10px 10px 0;
 }
+
+/* KNOWLEDGE BASE VIEWS PAGE */
+
+.mediateka-page .attachment,
+.knowledge-base-page .attachment {
+    margin-bottom: 10px;
+}
+
+.mediateka-page .views-field-title,
+.knowledge-base-page .views-field-title {
+    width: 50%;
+}
+
+.mediateka-page .views-field-field-author,
+.knowledge-base-page .views-field-field-author {
+    width: 100px;
+}
+
+.mediateka-page .views-field-name,
+.knowledge-base-page .views-field-name {
+    width: 90px;
+}

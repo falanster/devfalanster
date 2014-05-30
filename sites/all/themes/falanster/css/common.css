@@ -1,5 +1,9 @@
 /* Common styles for tweaking content on all pages */
 
+.grey-text {
+    color: #444243;
+}
+
 .grey-title,
 a.grey title,
 .grey-title a {
@@ -19,6 +23,10 @@ a.grey title,
     margin: 5px 0;
 }
 
+.dark-grey-text {
+    color: #4d4948;
+}
+
 a.black-link,
 .black-link a {
     color: #444243;
@@ -28,24 +36,7 @@ a.black-link,
     font-size: 12px;
 }
 
-/* Views pager styles */
-
-.view .pager li {
-    padding: 0;
-    margin: 0 5px;
-}
-
-.view .pager li a {
-    color: #444243;
-}
-
-.view .pager .pager-current {
-    color: #D25D5E;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Views list styles */
+/* VIEWS LIST STYLES */
 
 .list-page {
     margin-bottom: 25px;
@@ -68,7 +59,11 @@ a.black-link,
     max-width: 100%;
 }
 
-/* Views grid styles */
+/* VIEWS GRID STYLES */
+
+.grid-page {
+    margin-bottom: 25px;
+}
 
 .grid-page table {
     border-collapse: separate;
@@ -93,7 +88,44 @@ a.black-link,
     max-width: 100%;
 }
 
-/* position styles */
+/* VIEWS TABLE STYLES */
+
+.table-page {
+    margin-bottom: 25px;
+}
+
+.table-page table {
+    width: 100%;
+}
+
+.table-page thead {
+    background-color: #f3f4f5;
+}
+
+.table-page th {
+    color: #4d4948;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+.table-page th a {
+    color: #4d4948;
+}
+
+.table-page tr {
+    background-color: #f3f4f5;
+    border: 1px solid #ccc;
+}
+
+.table-page td {
+    padding: 2px 5px;
+}
+
+.table-page td.active {
+    background-color:  #f3f4f5;
+}
+
+/* poSITION STYLES */
 
 .align-left {
     text-align: left;
