@@ -61,14 +61,7 @@
 
 .afishi-block {
     padding: 10px;
-}
-
-.afishi-image {
-    margin: 0 10px 10px 0;
-}
-
-.afishi-image img {
-    max-width: 100%;
+    overflow: auto;
 }
 
 .afishi-block .view-footer {
