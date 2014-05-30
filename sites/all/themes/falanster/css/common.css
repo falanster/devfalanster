@@ -1,4 +1,4 @@
-/* Common styles for tweaking content on all pages */
+/* COMMON STYLES FOR TWEAKING CONTENT ON ALL PAGES */
 
 .grey-text {
     color: #444243;
@@ -125,7 +125,7 @@ a.black-link,
     background-color:  #f3f4f5;
 }
 
-/* poSITION STYLES */
+/* POSITION STYLES */
 
 .align-left {
     text-align: left;
