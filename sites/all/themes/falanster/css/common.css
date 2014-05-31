@@ -1,7 +1,13 @@
 /* COMMON STYLES FOR TWEAKING CONTENT ON ALL PAGES */
 
-.grey-text {
+.grey-text,
+.grey-text a {
     color: #444243;
+}
+
+.white-text,
+.white-text a {
+    color: #fff;
 }
 
 .grey-title,
@@ -10,6 +16,14 @@ a.grey title,
     font-size: 16px;
     font-weight: bold;
     color: #444243;
+    text-decoration: none;
+}
+
+.white-title,
+a.white-title,
+.white-title a {
+    color: #fff;
+    font-size: 20px;
     text-decoration: none;
 }
 
@@ -65,28 +79,95 @@ a.black-link,
     margin-bottom: 25px;
 }
 
-.grid-page table {
-    border-collapse: separate;
-    border-spacing: 15px;
-    position: relative;
-    left: -15px;
-}
-
 .grid-cell {
-    padding: 15px;
+    width: 300px;
+    height: 300px;
+    float: left;
+    background-color: #f3f4f5;
+    margin: 0 20px 20px 0;
+    position: relative;
 }
 
-.grid-title {
-    margin-bottom: 10px;
+.grid-cell:nth-of-type(3),
+.grid-cell:nth-of-type(6),
+.grid-cell:nth-of-type(9),
+.grid-cell:nth-of-type(12),
+.grid-cell:nth-of-type(15),
+.grid-cell:nth-of-type(18),
+.grid-cell:nth-of-type(21) {
+    margin-right: 0px;
 }
 
 .grid-image {
-    margin: 0 10px 10px 0;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 0;
 }
 
 .grid-image img {
     max-width: 100%;
 }
+
+.grid-pad {
+    position: absolute;
+    z-index: 1;
+    background-color: #fa4343;
+    opacity: 0.8;
+    bottom: 15px;
+    left: 15px;
+    width: 270px;
+    height: 150px;
+}
+
+.grid-pad a:hover {
+    text-decoration: none;
+}
+
+.grid-date {
+    position: absolute;
+    z-index: 1;
+    bottom: 165px;
+    right: 20px;
+    color: #fa4343;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 70%;
+    opacity: 0.8;
+}
+
+.grid a {
+    color: #fa4343;
+}
+
+.grid-title {
+    width: 250px;
+    padding: 10px 10px 5px 10px;
+    line-height: 95%;
+}
+
+.grid-teaser {
+    width: 250px;
+    padding: 0 10px 10px 10px;
+    font-size: 14px;
+}
+
+.grid-teaser p {
+    margin: 0;
+    padding: 0;
+}
+
+/* .grid-teaser { */
+/*     position: absolute; */
+/*     z-index: 1; */
+/*     background-color: #D25D5E; */
+/*     opacity: 0.9; */
+/*     width: 270px; */
+/*     height: 30px; */
+/*     bottom: 15px; */
+/*     left: 15px; */
+/* } */
+
 
 /* VIEWS TABLE STYLES */
 
