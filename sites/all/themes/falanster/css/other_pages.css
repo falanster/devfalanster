@@ -160,16 +160,6 @@
     border-style: solid;
 }
 
-/* GALLERY VIEWS PAGE */
-
-.gallery-page .views-label {
-    margin-right: 0.3em;
-}
-
-.gallery-page .views-field-body {
-    margin-bottom: 10px;
-}
-
 /* GALLERY NODE PAGE */
 
 .node-gallery .field-type-image .field-item {
