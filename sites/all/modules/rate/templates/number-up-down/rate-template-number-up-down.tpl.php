@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <?php
 
 /**
@@ -17,7 +15,6 @@
   */
 ?>
 
->>>>>>> 35e77fdfc80d676eef8708dca155e0f78b6aedde
 <?php print $up_button; ?>
 
 <div class="rate-number-up-down-rating <?php print $score_class ?>"><?php print $score; ?></div>
