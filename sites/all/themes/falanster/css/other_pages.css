@@ -1,0 +1,202 @@
+/* This file contains styles for all pages except main */
+
+/* Common position settings */
+
+#region-sidebar-second .block {
+    margin-bottom: 25px;
+}
+
+/* CONTENT */
+
+/* Google calendar block in sidebar */
+
+.block-agenda-1 {
+    margin-bottom: 0 !important;
+}
+
+.block-agenda-1 .content {
+    padding: 10px;
+    background-color: #f3f4f5;
+}
+
+.block .agenda-block p {
+    padding: 0 10px 3px;
+}
+
+.block .agenda-block ol li {
+    background-color: #dc6f6a;
+}
+
+.block-block-18 .content {
+    text-align: right;
+    padding: 0 25px 20px 25px;
+    background-color: #f3f4f5;
+}
+
+.block-block-18 p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Social links in sidebar */
+
+.block-block-16 .content {
+    background-color: #f3f4f5;
+    padding: 25px 5px;
+}
+
+.block-block-16 .content p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Donation block in sidebar */
+
+.block-block-1 .content {
+    background-color: #f3f4f5;
+    padding: 25px;
+}
+
+.block-block-1 img {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+
+
+/* Subscribe block in sidebar */
+
+.block-simplenews-1 .content {
+    background-color: #f3f4f5;
+    padding: 25px;   
+}
+
+/* FOOTER */
+
+/* Falanster logo block */
+
+.block-block-12 .content {
+    float: right;
+    margin-top: 30px;
+}
+
+.block-block-12 .content p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Hot pages menu */
+
+#block-menu-menu-hot-pages {
+    float: right;
+} 
+
+#block-menu-menu-hot-pages .menu a {
+    font-size: 16px;
+    color: #848589;
+    text-transform: lowercase;  
+}
+
+#block-menu-menu-hot-pages ul li {
+    list-style: none;
+    display: inline;
+    float: right;
+}
+
+#block-menu-menu-hot-pages ul li a {
+    text-decoration: none;
+}
+
+#block-menu-menu-hot-pages ul li a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+/* NODE STYLES */
+
+.node {
+    margin-bottom: 25px;
+}
+
+.node .field-type-datetime {
+    color: #c2c2c2;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.node .field-type-node-reference,
+.node .field-type-taxonomy-term-reference {
+    float: left;
+    margin-top: 5px;
+}
+
+.node .field-type-node-reference.field-label-inline,
+.node .field-type-taxonomy-term-reference.field-label-inline {
+    clear: both;
+    float: left;
+    margin-top: 5px;
+}
+
+.node .field-type-node-reference.field-label-hidden,
+.node .field-type-taxonomy-term-reference.field-label-hidden {
+    float: left;
+    margin-top: 5px;
+}
+
+.node .field-type-node-reference .field-item,
+.node .field-type-taxonomy-term-reference .field-item {
+    float: left;
+    margin-right: 0.5em;
+}
+
+/* AGENDA PAGE */
+
+/* Google calendar block in Agenda page*/
+
+.fc-event-red .fc-event-skin {
+    border-color: #dc6f6a;
+    background-color: #dc6f6a;
+    color: #fff;
+    border-style: solid;
+}
+
+/* GALLERY NODE PAGE */
+
+.node-gallery .field-type-image .field-item {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.node-gallery .field-type-image .field-item {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+/* KNOWLEDGE BASE/LIBRARY/MEDIATEKA/ALL KNOWLEDGE VIEWS PAGES */
+
+.library-page .attachment
+.mediateka-page .attachment,
+.knowledge-base-page .attachment {
+    margin-bottom: 10px;
+}
+
+.library-page .views-field-title,
+.mediateka-page .views-field-title,
+.knowledge-base-page .views-field-title,
+.all-knowledge-page .views-field-title {
+    width: 50%;
+}
+
+.library-page .views-field-field-author,
+.mediateka-page .views-field-field-author,
+.knowledge-base-page .views-field-field-author,
+.all-knowledge-page .views-field-field-author {
+    width: 100px;
+}
+
+.library-page .views-field-name,
+.mediateka-page .views-field-name,
+.knowledge-base-page .views-field-name,
+.all-knowledge-page .views-field-name {
+    width: 90px;
+}

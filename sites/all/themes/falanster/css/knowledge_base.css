@@ -1,0 +1,85 @@
+/* Knowledge base page styles */
+
+/* Knowledge base tables */
+
+/* .views-table .views-field-title { */
+/*   width: 450px; */
+/* } */
+
+/* .views-table .views-field-field-author { */
+/*   width: 250px; */
+/* } */
+
+/* .views-table .views-field-name { */
+/*   width: 150px; */
+/* } */
+
+/* .views-table .views-field-field-fivestar { */
+/*   width: 200px; */
+/* } */
+
+/* .views-table th.views-field-title a, */
+/* .views-table th.views-field-field-author a, */
+/* .views-table th.views-field-name a, */
+/* .views-table th.views-field-field-fivestar a { */
+/*   color: #4d4948; */
+/* } */
+
+/* .views-table td.views-field-name a { */
+/*   color: #4d4948; */
+/* } */
+
+/* Mediateka pages */
+
+.view-mediateka a {
+	color: #D25D5E;
+    text-decoration: none;
+}
+
+.view-mediateka a:hover {
+  text-decoration: underline;
+}
+
+.view-mediateka a:visited {
+  color: #D25D5E;
+}
+
+
+.view-mediateka .view-content {
+	padding: 15px 0;
+}
+
+.view-mediateka .view-header {
+	float: right;	
+	width: 100%;
+}
+.view-mediateka .view-header a {	
+	color: #b2382d;
+}
+
+.view-mediateka .view-header .add_content {
+  float: right;
+}
+
+
+#block-system-main .view-mediateka .views-summary a {
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #BCBCBC;
+}
+
+#block-system-main .view-mediateka .view-content a,
+#block-system-main .view-mediateka .view-content a.active  {
+  color: #D25D5E;
+  font-size: 100%;
+  font-weight: normal;
+}
+
+#block-views-mediateka-block-2 h2.block-title {
+  color: #4d4948;
+}
+
+.view-mediateka .view-header .add_content {
+  float: right;
+}
