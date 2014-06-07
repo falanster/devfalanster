@@ -1,12 +1,13 @@
 name = organization_and_contact_helpus_pages
 core = 7.x
 package = Custom
-version = 7.x-1.0
+version = 7.x-1.1
 project = organization_and_contact_helpus_pages
 features[context][] = contact_page_2
 features[ctools][] = context:context:3
 features[ctools][] = ds:ds:1
 features[ctools][] = views:views_default:3.0
+features[ds_layout_settings][] = node|static_pages|in_page
 features[ds_view_modes][] = in_page
 features[features_api][] = api:2
 features[menu_custom][] = menu-contact-us
