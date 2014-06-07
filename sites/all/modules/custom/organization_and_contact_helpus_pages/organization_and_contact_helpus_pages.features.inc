@@ -14,6 +14,9 @@ function organization_and_contact_helpus_pages_ctools_plugin_api($module = NULL,
   if ($module == "ds" && $api == "ds") {
     return array("version" => "1");
   }
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
 }
 
 /**
@@ -21,6 +24,23 @@ function organization_and_contact_helpus_pages_ctools_plugin_api($module = NULL,
  */
 function organization_and_contact_helpus_pages_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
+}
+
+/**
+ * Implements hook_node_info().
+ */
+function organization_and_contact_helpus_pages_node_info() {
+  $items = array(
+    'static_pages' => array(
+      'name' => t('Static pages'),
+      'base' => 'node_content',
+      'description' => t('Страницы с описанием (например, о нас, миссия, документы)'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
+  );
+  return $items;
 }
 
 /**
