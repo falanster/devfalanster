@@ -114,6 +114,10 @@
 
 /* NODE STYLES */
 
+.node {
+    margin-bottom: 10px;
+}
+
 .node .field-type-datetime {
     color: #c2c2c2;
     font-size: 12px;
