@@ -1,13 +1,27 @@
 /* COMMON STYLES FOR TWEAKING CONTENT ON ALL PAGES */
 
+.white-text,
+a.white-text,
+.white-text a {
+    color: #fff;
+}
+
+.light-grey-text,
+a.light-grey-text,
+.light-grey-text a {
+    color: #bcbcbc;
+}
+
 .grey-text,
+a.grey-text,
 .grey-text a {
     color: #444243;
 }
 
-.white-text,
-.white-text a {
-    color: #fff;
+.dark-grey-text,
+a.dark-grey-text,
+.dark-grey-text a {
+    color: #4d4948;
 }
 
 .grey-title,
@@ -35,10 +49,6 @@ a.white-title,
     color: #c2c2c2;
     font-size: 12px;
     margin: 5px 0;
-}
-
-.dark-grey-text {
-    color: #4d4948;
 }
 
 a.black-link,
