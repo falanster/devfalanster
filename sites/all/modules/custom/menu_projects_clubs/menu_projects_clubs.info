@@ -1,0 +1,10 @@
+name = Menu: projects and clubs
+description = Short menu for projects and clubs page 
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = menu_projects_clubs
+dependencies[] = fe_block
+features[fe_block_boxes][] = projects_and_clubs_menu
+features[fe_block_settings][] = block-projects_and_clubs_menu
+features[features_api][] = api:2
