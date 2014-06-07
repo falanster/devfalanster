@@ -115,7 +115,7 @@
 /* NODE STYLES */
 
 .node {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .node .field-type-datetime {
@@ -203,9 +203,8 @@
 
 /* PROJECTS AND CLUBS PAGE */
 
-.context-projects-and-clubs .block-views-clubs-block-2,
 .context-projects-and-clubs .block-views-projects-block-2 {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .context-projects-and-clubs .block-block-19 p,

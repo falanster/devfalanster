@@ -85,16 +85,12 @@ a.black-link,
 
 /* VIEWS GRID STYLES */
 
-.grid-page {
-    margin-bottom: 25px;
-}
-
 .grid-cell {
     width: 300px;
     height: 300px;
     float: left;
     background-color: #f3f4f5;
-    margin: 0 20px 20px 0;
+    margin: 10px 20px 10px 0;
     position: relative;
 }
 
@@ -140,7 +136,7 @@ a.black-link,
     bottom: 165px;
     right: 20px;
     color: #fa4343;
-    font-size: 36px;
+    font-size: 60px;
     font-weight: bold;
     line-height: 70%;
     opacity: 0.8;
@@ -166,18 +162,6 @@ a.black-link,
     margin: 0;
     padding: 0;
 }
-
-/* .grid-teaser { */
-/*     position: absolute; */
-/*     z-index: 1; */
-/*     background-color: #D25D5E; */
-/*     opacity: 0.9; */
-/*     width: 270px; */
-/*     height: 30px; */
-/*     bottom: 15px; */
-/*     left: 15px; */
-/* } */
-
 
 /* VIEWS TABLE STYLES */
 
