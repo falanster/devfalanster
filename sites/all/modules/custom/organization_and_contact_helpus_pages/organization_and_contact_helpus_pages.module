@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the organization_and_contact_helpus_pages feature.
+ */
+
+include_once 'organization_and_contact_helpus_pages.features.inc';
