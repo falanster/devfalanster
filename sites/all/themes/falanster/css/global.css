@@ -82,6 +82,10 @@ h2.block-title a {
     padding: 10px 0;
 }
 
+#zone-content {
+    padding-bottom: 10px;
+}
+
 /* HEADER */
 
 /* Site logo block */

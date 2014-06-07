@@ -114,10 +114,6 @@
 
 /* NODE STYLES */
 
-.node {
-    margin-bottom: 25px;
-}
-
 .node .field-type-datetime {
     color: #c2c2c2;
     font-size: 12px;
@@ -203,9 +199,17 @@
 
 /* PROJECTS AND CLUBS PAGE */
 
+.context-projects-and-clubs .block-views-projects-block-2 {
+    margin-bottom: 25px;
+}
+
 .context-projects-and-clubs .block-block-19 p,
 .context-projects-and-clubs .block-block-20 p {
     margin-bottom: 0;
+}
+
+.projects-and-clubs-menu h1 {
+    margin-bottom: 10px;
 }
 
 .projects-and-clubs-menu a {
