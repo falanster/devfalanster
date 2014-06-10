@@ -1,79 +1,141 @@
 /* This file will hold styles for all layouts using the alpha grid (i.e. not the mobile layout). */
 
+/* COMMON POSITION STYLES */
 
-/*Falanster block*/
-
-#block-block-10 img {
-  float: right;
-  position: relative;
+#region-footer-first,
+#region-footer-second {
+  display: block;
+  padding: 25px 0;
 }
 
-#block-block-10 {
-  float: right;
+#zone-postscript .block {
+    margin-bottom: 0;
 }
 
-#block-block-10 p {
-  margin: 0;
+#zone-postscript {
+    padding-bottom: 30px;
 }
 
-
-/* Common Styles */
-
-.node p {
-  clear: none;
+#zone-content {
+    padding-bottom: 30px;
 }
 
-.field-item div {
-	clear: none;
-}
-/*End common styles*/
-/*Front page*/
+/* HEADER */
 
-/*header line*/
-
-/*logo*/
+/* Site Logo */
 #block-block-11 {
   margin: 100px 0 10px 0;
 }
 
-/*end logo*/
+/* CONTENT */
 
-#zone-branding { 
-  border-top: 3px #C72C29 solid;
-  padding: 0 10px 0 10px;
+/* News block */
+
+.headernews-block {
+    padding: 25px;
+    overflow: auto;
 }
 
-#block-block-7 {
-  padding: 10px 0;
-  float: right;
+/* Related news block */
+
+.related-news-block {
+    padding: 0 25px 25px 25px;
 }
+
+/*Afisha Blocks*/
+
+#block-views-afishi-block-2 {
+  display: none;
+}
+
+#block-views-afishi-block-1 {
+  display: block;
+}
+
+.afishi-block {
+    padding: 25px;
+}
+
+/* Google calendar block */
+
+.block-agenda-1 .content {
+    padding-top: 25px;
+}
+
+/* Last video or podcast block */
+
+.last-video-or-podcast-block {
+    padding: 25px 0 0 0;
+}
+
+.view-last-video-or-podcast .views-field-title {
+    padding: 0 25px;
+}
+
+#block-poll-recent .poll { 
+    padding: 25px;
+}
+
+/* FOOTER */
+
+/* Facebook block */
+
+#block-block-4 {
+  float: left;
+  background: #F3F4F5;
+}
+
+#block-block-4 p {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+/* Block "Falanster Needed" */
+
+#block-block-15 {
+  float: left;
+  width: 300px;
+  background: #F3F4F5;
+  margin-left: 20px;
+}
+
+#block-block-15 .content{
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+#block-block-15 .content img {
+  margin-right: 5px;
+  margin-bottom: 4px;
+}
+
+/* Block Vkontakte */
+
+#block-block-3 {
+  float: left;
+  width: 290px;
+  margin-left: 20px;
+}
+
+#block-block-3 #vk_groups #vkwidget1 .community_head {
+  background: red;
+}
+
+/* Block with social services */
 
 #block-block-5 {
   float: right;
-  margin-top: 5px;
-  margin-bottom: 0;
-  width: 195px;
+  margin-top: 0;
+  margin-right: 50px;
 }
 
 #block-block-5 p {
   margin: 0;
   padding: 0;
-  float: right;
 }
 
-#zone-content {
-  padding: 0 0 30px 0;
-}
-
-/*Localization block*/
-.block-locale {
-  float: right;
-  margin: 30px 0 35px 0;
-}
-
-/*End localization block*/
-
-/*MENU PART*/
+/*UNNECESSARY STYLES*/
 
 /* ENABLE MAIN MENU */
 
@@ -105,7 +167,7 @@
 }
 
 #block-nice-menus-1 li a,
-#block-nice-menus-2 li a, 
+#block-nice-menus-2 li a,
 #block-nice-menus-3 li a {
   text-decoration: none;
   color: #605d5c;
@@ -114,373 +176,30 @@
 }
 
 #block-nice-menus-1 li a:hover,
-#block-nice-menus-2 li a:hover, 
+#block-nice-menus-2 li a:hover,
 #block-nice-menus-3 li a:hover {
   color: #000000;
 }
 
 #block-nice-menus-1 li ul,
-#block-nice-menus-2 li ul, 
+#block-nice-menus-2 li ul,
 #block-nice-menus-3 li ul {
   margin-top: 5px;
 }
 
 
 #block-nice-menus-1 li ul li,
-#block-nice-menus-2 li ul li, 
+#block-nice-menus-2 li ul li,
 #block-nice-menus-3 li ul li {
   background: #DFDCDF;
   width: 100px;
 }
 
 #block-nice-menus-1 li ul li a:hover,
-#block-nice-menus-2 li ul li a:hover, 
+#block-nice-menus-2 li ul li a:hover,
 #block-nice-menus-3 li ul li a:hover {
   color: #c72c29;
 }
 
-/* @end Nice menu */
-
-/*Afisha Block's*/
-
-#block-views-afishi-block-2 {
-  display: none;
-}
-
-#block-views-afishi-block-1 {
-  display: block;
-}
-
-.views-slideshow-cycle-main-frame-row-item .views-field-field-preview img {
-  float: left;
-  margin: 0 10px 10px 0;
-}
-
-#views_slideshow_controls_text_afishi-block_1 {
-  display: none;
-}
-
-.view-display-id-block_1 .view-footer{
-  float: right;
-}
-
-/* @end afisha na glavnoj */
-
-/*Agenda block*/
-
-.agenda-block {
-  position: relative;
-  width: auto;
-  margin: 0 -25px 0 -25px;
-}
-
-/*End Agenda block*/
-
-/*Social Footer*/
-
-#region-footer-first {
-  display: block;
-}
-
-#region-footer-first .region-footer-first-inner,
-#region-footer-second .region-footer-second-inner,
-#region-preface-first .region-preface-first-inner {
-  width: 960px;
-  margin: 0 auto;
-  float: none;
-}
-
-
-.not-front #zone-footer {
-  width: 960px;
-  margin: 0 auto;
-}
-
-.page-frontpage #region-content .content,
-.page-frontpage #region-sidebar-second .content,
-.page-frontpage #block-agenda-1 .content, 
-.page-frontpage #block-views-last-video-or-podcast-block .content,
-.page-frontpage .block-poll .poll,
-#block-agenda-1 .content,
-/*#block-block-1 .content, */
-/*#block-views-twitter-list-block .content,*/
-#block-simplenews-1 .content {
-  background-color: #f3f4f5;
-  padding: 25px;
-}
-
-#block-block-1 .content {
-  background-color: #f3f4f5;
-  padding: 20px 20px 5px 25px;
-}
-
-#block-block-1 .content img{
-  margin-right: 5px;
-  margin-bottom: 4px;
-}
-
-#block-block-16 .content{
-  float: left;
-  background-color: #f3f4f5;
-  padding: 25px 8px 5px 8px;
-}
-
-.page-frontpage #block-views-last-video-or-podcast-block .content {
-  padding-bottom: 0px;
-  margin: 0 0 30px 0;
-}
-
-/* Social networks */
-
-.front #block-views-twitter-list-block {
-  width: 250px;
-  height: 350px;
-  margin: 0 25px;
-  float: left;  
-}
-.not-front #block-views-twitter-list-block {
-  height: auto;
-}
-
-#block-views-twitter-list-block .block-inner {
-  background: #e9eaec;
-}
-.not-front #block-views-twitter-list-block .block-inner {
-  background: none;
-}
-#block-views-twitter-list-block .block-title {
-  color: #383431;
-  font-size: 15px;
-  margin-left: 10px;
-  font-weight: normal;
-}
-#block-views-twitter-list-block .views-field-text {
-  font-size: 12px;
-}
-#block-views-twitter-list-block .views-field-profile-image-url img {
-  width: 50px;
-  height: 50px;
-  float: left;
-  padding-right: 5px;
-}
-#block-views-twitter-list-block .views-field-screen-name span {
-  font-size: 13px;
-  font-weight: bold;
-  float: left;  
-}
-#block-views-twitter-list-block .views-field-created-time span {
-  margin-left: 5px;
-  font-size: 11px;
-}
-#block-views-twitter-list-block .views-field-text span {
-}
-#block-views-twitter-list-block .views-row-odd,
-#block-views-twitter-list-block .views-row-even {
-  margin-bottom: 5px;
-  float: left;
-}
-
-#block-views-headernews-block .content .field-content {
-  margin: 5px 0;
-}
-#block-views-headernews-block .content {
-  padding: 25px 25px 0 25px !important;	
-}
-#block-views-headernews-block p {
-  padding: 0;
-  margin: 0;
-}
-
-/*#block-block-3 {
-  float: left;
-  width: 250px;
-  margin: 0 25px;
-}
-*/
-#block-block-3 {
-  float: left;
-  width: 290px;
-  height: 300px;
-  margin: 0 20px;
-}
-
-#block-block-3 #vk_groups #vkwidget1 .community_head {
-  background: red;
-}
-
-/*#block-block-4 {
-  float: left;
-  width: 250px;
-  height: 350px;
-  background: #F3F4F5;
-  margin: 0 25px 0 40px;
-}
-*/
-#block-block-4 {
-  float: left;
-  width: 300px;
-  height: 270px;
-  background: #F3F4F5;
-  margin: 0 0px 0 10px;
-}
-#block-block-4 p {
-  margin: 0;
-  padding: 0;
-  line-height: 0;
-}
-
-#block-block-15 {
-  float: left;
-  width: 300px;
-  height: 270px;
-  background: #F3F4F5;
-  margin: 0 0px 0 20px;
-}
-
-#block-block-15 .content{
-  margin-left: 20px;
-  margin-top: 20px;
-}
-
-#block-block-15 .content img{
-  margin-right: 5px;
-  margin-bottom: 4px;
-}
-
-.fbConnectWidgetHeaderTitleBranded {
-  background: #c2c1c1;
-}
-.region-sidebar-second-inner #block-views-twitter-list-block {
-  width: 300px;
-  margin: 0;
-}
-.region-sidebar-second .block {
-  margin: 0 0 30px 0;
-}
-/* @end social networks */
-
-/*falanster logo footer block*/
-
-#footer_logo_by img {
-  width: 395px;
-  height: 97px;
-}
-
-#footer_logo_ru img {
-  width: 435px;
-  height: 120px;
-}
-#footer_logo_en img {
-  width: 407px;
-  height: 95px;
-}
-
-#block-block-12 img {
-  margin: 30px 0 0 0;  
-}
-
-/*Bottom banner block*/
-
-#views_slideshow_cycle_main_banner-block {
-  display: block;
-}
-
-/*hor bottom menu*/
-
-#block-menu-menu-hor-bottom-menu {
-  float: right;
-  margin-right: 10px;
-  width: 200px;
-}
-
-/* Footer CC and social networks*/
-#block-block-14 {
-  float: left;
-  margin-top: 10px;
-  margin-left: 10px;
-  width: 150px;
-}
-
-#block-block-5 {
-  float: left;
-  margin-top: 10px;
-/*  margin-left: 30px; */
-  width: 250px;
-}
-
-/*Twitter block*/
-
-.not-front #block-views-twitter-list-block .block-title {
-  color: #C72C29;  
-  text-transform: lowercase;
-  font-size: 18px;
-  margin: 0;
-  background: none;  
-}
-
-.not-front #block-views-twitter-list-block .content {
-  padding: 25px;	
-}
-
-/* Novosti na glavnoj*/
-.block-views-headernews-block .views-field-field-image-news img,
-.view-headernews-english .field-content img {
-  float:left;
-}
-
-/* @end novosti na glavnoj*/
-
-#zone-content .view-news-list .field-content img {
-  float: left;
-}
-
-
-/* baza vedaj */
-
-.view-id-mediateka .view-header .add_content{
-  float: right;
-}
-/* @end baza vedaj */
-
-/* video in afisha */
-.node-afishi .field-name-field-video-youtube {
-  margin-top: 20px;
-}
-
-/* @end video in afisha */
-
-
-/* video na glavnoj */
-
-.i18n-en .view-last-video-or-podcast .views-field-colorbox img{
-  margin-left: 0px;
-}
-
-
-.view-last-video-or-podcast .views-field-colorbox img {
-  margin-left: -25px;
-}
-
-/* @end video na glavnoj */
-
-
-nav.links {
-  float: left;
-  width: 100%;
-  margin: 15px 0 0 0;
-}
-
-/* Stranica po tegam */
-
-.page-taxonomy-term .field-name-field-image .field-item img {
-  float: left;
-  margin: 0px 10px 10px 10px;
-}
-
-.page-taxonomy-term .node-gallery .field-name-field-image .field-item img{
-  margin: 0px;
-}
-
-/* @end stranica po tegam */
 
 

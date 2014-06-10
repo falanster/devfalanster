@@ -4,7 +4,7 @@
  * Variable realm controller
  */
 
-class VariableStoreRealmController extends VariableRealmDefaultController {
+class VariableStoreRealmStore extends VariableRealmDefaultStore {
   /**
    * Initialize realm.
    */
@@ -34,5 +34,13 @@ class VariableStoreRealmController extends VariableRealmDefaultController {
   public function variable_del($name) {
     // Since $variables is a reference we just need to delete the store value.
     variable_store_del($this->realm, $this->key, $name);
+  }
+  /**
+   * Implements 'magic' _sleep method.
+   *
+   * If serialized, variables should not be saved, but rebuilt from store on wake up.
+   */
+  public function __sleep(){
+    return array('realm', 'key');
   }
 }

@@ -2,20 +2,3 @@
 /* If you are using the default media queries provided by Omega, these styles will also
  *  apply to the normal and widescreen layouts. You may override these styles in the normal 
  *  and widescreen CSS files as appropriate. */
-
-/*MENU PART*/
-
-/* ENABLE MAIN MENU */
-
-#block-nice-menus-1, #block-nice-menus-2, #block-nice-menus-3 {
-	display: block;
-}
-
-/* DISABLE MOBILE MENU */
-
-#block-menu-menu-mobile-menu {
-	display: none;
-}
-
-/*END MENU PART*/
-

@@ -17,6 +17,10 @@ function variable_variable_group_info() {
     'title' => t('Debug'),
     'description' => t('Debug and development options.'),
   );
+  $groups['variable'] = array(
+    'title' => t('Variable'),
+    'description' => t('Variables that contain metadata about the variable system.'),
+  );
   return $groups;
 }
 
@@ -35,6 +39,12 @@ function variable_variable_type_info() {
     'format callback' => 'variable_format_array',
     'element callback' => 'variable_form_element_array',
     'default' => array(),
+  );
+  // Array whose keys are named properties.
+  $type['properties'] = array(
+    'title' => t('Properties'),
+    'format callback' => 'variable_format_properties',
+    'type' => 'array',
   );
   // TRUE / FALSE value, checkbox
   $type['boolean'] = array(
@@ -82,6 +92,8 @@ function variable_variable_type_info() {
     'title' => t('Number'),
     'element' => array('#type' => 'textfield', '#size' => 15, '#maxlength' => 10),
     'token' => TRUE,
+    'validate callback' => 'variable_validate_number',
+    'format callback' => 'variable_format_number',
   );
   // Select multiple options from multiple choices
   $type['options'] = array(
@@ -110,7 +122,11 @@ function variable_variable_type_info() {
     'title' => t('String'),
     'element' => array('#type' => 'textfield'),
     'localize' => TRUE,
+    'format callback' => 'variable_format_string',
     'token' => TRUE,
+    // This type may have an 'allowed tags' attribute.
+    // If empty it will be formatted as plain text
+    'allowed tags' => array(),
   );
   $type['text'] = array(
     'title' => t('Text'),
@@ -118,6 +134,9 @@ function variable_variable_type_info() {
     'localize' => TRUE,
     'format callback' => 'variable_format_text',
     'token' => TRUE,
+    // This type may have an 'allowed tags' attribute.
+    // If empty it will be formatted with filter_xss_admin.
+    'allowed tags' => array(),
   );
   // Default type for variables with no other type
   $type['unknown'] = array(
@@ -165,7 +184,7 @@ function variable_build_mail_text($variable, $options = array()) {
 function variable_format_selection($variable, $options = array()) {
   $variable = variable_build_options($variable, $options);
   if (isset($variable['value'])) {
-    return isset($variable['options'][$variable['value']]) ? $variable['options'][$variable['value']] : t('<Invalid option>');
+    return isset($variable['options'][$variable['value']]) ? $variable['options'][$variable['value']] : '<' . t('Invalid option') . '>';
   }
   else {
     return variable_format_empty($variable);
@@ -181,12 +200,12 @@ function variable_format_options($variable, $options = array()) {
   if (isset($variable['value']) && $variable['value']) {
     if (is_array($variable['value'])) {
       foreach ($variable['value'] as $index => $value) {
-         $names[$index] = isset($variable['options'][$value]) ? $variable['options'][$value] : t('<Invalid option>');
+         $names[$index] = isset($variable['options'][$value]) ? $variable['options'][$value] : '<' . t('Invalid option') . '>';
       }
       return implode(', ', $names);
     }
     else {
-      return t('<Invalid value>');
+      return '<' . t('Invalid value') . '>';
     }
   }
   else {
@@ -202,11 +221,38 @@ function variable_format_array($variable = NULL, $options = array()) {
     return variable_format_empty($variable);
   }
   else {
-    $elements = array();
-    foreach ($variable['value'] as $item) {
-      $elements[] = is_array($item) ? '(' . variable_format_array(array('value' => $item), $options) . ')' : check_plain($item);
+    $list = array();
+    foreach ($variable['value'] as $index => $item) {
+      if (is_array($item) || is_object($item)) {
+        $list[$index] = variable_format_array(array('value' => (array)$item), $options);
+      }
+      else {
+        $list[$index] = check_plain((string)$item);
+      }
     }
-    return implode(', ', $elements);
+    return theme('item_list', array('items' => $list));
+  }
+}
+/**
+ * Format array variable with known keys, handling nested arrays
+ */
+function variable_format_properties($variable = NULL, $options = array()) {
+  if (empty($variable['value'])) {
+    return variable_format_empty($variable);
+  }
+  else {
+    $rows = array();
+    foreach ($variable['value'] as $name => $item) {
+      $title = check_plain((string)$name);
+      if (is_array($item) || is_object($item)) {
+        $value = variable_format_array(array('value' => (array)$item), $options);
+      }
+      else {
+        $value = check_plain((string)$item);
+      }
+      $rows[] = array('<em>' . $title . '</em>', $value);
+    }
+    return theme('table', array('rows' => $rows));
   }
 }
 
@@ -230,10 +276,48 @@ function variable_format_empty($variable) {
 }
 
 /**
+ * Format variable as number.
+ */
+function variable_format_number($variable, $options = array()) {
+  if (is_numeric($variable['value'])) {
+    return (string)$variable['value'];
+  }
+  elseif (empty($variable['value'])) {
+    return '';
+  }
+  else {
+    return check_plain($variable['value']);
+  }
+}
+
+/**
+ * Format variable as string. Either check plain for filter_xss.
+ */
+function variable_format_string($variable, $options = array()) {
+  if (empty($variable['value'])) {
+    return '';
+  }
+  elseif (!empty($variable['allowed tags'])) {
+    return filter_xss($variable['value'], $variable['allowed tags']);
+  }
+  else {
+    return check_plain($variable['value']);
+  }
+}
+
+/**
  * Format text variable
  */
 function variable_format_text($variable, $options = array()) {
-  return isset($variable['value']) ? filter_xss_admin($variable['value']) : variable_format_empty($variable);
+  if (empty($variable['value'])) {
+    return '';
+  }
+  elseif (!empty($variable['allowed tags'])) {
+    return filter_xss($variable['value'], $variable['allowed tags']);
+  }
+  else {
+    return filter_xss_admin($variable['value']);
+  }
 }
 
 /**
@@ -286,4 +370,16 @@ function variable_format_multiple($variable, $options = array()) {
     );
   }
   return theme('table', array('rows' => $rows));
+}
+
+/**
+ * Validate numeric variable.
+ */
+function variable_validate_number($variable) {
+  if (empty($variable['required']) && empty($variable['value'])) {
+    return;
+  }
+  elseif (!is_numeric($variable['value'])) {
+    return t('The value is not a number.');
+  }
 }
