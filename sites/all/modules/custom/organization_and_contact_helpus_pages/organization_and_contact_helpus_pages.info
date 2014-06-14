@@ -1,9 +1,11 @@
 name = organization_and_contact_helpus_pages
 core = 7.x
 package = Custom
-version = 7.x-1.2
+version = 7.x-1.3
 project = organization_and_contact_helpus_pages
+dependencies[] = node
 dependencies[] = preview_main_page
+dependencies[] = strongarm
 features[context][] = contact_page_2
 features[ctools][] = context:context:3
 features[ctools][] = ds:ds:1

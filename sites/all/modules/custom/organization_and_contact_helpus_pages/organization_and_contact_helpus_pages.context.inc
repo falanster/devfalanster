@@ -19,7 +19,7 @@ function organization_and_contact_helpus_pages_context_default_contexts() {
   $context->conditions = array(
     'path' => array(
       'values' => array(
-        'kantakt2' => 'kantakt2',
+        'kantakt' => 'kantakt',
       ),
     ),
   );
