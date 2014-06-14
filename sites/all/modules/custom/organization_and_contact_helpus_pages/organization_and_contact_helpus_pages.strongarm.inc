@@ -90,6 +90,10 @@ function organization_and_contact_helpus_pages_strongarm() {
             'weight' => '9',
             'visible' => FALSE,
           ),
+          'full' => array(
+            'weight' => '10',
+            'visible' => TRUE,
+          ),
         ),
       ),
     ),

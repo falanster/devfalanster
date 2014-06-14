@@ -26,19 +26,5 @@ function donation_blocks_default_fe_block_boxes() {
 
   $export['front_money_block'] = $fe_block_boxes;
 
-  $fe_block_boxes = new stdClass();
-  $fe_block_boxes->info = 'money_ipay';
-  $fe_block_boxes->format = 'full_html';
-  $fe_block_boxes->machine_name = 'money_ipay';
-  $fe_block_boxes->body = '<h2>
-	<img alt="" src="/sites/default/files/image/blocks/people.png" style="font-size: 12px; height: 40px; width: 30px;" />&nbsp;<a href="">people</a>&nbsp;&nbsp;</h2>
-<h2>
-	<img alt="" src="/sites/default/files/image/blocks/money.png" style="font-size: 12px; width: 30px; height: 30px;" /><a href="/en/donations">money</a>&nbsp;&nbsp;</h2>
-<h2>
-	<img alt="" src="/sites/default/files/image/blocks/feedback.png" style="font-size: 12px; height: 25px; width: 24px;" />&nbsp;<a href="">feedback</a>&nbsp;&nbsp;</h2>
-';
-
-  $export['money_ipay'] = $fe_block_boxes;
-
   return $export;
 }
