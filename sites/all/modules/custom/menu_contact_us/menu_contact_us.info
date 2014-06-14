@@ -1,9 +1,0 @@
-name = Menu contact Us
-core = 7.x
-package = Custom
-version = 7.x-1.0
-project = menu_contact_us
-features[features_api][] = api:2
-features[menu_custom][] = menu-contact-us
-features_exclude[dependencies][features] = features
-features_exclude[dependencies][menu] = menu
