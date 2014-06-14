@@ -15,3 +15,5 @@ phpmyadmin
 .htaccess
 .htpasswd
 /sites/default/settings.php
+
+.ht.filecache
