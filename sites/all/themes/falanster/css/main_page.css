@@ -8,6 +8,10 @@
     margin-bottom: 25px;
 }
 
+#block-system-main {
+    display: none;
+}
+
 /* CONTENT */
 
 /* News block */
