@@ -12,7 +12,7 @@ body {
 a,
 a:link,
 a:visited {
-	color: #D25D5E;
+	color: #c72c29;
     text-decoration: none;
 }
 
@@ -102,10 +102,9 @@ h2.block-title a {
 
 /* Language selector block */
 
-/* .block-locale { */
-/*     float: right; */
-/*     margin: 25px 0; */
-/* } */
+.block-locale .content ul {
+    margin-bottom: 0;
+}
 
 .block-locale .content ul li {
     display: inline;
@@ -114,32 +113,11 @@ h2.block-title a {
 
 .block-locale .content ul li a,
 .block-locale .content ul li .locale-untranslated {
-    text-decoration: none;
     text-transform: lowercase;
 }
 
 .block-locale .content ul li a.active {
-    color: #c72c29;
-}
-
-/* User logged in block*/
-
-/* #block-block-7 { */
-/*     padding: 10px 0; */
-/*     float: right; */
-/* } */
-
-#block-block-7 a {
-	color: #D25D5E;
-    text-decoration: none;
-}
-
-#block-block-7 a:hover {
-    text-decoration: underline;
-}
-
-#block-block-7 a:visited {
-    color: #D25D5E;
+    color: #e90606;
 }
 
 /* Block with social services */
