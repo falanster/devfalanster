@@ -226,3 +226,19 @@
     margin-right: 1em;
 }
 
+#rate-button-1 {
+    background: url('../images/like_plus.png');
+    width: 36px;
+    height: 29px;
+}
+
+#rate-button-2 {
+    background: url('../images/dislike_minus.png');
+    width: 37px;
+    height: 30px;
+}
+
+.rate-number-up-down-rating{
+    margin-top: 4px;
+    font-size: 18px;
+}
