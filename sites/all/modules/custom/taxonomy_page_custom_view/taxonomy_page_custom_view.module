@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the taxonomy page custom view feature.
- */
-
-include_once 'taxonomy_page_custom_view.features.inc';
