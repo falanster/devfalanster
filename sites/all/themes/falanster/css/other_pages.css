@@ -230,3 +230,12 @@
     margin-top: 4px;
     font-size: 18px;
 }
+
+.form-item label{
+    display: none;
+}
+
+.rate-widget{
+    float: right;
+    margin-top: -25px;
+}
