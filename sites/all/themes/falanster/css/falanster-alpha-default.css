@@ -30,7 +30,10 @@
 }
 
 #zone-header-second {
+    margin-bottom: 0;
+    padding-top: 0;
     padding-bottom: 25px;
+    background-color: #fff;
 }
 
 /* HEADER */
@@ -47,29 +50,30 @@
   margin: 72px 0 -12px 0;
 }
 
-#block-views-slogan-block .content {
-    font-size: 30px;
-    color: #c72c29;
-}
-
 /* Language selector block */
 
 .block-locale {
     float: right;
+    margin-bottom: 0;
 }
+
+.block-locale .content ul li {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
 
 /* User logged in block*/
 
 #block-block-7 {
     margin-top: 60px;
+    margin-bottom: 0;
     float: right;
 }
 
 /* First main menu block */
 
 #block-menu-menu-first-menu .content ul li {
-    list-style-type: none;
-    list-style-image: none;
     font-size: 15px;
     float: left;
     margin: 5px 15px 0 0;
@@ -93,8 +97,6 @@
 }
 
 #block-menu-menu-second-menu .content ul li {
-    list-style-type: none;
-    list-style-image: none;
     font-size: 15px;
     float: right;
     margin: 5px 0 0 15px;
@@ -216,13 +218,12 @@
 /* Block with social services */
 
 #block-block-5 {
-  float: right;
   margin-top: 0;
-  margin-right: 50px;
+  margin-left: 220px;
 }
 
-#block-block-5 p {
-  margin: 0;
-  padding: 0;
-}
+/* Bottom horizontal menu*/
 
+#block-menu-menu-hor-bottom-menu {
+    float: right;
+} 

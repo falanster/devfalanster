@@ -134,7 +134,7 @@
 /* Bottom horizontal menu*/
 
 #block-menu-menu-hor-bottom-menu {
-    float: right;
+    float: left;
 } 
 
 #block-menu-menu-hor-bottom-menu .menu a {

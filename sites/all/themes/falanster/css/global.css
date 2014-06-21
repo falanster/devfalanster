@@ -71,6 +71,12 @@ h2.block-title a {
     padding: 0 10px 0 10px;
 }
 
+#zone-header-second {
+    padding: 5px 0;
+    margin-bottom: 25px;
+    background-color: #F3F4F5;
+}
+
 #zone-footer-wrapper {
     background-color: #848589;
 }
@@ -99,8 +105,23 @@ h2.block-title a {
   margin: 0;  
 }
 
+/* Slogan */
+
+#block-views-slogan-block {
+  margin-bottom: 10px;
+}
+
+#block-views-slogan-block .content {
+    font-size: 30px;
+    color: #c72c29;
+}
 
 /* Language selector block */
+
+.block-locale {
+    float: left;
+    margin-bottom: 25px;
+}
 
 .block-locale .content ul {
     margin-bottom: 0;
@@ -108,7 +129,7 @@ h2.block-title a {
 
 .block-locale .content ul li {
     display: inline;
-    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .block-locale .content ul li a,
@@ -120,7 +141,36 @@ h2.block-title a {
     color: #e90606;
 }
 
-/* Block with social services */
+/* User logged in block*/
+
+#block-block-7 {
+    float: right;
+    margin-bottom: 25px;
+}
+
+/* First main menu block */
+
+#block-menu-menu-first-menu .content ul li {
+    list-style-type: none;
+    list-style-image: none;
+    font-size: 15px;
+}
+
+/* Second main menu block */
+
+#block-menu-menu-second-menu {
+
+}
+
+#block-menu-menu-second-menu .content ul {
+
+}
+
+#block-menu-menu-second-menu .content ul li {
+    list-style-type: none;
+    list-style-image: none;
+    font-size: 15px;
+}
 
 /* CONTENT */
 
@@ -143,21 +193,27 @@ h2.block-title a {
 
 /* FOOTER */
 
-/*Falanster logo footer block*/
-
-/* #block-block-10 img { */
-/*   float: right; */
-/* } */
-
-/* #block-block-10 p { */
-/*   margin: 0; */
-/* } */
-
 /* Creative Commons block */
 
 #block-block-14 {
   float: left;
   margin-right: 5px;
+}
+
+#block-block-14 p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Block with social services */
+
+#block-block-5 {
+  float: left;
+}
+
+#block-block-5 p {
+  margin: 0;
+  padding: 0;
 }
 
 /* COMMON VIEWS STYLES */
