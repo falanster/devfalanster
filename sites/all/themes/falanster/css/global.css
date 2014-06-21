@@ -145,33 +145,13 @@ h2.block-title a {
 
 /*Falanster logo footer block*/
 
-#block-block-10 img {
-  float: right;
-}
+/* #block-block-10 img { */
+/*   float: right; */
+/* } */
 
-#block-block-10 p {
-  margin: 0;
-}
-
-.i18n-be #block-block-10 img,
-.i18n-en #block-block-10 img {
-	margin-bottom: 15px;
-}
-
-#footer_logo_by img {
-	width: 320px;
-	height: 79px;
-}
-
-#footer_logo_ru img {
-	width: 320px;
-	height: 86px;
-}
-
-#footer_logo_en img {
-	width: 320px;
-	height: 72px;
-}
+/* #block-block-10 p { */
+/*   margin: 0; */
+/* } */
 
 /* Creative Commons block */
 
