@@ -159,11 +159,12 @@ function ftools_form_features_export_form_alter(&$form, &$form_state) {
  * @todo Please document this function.
  * @see http://drupal.org/node/1354
  */
+
 function ftools_form_features_export_form_safe_submit($form, &$form_state) {
+  module_load_include('inc', 'features', 'features.export');
+  features_include();
 
   if (module_exists('rules')) {
-    module_load_include('inc', 'features', 'features.export');
-    features_include();
     module_load_include('inc', 'rules', 'modules/events');
     rules_invoke_event('init');
     module_load_include('inc', 'rules_admin', 'rules_admin.export');
@@ -174,23 +175,26 @@ function ftools_form_features_export_form_safe_submit($form, &$form_state) {
   $arr = explode('/', $destination);
   $arr[sizeof($arr) - 1] .= '_unlink';
   $module_name = $arr[sizeof($arr) - 1];
+
   $destination = implode('/', $arr) . '/';
   $destination_info = _ftools_get_unlink_version($destination);
+
   $hooks = _ftools_get_hooks();
-  $new_feature = $form_state['values']['sources'];
+  $new_feature = !empty($form_state['values']) ? $form_state['values'] : array();
   $old_feature = $form['#feature']->info['features'];
+
   $stub = array();
   foreach ($hooks as $hook) {
     if (isset($old_feature[$hook])) {
       foreach ($old_feature[$hook] as $value) {
-        if (!$new_feature[$hook][$value]) {
+        if (!$new_feature[$hook]['included'][$value]) {
           $stub[$hook][] = $value;
         }
       }
     }
   }
-  if ($stub) {
 
+  if ($stub) {
     $file_content = array();
     foreach ($stub as $hook => $value) {
       $output = array();
@@ -208,6 +212,29 @@ function ftools_form_features_export_form_safe_submit($form, &$form_state) {
             $output[] = str_replace(' return $export;', '', $component_hooks['box']['default_box']);
             $output[] = 'drupal_write_record(' . "'box'" . ', $box);';
             break;
+          case 'page_manager_pages':
+            ctools_include('plugins');
+            $plugin = ctools_get_plugins('page_manager', 'tasks');
+            
+            $objects = ctools_export_load_object('page_manager_pages', 'names', array($component));            
+            $export = page_manager_page_export($objects[$component], true); //export page with handlers
+            $output[] = $export;
+            
+            $output[] = '$task_name = page_manager_make_task_name(\'page\', $page->name);';
+            $output[] = '$cache = page_manager_get_page_cache($task_name);';
+            $output[] = 'if (!$cache) {';
+            $output[] = '  $cache = new stdClass();';
+            $output[] = '}';
+            $output[] = 'page_manager_page_new_page_cache($page, $cache);';
+            $output[] = 'page_manager_set_page_cache($cache);';
+            $output[] = 'page_manager_save_page_cache($cache);';
+            
+            break;
+          case 'panels_mini':
+            $mini_panel = panels_mini_load($component);
+            $output[] = panels_mini_export($mini_panel);
+            $output[] = 'panels_mini_save($mini);';
+            break;
         }
       }
       $code_buffer .= implode("\n", $output);
@@ -220,6 +247,7 @@ function ftools_form_features_export_form_safe_submit($form, &$form_state) {
       $output[] = "}";
       $file_content[] = implode("\n", $output);
     }
+
     $file_content = "<?php\n\n" . implode("\n\n", $file_content) . "\n";
     mkdir($destination_info['destination'], 0777, TRUE);
     $error = '';
@@ -244,79 +272,22 @@ function ftools_export_build_form_submit($form, &$form_state) {
   module_load_include('inc', 'features', 'features.export');
   features_include();
 
-  // Assemble the combined component list.
-  $stub = array();
-  $components = array_keys(features_get_components());
-  foreach ($components as $component) {
-    // User-selected components take precedence.
-    if (!empty($form_state['values']['sources'][$component])) {
-      $stub[$component] = features_dom_decode_options(array_filter($form_state['values']['sources'][$component]));
-    }
-    // Only fallback to an existing feature's values if there are no export options for the component.
-    elseif (!empty($form['#feature']->info['features'][$component])) {
-      $stub[$component] = $form['#feature']->info['features'][$component];
-    }
-  }
-  // Generate populated feature.
-  $module_name = $form_state['values']['module_name'];
-  $export = features_populate($stub, $form_state['values']['sources']['dependencies'], $module_name);
-
-  // Directly copy the following attributes.
-  $attr = array('name', 'description');
-  foreach ($attr as $key) {
-    $export[$key] = isset($form_state['values'][$key]) ? $form_state['values'][$key] : NULL;
-  }
-  // If either update status-related keys are provided, add a project key
-  // corresponding to the module name.
-  if (!empty($form_state['values']['version']) || !empty($form_state['values']['project_status_url'])) {
-    $export['project'] = $form_state['values']['module_name'];
-  }
-  if (!empty($form_state['values']['version'])) {
-    $export['version'] = $form_state['values']['version'];
-  }
-  if (!empty($form_state['values']['project_status_url'])) {
-    $export['project status url'] = $form_state['values']['project_status_url'];
-  }
-  // Generate download.
-  $directory = '';
-  $destination = $form_state['values']['ftools_dest'];
-  if ($destination) {
-    $directory .= $destination . '/';
-  }
-  //TODO: find a better term then arg(3) to find if we are on create page or recreat.
-  if (arg(3) == 'create') {
-    $directory .=  $module_name;
-  }
-  if ($files = features_export_render($export, $module_name, TRUE)) {
-    //If the directory dont exists create it.
-    if (!file_exists($directory)) {
-      mkdir($directory, 0777, TRUE);
-    }
-    $error = false;
-    foreach ($files as $extension => $file_contents) {
-      if (!in_array($extension, array('module', 'info'))) {
-        $extension .= '.inc';
-      }
-      if (file_put_contents("{$directory}/{$module_name}.$extension", $file_contents) === FALSE) {
-        $error = true;
-      }
-    }
-    if ($error) {
-      drupal_set_message(t('One or more files could not be written to the file system. This is probably a permission issue. See !link for more information.', array('!link' => l(t('the Features Tools module page'), 'http://drupal.org/project/ftools'))), 'error');
-    }
-    else {
-      drupal_set_message(t('The feature was successfully created.'));
-    }
-  }
+  //just call the features method to write the feature directly to the directory
+  //set values from features API to use this export to write feature to file directly
+  $form_state['values']['op'] = $form['advanced']['generate']['#value'];
+  $form_state['values']['generate'] = $form['advanced']['generate']['#value'];
+  //$form_state['values']['generate_path'] = $form_state['values']['ftools_dest'];
+  features_export_build_form_submit($form, $form_state);
+  
   drupal_flush_all_caches();
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Admin form to execute unlink files
  */
 function ftools_unlink_form($form, $form_state) {
   $files = drupal_system_listing('/\.unlink.inc$/', 'modules', 'name', 0);
+  
   $form = array();
   $options = array();
   foreach ($files as $value) {
@@ -339,36 +310,56 @@ function ftools_unlink_form($form, $form_state) {
  * @see http://drupal.org/node/1354
  */
 function ftools_unlink_form_submit($form, &$form_state) {
-
-  $hooks = _ftools_get_hooks();
-  $files = drupal_system_listing('/\.unlink.inc$/', 'modules', 'name', 0);
   foreach ($form_state['values']['unlink_options'] as $key => $value) {
     if ($value) {
-      include_once DRUPAL_ROOT . "/" . $files[$key]->uri;
-      views_include('view');
-
-      foreach ($hooks as $hook) {
-        $function_name = str_replace('.unlink', '', $key) . "_$hook";
-        $function_name = str_replace('.', '_', $function_name);
-        if (function_exists($function_name)) {
-
-          //TODO add info file so we can check if the element is in the db before trying to insert it.
-          //i add a try catch block meanwhile to hide the error message.
-          try {
-            include_once DRUPAL_ROOT . "/" . $files[$key]->uri;
-          } catch (Exception $e) {
-            watchdog('ftools', "error in unlink function:" . $e->getMessage());
-          }
-          
-          drupal_set_message("$hook $function_name");
-        }
-      }
+      _ftools_exec_unlink($key);
     }
   }
 }
 
+/**
+* Return unlink files
+*/
+function _ftools_get_unlink_files() {
+  $files = drupal_system_listing('/\.unlink.inc$/', 'modules', 'name', 0);
+  
+  return $files;
+}
+
+/**
+* Execute the given unlink file
+*/
+function _ftools_exec_unlink($component) {
+  $hooks = _ftools_get_hooks();
+  $files = _ftools_get_unlink_files();
+  
+  include_once DRUPAL_ROOT . "/" . $files[$component]->uri;
+  views_include('view');
+
+  foreach ($hooks as $hook) {
+    $function_name = str_replace('.unlink', '', $component) . "_$hook";
+    $function_name = str_replace('.', '_', $function_name);
+    if (function_exists($function_name)) {
+
+      //@TODO: add info file so we can check if the element is in the db before trying to insert it.
+      //i add a try catch block meanwhile to hide the error message.
+      try {
+        include_once DRUPAL_ROOT . "/" . $files[$component]->uri;
+        call_user_func_array($function_name, array());
+      } catch (Exception $e) {
+        watchdog('ftools', "error in unlink function:" . $e->getMessage());
+      }
+      
+      drupal_set_message("$hook $function_name");
+    }
+  }
+}
+
+/**
+* Return all hooks that are available for unlink components
+*/
 function _ftools_get_hooks() {
-  return array('box', 'views_view');
+  return array('box', 'views_view', 'page_manager_pages', 'panels_mini');
 }
 
 

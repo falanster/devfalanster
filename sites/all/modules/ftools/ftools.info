@@ -1,11 +1,11 @@
 name = "ftools"
 description = "Provides feature management auto download button."
 core = 7.x
-dependencies[] = "features"
+dependencies[] = "features (2.x)"
 package = "Features"
-; Information added by drupal.org packaging script on 2012-10-14
-version = "7.x-1.6"
+; Information added by Drupal.org packaging script on 2013-12-10
+version = "7.x-2.x-dev"
 core = "7.x"
 project = "ftools"
-datestamp = "1350205638"
+datestamp = "1386675211"
 
