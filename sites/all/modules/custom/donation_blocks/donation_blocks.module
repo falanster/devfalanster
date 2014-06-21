@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the donation blocks feature.
- */
-
-include_once 'donation_blocks.features.inc';

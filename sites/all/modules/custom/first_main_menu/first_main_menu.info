@@ -1,6 +1,0 @@
-name = First main menu
-core = 7.x
-package = Custom
-version = 7.x-1.0
-project = first_main_menu
-features[features_api][] = api:2

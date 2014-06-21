@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Headernews_english feature.
- */
-
-include_once 'headernews_english.features.inc';
