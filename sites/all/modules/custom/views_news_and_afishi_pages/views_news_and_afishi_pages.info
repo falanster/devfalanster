@@ -1,8 +1,9 @@
 name = Views news and afishi pages
 core = 7.x
 package = Custom
-version = 7.x-1.0
+version = 7.x-1.1
 project = views_news_and_afishi_pages
+dependencies[] = ctools
 dependencies[] = views
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2

@@ -1,14 +1,8 @@
-// Features tools
-Features tools is a drupal module.
-It's a develop helper module for working with Feature module.
-It's add a submit button in the recreate feature form named "auto create feature",
-which download the feature tar ball, un-tar it and put the files in the right place.
-All in one click. 
+Ftools is a drupal module to facilitate efficient development workflows with the features (exportable) module.
 
-Any one how use the recreate feature more then few time a day will probably like this feature.
+Specifically, it's add an additional "auto create feature" submit button into the recreate feature form. When triggered, it downloads the feature tar ball, un-tar's it and puts the files in the right place, all in one click. This can save you an incredible amount of time during development.
 
-In order to make the module to work you need to give www-data ,permission to write to the sites/all/modules directory.
-THIS MODULE IS FOR LOCAL SERVER DEVELOPING ONLY !!!
-It's probably won't work other places but please don't try.
-
-
+Please note: 
+- ftools only works with the Features 1.x. This is because features 2.x has the same functionality baked in.
+- the module requires write access to the sites/all/modules directory. 
+- it is intended for personal development, not on production servers.

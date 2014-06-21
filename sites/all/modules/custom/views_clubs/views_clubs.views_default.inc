@@ -24,23 +24,29 @@ function views_clubs_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Projects list';
   $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['use_more_text'] = 'болей';
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Скінуць';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '«';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹';
+  $handler->display->display_options['pager']['options']['tags']['next'] = '›';
+  $handler->display->display_options['pager']['options']['tags']['last'] = '»';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'node';
   $handler->display->display_options['row_options']['view_mode'] = 'full';
-  /* Field: Content: Title */
+  /* Поле: Змест: Загаловак */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Date */
+  /* Поле: Змест: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -53,7 +59,7 @@ function views_clubs_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: Image */
+  /* Поле: Змест: Image */
   $handler->display->display_options['fields']['field_image_news']['id'] = 'field_image_news';
   $handler->display->display_options['fields']['field_image_news']['table'] = 'field_data_field_image_news';
   $handler->display->display_options['fields']['field_image_news']['field'] = 'field_image_news';
@@ -64,31 +70,31 @@ function views_clubs_views_default_views() {
     'image_style' => 'news_square',
     'image_link' => 'content',
   );
-  /* Field: Content: Body */
+  /* Поле: Змест: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
   $handler->display->display_options['fields']['body']['alter']['max_length'] = '400';
   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
-  $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Read more';
+  $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Чытаць болей';
   $handler->display->display_options['fields']['body']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['preserve_tags'] = '<p> <br> <a> <b> <strong> <i>';
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
-  /* Sort criterion: Content: Post date */
+  /* Sort criterion: Змест: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Змест: Апублікавана */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
+  /* Filter criterion: Змест: Тып */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -97,7 +103,7 @@ function views_clubs_views_default_views() {
     'news' => 'news',
     'static_pages' => 'static_pages',
   );
-  /* Filter criterion: Content: Has taxonomy terms (with depth) */
+  /* Filter criterion: Змест: Has taxonomy terms (with depth) */
   $handler->display->display_options['filters']['term_node_tid_depth']['id'] = 'term_node_tid_depth';
   $handler->display->display_options['filters']['term_node_tid_depth']['table'] = 'node';
   $handler->display->display_options['filters']['term_node_tid_depth']['field'] = 'term_node_tid_depth';
@@ -107,7 +113,7 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['filters']['term_node_tid_depth']['type'] = 'select';
   $handler->display->display_options['filters']['term_node_tid_depth']['vocabulary'] = 'falanster';
   $handler->display->display_options['filters']['term_node_tid_depth']['depth'] = '0';
-  /* Filter criterion: Content: Language */
+  /* Filter criterion: Змест: Мова */
   $handler->display->display_options['filters']['language']['id'] = 'language';
   $handler->display->display_options['filters']['language']['table'] = 'node';
   $handler->display->display_options['filters']['language']['field'] = 'language';
@@ -126,14 +132,14 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Title */
+  /* Поле: Змест: Загаловак */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Date */
+  /* Поле: Змест: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -146,7 +152,7 @@ function views_clubs_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Content: Image */
+  /* Поле: Змест: Image */
   $handler->display->display_options['fields']['field_image_news']['id'] = 'field_image_news';
   $handler->display->display_options['fields']['field_image_news']['table'] = 'field_data_field_image_news';
   $handler->display->display_options['fields']['field_image_news']['field'] = 'field_image_news';
@@ -157,14 +163,14 @@ function views_clubs_views_default_views() {
     'image_style' => 'news_square',
     'image_link' => 'content',
   );
-  /* Field: Content: Body */
+  /* Поле: Змест: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
   $handler->display->display_options['fields']['body']['alter']['max_length'] = '400';
   $handler->display->display_options['fields']['body']['alter']['more_link'] = TRUE;
-  $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Read more';
+  $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Чытаць болей';
   $handler->display->display_options['fields']['body']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['preserve_tags'] = '<p> <br> <a> <b> <strong> <i>';
@@ -184,14 +190,14 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Nid */
+  /* Поле: Змест: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
+  /* Поле: Змест: Загаловак */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -203,14 +209,14 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['fields']['title']['element_class'] = 'grey-title';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Body */
+  /* Поле: Змест: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
   $handler->display->display_options['fields']['body']['label'] = '';
   $handler->display->display_options['fields']['body']['exclude'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['max_length'] = '100';
-  $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Читать всё';
+  $handler->display->display_options['fields']['body']['alter']['more_link_text'] = 'Чытаць болей';
   $handler->display->display_options['fields']['body']['alter']['strip_tags'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
@@ -218,7 +224,7 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['fields']['body']['settings'] = array(
     'trim_length' => '100',
   );
-  /* Field: Content: Image */
+  /* Поле: Змест: Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -231,7 +237,7 @@ function views_clubs_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Global: Custom text */
+  /* Поле: Global: Custom text */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
@@ -244,14 +250,14 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Змест: Апублікавана */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
+  /* Filter criterion: Змест: Тып */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
@@ -259,14 +265,14 @@ function views_clubs_views_default_views() {
     'static_pages' => 'static_pages',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Content: Language */
+  /* Filter criterion: Змест: Мова */
   $handler->display->display_options['filters']['language']['id'] = 'language';
   $handler->display->display_options['filters']['language']['table'] = 'node';
   $handler->display->display_options['filters']['language']['field'] = 'language';
   $handler->display->display_options['filters']['language']['value'] = array(
     '***CURRENT_LANGUAGE***' => '***CURRENT_LANGUAGE***',
   );
-  /* Filter criterion: Content: Has taxonomy terms (with depth) */
+  /* Filter criterion: Змест: Has taxonomy terms (with depth) */
   $handler->display->display_options['filters']['term_node_tid_depth']['id'] = 'term_node_tid_depth';
   $handler->display->display_options['filters']['term_node_tid_depth']['table'] = 'node';
   $handler->display->display_options['filters']['term_node_tid_depth']['field'] = 'term_node_tid_depth';
@@ -276,7 +282,7 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['filters']['term_node_tid_depth']['type'] = 'select';
   $handler->display->display_options['filters']['term_node_tid_depth']['vocabulary'] = 'falanster';
   $handler->display->display_options['filters']['term_node_tid_depth']['depth'] = '1';
-  /* Filter criterion: Content: Has taxonomy term */
+  /* Filter criterion: Змест: Has taxonomy term */
   $handler->display->display_options['filters']['tid']['id'] = 'tid';
   $handler->display->display_options['filters']['tid']['table'] = 'taxonomy_index';
   $handler->display->display_options['filters']['tid']['field'] = 'tid';
@@ -298,21 +304,21 @@ function views_clubs_views_default_views() {
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Filter criterion: Змест: Апублікавана */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Language */
+  /* Filter criterion: Змест: Мова */
   $handler->display->display_options['filters']['language']['id'] = 'language';
   $handler->display->display_options['filters']['language']['table'] = 'node';
   $handler->display->display_options['filters']['language']['field'] = 'language';
   $handler->display->display_options['filters']['language']['value'] = array(
     '***CURRENT_LANGUAGE***' => '***CURRENT_LANGUAGE***',
   );
-  /* Filter criterion: Content: Has taxonomy term */
+  /* Filter criterion: Змест: Has taxonomy term */
   $handler->display->display_options['filters']['tid']['id'] = 'tid';
   $handler->display->display_options['filters']['tid']['table'] = 'taxonomy_index';
   $handler->display->display_options['filters']['tid']['field'] = 'tid';
@@ -321,7 +327,7 @@ function views_clubs_views_default_views() {
   );
   $handler->display->display_options['filters']['tid']['type'] = 'select';
   $handler->display->display_options['filters']['tid']['vocabulary'] = 'falanster';
-  /* Filter criterion: Content translation: Translation set node ID */
+  /* Filter criterion: Пераклад змесціва: Translation set node ID */
   $handler->display->display_options['filters']['tnid']['id'] = 'tnid';
   $handler->display->display_options['filters']['tnid']['table'] = 'node';
   $handler->display->display_options['filters']['tnid']['field'] = 'tnid';

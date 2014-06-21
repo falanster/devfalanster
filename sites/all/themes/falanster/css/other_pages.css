@@ -42,13 +42,19 @@
 
 .block-block-16 .content {
     background-color: #f3f4f5;
-    padding: 25px 5px;
+    padding: 25px 15px;
 }
 
 .block-block-16 .content p {
     margin: 0;
     padding: 0;
 }
+
+.block-block-16 .content img {
+    margin: 2px 1px;
+    
+}
+
 
 /* Donation block in sidebar */
 
