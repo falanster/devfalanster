@@ -17,6 +17,9 @@ phpmyadmin
 
 sites/default/settings.php
 sites/default/files/languages*
+sites/default/files/css*
+sites/default/files/js*
 
 .ht.filecache
 db
+

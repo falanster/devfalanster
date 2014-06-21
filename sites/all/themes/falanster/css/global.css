@@ -12,7 +12,7 @@ body {
 a,
 a:link,
 a:visited {
-	color: #D25D5E;
+	color: #c72c29;
     text-decoration: none;
 }
 
@@ -102,10 +102,9 @@ h2.block-title a {
 
 /* Language selector block */
 
-/* .block-locale { */
-/*     float: right; */
-/*     margin: 25px 0; */
-/* } */
+.block-locale .content ul {
+    margin-bottom: 0;
+}
 
 .block-locale .content ul li {
     display: inline;
@@ -114,32 +113,11 @@ h2.block-title a {
 
 .block-locale .content ul li a,
 .block-locale .content ul li .locale-untranslated {
-    text-decoration: none;
     text-transform: lowercase;
 }
 
 .block-locale .content ul li a.active {
-    color: #c72c29;
-}
-
-/* User logged in block*/
-
-/* #block-block-7 { */
-/*     padding: 10px 0; */
-/*     float: right; */
-/* } */
-
-#block-block-7 a {
-	color: #D25D5E;
-    text-decoration: none;
-}
-
-#block-block-7 a:hover {
-    text-decoration: underline;
-}
-
-#block-block-7 a:visited {
-    color: #D25D5E;
+    color: #e90606;
 }
 
 /* Block with social services */
@@ -167,33 +145,13 @@ h2.block-title a {
 
 /*Falanster logo footer block*/
 
-#block-block-10 img {
-  float: right;
-}
+/* #block-block-10 img { */
+/*   float: right; */
+/* } */
 
-#block-block-10 p {
-  margin: 0;
-}
-
-.i18n-be #block-block-10 img,
-.i18n-en #block-block-10 img {
-	margin-bottom: 15px;
-}
-
-#footer_logo_by img {
-	width: 320px;
-	height: 79px;
-}
-
-#footer_logo_ru img {
-	width: 320px;
-	height: 86px;
-}
-
-#footer_logo_en img {
-	width: 320px;
-	height: 72px;
-}
+/* #block-block-10 p { */
+/*   margin: 0; */
+/* } */
 
 /* Creative Commons block */
 
