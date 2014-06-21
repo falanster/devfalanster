@@ -49,7 +49,7 @@
 
 #block-views-slogan-block .content {
     font-size: 30px;
-    color: #D25D5E;
+    color: #c72c29;
 }
 
 /* Language selector block */
@@ -67,14 +67,6 @@
 
 /* First main menu block */
 
-#block-menu-menu-first-menu {
-
-}
-
-#block-menu-menu-first-menu .content ul {
-    margin-left: 50px;
-}
-
 #block-menu-menu-first-menu .content ul li {
     list-style-type: none;
     list-style-image: none;
@@ -82,11 +74,11 @@
     float: left;
     margin: 5px 15px 0 0;
     padding: 0;
-    color: #e90606;
+    color: #c72c29;
 }
 
 #block-menu-menu-first-menu .content ul li a {
-    color: #e90606;
+    color: #c72c29;
 }
 
 
