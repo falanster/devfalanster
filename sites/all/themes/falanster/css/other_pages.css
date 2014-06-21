@@ -82,7 +82,7 @@
 /* Hot pages menu */
 
 #block-menu-menu-hot-pages {
-    float: right;
+    float: left;
 } 
 
 #block-menu-menu-hot-pages .menu a {
