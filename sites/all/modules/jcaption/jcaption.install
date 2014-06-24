@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the jcaption module.
+ */
+
+/**
+ * Add new permission to the administrator role.
+ */
+function jcaption_update_7101() {
+  $rid = variable_get('user_admin_role', 0);
+  if ($rid) {
+    drupal_load('module', 'user');
+    $permissions = user_role_permissions(array($rid => TRUE));
+    if (!array_key_exists('access jcaption settings', $permissions[$rid])) {
+      user_role_change_permissions($rid,
+        array(
+          'access jcaption settings' => TRUE,
+        )
+      );
+      return t('The <em>access jcaption settings</em> permission has been added to the administrator role %user_admin_role.', array('%user_admin_role' => $rid));
+    }
+  }
+  else {
+    return t('No administrator role available to grant the <em>access jcaption settings</em> permission.');
+  }
+}
+
+/**
+ * Notify that permission possibly had been granted to wrong user role.
+ */
+function jcaption_update_7102() {
+  return t('If jCaption 7.x-1.3 was the first version you installed, then at install time the permission <em>access jcaption settings</em> was granted to role ID 3, which may or may not have been the administration role. You may want to check the jCaption configuration and the current grants.');
+}

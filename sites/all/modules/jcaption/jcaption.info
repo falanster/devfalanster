@@ -1,0 +1,10 @@
+name = "jCaption"
+description = "Provides a caption for images from the alt or title attribute using jQuery."
+core = 7.x
+configure = admin/config/media/jcaption
+; Information added by Drupal.org packaging script on 2014-05-09
+version = "7.x-1.4"
+core = "7.x"
+project = "jcaption"
+datestamp = "1399652897"
+
