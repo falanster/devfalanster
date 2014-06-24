@@ -222,10 +222,6 @@ h2.block-title a {
     display: none;
 }
 
-.node .form-item label { /* fix strange bug with rate */
-    display: none;
-} 
-
 /* FOOTER */
 
 /* Creative Commons block */
