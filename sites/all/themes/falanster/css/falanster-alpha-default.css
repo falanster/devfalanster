@@ -209,6 +209,10 @@
     float: right;
 }
 
+.not-front .block-block-10 .content {
+    margin-top: 80px;
+}
+
 /* Block with social services */
 
 #block-block-5 {
