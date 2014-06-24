@@ -31,6 +31,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     font-size: 36px;
     color: #4d4948;
+    line-height: 1.2em;
 }
 
 h2 {
@@ -201,13 +202,13 @@ h2.block-title a {
     overflow: auto;
 }
 
-#rate-button-1 {
+.rate-number-up-down-btn-up {
     background: url('../images/like_plus.png');
     width: 36px;
     height: 29px;
 }
 
-#rate-button-2 {
+.rate-number-up-down-btn-down {
     background: url('../images/dislike_minus.png');
     width: 37px;
     height: 30px;
@@ -275,23 +276,4 @@ h2.block-title a {
     color: #D25D5E;
     font-size: 18px;
     font-weight: bold;
-}
-
-/* UNNECESSARY STYLES */
-
-/* Nice menu */
-
-/* DISABLE NORMAL MAIN MENU FOR MOBILE DEVICES */
-
-#block-nice-menus-1,
-#block-nice-menus-2,
-#block-nice-menus-3 {
-	display: none;
-}
-
-/* ENABLE MOBILE MENU */
-
-#block-menu-menu-mobile-menu {
-	display: block;
-	padding: 0px 20px;
 }
