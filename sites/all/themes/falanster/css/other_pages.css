@@ -51,7 +51,6 @@
     
 }
 
-
 /* Donation block in sidebar */
 
 .block-block-1 .content {
@@ -63,8 +62,6 @@
     vertical-align: middle;
     margin-right: 5px;
 }
-
-
 
 /* Subscribe block in sidebar */
 
@@ -208,30 +205,4 @@
 
 .projects-and-clubs-menu a {
     margin-right: 1em;
-}
-
-#rate-button-1 {
-    background: url('../images/like_plus.png');
-    width: 36px;
-    height: 29px;
-}
-
-#rate-button-2 {
-    background: url('../images/dislike_minus.png');
-    width: 37px;
-    height: 30px;
-}
-
-.rate-number-up-down-rating{
-    margin-top: 4px;
-    font-size: 18px;
-}
-
-.form-item label{
-    display: none;
-}
-
-.rate-widget{
-    float: right;
-    margin-top: -25px;
 }
