@@ -85,6 +85,10 @@ h2.block-title a {
 	display: none;
 }
 
+#region-footer-second {
+    padding-top: 25px;
+}
+
 #zone-preface {
     padding: 10px 0;
 }
@@ -201,6 +205,13 @@ h2.block-title a {
 }
 
 #block-block-14 p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Falanster logo block */
+
+.block-block-10 .content p {
     margin: 0;
     padding: 0;
 }
