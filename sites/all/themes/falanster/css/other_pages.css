@@ -206,9 +206,9 @@
 
 /* CONTACT US PAGE */
 
-.block-menu-contact-us ul li {
+.block-menu-contact-us .content ul li {
     float: left;
-    margin: 0 1em 0 0;
+    margin: 0 1em 20px 0;
     padding: 0;
     list-style-image: none;
     list-style-type: none;
@@ -216,10 +216,10 @@
     color: #444243;
 }
 
-.block-menu-contact-us ul li a {
+.block-menu-contact-us .content ul li a {
     color: #bcbcbc;
 }
 
-.block-menu-contact-us ul li.first a {
+.block-menu-contact-us .content ul li.first a {
     color: #444243;
 }
