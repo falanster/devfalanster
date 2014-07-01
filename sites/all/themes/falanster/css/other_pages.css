@@ -199,10 +199,27 @@
     margin-bottom: 0;
 }
 
-.projects-and-clubs-menu h1 {
+.projects-and-clubs-menu a {
     margin-bottom: 10px;
+    margin-right: 1em;
 }
 
-.projects-and-clubs-menu a {
-    margin-right: 1em;
+/* CONTACT US PAGE */
+
+.block-menu-contact-us ul li {
+    float: left;
+    margin: 0 1em 0 0;
+    padding: 0;
+    list-style-image: none;
+    list-style-type: none;
+    font-size: 36px;
+    color: #444243;
+}
+
+.block-menu-contact-us ul li a {
+    color: #bcbcbc;
+}
+
+.block-menu-contact-us ul li.first a {
+    color: #444243;
 }
