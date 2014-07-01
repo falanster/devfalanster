@@ -163,14 +163,6 @@ h2.block-title a {
 
 /* Second main menu block */
 
-#block-menu-menu-second-menu {
-
-}
-
-#block-menu-menu-second-menu .content ul {
-
-}
-
 #block-menu-menu-second-menu .content ul li {
     list-style-type: none;
     list-style-image: none;
@@ -221,6 +213,12 @@ h2.block-title a {
 
 .rate-info {
     display: none;
+}
+
+/* Agenda block */
+
+#block-agenda-1 {
+    margin-bottom: 0 !important;
 }
 
 /* FOOTER */
