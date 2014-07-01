@@ -221,6 +221,18 @@ h2.block-title a {
     margin-bottom: 0 !important;
 }
 
+/* Caption styles */
+
+article .caption {
+    display: block;
+}
+
+article .caption p {
+    color: #b41f1f;
+    font-size: 12px;
+    font-style: italic;
+}
+
 /* FOOTER */
 
 /* Creative Commons block */
