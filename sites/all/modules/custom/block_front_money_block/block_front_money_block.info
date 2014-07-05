@@ -1,0 +1,11 @@
+name = Block-front_money_block
+description = Front money block. Support falanster block on main page
+core = 7.x
+package = Custom
+version = 7.x-1.1
+project = block_front_money_block
+features[fe_block_boxes][] = front_money_block
+features[fe_block_settings][] = block-front_money_block
+features[features_api][] = api:2
+features_exclude[dependencies][fe_block] = fe_block
+no autodetect = 1

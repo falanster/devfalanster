@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Context - Grid feature.
+ */
+
+include_once 'context_grid.features.inc';

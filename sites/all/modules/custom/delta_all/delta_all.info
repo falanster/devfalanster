@@ -1,0 +1,15 @@
+name = Delta - All
+description = все дельты здесь
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = delta_all
+features[ctools][] = delta:delta:3
+features[delta][] = clone_of_other
+features[delta][] = english_page
+features[delta][] = main
+features[delta][] = other
+features[features_api][] = api:2
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][delta] = delta
+no autodetect = 1

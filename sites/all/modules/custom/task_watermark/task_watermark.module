@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Task - Watermark feature.
+ */
+
+include_once 'task_watermark.features.inc';

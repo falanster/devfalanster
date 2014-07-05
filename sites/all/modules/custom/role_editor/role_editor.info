@@ -1,0 +1,10 @@
+name = Role - Editor
+description = права для роли эдитор
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = role_editor
+features[features_api][] = api:2
+features[user_role][] = editor
+features_exclude[dependencies][features] = features
+no autodetect = 1

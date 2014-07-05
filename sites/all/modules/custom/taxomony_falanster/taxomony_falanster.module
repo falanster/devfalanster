@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Taxomony - Falanster feature.
+ */
+
+include_once 'taxomony_falanster.features.inc';

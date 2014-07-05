@@ -1,0 +1,14 @@
+name = Task Block_titlelink module settings
+description = Title links for main page header news and afisha added
+core = 7.x
+package = Custom
+version = 7.x-1.1
+project = task_block_titlelink_module_settings
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = block_titlelink_views_afishi-block_1
+features[variable][] = block_titlelink_views_headernews-block
+features[variable][] = block_titlelink_views_headernews_english-block
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][strongarm] = strongarm
+no autodetect = 1
