@@ -1,0 +1,13 @@
+name = Views - Contact
+description = подключаем страницу контакты
+core = 7.x
+package = Custom
+version = 7.x-1.1
+project = views_contact
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = contact_us
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][ds] = ds
+features_exclude[dependencies][views] = views
+no autodetect = 1

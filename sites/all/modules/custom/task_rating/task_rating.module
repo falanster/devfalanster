@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Task - Rating feature.
+ */
+
+include_once 'task_rating.features.inc';

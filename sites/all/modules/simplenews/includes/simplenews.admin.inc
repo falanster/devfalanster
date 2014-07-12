@@ -531,7 +531,7 @@ function simplenews_admin_category_form($form, &$form_state, $edit = array()) {
     '#type' => 'textfield',
     '#title' => t('From name'),
     '#size' => 60,
-    '#maxlength' => 64,
+    '#maxlength' => 128,
     '#default_value' => $edit['from_name'],
   );
 
@@ -633,7 +633,8 @@ function simplenews_admin_category_form_submit($form, &$form_state) {
   // Create or update taxonomy term.
   $term = new stdClass();
   $term->tid = $form_state['values']['tid'];
-  $term->vid = variable_get('simplenews_vid', 0);
+  $term->vocabulary_machine_name = 'newsletter';
+  $term->vid = taxonomy_vocabulary_machine_name_load('newsletter')->vid;
   $term->name = $form_state['values']['name'];
   $term->description = $form_state['values']['description'];
   $term->weight = $form_state['values']['weight'];
@@ -725,6 +726,12 @@ function simplenews_subscription_list_add($form, &$form_state) {
     );
   }
 
+  $form['resubscribe'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Force resubscription'),
+    '#description' => t('If checked, previously unsubscribed e-mail addresses will be resubscribed. Consider that this might be against the will of your users.'),
+  );
+
   // Include language selection when the site is multilingual.
   // Default value is the empty string which will result in receiving emails
   // in the site's default language.
@@ -764,6 +771,7 @@ function simplenews_subscription_list_add($form, &$form_state) {
 function simplenews_subscription_list_add_submit($form, &$form_state) {
   $added = array();
   $invalid = array();
+  $unsubscribed = array();
   $checked_categories = array_keys(array_filter($form_state['values']['newsletters']));
   $langcode = $form_state['values']['language'];
 
@@ -774,10 +782,20 @@ function simplenews_subscription_list_add_submit($form, &$form_state) {
       continue;
     }
     if (valid_email_address($email)) {
+      $subscriber = simplenews_subscriber_load_by_mail($email);
       foreach (simplenews_categories_load_multiple($checked_categories) as $category) {
-
-        simplenews_subscribe_user($email, $category->tid, FALSE, 'mass subscribe', $langcode);
-        $added[] = $email;
+        // If there is a valid subscriber, check if there is a subscription for
+        // the current category and if this subscription has the status
+        // unsubscribed.
+        $is_unsubscribed = $subscriber && array_key_exists($category->tid, $subscriber->newsletter_subscription)
+          && $subscriber->newsletter_subscription[$category->tid]->status == SIMPLENEWS_SUBSCRIPTION_STATUS_UNSUBSCRIBED;
+        if (!$is_unsubscribed || $form_state['values']['resubscribe'] == TRUE) {
+          simplenews_subscribe_user($email, $category->tid, FALSE, 'mass subscribe', $langcode);
+          $added[] = $email;
+        }
+        else {
+          $unsubscribed[check_plain(_simplenews_newsletter_name($category))][] = $email;
+        }
       }
     }
     else {
@@ -800,6 +818,15 @@ function simplenews_subscription_list_add_submit($form, &$form_state) {
   if ($invalid) {
     $invalid = implode(", ", $invalid);
     drupal_set_message(t('The following addresses were invalid: %invalid.', array('%invalid' => $invalid)), 'error');
+  }
+
+  foreach ($unsubscribed as $name => $subscribers) {
+    $subscribers = implode(", ", $subscribers);
+    drupal_set_message(t('The following addresses were skipped because they have previously unsubscribed from %name: %unsubscribed.', array('%name' => $name, '%unsubscribed' => $subscribers)), 'warning');
+  }
+
+  if (!empty($unsubscribed)) {
+    drupal_set_message(t("If you would like to resubscribe them, use the 'Force resubscription' option."), 'warning');
   }
 
   // Return to the parent page.
@@ -835,7 +862,7 @@ function simplenews_subscription_list_export($form, &$form_state) {
     '#options' => array(
       'subscribed' => t('Subscribed to the newsletter'),
       'unconfirmed' => t('Unconfirmed to the newsletter'),
-      'unsubscribed' => t('UnSubscribed from the newsletter'),
+      'unsubscribed' => t('Unsubscribed from the newsletter'),
     ),
     '#default_value' => $default['subscribed'],
     '#description' => t('Subscriptions matching the selected subscription states will be exported.'),
@@ -1085,7 +1112,7 @@ function simplenews_subscription_list_form() {
 
   foreach ($result as $subscriber) {
     $options[$subscriber->snid] = array(
-      'mail' => $subscriber->mail,
+      'mail' => check_plain($subscriber->mail),
       'username' => isset($subscriber->uid) ? l($subscriber->name, 'user/' . $subscriber->uid) : check_plain($subscriber->name),
       'status' => theme('simplenews_status', array('source' => 'activated', 'status' => $subscriber->activated)),
       'language' => check_plain($subscriber->language),
@@ -1277,7 +1304,7 @@ function simplenews_admin_settings_newsletter($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('From name'),
     '#size' => 60,
-    '#maxlength' => 64,
+    '#maxlength' => 128,
     '#default_value' => variable_get('simplenews_from_name', variable_get('site_name', 'Drupal')),
   );
   $form['simplenews_sender_info']['simplenews_from_address'] = array(
@@ -1351,9 +1378,9 @@ function simplenews_admin_settings_mail($form, &$form_state) {
     '#title' => t('Mail spool expiration'),
     '#options' => array(
       0 => t('Immediate'),
-      1 => t('1 day'),
-      7 => t('1 week'),
-      14 => t('2 weeks'),
+      1 => format_plural(1, '1 day', '@count days'),
+      7 => format_plural(1, '1 week', '@count weeks'),
+      14 => format_plural(2, '1 week', '@count weeks'),
     ),
     '#default_value' => variable_get('simplenews_spool_expire', 0),
     '#description' => t('Newsletter mails are spooled. How long must messages be retained in the spool after successful sending. Keeping the message in the spool allows mail statistics (which is not yet implemented). If cron is not used, immediate expiration is advised.'),
@@ -1533,7 +1560,7 @@ function simplenews_admin_settings_subscription($form, &$form_state) {
     '#description' => t('Drupal path or URL of the destination page where after the subscription is confirmed (e.g. node/123). Leave empty to go to the front page.'),
     '#default_value' => variable_get('simplenews_confirm_subscribe_page', ''),
   );
-  $form['simplenews_subscription']['confirm_pages']['simplenews_confirm_unsubscribe_page'] = array(
+  $form['confirm_pages']['simplenews_confirm_unsubscribe_page'] = array(
     '#type' => 'textfield',
     '#title' => t('Unsubscribe confirmation'),
     '#description' => t('Drupal path or URL of the destination page when the subscription removal is confirmed (e.g. node/123). Leave empty to go to the front page.'),

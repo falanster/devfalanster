@@ -8,27 +8,32 @@ Drupal.behaviors.webform_conditional.attach = function() {
 	// create quasi static var to save perfomance
 	Drupal.webform_conditional.wrappers = new Object();
 	Drupal.webform_conditional.components = new Object();
-	$.each(Drupal.settings.webform_conditional.fields, function(triggerField_key, triggerField_info) {
-		
-		var formItemWrapper = Drupal.webform_conditional.getWrapper(triggerField_info);
-		if(formItemWrapper.length > 0){
-				// Add onclick handler to Parent field
-				Drupal.webform_conditional.addOnChange (triggerField_key, triggerField_info);
-		}
-		});
-	// after all added - trigger initial
-	$.each(Drupal.settings.webform_conditional.fields, function(triggerField_key, triggerField_info) {
-		var formItemWrapper = Drupal.webform_conditional.getWrapper(triggerField_info);
-			if(formItemWrapper.length > 0){
-				var field_name = Drupal.webform_conditional.escapeId(triggerField_key);
-				var components = Drupal.webform_conditional.getComponentsByName(field_name);
-				if(components.attr('type')=='radio' || components.attr('type')=='checkbox'){
-					$(components[0]).triggerHandler('click');
-				}else{
-					components.triggerHandler('change');
-				}
-			}
-		});
+  $.each(Drupal.settings, function(key, info) {
+    if(key.substring(0, 20) == 'webform_conditional_') {
+      $.each(info.fields, function(triggerField_key, triggerField_info) {
+        
+        var formItemWrapper = Drupal.webform_conditional.getWrapper(triggerField_info);
+        if(formItemWrapper.length > 0){
+            // Add onclick handler to Parent field
+            Drupal.webform_conditional.addOnChange (triggerField_key, triggerField_info, key);
+        }
+        });
+      // after all added - trigger initial
+  
+      $.each(info.fields, function(triggerField_key, triggerField_info) {
+        var formItemWrapper = Drupal.webform_conditional.getWrapper(triggerField_info);
+          if(formItemWrapper.length > 0){
+            var field_name = Drupal.webform_conditional.escapeId(triggerField_key);
+            var components = Drupal.webform_conditional.getComponentsByName(field_name, key);
+            if(components.attr('type')=='radio' || components.attr('type')=='checkbox'){
+              $(components[0]).triggerHandler('click');
+            }else{
+              components.triggerHandler('change');
+            }
+          }
+        });
+      }
+    });
 	return;
 };
 Drupal.webform_conditional = Drupal.webform_conditional || {};
@@ -39,11 +44,10 @@ Drupal.webform_conditional.getWrapper = function(fieldInfo){
 	}
 	return Drupal.webform_conditional.wrappers[fieldInfo['css_id']] = $("#" + fieldInfo['css_id']);
 };
-Drupal.webform_conditional.addOnChange = function(triggerField_key, triggerField_info) {
+Drupal.webform_conditional.addOnChange = function(triggerField_key, triggerField_info, key) {
 	var monitor_field_name = Drupal.webform_conditional.escapeId(triggerField_key);
 	var changeFunction = function() {
-		
-		Drupal.webform_conditional.setVisibility(triggerField_key,triggerField_info);
+		Drupal.webform_conditional.setVisibility(triggerField_key,triggerField_info,key);
 	};
 	$.each(triggerField_info['dependent_fields'],function(dependent_field_key,dependent_field_info){
 		var formItemWrapper = Drupal.webform_conditional.getWrapper(dependent_field_info);
@@ -52,7 +56,7 @@ Drupal.webform_conditional.addOnChange = function(triggerField_key, triggerField
 	    }
 
 	});
-	var components = Drupal.webform_conditional.getComponentsByName(monitor_field_name);
+	var components = Drupal.webform_conditional.getComponentsByName(monitor_field_name, key);
 	if(components.attr('type')=='radio' || components.attr('type')=='checkbox'){
 		components.click(changeFunction)
 	}else{
@@ -60,7 +64,7 @@ Drupal.webform_conditional.addOnChange = function(triggerField_key, triggerField
 	}
 	
 };
-Drupal.webform_conditional.setVisibility = function(triggerField_key,triggerField_info,monitorField,monitorInfo){
+Drupal.webform_conditional.setVisibility = function(triggerField_key,triggerField_info,key,monitorField,monitorInfo){
 	var monitor_field_name = Drupal.webform_conditional.escapeId(triggerField_key);
 	var currentValues = Drupal.webform_conditional.getFieldValue(monitor_field_name); 
 	var monitor_visible = true;
@@ -81,26 +85,28 @@ Drupal.webform_conditional.setVisibility = function(triggerField_key,triggerFiel
 				// and clear data (using different selector: want the
 				// textarea to be selected, not the parent div)
 		}
-		Drupal.webform_conditional.TriggerDependents(dependentField,dependentInfo);
+		Drupal.webform_conditional.TriggerDependents(dependentField,dependentInfo,key);
 	});
 };
-Drupal.webform_conditional.getComponentsByName = function (field_name){
+Drupal.webform_conditional.getComponentsByName = function (field_name, key){
 	// check to save jquery calls
 	if(Drupal.webform_conditional.components[field_name]){
 		return Drupal.webform_conditional.components[field_name];
 	}
 	// don't overwrite original name to store for caching
 	var css_field_name = "[" + field_name + "]";
-	var nid = Drupal.settings.webform_conditional.nid;
+	settings = Drupal.settings[key];
+	var nid = settings.nid;
 	if(nid instanceof Array){
-		nid = Drupal.settings.webform_conditional.nid[0];
+		nid = settings.nid[0];
 	}
 	return Drupal.webform_conditional.components[field_name] = $("#webform-client-form-" + nid + " *[name*='"+css_field_name+"']");
 };
-Drupal.webform_conditional.TriggerDependents = function(monitorField,monitorInfo){
-	$.each(Drupal.settings.webform_conditional.fields, function(triggerField_key, triggerField_info) {
+Drupal.webform_conditional.TriggerDependents = function(monitorField,monitorInfo, key){
+  settings = Drupal.settings[key];
+	$.each(settings.fields, function(triggerField_key, triggerField_info) {
 		if(triggerField_key == monitorField){
-			Drupal.webform_conditional.setVisibility(triggerField_key, triggerField_info,monitorField,monitorInfo);
+			Drupal.webform_conditional.setVisibility(triggerField_key, triggerField_info,key,monitorField,monitorInfo);
 		};
 	});
 };

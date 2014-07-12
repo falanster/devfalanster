@@ -1,0 +1,10 @@
+name = Task - Watermark
+description = все измения для водяного знака
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = task_watermark
+features[features_api][] = api:2
+features[image][] = watermark
+features_exclude[dependencies][image] = image
+no autodetect = 1

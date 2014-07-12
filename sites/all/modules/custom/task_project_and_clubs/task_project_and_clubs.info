@@ -1,0 +1,17 @@
+name = Task - Project and Clubs
+description = для страницы проектов и клубов (блоки + стили рисунков)
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = task_project_and_clubs
+features[fe_block_boxes][] = clubs_and_projects_menu
+features[fe_block_boxes][] = projects_and_clubs_menu
+features[fe_block_settings][] = block-clubs_and_projects_menu
+features[fe_block_settings][] = block-projects_and_clubs_menu
+features[fe_block_settings][] = views-clubs-block_2
+features[features_api][] = api:2
+features[image][] = internal_view_square
+features_exclude[dependencies][fe_block] = fe_block
+features_exclude[dependencies][image] = image
+features_exclude[dependencies][views] = views
+no autodetect = 1

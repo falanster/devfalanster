@@ -141,38 +141,20 @@ function agenda_theme($existing, $type, $theme, $path) {
 
 
 /**
- * Generate the themed agenda block
+ * Generate the themed agenda block.
  *
  * @return string
  */
 function agenda_display_block($delta = 0) {
-
-  // Check block exists
+  // Check block exists.
   if ($delta === 0 || !($block = agenda_settings($delta))) {
     return false;
   }
-
-  // Group the events by date
+  // Get the events for the block.
   $events = agenda_get_events($block);
-  $groupedevents = array();
-  foreach ($events as $event) {
-    $groupedevents[$event['when']][] = $event;
-  }
-  ksort($groupedevents);
-
-  // Filter the events based on their date
-  $datelimit = $block->datelimit;
-  $count     = 0;
-  $events    = array();
-  foreach ($groupedevents as $date => $eventdata) {
-    if ($count >= $datelimit) {
-      break;
-    }
-    $events[$date] = $eventdata;
-    $count++;
-  }
-
-  // Render
+  // Group the events by date.
+  $events = agenda_group_events_for_block($block, $events);
+  // Render.
   if (count($events)) {
     $output = theme('agenda_block', array('events' => $events, 'block' => $block));
   }
@@ -182,7 +164,6 @@ function agenda_display_block($delta = 0) {
   else {
     $output = filter_xss($block->noeventstext);
   }
-
   return $output;
 }
 
@@ -470,4 +451,37 @@ function _agenda_parse_googleid($googleid) {
   }
 
   return array($parts[0], $token);
+}
+
+/**
+ * Group events by date for a block. Is not a part of agenda_get_events() to
+ * allow passing self-constructed events during testing.
+ * @see agenda_get_events()
+ * @see AgendaBlockTestCase::testNicknamedDays()
+ *
+ * @param array $block
+ *   Block for which events are going to be groupped.
+ * @param array $events
+ *   An array of events to be groupped.
+ * @return array
+ *   An array of groupped events.
+ */
+function agenda_group_events_for_block($block, array $events) {
+  $groupedevents = array();
+  foreach ($events as $event) {
+    $groupedevents[$event['when']][] = $event;
+  }
+  ksort($groupedevents);
+  // Filter the events based on their date.
+  $datelimit = $block->datelimit;
+  $count     = 0;
+  $events    = array();
+  foreach ($groupedevents as $date => $eventdata) {
+    if ($count >= $datelimit) {
+      break;
+    }
+    $events[$date] = $eventdata;
+    $count++;
+  }
+  return $events;
 }

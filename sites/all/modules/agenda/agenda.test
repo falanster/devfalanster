@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Tests for the Agenda module.
+ */
+
+/**
+ * Base class for all Agenda web test cases.
+ */
+class AgendaWebTestCase extends DrupalWebTestCase {
+  public function setUp() {
+    parent::setUp(array('agenda'));
+  }
+}
+
+class AgendaBlockTestCase extends AgendaWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Agenda block',
+      'description' => 'Tests Agenda block functionality and appearance.',
+      'group' => 'Agenda',
+    );
+  }
+
+  public function testNicknamedDays() {
+    // Get sample block.
+    $block = agenda_settings(1);
+    // Timezone.
+    $tz = new DateTimeZone($block->timezone);
+    // Parse the update timestamp.
+    $updated = new DateTime("now", $tz);
+    $published = new DateTime('now', $tz);
+    // Loop through all use cases.
+    $use_cases = array(
+      'yesterday',
+      'today',
+      'tomorrow',
+    );
+    foreach ($use_cases as $use_case) {
+      $events = array();
+      // Construct an event.
+      $event = array();
+      $event['title'] = "Testing $use_case";
+      $event['where'] = '';
+      $event['description'] = '';
+      $event['timezone'] = $block->timezone;
+      // Below several parameters are necessary for block appearance.
+      $event['index'] = 1;
+      $event['calendar'] = 'Calendar title';
+      // One day all-day event.
+      switch ($use_case) {
+        case 'yesterday':
+          $start = new DateTime("-1 day", $tz);
+          $end = new DateTime("now", $tz);
+          break;
+        case 'today':
+          $start = new DateTime("now", $tz);
+          $end = new DateTime("+1 day", $tz);
+          break;
+        case 'tomorrow':
+          $start = new DateTime("+1 day", $tz);
+          $end = new DateTime("+2 days", $tz);
+          break;
+      }
+      $event['start date'] = $start->format($block->dateformat);
+      $event['start time'] = $start->format($block->timeformat);
+      // Use strtotime instead of getTimestamp for < PHP5.3.
+      $event['start timestamp'] = strtotime($start->format('c'));
+      $event['end date'] = $end->format($block->dateformat);
+      $event['end time'] = $end->format($block->timeformat);
+      $event['end timestamp'] = strtotime($end->format('c'));
+      $event['published'] = $published->format($block->dateformat);
+      $event['updated'] = $updated->format($block->dateformat);
+      // The day the event occurs on (without time) used for grouping
+      $event['when'] = $start->format('Y-m-d');
+      $events[] = $event;
+      // Group the events by date.
+      $events = agenda_group_events_for_block($block, $events);
+      // Get the output of the block.
+      $output = theme('agenda_block', array(
+        'block' => $block,
+        'events' => $events,
+      ));
+      // Test the output.
+      $this->verbose($output);
+      $this->assertTrue(strpos($output, $nicknamed_day = ucfirst($use_case)) !== FALSE, "$use_case : $nicknamed_day found");
+    }
+  }
+}

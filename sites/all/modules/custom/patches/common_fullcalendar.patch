@@ -1,0 +1,14 @@
+diff --git a/includes/common.inc b/includes/common.inc
+index e1a1673..3af066b 100644
+--- a/includes/common.inc
++++ b/includes/common.inc
+@@ -5907,7 +5907,8 @@ function drupal_render(&$elements) {
+   // for speed.
+   if ($elements['#children'] == '') {
+     foreach ($children as $key) {
+-      $elements['#children'] .= drupal_render($elements[$key]);
++      if (is_array($elements[$key]))
++        $elements['#children'] .= drupal_render($elements[$key]);
+     }
+   }
+ 

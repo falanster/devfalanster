@@ -1,0 +1,159 @@
+/* This file contains main-page specific styles */
+
+/* Zone and region positioning */
+
+#region-content .block,
+#region-sidebar-second .block,
+#zone-postscript .block {
+    margin-bottom: 25px;
+}
+
+#block-system-main {
+    display: none;
+}
+
+/* CONTENT */
+
+/* News block */
+
+.block-headernews-english-block,
+.block-headernews-block {
+    margin-bottom: 0 !important;
+}
+
+.headernews-block {
+    padding: 10px;
+    overflow: auto;
+}
+
+.headernews-block .view-header {
+    margin-bottom: 10px;
+}
+
+.headernews-image {
+    margin: 0 10px 10px 0;
+}
+
+.headernews-image img {
+    max-width: 100%;
+}
+
+/* Related news block */
+
+.related-news-block {
+    padding: 0 10px 10px 10px;
+}
+
+.related-news-block .view-header {
+    margin-bottom: 10px;
+}
+
+.related-news-block .views-row {
+    margin-bottom: 5px;
+}
+
+.related-news-block .view-footer {
+    text-align: right;
+}
+
+
+/* Afisha blocks */
+
+#block-views-afishi-block-1 {
+    display: none;
+}
+
+.afishi-block {
+    padding: 10px;
+    overflow: auto;
+}
+
+.afishi-block .view-footer {
+    text-align: right;
+}
+
+/* Google calendar block */
+
+.block-agenda-1 .content {
+    padding-top: 10px;
+    background-color: #f3f4f5;
+}
+
+.block .agenda-block p {
+    padding: 0 10px 3px;
+}
+
+.block .agenda-block ol li {
+    background-color: #dc6f6a;
+}
+
+.block-block-18 .content {
+    text-align: right;
+    padding: 0 25px 20px 25px;
+    background-color: #f3f4f5;
+}
+
+.block-block-18 p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Last video or podcast */
+
+.last-video-or-podcast-block {
+    padding: 10px;
+}
+
+.last-video-or-podcast-image img,
+.last-video-or-podcast-block .views-field-colorbox img {
+    max-width: 100%;
+}
+
+/* Poll block */
+
+#block-poll-recent .poll { 
+    background-color: #f3f4f5;
+    padding: 10px;
+}
+
+#block-poll-recent .title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #444243;
+    line-height: 22px;
+    text-decoration: none;
+    margin-bottom: 20px;
+ }
+
+#block-poll-recent .links {
+    display: none;
+}
+
+/* FOOTER */
+
+/* Bottom horizontal menu*/
+
+#block-menu-menu-hor-bottom-menu {
+    float: left;
+} 
+
+#block-menu-menu-hor-bottom-menu .menu a {
+    font-size: 16px;
+    color: #848589;
+    text-transform: lowercase;  
+}
+
+#block-menu-menu-hor-bottom-menu ul li {
+    list-style: none;
+    display: inline;
+    float: right;
+}
+
+#block-menu-menu-hor-bottom-menu ul li a {
+    text-decoration: none;
+}
+
+#block-menu-menu-hor-bottom-menu ul li a:hover {
+    text-decoration: none;
+    color: #000;
+}

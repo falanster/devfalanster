@@ -1,0 +1,7 @@
+name = Second main menu
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = second_main_menu
+features[features_api][] = api:2
+no autodetect = 1

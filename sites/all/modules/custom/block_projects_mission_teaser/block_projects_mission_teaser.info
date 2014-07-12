@@ -1,0 +1,11 @@
+name = Block - projects_mission_teaser
+description = Block on page Projects+Clubs
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = block_projects_mission_teaser
+features[fe_block_boxes][] = projects_mission_teaser_block
+features[fe_block_settings][] = block-projects_mission_teaser_block
+features[features_api][] = api:2
+features_exclude[dependencies][fe_block] = fe_block
+no autodetect = 1

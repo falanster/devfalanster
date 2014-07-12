@@ -4,6 +4,22 @@
  */
 
 /**
+ * Implements hook_variable_realm_info()
+ */
+function variable_example_variable_realm_info() {
+  $realm['example'] = array(
+    'title' => t('Example'),
+    'weight' => 10,
+    'store class' => 'VariableStoreRealmStore',
+    'keys' => array(
+      'first' => t('First example'),
+      'second' => t('Second example'),
+    ),
+  );
+  return $realm;
+}
+
+/**
  * Implements hook_menu().
  */
 function variable_example_menu() {
@@ -62,3 +78,4 @@ function variable_example_page_realm($realm, $key) {
   variable_realm_switch($realm, $key);
   return variable_example_page_list();
 }
+

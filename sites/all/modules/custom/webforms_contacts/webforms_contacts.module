@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Webforms - Contacts feature.
+ */
+
+include_once 'webforms_contacts.features.inc';

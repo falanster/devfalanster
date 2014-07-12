@@ -72,6 +72,7 @@ function i18n_field_i18n_string_info() {
     'description' => t('Configurable fields descriptions, defaults, options, etc.'),
     'format' => FALSE, // This group doesn't have formatted strings
     'list' => TRUE, // This group can list all strings
+    'class' => 'i18n_string_textgroup_cached',
   );
   return $groups;
 }
@@ -83,7 +84,7 @@ function i18n_field_i18n_field_info() {
   $info['text'] = $info['text_long'] = $info['text_with_summary'] = array(
     'translate_default' => 'i18n_field_translate_default',
   );
-  $info['list_text'] = $info['list_boolean'] = $info['list_integer'] = $info['list_integer'] = array(
+  $info['list_text'] = $info['list_boolean'] = $info['list_integer'] = array(
     'translate_options' => 'i18n_field_translate_allowed_values',
   );
   return $info;

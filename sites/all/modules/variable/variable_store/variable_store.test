@@ -71,8 +71,8 @@ class VariableStoreTestCase extends DrupalWebTestCase {
     }
     // Finally check variable has returned to default value. Use any of the realms.
     variable_realm_switch($realm, 'first');
-    $this->assertEqual(variable_get_value('site_name'), 'Drupal', "We get the right value with Variable API after deleting the variable.");
-    $this->assertFalse(variable_get('site_name'), "We get the right value with Drupal API after deleting the variable.");
+    $this->assertEqual($value = variable_get_value('site_name'), 'Drupal', "We get the right value with Variable API after deleting the variable: $value");
+    $this->assertFalse($value = variable_get('site_name'), "We get the right value with Drupal API after deleting the variable: $value");
 
   }
 }

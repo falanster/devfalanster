@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Views news and afishi pages feature.
+ */
+
+include_once 'views_news_and_afishi_pages.features.inc';

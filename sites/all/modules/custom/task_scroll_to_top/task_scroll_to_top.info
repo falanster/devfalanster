@@ -1,0 +1,16 @@
+name = Task - Scroll to top
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = task_scroll_to_top
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = scroll_to_top_bg_color_hover
+features[variable][] = scroll_to_top_bg_color_out
+features[variable][] = scroll_to_top_display_text
+features[variable][] = scroll_to_top_enable_admin_theme
+features[variable][] = scroll_to_top_label
+features[variable][] = scroll_to_top_position
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][strongarm] = strongarm
+no autodetect = 1

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Task Block_titlelink module settings feature.
+ */
+
+include_once 'task_block_titlelink_module_settings.features.inc';

@@ -1,0 +1,15 @@
+name = Task - Rating
+description = для лайков на разных страницах и настроек
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = task_rating
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = rate_bot_botscout_key
+features[variable][] = rate_bot_hour_threshold
+features[variable][] = rate_bot_minute_threshold
+features[variable][] = rate_widgets
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][strongarm] = strongarm
+no autodetect = 1

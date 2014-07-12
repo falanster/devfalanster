@@ -1,0 +1,12 @@
+diff --git a/sites/all/modules/rate/rate.module b/sites/all/modules/rate/rate.module
+index 5329e2c..b485d87 100644
+--- a/sites/all/modules/rate/rate.module
++++ b/sites/all/modules/rate/rate.module
+@@ -772,6 +772,7 @@ function rate_node_view($node, $view_mode, $langcode = '') {
+         '#markup' => rate_generate_widget($widget_id, 'node', $node->nid, $display_mode),
+         '#title' => check_plain($widget->title),
+         '#type' => 'item',
++        '#title_display' => 'invisible',
+       );
+       if ($widget->node_display == RATE_DISPLAY_DISABLE) {
+         $node->$widget_name = $widget_code;

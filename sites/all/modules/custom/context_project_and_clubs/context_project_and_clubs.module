@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Context - Project and Clubs feature.
+ */
+
+include_once 'context_project_and_clubs.features.inc';

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Theme - Falanster feature.
+ */
+
+include_once 'theme_falanster.features.inc';

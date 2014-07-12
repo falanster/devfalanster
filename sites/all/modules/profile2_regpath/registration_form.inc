@@ -80,7 +80,6 @@ function _profile2_regpath_set_title($profiles, $key) {
   else {
     $title = 'User account';
   }
-  // Set title.
-  drupal_set_title(check_plain($title));
+  // Set title. See http://drupal.org/node/1800116 for use of t().
+  drupal_set_title(t($title));
 }
-

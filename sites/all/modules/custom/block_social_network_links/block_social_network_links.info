@@ -1,0 +1,11 @@
+name = Block - social_network_links
+description = Social network links block shows icons on main page and grid pages.
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = block_social_network_links
+features[fe_block_boxes][] = social_network_links
+features[fe_block_settings][] = block-social_network_links
+features[features_api][] = api:2
+features_exclude[dependencies][fe_block] = fe_block
+no autodetect = 1

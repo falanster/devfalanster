@@ -10,11 +10,7 @@
  * Get variable store
  */
 function &variable_store($realm, $key) {
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['store'] = &drupal_static('variable_store');
-  }
-  $variable_store = &$drupal_static_fast['store'];
+  $variable_store = &drupal_static('variable_store');
 
   if (!isset($variable_store[$realm][$key])) {
     $variable_store[$realm][$key] = _variable_store_load($realm, $key);
@@ -32,7 +28,7 @@ function variable_store_boot() {
 /**
  * Delete variable from db
  */
-function variable_store_del($realm, $key, $name, $rebuild = TRUE) {
+function variable_store_del($realm, $key, $name) {
   $store = &variable_store($realm, $key);
   db_delete('variable_store')
     ->condition('realm', $realm)
@@ -47,12 +43,8 @@ function variable_store_del($realm, $key, $name, $rebuild = TRUE) {
  * Get single variable from store
  */
 function variable_store_get($realm, $key, $name, $default = NULL) {
-  if ($variables = variable_store($realm, $key)) {
-    return isset($variables[$name]) ? $variables[$name] : $default;
-  }
-  else {
-    return $default;
-  }
+  $variables = variable_store($realm, $key);
+  return $variables && isset($variables[$name]) ? $variables[$name] : $default;
 }
 
 /**
@@ -91,7 +83,7 @@ function variable_store_delete_all($realm, $key, $name = NULL) {
  * @return array
  *   List of variable names.
  */
-function variable_store_list_all($realm, $key) {
+function variable_store_list_all($realm, $key = NULL) {
   $query = db_select('variable_store', 'vs')
     ->fields('vs', array('name'))
     ->distinct();
@@ -131,7 +123,12 @@ function _variable_store_load($realm, $key) {
  * Reset caches and static variables.
  */
 function _variable_store_reset() {
-  drupal_static_reset('variable_store');
+  $store =  &drupal_static('variable_store', array());
+  foreach ($store as $realm => &$realm_store) {
+    foreach (array_keys($realm_store) as $key) {
+      $realm_store[$key] = NULL;
+    }
+  }
   cache_clear_all('variable:', 'cache_bootstrap', TRUE);
 }
 
@@ -149,12 +146,3 @@ function variable_store_set($realm, $key, $name, $value, $rebuild = TRUE) {
   $store[$name] = $value;
 }
 
-/**
- * Implements hook_variable_delete().
- */
-function variable_store_variable_delete($variable) {
-  db_delete('variable_store')
-    ->condition('name', variable_children($variable['name']))
-    ->execute();
-  _variable_store_reset();
-}
