@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * block_clubs_and_project_shift.features.fe_block_boxes.inc
+ * block_projects_and_clubs_shift.features.fe_block_boxes.inc
  */
 
 /**
  * Implements hook_default_fe_block_boxes().
  */
-function block_clubs_and_project_shift_default_fe_block_boxes() {
+function block_projects_and_clubs_shift_default_fe_block_boxes() {
   $export = array();
 
   $fe_block_boxes = new stdClass();

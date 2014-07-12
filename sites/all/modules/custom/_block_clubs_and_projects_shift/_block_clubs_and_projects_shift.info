@@ -1,0 +1,11 @@
+name =  Block - clubs_and_projects_shift
+description = Block on page Projects+Clubs that shifts between clubs and projects
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = _block_clubs_and_projects_shift
+features[fe_block_boxes][] = clubs_and_projects_shift
+features[fe_block_settings][] = block-clubs_and_projects_shift
+features[features_api][] = api:2
+features_exclude[dependencies][fe_block] = fe_block
+no autodetect = 1

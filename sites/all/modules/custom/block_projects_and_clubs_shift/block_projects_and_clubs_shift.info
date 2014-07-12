@@ -1,9 +1,9 @@
-name = Block - Clubs and Project - Shift
-description = блоки-меню для нвигации по странице
+name = Block - projects_and_clubs_shift
+description = Block on page Projects+Clubs that shifts between projects and clubs
 core = 7.x
 package = Custom
 version = 7.x-1.0
-project = block_clubs_and_project_shift
+project = block_projects_and_clubs_shift
 features[fe_block_boxes][] = block_project_club_shift
 features[fe_block_settings][] = block-block_project_club_shift
 features[features_api][] = api:2
