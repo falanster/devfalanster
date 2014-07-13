@@ -1,0 +1,16 @@
+name = Context - Base
+description = фича к контексту для всех страниц
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = context_base
+features[context][] = base
+features[ctools][] = context:context:3
+features[features_api][] = api:2
+features_exclude[dependencies][block] = block
+features_exclude[dependencies][context] = context
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][locale] = locale
+features_exclude[dependencies][menu] = menu
+features_exclude[dependencies][views] = views
+no autodetect = 1
