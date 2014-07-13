@@ -1,0 +1,12 @@
+name = Module - Beauty tips
+description = beauty tips settings
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = module_beauty_tips
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = beautytips_defaults
+features_exclude[dependencies][ctools] = ctools
+features_exclude[dependencies][strongarm] = strongarm
+no autodetect = 1
