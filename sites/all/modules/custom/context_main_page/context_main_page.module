@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Context - Main page feature.
+ */
+
+include_once 'context_main_page.features.inc';
