@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Module - Beauty tips feature.
+ */
+
+include_once 'module_beauty_tips.features.inc';
