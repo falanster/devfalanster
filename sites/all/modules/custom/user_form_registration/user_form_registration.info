@@ -1,0 +1,16 @@
+name = User - Form Registration
+description = для старонкі рэгістрацыі
+core = 7.x
+package = Custom
+version = 7.x-1.0
+project = user_form_registration
+dependencies[] = text
+features[features_api][] = api:2
+features[field_base][] = field_subscribe
+features[field_base][] = field_what_are_you_interested_to
+features[field_instance][] = user-user-field_subscribe
+features[field_instance][] = user-user-field_what_are_you_interested_to
+features_exclude[dependencies][features] = features
+features_exclude[dependencies][list] = list
+features_exclude[dependencies][options] = options
+no autodetect = 1
