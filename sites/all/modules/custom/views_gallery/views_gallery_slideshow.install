@@ -1,0 +1,8 @@
+<?php
+
+function views_gallery_slideshow_install() {
+  // Ensure a default gallery was created and the variable is set.
+  module_load_include('install', 'views_gallery');
+  _views_gallery_create_gallery();
+
+}

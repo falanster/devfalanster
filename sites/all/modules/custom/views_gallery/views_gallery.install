@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Install file for image gallery feature.
+ * 
+ * Adds Image and Gallery content types.
+ */
+function _views_gallery_create_gallery() {
+  $gid = variable_get('views_gallery_nid', NULL);
+
+  // If the variable is already set, nothing to do.
+  if (!empty($gid)) {
+    return;
+  }
+
+  // See if there is already an existing gallery. Find the first one created and set the variable.
+  else {
+    $gid = db_query("SELECT MIN(nid) FROM {node} WHERE type='gallery'")->fetchField();
+    if (!empty($gid)) {
+      variable_set('views_gallery_nid', $gid);
+      return;
+    }
+  }
+
+  // If there is no gallery yet, create one, and then set the variable.
+  // Make sure all the types and fields are totally created and available before creating nodes,
+  // needed if this is done at the same time the content type is first created.
+
+  drupal_flush_all_caches();
+  node_types_rebuild();
+
+  $node = array(
+    'type' => 'gallery',
+    'title' => t('Gallery'),
+    'name' => t('Gallery'),
+    'status' => 1,
+    'comment' => 0,
+    'promote' => 1,
+    'revision' => 1,
+    'format' => 1,
+    'body' => '',
+    'comment' => COMMENT_NODE_DISABLED,
+  );
+  $node = node_submit($node);
+  node_save($node);
+  variable_set('views_gallery_nid', $node->nid);
+}
+
+/**
+ * Create a custom pager for navigating inside a gallery.
+ */
+function _views_gallery_create_pager() {
+  $pid = variable_set('views_gallery_pager', NULL);
+  if (module_exists('custom_pagers') && empty($pid)) {
+    $pager = new stdClass();
+    $pager->title = 'Views gallery pager';
+    $pager->position = 'both';
+    $pager->view = 'gallery';
+    $pager->args = '[field_gallery-nid]';
+    $pager->node_type = 'gallery_image';
+    _custom_pagers_save_pager($pager);
+    variable_set('views_gallery_pager', $pager->pid);
+  }
+}
+
+function _views_gallery_delete_pager() {
+  if (module_exists('custom_pagers')) {
+    // Remove the pager.
+    _custom_pagers_delete_pager(variable_get('views_gallery_pager', NULL));
+  }
+  variable_del('views_gallery_pager');
+}
+
+/**
+ * Implementation of hook_enable();
+ */
+function views_gallery_enable() {
+  // Create a top-level gallery to start with.
+  _views_gallery_create_gallery();
+  // Create the custom pager
+  _views_gallery_create_pager();
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function views_gallery_uninstall() {
+  _views_gallery_delete_pager();
+}
+
+function views_gallery_update_6000() {
+  $ret = array();
+  if (module_exists('custom_pager')) {
+    _views_gallery_create_pager();
+  }
+  // For updates only, set these values to what
+  // we were using before so we don't break
+  // existing installations. The defaults for
+  // new installations will not use 'image'.
+  variable_set('views_gallery_image_type', 'image');
+  variable_set('views_gallery_gallery_type', 'gallery');
+  return $ret;
+}

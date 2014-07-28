@@ -1,0 +1,23 @@
+core = "6.x"
+dependencies[] = "features"
+dependencies[] = "og"
+dependencies[] = "og_views"
+dependencies[] = "strongarm"
+dependencies[] = "views_gallery"
+description = "Add Views Gallery galleries to Organic Groups."
+features[ctools][] = "strongarm:strongarm:1"
+features[variable][] = "og_content_type_usage_gallery"
+features[variable][] = "og_content_type_usage_gallery_image"
+features[variable][] = "og_max_groups_gallery"
+features[variable][] = "og_max_groups_gallery_image"
+name = "Views Gallery for Organic Groups"
+package = "Features"
+project = "views_gallery_og"
+
+
+; Information added by drupal.org packaging script on 2013-10-19
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "views_gallery"
+datestamp = "1382164825"
+
