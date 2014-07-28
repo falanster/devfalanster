@@ -190,13 +190,13 @@ function views_organization_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Nid */
-  $handler->display->display_options['fields']['nid']['id'] = 'nid';
-  $handler->display->display_options['fields']['nid']['table'] = 'node';
-  $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['label'] = '';
-  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Мэтавая старонка */
+  $handler->display->display_options['fields']['field_target_page']['id'] = 'field_target_page';
+  $handler->display->display_options['fields']['field_target_page']['table'] = 'field_data_field_target_page';
+  $handler->display->display_options['fields']['field_target_page']['field'] = 'field_target_page';
+  $handler->display->display_options['fields']['field_target_page']['label'] = '';
+  $handler->display->display_options['fields']['field_target_page']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_target_page']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -229,6 +229,8 @@ function views_organization_views_default_views() {
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['label'] = '';
+  $handler->display->display_options['fields']['field_image']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['field_image']['alter']['path'] = '[field_target_page]';
   $handler->display->display_options['fields']['field_image']['element_class'] = 'grid-image';
   $handler->display->display_options['fields']['field_image']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_image']['hide_empty'] = TRUE;
@@ -246,7 +248,7 @@ function views_organization_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['text'] = '<div class="grid-title white-title">[title]</div>
 <div class="grid-teaser white-text">[body]</div>';
   $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['nothing']['alter']['path'] = 'node/[nid]';
+  $handler->display->display_options['fields']['nothing']['alter']['path'] = '[field_target_page]';
   $handler->display->display_options['fields']['nothing']['element_class'] = 'grid-pad';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
