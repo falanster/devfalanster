@@ -20,6 +20,18 @@ a:hover {
     text-decoration: underline;
 }
 
+ol {
+    display: block;
+    list-style-type: decimal;
+    margin: 1em 0;
+    padding-left: 40px;
+}
+
+blockquote {
+    display: block;
+    margin: 1em 40px;
+}
+
 /* Font settings */
 
 h1, h2, h3, h4, h5, h6 {
