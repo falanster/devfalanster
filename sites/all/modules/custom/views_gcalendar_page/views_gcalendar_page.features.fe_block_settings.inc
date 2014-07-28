@@ -17,12 +17,18 @@ function views_gcalendar_page_default_fe_block_settings() {
     'custom' => 0,
     'delta' => 'gcalendar-block',
     'i18n_block_language' => array(),
-    'i18n_mode' => 1,
+    'i18n_mode' => 0,
     'module' => 'views',
     'node_types' => array(),
     'pages' => '',
     'roles' => array(),
     'themes' => array(
+      'alpha' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'alpha',
+        'weight' => 0,
+      ),
       'falanster' => array(
         'region' => '',
         'status' => 0,
@@ -41,20 +47,8 @@ function views_gcalendar_page_default_fe_block_settings() {
         'theme' => 'seven',
         'weight' => 0,
       ),
-      'stark' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'stark',
-        'weight' => 0,
-      ),
-      'test_theme' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'test_theme',
-        'weight' => 0,
-      ),
     ),
-    'title' => 'All Our Events',
+    'title' => '',
     'visibility' => 0,
   );
 
