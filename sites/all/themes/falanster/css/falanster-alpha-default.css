@@ -47,7 +47,7 @@
 /* Site Logo */
 
 #block-block-11 {
-  margin: 60px 0 -2px 0;
+  margin: 60px 0 0px 0;
 }
 
 /* Slogan */
@@ -79,8 +79,8 @@
 /* User logged in block*/
 
 #block-block-7 {
-    margin-top: 55px;
-    margin-bottom: 5px;
+    margin-top: 50px;
+    margin-bottom: 0px;
     float: right;
 }
 
