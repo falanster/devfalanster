@@ -91,12 +91,12 @@ foo
       'page cache' => 1,
     ),
     'locale:language' => array(
-      'description' => 'Locale: Language - The code of the current site language, formatted like "en" or "de" or "neutral". See <a href="/en/admin/config/language">admin/config/language</a> for the codes of your enabled languages',
+      'description' => 'Locale: Language - The code of the current site language, formatted like "en" or "de" or "neutral". See <a href="/ru/admin/config/language">admin/config/language</a> for the codes of your enabled languages',
       'validator' => 'themekey_validator_language',
       'page cache' => 1,
     ),
     'locale:language_content' => array(
-      'description' => 'Locale: Language Content - The code of the current content language, formatted like "en" or "de" or "neutral". See <a href="/en/admin/config/language">admin/config/language</a> for the codes of your enabled languages',
+      'description' => 'Locale: Language Content - The code of the current content language, formatted like "en" or "de" or "neutral". See <a href="/ru/admin/config/language">admin/config/language</a> for the codes of your enabled languages',
       'validator' => 'themekey_validator_language',
       'page cache' => 1,
     ),
@@ -118,32 +118,32 @@ foo
       'page cache' => 1,
     ),
     'node:changed' => array(
-      'description' => 'Node: Changed date - The date when the node was last edited/updated, formatted as unix timestamp like "1248873565".',
+      'description' => 'Материал: Дата изменения - Дата, когда материал был изменен/обновлен в формате UNIX. Например, "1248873565".',
       'validator' => 'themekey_validator_ctype_digit',
       'page cache' => 1,
     ),
     'node:changed_date' => array(
-      'description' => 'Node: Changed date - The date without the time when the node was last edited/updated, formatted like "2009-12-24"',
+      'description' => 'Материал: Дата изменения - Дата, не включающая время, когда материал был изменен/обновлен в формате "2009-12-24".',
       'validator' => 'themekey_validator_date',
       'page cache' => 1,
     ),
     'node:changed_date_time' => array(
-      'description' => 'Node: Changed date - The date including the time when the node was last edited/updated, formatted like "2009-12-24 18:13:24"',
+      'description' => 'Материал: Дата изменения - Дата, включающая время, когда материал был изменен/обновлен в формате "2009-12-24 18:13:24".',
       'validator' => 'themekey_validator_date_time',
       'page cache' => 1,
     ),
     'node:created' => array(
-      'description' => 'Node: Created date - The date when the node was created, formatted as unix timestamp like "1248873565".',
+      'description' => 'Материал: Дата создания - Дата, когда материал был создан в формате UNIX. Например, "1248873565".',
       'validator' => 'themekey_validator_ctype_digit',
       'page cache' => 1,
     ),
     'node:created_date' => array(
-      'description' => 'Node: Created date - The date without the time when the node was created, formatted like "2009-12-24"',
+      'description' => 'Материал: Дата создания - Дата, не включающая время, когда материал был создан в формате "2009-12-24".',
       'validator' => 'themekey_validator_date',
       'page cache' => 1,
     ),
     'node:created_date_time' => array(
-      'description' => 'Node: Created date - The date including the time when the node was created, formatted like "2009-12-24 18:13:24"',
+      'description' => 'Материал: Дата создания - Дата, включающая время, когда материал был создан в формате "2009-12-24 18:13:24".',
       'validator' => 'themekey_validator_date_time',
       'page cache' => 1,
     ),
@@ -340,36 +340,36 @@ foo
       'page cache' => 1,
     ),
     'node:language' => array(
-      'description' => 'Node: Language - The code of the selected language of a node (formatted like "en" or "de") or "neutral". See <a href="/en/admin/config/language">admin/config/language</a> for the codes of your enabled languages',
+      'description' => 'Node: Language - The code of the selected language of a node (formatted like "en" or "de") or "neutral". See <a href="/ru/admin/config/language">admin/config/language</a> for the codes of your enabled languages',
       'validator' => 'themekey_validator_language',
       'page cache' => 1,
     ),
     'node:nid' => array(
-      'description' => 'Node: ID - The id of a node (nid), can be found in the URL of the node, "node/23" or "node/23/edit" (23 = nid)',
+      'description' => 'Материал: ID - ID материала (nid); может быть обнаружен в URL материала: "node/23" или "node/23/edit" (23 = nid)',
       'validator' => 'themekey_validator_ctype_digit',
       'page cache' => 1,
     ),
     'node:promote' => array(
-      'description' => 'Node: Promoted - If the node is promoted to the front page. Possible values are "0" for true and "1" for false.',
+      'description' => 'Материал: Помещен ли на главную - Возможны значения "0" для true и "1" для false.',
       'validator' => 'themekey_validator_numeric_boolean',
       'page cache' => 1,
     ),
     'node:sticky' => array(
-      'description' => 'Node: Sticky - If the node is set "Sticky at top of lists". Possible values are "0" for true and "1" for false.',
+      'description' => 'Материал: Прикреплен - Установлен ли флаг "Закреплять вверху списков" для материала. Возможны значения "0" для true и "1" для false.',
       'validator' => 'themekey_validator_numeric_boolean',
       'page cache' => 1,
     ),
     'node:title' => array(
-      'description' => 'Node: Title - The title of the node.',
+      'description' => 'Материал: Заголовок - Заголовок материала.',
       'page cache' => 1,
     ),
     'node:type' => array(
-      'description' => 'Node: Type - The machine-readable content type of the node. See <a href="/en/admin/structure/types">admin/structure/types</a> for your content types (use column "Type"). Drupal default types are "page" and "story".',
+      'description' => 'Node: Type - The machine-readable content type of the node. See <a href="/ru/admin/structure/types">admin/structure/types</a> for your content types (use column "Type"). Drupal default types are "page" and "story".',
       'validator' => 'themekey_validator_node_type',
       'page cache' => 1,
     ),
     'node:uid' => array(
-      'description' => 'Node: User ID - The node author\'s user id (uid). The user id can be found in the URL of the user\'s profile page, "user/23" or "user/23/edit" (23 = uid). See <a href="/en/admin/user/user/list">admin/user/user/list</a> for your users.',
+      'description' => 'Node: User ID - The node author\'s user id (uid). The user id can be found in the URL of the user\'s profile page, "user/23" or "user/23/edit" (23 = uid). See <a href="/ru/admin/user/user/list">admin/user/user/list</a> for your users.',
       'validator' => 'themekey_validator_ctype_digit',
       'page cache' => 1,
     ),
@@ -398,7 +398,7 @@ foo
       'page cache' => 2,
     ),
     'system:day_of_month' => array(
-      'description' => 'System: Day of Month - Current day of the month formatted as 1 - 31',
+      'description' => 'Система: Число - Текущее число месяца (от 1 до 31)',
       'validator' => 'themekey_validator_day_of_month',
       'page cache' => 2,
     ),
@@ -417,7 +417,7 @@ foo
       'page cache' => 1,
     ),
     'system:http_header' => array(
-      'description' => 'System: HTTP Header - Every single HTTP header and its value if present will be formatted like \'HEADER_NAME=HEADER_VALUE\'',
+      'description' => 'Система: HTTP-заголовок - Каждый HTTP-заголовок и его значение (если присутствует) будет отформатировано в виде \'HEADER_NAME=HEADER_VALUE\'',
       'page cache' => 0,
     ),
     'system:https' => array(
@@ -426,7 +426,7 @@ foo
       'page cache' => 1,
     ),
     'system:month' => array(
-      'description' => 'System: Month - Current month formatted as \'Jan\' through \'Dec\'',
+      'description' => 'Система: Месяц - Текущий месяц в формате от \'Янв\' до \'Дек\'',
       'validator' => 'themekey_validator_month',
       'page cache' => 2,
     ),
@@ -484,25 +484,25 @@ foo
       'page cache' => 0,
     ),
     'system:user_browser' => array(
-      'description' => 'System: Browser - Information about user\'s browser. Possible values: \'Blazer [VERSION]\', \'Internet Explorer [VERSION]\', \'Internet Explorer Mobile [VERSION]\', \'Mozilla Firefox [VERSION]\', \'Netscape [VERSION]\', \'Google Chrome [VERSION]\', \'Safari [VERSION]\', \'Galeon [VERSION]\', \'Konqueror [VERSION]\', \'Gecko based\', \'Opera [VERSION]\', \'Lynx [VERSION]\', \'Fennec [VERSION]\', \'Maemo [VERSION]\', \'unknown\'',
+      'description' => 'Система: Браузер - Информация о браузере пользователя. Возможные значения: \'Blazer [VERSION]\', \'Internet Explorer [VERSION]\', \'Internet Explorer Mobile [VERSION]\', \'Mozilla Firefox [VERSION]\', \'Netscape [VERSION]\', \'Google Chrome [VERSION]\', \'Safari [VERSION]\', \'Galeon [VERSION]\', \'Konqueror [VERSION]\', \'Gecko based\', \'Opera [VERSION]\', \'Lynx [VERSION]\', \'Fennec [VERSION]\', \'Maemo [VERSION]\', \'неизвестно\'',
       'page cache' => 0,
       'deprecated' => TRUE,
       'deprecated message' => 'Property system:user_browser is deprecated. Consider to use one of the new properties ThemeKey provides in combination with <a href="https://drupal.org/project/browscap">Browscap</a>, <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect API</a>, or <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect</a>.',
     ),
     'system:user_browser_simplified' => array(
-      'description' => 'System: Browser - Simplified information about user\'s browser. Possible values: \'Blazer\', \'Internet Explorer\', \'Internet Explorer Mobile\', \'Mozilla Firefox\', \'Netscape\', \'Google Chrome\', \'Safari\', \'Galeon\', \'Konqueror\', \'Gecko based\', \'Opera\', \'Lynx\', \'Fennec\', \'Maemo\', \'unknown\'',
+      'description' => 'Система: Браузер - Краткая информация о браузере пользователя. Возможные значения: \'Blazer\', \'Internet Explorer\', \'Internet Explorer Mobile\', \'Mozilla Firefox\', \'Netscape\', \'Google Chrome\', \'Safari\', \'Galeon\', \'Konqueror\', \'Gecko based\', \'Opera\', \'Lynx\', \'Fennec\', \'Maemo\', \'unknown\'',
       'page cache' => 0,
       'deprecated' => TRUE,
       'deprecated message' => 'Property system:user_browser_simplified is deprecated. Consider to use one of the new properties ThemeKey provides in combination with <a href="https://drupal.org/project/browscap">Browscap</a>, <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect API</a>, or <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect</a>.',
     ),
     'system:user_os' => array(
-      'description' => 'System: Operating System - Information about user\'s browser. Possible values: \'Windows XP\', \'Windows Vista\', \'Windows 98\', \'Windows 2000\', \'Windows 2003 server\', \'Windows NT\',  \'Windows ME\', \'Windows CE\', \'Windows ME\', \'Windows Phone\', \'iPhone\', \'iPad\', \'Mac OS X\', \'Macintosh\', \'Linux\', \'Free BSD\', \'Symbian\', \'webOS\', \'Android\', \'Blackberry\', \'unknown\'',
+      'description' => 'Система: Операционная система - Информация о браузере пользователя. Возможные значения: \'Windows XP\', \'Windows Vista\', \'Windows 98\', \'Windows 2000\', \'Windows 2003 server\', \'Windows NT\',  \'Windows ME\', \'Windows CE\', \'Windows ME\', \'Windows Phone\', \'iPhone\', \'iPad\', \'Mac OS X\', \'Macintosh\', \'Linux\', \'Free BSD\', \'Symbian\', \'webOS\', \'Android\', \'Blackberry\', \'неизвестно\'',
       'page cache' => 0,
       'deprecated' => TRUE,
       'deprecated message' => 'Property system:user_os is deprecated. Consider to use one of the new properties ThemeKey provides in combination with <a href="https://drupal.org/project/browscap">Browscap</a>, <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect API</a>, or <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect</a>.',
     ),
     'system:user_os_simplified' => array(
-      'description' => 'System: Operating System - Simplified information about user\'s browser. Possible values: \'Windows\', \'Windows Phone\', \'iPhone\', \'iPad\', \'Mac OS X\', \'Macintosh\', \'Linux\', \'Free BSD\', \'Symbian\', \'webOS\', \'Android\', \'Blackberry\', \'unknown\'',
+      'description' => 'Система: ОС - Краткая информация о браузере пользователя. Возможные значения: \'Windows\', \'Windows Phone\', \'iPhone\', \'iPad\', \'Mac OS X\', \'Macintosh\', \'Linux\', \'Free BSD\', \'Symbian\', \'webOS\', \'Android\', \'Blackberry\', \'unknown\'',
       'page cache' => 0,
       'deprecated' => TRUE,
       'deprecated message' => 'Property system:user_os_simplified is deprecated. Consider to use one of the new properties ThemeKey provides in combination with <a href="https://drupal.org/project/browscap">Browscap</a>, <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect API</a>, or <a href="https://drupal.org/project/mobile_detect_api">Mobile Detect</a>.',
@@ -523,17 +523,17 @@ foo
       'page cache' => 0,
     ),
     'taxonomy:vid' => array(
-      'description' => 'Taxonomy: Vocabulary - The vocabulary id (vid) of a taxonomy vocabulary. See <a href="/en/admin/structure/taxonomy">admin/structure/taxonomy</a> for your vocabularies.',
+      'description' => 'Taxonomy: Vocabulary - The vocabulary id (vid) of a taxonomy vocabulary. See <a href="/ru/admin/structure/taxonomy">admin/structure/taxonomy</a> for your vocabularies.',
       'validator' => 'themekey_validator_ctype_digit',
       'page cache' => 1,
     ),
     'themekey_ui:author_triggers_theme' => array(
-      'description' => 'The property, themekey_ui:author_triggers_theme, could not be selected from the property drop down. You get this static property by activating <a href="/en/admin/config/user-interface/themekey/settings/ui">Let the user select a theme that will be used to display all content she creates.</a>. Afterwards, you can move the property to any position in the rule chain. When done, it triggers the switch to the theme the author selected in her user profile for own content, a contact form or blog pages.',
+      'description' => 'The property, themekey_ui:author_triggers_theme, could not be selected from the property drop down. You get this static property by activating <a href="/ru/admin/config/user-interface/themekey/settings/ui">Let the user select a theme that will be used to display all content she creates.</a>. Afterwards, you can move the property to any position in the rule chain. When done, it triggers the switch to the theme the author selected in her user profile for own content, a contact form or blog pages.',
       'page cache' => 1,
       'static' => TRUE,
     ),
     'themekey_ui:node_triggers_theme' => array(
-      'description' => 'The property, themekey_ui:node_triggers_theme, could not be selected from the property drop-down. You get this static property by activating <a href="/en/admin/config/user-interface/themekey/settings/ui">Show theme option in create/edit node forms</a>. Afterwards, you can move the property to any position in the rule chain. When done, it triggers the switch to the theme assigned to the current node using ThemeKey UI.',
+      'description' => 'The property, themekey_ui:node_triggers_theme, could not be selected from the property drop-down. You get this static property by activating <a href="/ru/admin/config/user-interface/themekey/settings/ui">Отображать опцию выбора темы оформления при создании/редактировании материала.</a>. Afterwards, you can move the property to any position in the rule chain. When done, it triggers the switch to the theme assigned to the current node using ThemeKey UI.',
       'page cache' => 1,
       'static' => TRUE,
     ),
@@ -545,16 +545,16 @@ foo
     ),
     'user:language' => array(
       'description' => 'User: Language - The language the user has set in the settings of his profile page.
-      Format is the language code (for example "en" for English or "de" for German) that can be found on <a href="/en/admin/config/regional/language/overview">admin/config/regional/language/overview</a>.',
+      Format is the language code (for example "en" for English or "de" for German) that can be found on <a href="/ru/admin/config/regional/language/overview">admin/config/regional/language/overview</a>.',
       'validator' => 'themekey_validator_language',
       'page cache' => 1,
     ),
     'user:name' => array(
-      'description' => 'User: Name - The username of the user. See <a href="/en/admin/people/people">admin/people/people</a> for your users.',
+      'description' => 'User: Name - The username of the user. See <a href="/ru/admin/people/people">admin/people/people</a> for your users.',
       'page cache' => 1,
     ),
     'user:profile_triggers_theme' => array(
-      'description' => 'Property user:profile_triggers_theme could not be selected from the property drop down. You get this static property by activating <a href="/en/admin/config/user-interface/themekey/settings/ui">Add theme option to user profile</a>. Afterwards you can move the property to any position in the rule chain. When done it triggers the switch to the theme assigned to a user profile using ThemeKey User Profile if the current user has selected a theme in her profile.',
+      'description' => 'Property user:profile_triggers_theme could not be selected from the property drop down. You get this static property by activating <a href="/ru/admin/config/user-interface/themekey/settings/ui">Добавить опцию темы оформления в пользовательский профиль</a>. Afterwards you can move the property to any position in the rule chain. When done it triggers the switch to the theme assigned to a user profile using ThemeKey User Profile if the current user has selected a theme in her profile.',
       'page cache' => 1,
       'static' => TRUE,
     ),
@@ -564,7 +564,7 @@ foo
       'page cache' => 1,
     ),
     'user:uid' => array(
-      'description' => 'User: ID - The id of the user (uid). The user id can be found in the URL of the users profile page, "user/23" or "user/23/edit" (23 = uid). See <a href="/en/admin/people/people">admin/people/people</a> for your users.',
+      'description' => 'User: ID - The id of the user (uid). The user id can be found in the URL of the users profile page, "user/23" or "user/23/edit" (23 = uid). See <a href="/ru/admin/people/people">admin/people/people</a> for your users.',
       'validator' => 'themekey_validator_ctype_digit',
       'page cache' => 1,
     ),

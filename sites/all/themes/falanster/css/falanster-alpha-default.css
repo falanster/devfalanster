@@ -199,19 +199,19 @@
 
 /* Block "Falanster Needed" */
 
-#block-block-15 {
+#block-block-23 {
   float: left;
   width: 300px;
   background: #F3F4F5;
   margin-left: 20px;
 }
 
-#block-block-15 .content{
+#block-block-23 .content{
   margin-left: 20px;
   margin-top: 20px;
 }
 
-#block-block-15 .content img {
+#block-block-23 .content img {
   margin-right: 5px;
   margin-bottom: 4px;
 }

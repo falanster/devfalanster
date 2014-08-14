@@ -10,6 +10,14 @@
 function menus_project_and_clubs_menu_default_menu_custom() {
   $menus = array();
 
+  // Exported menu: management.
+  $menus['management'] = array(
+    'menu_name' => 'management',
+    'title' => 'Management',
+    'description' => 'The <em>Management</em> menu contains links for administrative tasks.',
+    'language' => 'und',
+    'i18n_mode' => 0,
+  );
   // Exported menu: menu-first-menu.
   $menus['menu-first-menu'] = array(
     'menu_name' => 'menu-first-menu',
@@ -29,7 +37,9 @@ function menus_project_and_clubs_menu_default_menu_custom() {
   // Translatables
   // Included for use with string extractors like potx.
   t('First main menu');
+  t('Management');
   t('Mobile Menu');
+  t('The <em>Management</em> menu contains links for administrative tasks.');
   t('меню для мобильной версии');
 
 

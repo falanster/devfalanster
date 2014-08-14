@@ -1,0 +1,8 @@
+div.view-gallery table.views-view-grid td {
+  vertical-align: top;
+}
+/* Force the table grid to equal column
+ widths no matter what is in them.*/
+div.view-gallery table.views-view-grid {
+  table-layout:fixed;
+}

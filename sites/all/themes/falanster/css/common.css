@@ -142,6 +142,10 @@ a.black-link,
     opacity: 0.8;
 }
 
+.grid-date a:hover {
+    text-decoration: none;
+}
+
 .grid a {
     color: #fa4343;
 }

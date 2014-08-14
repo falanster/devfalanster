@@ -1,0 +1,15 @@
+core = "6.x"
+dependencies[] = "views_gallery"
+dependencies[] = "views_slideshow"
+description = "Integrate Views Slideshow into Views Gallery."
+name = "Views Gallery Slideshow"
+package = "Features"
+project = "views_gallery_slideshow"
+
+
+; Information added by drupal.org packaging script on 2013-10-19
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "views_gallery"
+datestamp = "1382164825"
+

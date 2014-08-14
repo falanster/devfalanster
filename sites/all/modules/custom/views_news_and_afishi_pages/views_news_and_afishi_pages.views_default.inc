@@ -22,7 +22,7 @@ function views_news_and_afishi_pages_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Навiны';
+  $handler->display->display_options['title'] = 'Новости';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['use_more_text'] = 'болей';
   $handler->display->display_options['access']['type'] = 'perm';
@@ -48,21 +48,21 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['pager']['options']['tags']['last'] = '»';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Content: Nid */
+  /* Поле: Содержимое: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
+  /* Поле: Содержимое: Заголовок */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Image */
+  /* Поле: Содержимое: Image */
   $handler->display->display_options['fields']['field_image_news']['id'] = 'field_image_news';
   $handler->display->display_options['fields']['field_image_news']['table'] = 'field_data_field_image_news';
   $handler->display->display_options['fields']['field_image_news']['field'] = 'field_image_news';
@@ -75,7 +75,7 @@ function views_news_and_afishi_pages_views_default_views() {
   );
   $handler->display->display_options['fields']['field_image_news']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_image_news']['delta_offset'] = '0';
-  /* Field: Content: Body */
+  /* Поле: Содержимое: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -88,7 +88,7 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['preserve_tags'] = '<p> <br> <a> <i>';
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
-  /* Field: Content: Date */
+  /* Поле: Содержимое: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
   $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
@@ -101,26 +101,26 @@ function views_news_and_afishi_pages_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Sort criterion: Content: Post date */
+  /* Критерий сортировки: Содержимое: Дата публикации */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
   $handler->display->display_options['sorts']['created']['field'] = 'created';
   $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
+  /* Критерий фильтра: Содержимое: Опубликовано */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
+  /* Критерий фильтра: Содержимое: Тип */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'afishi' => 'afishi',
   );
-  /* Filter criterion: Content: Language */
+  /* Критерий фильтра: Содержимое: Язык */
   $handler->display->display_options['filters']['language']['id'] = 'language';
   $handler->display->display_options['filters']['language']['table'] = 'node';
   $handler->display->display_options['filters']['language']['field'] = 'language';
@@ -132,7 +132,7 @@ function views_news_and_afishi_pages_views_default_views() {
   /* Display: All news */
   $handler = $view->new_display('page', 'All news', 'page');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Навiны';
+  $handler->display->display_options['title'] = 'Новости';
   $handler->display->display_options['defaults']['css_class'] = FALSE;
   $handler->display->display_options['css_class'] = 'grid-page afishi-page';
   $handler->display->display_options['defaults']['pager'] = FALSE;
@@ -156,14 +156,14 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Nid */
+  /* Поле: Содержимое: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
+  /* Поле: Содержимое: Заголовок */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -175,7 +175,7 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['fields']['title']['element_class'] = 'white-title grid-title';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Body */
+  /* Поле: Содержимое: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -188,7 +188,7 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['alter']['preserve_tags'] = '<p> <br> <a> <i>';
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
-  /* Field: Content: Image */
+  /* Поле: Содержимое: Image */
   $handler->display->display_options['fields']['field_image_news']['id'] = 'field_image_news';
   $handler->display->display_options['fields']['field_image_news']['table'] = 'field_data_field_image_news';
   $handler->display->display_options['fields']['field_image_news']['field'] = 'field_image_news';
@@ -202,7 +202,7 @@ function views_news_and_afishi_pages_views_default_views() {
   );
   $handler->display->display_options['fields']['field_image_news']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_image_news']['delta_offset'] = '0';
-  /* Field: Global: Custom text */
+  /* Поле: Глобальный: Пользовательский текст */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
@@ -215,21 +215,21 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Content: Published */
+  /* Критерий фильтра: Содержимое: Опубликовано */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
   $handler->display->display_options['filters']['status']['field'] = 'status';
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
+  /* Критерий фильтра: Содержимое: Тип */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
     'news' => 'news',
   );
-  /* Filter criterion: Content: Language */
+  /* Критерий фильтра: Содержимое: Язык */
   $handler->display->display_options['filters']['language']['id'] = 'language';
   $handler->display->display_options['filters']['language']['table'] = 'node';
   $handler->display->display_options['filters']['language']['field'] = 'language';
@@ -266,14 +266,14 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Nid */
+  /* Поле: Содержимое: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Content: Title */
+  /* Поле: Содержимое: Заголовок */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -284,7 +284,7 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['fields']['title']['element_class'] = 'white-title grid-title';
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Body */
+  /* Поле: Содержимое: Body */
   $handler->display->display_options['fields']['body']['id'] = 'body';
   $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
   $handler->display->display_options['fields']['body']['field'] = 'body';
@@ -298,7 +298,7 @@ function views_news_and_afishi_pages_views_default_views() {
   $handler->display->display_options['fields']['body']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['body']['element_class'] = 'grid-teaser';
   $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
-  /* Field: Content: Image */
+  /* Поле: Содержимое: Image */
   $handler->display->display_options['fields']['field_image']['id'] = 'field_image';
   $handler->display->display_options['fields']['field_image']['table'] = 'field_data_field_image';
   $handler->display->display_options['fields']['field_image']['field'] = 'field_image';
@@ -311,7 +311,7 @@ function views_news_and_afishi_pages_views_default_views() {
     'image_link' => 'content',
   );
   $handler->display->display_options['fields']['field_image']['delta_offset'] = '0';
-  /* Field: Content: Event_date */
+  /* Поле: Содержимое: Event_date */
   $handler->display->display_options['fields']['field_event_date']['id'] = 'field_event_date';
   $handler->display->display_options['fields']['field_event_date']['table'] = 'field_data_field_event_date';
   $handler->display->display_options['fields']['field_event_date']['field'] = 'field_event_date';
@@ -327,7 +327,7 @@ function views_news_and_afishi_pages_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  /* Field: Global: Custom text */
+  /* Поле: Глобальный: Пользовательский текст */
   $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
   $handler->display->display_options['fields']['nothing']['table'] = 'views';
   $handler->display->display_options['fields']['nothing']['field'] = 'nothing';

@@ -82,6 +82,7 @@ function translations_features_export_render($module_name, $data, $export = NULL
  */
 function translations_features_revert($module_name) {
   include_once('includes/locale.inc');
+
   $translations = features_get_default('translations', $module_name);
   if (!empty($translations)) {
     $report = array('updates' => 0, 'skips' => 0, 'additions' => 0, 'deletes' => 0);
@@ -131,12 +132,14 @@ function _features_translations_locale_export_get_strings($language, $group, $fi
   $uclids = array();
   if (count($files)) {
     foreach ($files as $key => $value) {
-      $file_uri = $value[$language->language]->uri;
-      if (is_string($file_uri)) {
-        $file = new stdClass();
-        $file->uri = $file_uri;
-        $file->filename = $file_uri;
-        $uclids = array_merge($uclids, _features_translations_update_locale_import_po($file, $language->language, 'default'));
+      if (isset($value[$language->language]->uri)) {
+        $file_uri = $value[$language->language]->uri;
+        if (is_string($file_uri)) {
+          $file = new stdClass();
+          $file->uri = $file_uri;
+          $file->filename = $file_uri;
+          $uclids = array_merge($uclids, _features_translations_update_locale_import_po($file, $language->language, 'default'));
+        }
       }
     }
   }
@@ -144,7 +147,7 @@ function _features_translations_locale_export_get_strings($language, $group, $fi
   $query->join('locales_target', 't', 's.lid = t.lid');
   $query->fields('s', array('lid', 'source', 'context', 'location'));
   $query->fields('t', array('translation', 'plid', 'plural'));
-  $query->addExpression('MD5(s.source)', 'source_md5');
+  $query->addExpression('MD5(CONCAT(s.source, s.context))', 'source_md5');
   $query->condition('t.language', $language->language);
   $query->condition('s.textgroup', $group);
   //exclude unchanged lids
@@ -214,6 +217,8 @@ function _features_translations_update_locale_import_po($file, $langcode, $group
  *   Result array of found lids on success, FALSE on failure.
  */
 function _features_translations_update_locale_import_read_po($file, $lang = NULL, $group = 'default') {
+  include_once('includes/locale.inc');
+
   $fd = @fopen($file->uri, "rb"); // File will get closed by PHP on return
   if (!$fd) {
     return FALSE;

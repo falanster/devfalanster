@@ -27,7 +27,7 @@ function menus_top_bottom_second_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 0,
-    'parent_identifier' => 'management_menus:admin/structure/menu',
+    'parent_identifier' => 'management_:admin/structure/menu',
   );
   // Exported menu link: management_menu-hot-pages:admin/structure/menu/manage/menu-hot-pages
   $menu_links['management_menu-hot-pages:admin/structure/menu/manage/menu-hot-pages'] = array(
@@ -46,7 +46,7 @@ function menus_top_bottom_second_menu_default_menu_links() {
     'expanded' => 0,
     'weight' => 0,
     'customized' => 0,
-    'parent_identifier' => 'management_menus:admin/structure/menu',
+    'parent_identifier' => 'management_:admin/structure/menu',
   );
   // Exported menu link: menu-hor-bottom-menu_--:node/649
   $menu_links['menu-hor-bottom-menu_--:node/649'] = array(

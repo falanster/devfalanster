@@ -1,11 +1,34 @@
-name = Views gallery
-core = 7.x
-package = Custom
-version = 7.x-1.0
-project = views_gallery
-dependencies[] = views
-features[ctools][] = views:views_default:3.0
-features[features_api][] = api:2
-features[views_view][] = Gallery
-features_exclude[dependencies][ctools] = ctools
-no autodetect = 1
+core = "7.x"
+dependencies[] = "features"
+dependencies[] = "image"
+dependencies[] = "nodereference_url"
+dependencies[] = "views"
+dependencies[] = "eva"
+stylesheets[all][] = views_gallery.css
+description = "A gallery created using Fields and Views."
+features[ctools][] = "views:views_default:3.0"
+features[field][] = "comment-comment_node_gallery-comment_body"
+features[field][] = "comment-comment_node_gallery_image-comment_body"
+features[field][] = "node-gallery-body"
+features[field][] = "node-gallery_image-body"
+features[field][] = "node-gallery_image-field_gallery"
+features[field][] = "node-gallery_image-field_gallery_image"
+features[image][] = "reg"
+features[image][] = "short"
+features[image][] = "thumb"
+features[image][] = "tiny"
+features[node][] = "gallery"
+features[node][] = "gallery_image"
+features[views_view][] = "gallery"
+features[views_view][] = "gallery_list"
+name = "Views Gallery"
+package = "Features"
+php = "5.2.4"
+
+
+; Information added by drupal.org packaging script on 2013-10-19
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "views_gallery"
+datestamp = "1382164825"
+

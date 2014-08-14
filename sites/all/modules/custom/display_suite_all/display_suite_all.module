@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Display Suite - all feature.
+ */
+
+include_once 'display_suite_all.features.inc';

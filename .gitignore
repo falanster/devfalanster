@@ -1,8 +1,10 @@
 # Ignore configuration files that may contain sensitive information.
 sites/default/settings.php
+sites/*/settings*.php
 
 # Ignore paths that contain user-generated content.
 sites/default/files/styles
+sites/*/files
 sites/*/private
 
 phpmyadmin
@@ -22,4 +24,3 @@ sites/default/files/js*
 
 .ht.filecache
 db
-

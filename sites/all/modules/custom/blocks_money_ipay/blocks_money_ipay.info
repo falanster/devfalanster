@@ -1,5 +1,5 @@
-name = Blocks-money_ipay
-description = Money-ipay block. Support falanster block on other pages
+name = Blocks - Money - Ipay
+description = перанос блока дапамагчы нам
 core = 7.x
 package = Custom
 version = 7.x-1.0

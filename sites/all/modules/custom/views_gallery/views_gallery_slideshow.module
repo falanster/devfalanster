@@ -1,0 +1,175 @@
+<?php
+/**
+ * @file
+ * Integrates Views Slideshow into Views Gallery.
+ */
+
+/**
+* Implementation of hook_help().
+*/
+function views_gallery_slideshow_help($path) {
+  // Central help page content.
+  if ($path == 'admin/help#views_gallery_slideshow') {
+    $help = '<h3>'. t('Views Gallery Slideshow') .'</h3>';
+    $help .= '<p>'. t("Views Gallery Slideshow creates a Views Slideshow block for Views Gallery.") .'</p>';
+    $help .= '<p>'. t("The slideshow block contains an argument to indicate which gallery images should be displayed in the slideshow. You can set it up to provide default argument with a 'fixed value' and enter your preferred gallery id as the 'default argument'.") .'</p>';
+    return $help;
+  }
+}
+ 
+/**
+ * Implementation of hook_init().
+ */
+function views_gallery_slideshow_init() {
+  drupal_add_css(drupal_get_path('module', 'views_slideshow_singleframe') .'/views_slideshow_singleframe.css');  
+}
+
+/**
+ * Alter the Views Gallery default view.
+ */
+function views_gallery_slideshow_views_default_views_alter(&$cache) {
+
+  // If Views Slideshow is installed, add slideshow block.
+  $view = $cache['gallery'];
+  $handler = $view->new_display('block', 'Slideshow block', 'block_2');
+  $handler->override_option('fields', array(
+    'field_gallery_image_fid' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'link_to_node' => 1,
+      'label_type' => 'none',
+      'format' => 'reg_linked',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_gallery_image_fid',
+      'table' => 'node_data_field_gallery_image',
+      'field' => 'field_gallery_image_fid',
+      'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+  ));
+  $handler->override_option('arguments', array(
+    'field_gallery_nid' => array(
+      'default_action' => 'default',
+      'style_plugin' => 'default_summary',
+      'style_options' => array(),
+      'wildcard' => 'all',
+      'wildcard_substitution' => 'All',
+      'title' => '',
+      'breadcrumb' => '',
+      'default_argument_type' => 'fixed',
+      'default_argument_fixed' => variable_get('views_gallery_nid', NULL),
+      'default_argument' => '',
+      'validate_type' => 'node',
+      'validate_fail' => 'not found',
+      'break_phrase' => 0,
+      'not' => 0,
+      'id' => 'field_gallery_nid',
+      'table' => 'node_data_field_gallery',
+      'field' => 'field_gallery_nid',
+      'validate_user_argument_type' => 'uid',
+      'validate_user_roles' => array(
+        '2' => 0,
+        '5' => 0,
+        '3' => 0,
+        '4' => 0,
+      ),
+      'relationship' => 'none',
+      'default_options_div_prefix' => '',
+      'default_argument_user' => 0,
+      'default_argument_php' => '',
+      'validate_argument_node_type' => array(
+        'gallery' => 'gallery',
+      ),
+      'validate_argument_node_access' => 1,
+      'validate_argument_nid_type' => 'nid',
+      'validate_argument_vocabulary' => array(
+        '2' => 0,
+      ),
+      'validate_argument_type' => 'tid',
+      'validate_argument_transform' => 0,
+      'validate_user_restrict_roles' => 0,
+      'validate_argument_php' => '',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+  ));
+  $handler->override_option('items_per_page', 10);
+  $handler->override_option('use_pager', 0);
+  $handler->override_option('style_plugin', 'slideshow');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'type' => 'ul',
+    'mode' => 'singleframe',
+    'singleframe' => array(
+      'timeout' => '1000',
+      'delay' => '1',
+      'speed' => '2000',
+      'random' => '0',
+      'pause' => '2',
+      'controls' => '0',
+      'pager' => '2',
+      'pager_type' => 'Numbered',
+      'pager_hover' => '1',
+      'image_count' => '0',
+      'effect' => 'fade',
+      'sync' => '1',
+      'advanced' => '',
+      'ie' => array(
+        'cleartype' => TRUE,
+        'cleartypenobg' => FALSE,
+      ),
+    ),
+    'thumbnailhover' => array(
+      'hover_breakout' => 'teaser',
+      'teasers_last' => 1,
+      'timeout' => '1500',
+      'delay' => '0',
+      'speed' => '1500',
+      'random' => '0',
+      'pause' => '1',
+      'pager_event' => 'mouseover',
+      'controls' => '0',
+      'image_count' => '0',
+      'effect' => 'fade',
+      'sync' => '',
+      'advanced' => '',
+      'ie' => array(
+        'cleartype' => TRUE,
+        'cleartypenobg' => FALSE,
+      ),
+    ),
+  ));
+  $handler->override_option('row_plugin', 'fields');
+  $handler->override_option('row_options', array(
+    'inline' => array(),
+    'separator' => '',
+  ));
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $cache['gallery'] = $view;
+}
