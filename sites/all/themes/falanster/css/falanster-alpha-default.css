@@ -1,5 +1,10 @@
 /* This file will hold styles for all layouts using the alpha grid (i.e. not the mobile layout). */
 
+
+/**/
+
+
+
 /* COMMON POSITION STYLES */
 
 #region-footer-first {
@@ -17,8 +22,13 @@
 }
 
 #zone-content {
-    padding-bottom: 30px;
+ padding-bottom: 30px;
 }
+
+#region-logo {
+ margin-bottom: -4px;
+}
+
 
 #zone-header-first {
     padding-top: 40px;
@@ -58,12 +68,19 @@
     margin-left: 15px;
 }
 
+/*region slogan styles*/
+#region-slogan {
+  position: relative;
+  width: 400px;
+  margin-right: -100px;
+}
+
 
 /* User logged in block*/
 
 #block-block-7 {
-    margin-top: 60px;
-    margin-bottom: 0;
+    margin-top: 55px;
+    margin-bottom: 5px;
     float: right;
 }
 
