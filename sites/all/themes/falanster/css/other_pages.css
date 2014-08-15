@@ -223,3 +223,8 @@
 .block-menu-contact-us .content ul li.first a {
     color: #444243;
 }
+/*image caption*/
+.content .content figure {
+  margin-right: 20px;
+  margin-left: 20px;
+}
