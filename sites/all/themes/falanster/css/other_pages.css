@@ -227,4 +227,10 @@
 .content .content figure {
   margin-right: 20px;
   margin-left: 20px;
+  border: 1px solid #ededed;
+  padding: 5px;
+  font-style: italic;
+}
+.content .content blockquote {
+  font-style: italic;
 }
