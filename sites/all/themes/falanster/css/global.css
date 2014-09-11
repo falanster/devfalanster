@@ -4,6 +4,7 @@
 /* COMMON STYLES */
 
 body {
+    margin: 0;
     color: #444243;
     background-color: #fefdfa;
     font: 13px/1.5 Verdana, Helvetica, Arial, sans-serif;
@@ -141,7 +142,9 @@ h2.block-title a {
 }
 
 .block-locale .content ul {
+    margin-top: 0;
     margin-bottom: 0;
+    padding-left: 10px;
 }
 
 .block-locale .content ul li {
@@ -163,6 +166,10 @@ h2.block-title a {
 #block-block-7 {
     float: right;
     margin-bottom: 25px;
+}
+
+#block-block-7 input {
+    float: right;
 }
 
 /* First main menu block */
