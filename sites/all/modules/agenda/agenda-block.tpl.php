@@ -19,17 +19,12 @@ $nolabel = array_map('trim', explode(',', $block->hide_labels));
   <?php
   $date = $day[0]['start date'];
 
-$timestamp_date = strtotime($date);
-$true_date = format_date($timestamp_date, $type = 'medium', $format = $block->dateformat);
-
   // Substitute today/yesterday/tomorrow.
   if (isset($dates[$day[0]['when']])) {
-//    $date = $dates[$day[0]['when']];
-    $true_date = $dates[$day[0]['when']];
+    $date = $dates[$day[0]['when']];
   }
   ?>
-<?php //echo $date; ?>
-<p><?php echo $true_date;  ?></p>
+  <p><?php echo $date; ?></p>
   <ol>
   <?php foreach ($day as $event): ?>
     <li class="cal_<?php echo $event['index']; ?>">

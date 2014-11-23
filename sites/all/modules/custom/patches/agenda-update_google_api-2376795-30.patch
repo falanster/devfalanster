@@ -1,0 +1,377 @@
+diff --git a/agenda-admin.tpl.php b/agenda-admin.tpl.php
+index 8133029..055aa15 100644
+--- a/agenda-admin.tpl.php
++++ b/agenda-admin.tpl.php
+@@ -9,5 +9,4 @@
+   <?php echo $table; ?>
+ <?php else: ?>
+   <p>You have not created any blocks yet.</p>
+-<?php endif; ?>
+-<p>&raquo; <?php echo l('Create a new block', 'admin/config/services/agenda/0/configure'); ?>.</p>
++<?php endif; ?>
+\ No newline at end of file
+diff --git a/agenda.admin.php b/agenda.admin.php
+index d885e1a..2f16a8c 100644
+--- a/agenda.admin.php
++++ b/agenda.admin.php
+@@ -90,6 +90,23 @@ function agenda_admin_delete_submit($form, $form_state) {
+ 
+ 
+ /**
++ * Set Google API Key
++ */
++function agenda_admin_googleapi($form, &$form_state){
++  $form['agenda_googleapi'] = array(
++    '#type' => 'textfield',
++    '#title' => t('Google API Key'),
++    '#default_value' => variable_get('agenda_googleapi', ''),
++    '#size' => 39,
++    '#maxlength' => 39,
++    '#description' => t('Key for server applications - <a href="https://developers.google.com/console/help/new/#usingkeys">https://developers.google.com/console/help/new/#usingkeys</a>'),
++    '#required' => TRUE,
++  );
++  return system_settings_form($form);
++}
++
++
++/**
+  * Manage agenda
+  */
+ function agenda_admin_configure($form, $form_state, $delta) {
+@@ -180,6 +197,14 @@ function agenda_admin_configure($form, $form_state, $delta) {
+     '#agenda_setting' => TRUE,
+   );
+ 
++  $form['agenda_hangoutlinktext'] = array(
++    '#type'           => 'textfield',
++    '#title'          => t('Calendar hangout link text'),
++    '#default_value'  => agenda_variable_get($delta, 'hangoutlinktext', 'Join Google Calendar Event Hangout'),
++    '#description'    => t('Text to display when linking to the Google Calendar event Hangout.'),
++    '#agenda_setting' => TRUE,
++  );
++
+   $form['agenda_cachetime'] = array(
+     '#type'           => 'textfield',
+     '#title'          => t('Amount of time to cache event data'),
+@@ -217,6 +242,16 @@ function agenda_admin_configure($form, $form_state, $delta) {
+     '#agenda_setting' => TRUE,
+   );
+ 
++  $form['agenda_googleapi_override'] = array(
++    '#type'           => 'textfield',
++    '#title'          => t('Google API Key'),
++    '#default_value'  => agenda_variable_get($delta, 'googleapi_override', ''),
++    '#size'           => 39,
++    '#maxlength'      => 39,
++    '#description'    => t("Use this Google API key instead of default set on agenda settings page."),
++    '#agenda_setting' => TRUE,
++  );
++
+   $form['agenda_timezone'] = array(
+     '#type'           => 'textfield',
+     '#title'          => t('Timezone'),
+@@ -324,7 +359,6 @@ function agenda_admin_configure_submit($form, $form_state) {
+  */
+ function agenda_debug($bid) {
+   $output     = array();
+-
+   // Date check (http://drupal.org/node/545174)
+   $output[]   = t('Checking server time: %date', array('%date' => gmdate('r')));
+   $output[]   = t('Checking real UTC time via NTP: %date', array('%date' => gmdate('r', agenda_debug_ntp_time('0.pool.ntp.org'))));
+@@ -343,33 +377,50 @@ function agenda_debug($bid) {
+     $output[] = t('Multiple calendars found, debugging with the first calendar: %googleid', array('%googleid' => $googleid));
+   }
+ 
++  $timeMin = date('Y-m-d', strtotime($block->start)) . 'T00:00:00' . date('P');
++  $timeMax = date('Y-m-d', strtotime($block->end)) . 'T00:00:00' . date('P');
++  $output[] = t('Using Agenda Block start value of %blockStart converted for Google API to %timeMin', array('%blockStart' => $block->start, '%timeMin' => $timeMin));
++  $output[] = t('Using Agenda Block end value of %blockEnd converted for Google API to %timeMax', array('%blockEnd' => $block->end, '%timeMax' => $timeMax));
++  $output[] = t('Maximum number of events to fetch: %maxEvents',array('%maxEvents' => $block->maxevents));
++  $output[] = t('Timezone: %timezone',array('%timezone' => $block->timezone));
++
++  $googlekey = ($block->googleapi_override) ? $block->googleapi_override : variable_get('agenda_googleapi', '');
++  $output[] = t('Using Google API Key: %googlekey',array('%googlekey' => $googlekey));
++
+   // Load the calendar
+   list ($address, $token) = _agenda_parse_googleid($googleid);
+-  $source = _agenda_feed_url($address, $token, $block);
+-  $output[] = t('Fetching feed from <em>%source</em>', array('%source' => $source));
++  //$source = _agenda_feed_url($address, $token, $block);
++  //$output[] = t('Fetching feed from <em>%source</em>', array('%source' => $source));
+ 
+   // Load the XML
+-  $calendar = _agenda_load_xml($address, $token, $block);
++  //$calendar = _agenda_load_xml($address, $token, $block);
++  $calendar = _agenda_load_google($address, $token, $block);
+   if (!$calendar) {
+-    $output[] = t('<strong>Warning</strong>: Failed to load XML');
++    $output[] = t('<strong>Warning</strong>: Failed');
+     return theme('item_list', $output, NULL, 'ul', array('id' => 'agenda-debug'));
+   }
+-  $output[] = t('Loaded XML successfully');
++  $output[] = t('Loaded Calendar successfully');
+ 
++  $calendar_events = $calendar->getItems();
+   // Find the events
+-  $number_of_events = count($calendar->entry);
++  $number_of_events = count($calendar_events);
+   $output[] = t('Found @count events', array('@count' => $number_of_events));
+   if ($number_of_events === 0) {
+     $output[] = t('<strong>Warning</strong>: Nothing to do with empty calendar, stopping!');
+-    return theme('item_list', $output, NULL, 'ul', array('id' => 'agenda-debug'));
++    $debug_log = theme('item_list', array('items' => $output));
++    return array(
++      'title'       => array('#markup' => '<h2>' . t('Debugging %calendar block', array('%calendar' => $block->title)) . ' - '.l('Edit','admin/config/services/agenda/'.$bid.'/configure').'</h2>'),
++      'debug_log'   => array('#markup' => $debug_log, '#prefix' => '<h3>Log</h3><div id="agenda-debug-log">', '#suffix' => '</div>'),
++      '#attached'   => array('css' => array(drupal_get_path('module', 'agenda') . '/agenda.css')),
++    );
+   }
+ 
+   // Parse the events
+   $i = 0;
+   $eventdata = array();
+-  foreach ($calendar->entry as $event) {
+-    $output[] = t('Loading event @number which is @size bytes', array('@number' => ++$i, '@size' => strlen($event->asXml())));
+-    $output[] = sprintf("<pre>%s</pre>", htmlspecialchars($event->asXml()));
++  foreach ($calendar_events as $event) {
++    //$output[] = t('Loading event @number which is @size bytes', array('@number' => ++$i, '@size' => strlen($event->asXml())));
++    //$output[] = sprintf("<pre>%s</pre>", htmlspecialchars($event->asXml()));
+ 
+     $thisevent = _agenda_parse_event($event, $block);
+     if (!$thisevent) {
+@@ -382,6 +433,7 @@ function agenda_debug($bid) {
+     $eventdata[] = $thisevent;
+   }
+ 
++
+   $output[] = t('Parsed @success/@total events successfully', array('@success' => count($eventdata), '@total' => $number_of_events));
+ 
+   $output[] = t('Begin filtering based on date: string provided (@old) which has timestamp (@timestamp) which has date (@date).', array(
+diff --git a/agenda.module b/agenda.module
+index 18fc38e..666724e 100644
+--- a/agenda.module
++++ b/agenda.module
+@@ -23,6 +23,39 @@ function agenda_menu() {
+     'file'             => 'agenda.admin.php',
+   );
+ 
++  $items['admin/config/services/agenda/list'] = array(
++    'title'            => 'List',
++    'type'             => MENU_DEFAULT_LOCAL_TASK,
++  );
++
++  $items['admin/config/services/agenda/googleapi'] = array(
++    'title' => 'Settings',
++    'description' => 'Set Google API Key',
++    'page callback' => 'drupal_get_form',
++    'page arguments' => array('agenda_admin_googleapi'),
++    'access arguments' => array('configure agenda blocks'),
++    'type' => MENU_LOCAL_TASK,
++    'file' => 'agenda.admin.php',
++  );
++
++  $items['admin/config/services/agenda/0/configure'] = array(
++    'title'            => 'Add new block',
++    'type'             => MENU_LOCAL_ACTION,
++    'page callback'    => 'drupal_get_form',
++    'page arguments'   => array('agenda_admin_configure', 4),
++    'access arguments' => array('configure agenda blocks'),
++    'file'             => 'agenda.admin.php',
++  );
++
++  $items['admin/config/services/agenda/0/configure'] = array(
++    'title'            => 'Add new block',
++    'type'             => MENU_LOCAL_ACTION,
++    'page callback'    => 'drupal_get_form',
++    'page arguments'   => array('agenda_admin_configure', 4),
++    'access arguments' => array('configure agenda blocks'),
++    'file'             => 'agenda.admin.php',
++  );
++
+   $items['admin/config/services/agenda/%/configure'] = array(
+     'title'            => 'Configure agenda block',
+     'type'             => MENU_CALLBACK,
+@@ -256,7 +289,8 @@ function agenda_get_events($block, $cache = TRUE) {
+   $eventdata = array();
+   foreach ($calendars as $calindex => $googleid) {
+     list ($address, $token) = _agenda_parse_googleid($googleid);
+-    $calendar = _agenda_load_xml($address, $token, $block);
++    //$calendar = _agenda_load_xml($address, $token, $block);
++    $calendar = _agenda_load_google($address, $token, $block);
+ 
+     // If we fail to load the XML, handle it
+     if (!$calendar) {
+@@ -265,14 +299,17 @@ function agenda_get_events($block, $cache = TRUE) {
+     }
+ 
+     // Parse out the event details
+-    foreach ($calendar->entry as $eventxml) {
+-      $event = _agenda_parse_event($eventxml, $block);
++    //foreach ($calendar->entry as $eventxml) {
++    //$event = _agenda_parse_event($eventxml, $block);
++    foreach ($calendar->getItems() as $google_event) {
++      $event = _agenda_parse_event($google_event, $block);
+       if (!$event) {
+         continue;
+       }
+ 
+       $event['index']    = (int) $calindex;
+-      $event['calendar'] = (string) $calendar->title;
++      //$event['calendar'] = (string) $calendar->title;
++      $event['calendar'] = (string) $calendar->summary;
+       $eventdata[] = $event;
+     }
+   }
+@@ -302,6 +339,7 @@ function agenda_get_events($block, $cache = TRUE) {
+  * @return array Associative array of information about the event
+  * @access private
+  */
++/*
+ function _agenda_parse_event($xml, $block) {
+   $gd = $xml->children('http://schemas.google.com/g/2005');
+ 
+@@ -361,6 +399,58 @@ function _agenda_parse_event($xml, $block) {
+ 
+   return $event;
+ }
++*/
++
++
++function _agenda_parse_event($google_response, $block) {
++  // Timezone
++  $tz = new DateTimeZone($block->timezone);
++
++  // Parse the timestamps
++  $updated = new DateTime($google_response->updated, $tz);
++  $start   = new DateTime((string) ($google_response->start->dateTime) ? $google_response->start->dateTime : $google_response->start->date , $tz);
++  $end     = new DateTime((string) ($google_response->end->dateTime) ? $google_response->end->dateTime : $google_response->end->date, $tz);
++
++  $event = array();
++  $event['title']           = htmlspecialchars((string) $google_response->summary);
++  $event['where']           = htmlspecialchars((string) $google_response->location);
++  $event['description']     = _filter_autop(filter_xss((string) $google_response->description));
++
++  $event['timezone']        = $block->timezone;
++
++  $event['start original']  = (string) $google_response->start->dateTime;
++  $event['start date']      = $start->format($block->dateformat);
++  $event['start time']      = $start->format($block->timeformat);
++  $event['start timestamp'] = strtotime($start->format('c')); // Use strtotime instead of getTimestamp for < PHP5.3
++
++  $event['end original']    = (string) $google_response->end->dateTime;
++  $event['end date']        = $end->format($block->dateformat);
++  $event['end time']        = $end->format($block->timeformat);
++  $event['end timestamp']   = strtotime($end->format('c'));
++
++  //Published date and time are not available in v3.
++  $event['updated']         = $updated->format($block->dateformat);
++
++  //$link                     = (array) $google_response->htmlLink;
++  $event['url']             = (string) $google_response->htmlLink;
++  $event['link']            = l($block->linktext, $event['url'].'&ctz='.$block->timezone);
++
++  // The day the event occurs on (without time) used for grouping
++  $event['when']            = $start->format('Y-m-d');
++
++  //new fields added for google api v3.
++  $event['event id']         = $google_response->id;
++  $event['hangout url']      = $google_response->hangoutLink;
++  $event['hangout link']     = l($block->hangoutlinktext, $event['hangout url']);
++  $event['iCalUID']          = $google_response->iCalUID;
++  $event['recurrence']       = $google_response->recurrence;
++  $event['recurringEventId'] = $google_response->recurringEventId;
++
++  if($google_response->start->date){ $event['start time'] = ''; }
++  if($google_response->end->date){   $event['end time']   = ''; }
++
++  return $event;
++}
+ 
+ 
+ /**
+@@ -387,6 +477,12 @@ function _agenda_translate($field) {
+   $t['when']            = t('When');
+   $t['calendar']        = t('Calendar');
+   $t['timezone']        = t('Timezone');
++  $t['event id']        = t('Event ID');
++  $t['hangout url']     = t('Hangout URL');
++  $t['hangout link']    = t('Hangout link');
++  $t['iCalUID']         = t('iCal UID');
++  $t['recurrence']      = t('Recurrence');
++  $t['recurringEventId']= t('Recurring Event ID');
+   return $t[$field];
+ }
+ 
+@@ -399,6 +495,7 @@ function _agenda_translate($field) {
+  * @return object An object containing the status, request and result
+  * @access private
+  */
++/*
+ function _agenda_load_xml($address, $key, $block) {
+   $url = _agenda_feed_url($address, $key, $block);
+   $xml = drupal_http_request($url);
+@@ -410,7 +507,47 @@ function _agenda_load_xml($address, $key, $block) {
+ 
+   return $data;
+ }
++*/
++
++function _agenda_load_google($address, $key, $block) {
++
++  $calendar_id = $address;
++  $googlekey = (!empty($block->googleapi_override)) ? $block->googleapi_override : variable_get('agenda_googleapi', '');
++
++  //Including the google-api-php-client library (required).
++  $autoload_path = libraries_get_path('google-api-php-client') . '/autoload.php';
++  if (!file_exists($autoload_path)) {
++    drupal_set_message('Agenda: The google-api-php-client library was not found.', 'error');
++    return;
++  }
++  include_once($autoload_path);
++
++  // https://developers.google.com/google-apps/calendar/v3/reference
++  $client = new Google_Client();
++  $client->setApplicationName('agenda_events_feed');
++  $client->setDeveloperKey($googlekey);
++
++  $service = new Google_Service_Calendar($client);
++  $optParams = array(
++    'orderBy' => 'startTime',
++    'singleEvents' => 'true',
++    'timeMin' => date('Y-m-d', strtotime($block->start)) . 'T00:00:00' . date('P'),
++    'timeMax' => date('Y-m-d', strtotime($block->end)) . 'T00:00:00' . date('P'),
++    'maxResults' => $block->maxevents,
++    'timeZone' => $block->timezone,
++  );
+ 
++  try {
++    $events = $service->events->listEvents($calendar_id, $optParams);
++  }
++  catch (Exception $e) {
++    drupal_set_message(t('Agenda: Bad call to list events. Check Google API Key or Calendar Address.'), 'error');
++    drupal_set_message('<pre>'.$e.'</pre>', 'error');
++    return;
++  }
++
++  return $events;
++}
+ 
+ /**
+  * Return the remote path to the google feed
+@@ -420,6 +557,7 @@ function _agenda_load_xml($address, $key, $block) {
+  * @return object An object containing the status, request and result
+  * @access private
+  */
++/*
+ function _agenda_feed_url($address, $key, $block) {
+ 
+   $url = sprintf(AGENDA_SOURCEPATTERN,
+@@ -432,7 +570,7 @@ function _agenda_feed_url($address, $key, $block) {
+ 
+   return $url;
+ }
+-
++*/
+ 
+ /**
+  * Parse a Google ID into the email address and token components
