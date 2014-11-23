@@ -107,6 +107,11 @@ function tvi_menu_alter(&$items) {
 
   // Avoid views to override tvi
   unset($items['taxonomy/term/%']);
+
+  // Views might have completely wiped the original title callback, so restore it.
+  // This is useful for breadcrumb-generating modules such as Crumbs or Easy breadcrumbs.
+  $items['taxonomy/term/%taxonomy_term']['title callback']   = 'taxonomy_term_title';
+  $items['taxonomy/term/%taxonomy_term']['title arguments']  = array(2);
 }
 
 /**
@@ -191,18 +196,26 @@ function theme_tvi_term_description($term) {
  * If more or less than one term is given then pass the request off
  * to the original taxonomy module page callback.
  */
-function tvi_render_view($tid = '', $depth = 0, $op = 'page') {
+function tvi_render_view($tid = '', $depth = NULL) {
   if (is_object($tid)) {
     $tid = $tid->tid;
   }
 
   list($view, $display, $term, $settings) = tvi_get_view_info($tid);
+  // Load metatags if needed.
+  if (module_exists('metatag')) {
+    metatag_entity_view($term, 'taxonomy_term', 'full', NULL);
+  }
   if (is_object($view) && $display) {
-    if (isset($view->display_handler->display->display_options["arguments"]["term_node_tid_depth"])) {
-      $args = array($tid, $view->display_handler->display->display_options["arguments"]["term_node_tid_depth"]["depth"]);
+    if (isset($settings->pass_arguments) && $settings->pass_arguments == 1) {
+      // Pass all arguments to views. Exclude /taxonomy/term.
+      $args = array_slice(arg(), 2);
     }
     else {
       $args = array($tid);
+      if (NULL !== $depth) {
+        $args[] = $depth;
+      }
     }
 
     if ($view->display[$display]->display_plugin == 'block') {

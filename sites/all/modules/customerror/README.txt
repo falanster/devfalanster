@@ -10,6 +10,7 @@ CONTENTS OF THIS FILE
 * Configuration
   - Redirecting upon login
   - Custom redirects for 404 errors
+* Submodule
 * FAQ
 * Maintainers
 
@@ -59,8 +60,6 @@ INSTALLATION
 
 2. Go to the Modules page
    - Enable the customerror module.
-   - If you want error pages to contain PHP, enable the core
-     PHP filter module.
    Click on Save configuration.
 
 3. Configure Error reporting
@@ -75,7 +74,11 @@ INSTALLATION
    - Go to Configuration -> System -> Custom error
    - Enter any title and description you want for the 404 (not found)
      and 403 (access denied) pages.
-   - THEME XXXX
+   - You may also set theme to be used on the error pages. The first
+     option (System default) lets the system set the theme. Each of
+     the remaining options lets you set an explicit theme to be used
+     on error pages (but it will not override the administration
+     theme, if set).
    - You can use any HTML tags to format the text.
    Click on Save configuration.
 
@@ -91,30 +94,6 @@ INSTALLATION
 
 CONFIGURATION
 -------------
-
-Redirecting upon login
-----------------------
-
-Here is an example of how to add custom PHP to a 403 to give the user
-the option to login:
-
-<?php
-global $user;
-if ($user->uid == 0) {
-  $output = '<p>';
-  $output .= t('If your user account has access to this page, please !message.',
-    array(
-      '!message' => l(t('log in'), 'user'),
-    )
-  );
-  $output .= '</p>';
-  print $output;
-}
-?>
-
-Note that customerror keeps track of what page the user is trying to
-access, so after logging in, the user will be redirected to that page.
-
 
 Custom redirects for 404 errors
 -------------------------------
@@ -146,6 +125,62 @@ you may consider the Drupal Redirect module, or using an external URL
 rewrite engine, such as Apache mod_rewrite.  If you use some other
 means of redirection or rewriting, you should refrain from using the
 redirect feature of CustomError.
+
+
+
+Using custom PHP on an error page
+----------------------------------
+
+If you want error pages to contain PHP, enable the core PHP filter
+module.  This allows you to include PHP code (enclosed in <?php ?>
+tags) for the error page message.  Note that this can be dangerous in
+some situations. Make sure that you are aware of the implications.
+
+Here is an example of how to add custom PHP to a 403 error page to
+check if the user is logged in.  If the user is not logged in, a
+message saying 'access denied: insufficient permissions' is shown,
+otherwise the user is given the option to log in:
+
+<?php
+if (user_is_logged_in()) {
+   $output = '<p>' . t('access denied: insufficient permissions') . '</p>';
+} 
+else {
+  $output = t('If your user account has access to this page, please !message.',
+    array(
+      '!message' => l(t('log in'), 'user'),
+    )
+  );
+  $output .= '</p>';
+}
+print $output;
+?>
+
+Note that enabling the PHP filter module is depreciated (it will no
+longer be part of core for Drupal 8).  For a safer method to show
+different error pages for access denied pages for anonymous and logged
+in users, enable the submodule that is part of the project: Custom
+error alternate for authenticated.
+
+If your handling of access denied errors allows the user to log in
+after been shown the message, customerror keeps track of what page the
+user is trying to access. After succesfully logging in, the user will
+be redirected to the page he or she originally requested.
+
+
+
+SUBMODULE
+---------
+
+Packaged with the project is the submodule: Custom error alternate for
+authenticated.
+
+Enabling this sub-module will add fields that allow the administrator
+to add a title and description for 403 (access denied) for
+authenticated users that are different from status code 403 (access
+denied) for anonymous users.
+
+See the submodule's own README.md for more documentation.
 
 
 FAQ

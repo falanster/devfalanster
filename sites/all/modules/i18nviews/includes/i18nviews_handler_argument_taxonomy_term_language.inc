@@ -3,7 +3,7 @@
 /**
  * Argument handler to accept a language.
  */
-class i18nviews_handler_argument_term_language extends views_handler_argument {
+class i18nviews_handler_argument_taxonomy_term_language extends views_handler_argument {
   function construct() {
     parent::construct('language');
   }

@@ -52,7 +52,6 @@ function customerror_help($path, $arg) {
   $output = '';
   switch ($path) {
     case 'admin/help#customerror':
-    case 'admin/config/system/customerror':
       $output = t('Enables the creation of custom error pages for 404 and 403 errors.');
       break;
   }
@@ -81,6 +80,7 @@ function customerror_admin_settings($form, &$form_state) {
     }
   }
 
+  $weight = -15;
   foreach ($errors as $code => $desc) {
     $group = 'customerror_' . $code . '_group';
     $form[$group] = array(
@@ -88,7 +88,10 @@ function customerror_admin_settings($form, &$form_state) {
       '#title' => t('!code Error Settings', array('!code' => $code)),
       '#collapsed' => TRUE,
       '#collapsible' => TRUE,
+      '#weight' => $weight,
     );
+    // Make room for some additional 403 codes.
+    $weight += 8;
     $form[$group]['customerror_' . $code . '_title'] = array(
       '#type' => 'textfield',
       '#title' => t('Title for @code', array('@code' => $code)),
@@ -103,12 +106,6 @@ function customerror_admin_settings($form, &$form_state) {
       '#default_value' => variable_get('customerror_' . $code, $desc),
       '#rows' => 10,
       '#description' => t('This text will be displayed if a @code (@desc) error occurs.', array('@code' => $code, '@desc' => $desc)),
-    );
-    $form[$group]['customerror_' . $code . '_php'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Allow PHP code to be executed for @code.', array('@code' => $code)),
-      '#default_value' => variable_get('customerror_' . $code . '_php', FALSE),
-      '#description' => t('This allows you to include PHP code (enclosed in &lt;?php ?&gt; tags) for the @code (@desc) message. Note that this can be dangerous in some situations. Make sure that you are aware of the implications.', array('@code' => $code, '@desc' => $desc)),
     );
   }
 
@@ -190,9 +187,14 @@ function customerror_page() {
     case 403:
       $internal_path = substr(request_uri(), strlen(base_path()));
       if ($internal_path) {
+        // Lets determine if we have a prefix from our languages.
+        if (module_exists('locale') && function_exists('language_url_split_prefix')) {
+          // Turn the path into a string so we can then remove our prefix.
+          list($language, $internal_path) = language_url_split_prefix($internal_path, language_list());
+        }
         $dest = drupal_parse_url($internal_path);
         if (isset($dest['query']['destination'])) {
-          $_GET['destination'] = ($dest['query']['destination']);
+          $_GET['destination'] = $dest['query']['destination'];
         }
         else {
           $_GET['destination'] = $internal_path;
@@ -201,7 +203,10 @@ function customerror_page() {
       else {
         $_GET['destination'] = variable_get('site_frontpage', 'node');
       }
-      $_SESSION['destination'] = $_GET['destination'];
+      // If the user is not logged in, save destination to redirect if they do.
+      if (!$GLOBALS['user']->uid) {
+        $_SESSION['customerror_destination'] = $_GET['destination'];
+      }
     case 404:
     default:
       // Treat an unknown method as a 404.
@@ -213,14 +218,17 @@ function customerror_page() {
 
       module_invoke_all('customerror_pre_render', $code);
 
+      if (module_exists('customerroralt') && customerroralt_code($code)) {
+        $code = customerroralt_code($code);
+      }
+
       drupal_set_title(variable_get('customerror_' . $code . '_title', _customerror_fetch_error($code)));
       $output = theme('customerror', array(
         'code' => $code,
         'content' => variable_get('customerror_' . $code, _customerror_fetch_error($code)),
       ));
       if (module_exists('php')) {
-        $output = (variable_get('customerror_' . $code . '_php', FALSE)) ? php_eval($output) : $output;
-
+        $output = php_eval($output);
       }
       break;
   }
@@ -272,27 +280,23 @@ function theme_customerror(array $variables) {
 }
 
 /**
- * Implements hook_user_login().
+ * Implements hook_drupal_goto_alter().
  */
-function customerror_user_login(&$edit, $account) {
-  // Check if we have a destination saved in the session.
-  if (!empty($_SESSION['destination'])) {
-    // If there is one, then set the REQUEST destination to it.
-    $dest = drupal_parse_url($_SESSION['destination']);
-    if (isset($dest['query']['destination'])) {
-      $dnode = $dest['query']['destination'];
-    }
-    elseif (isset($dest['path'])) {
-      $dnode = $dest['path'];
-    }
-    else {
-      $dnode = variable_get('site_frontpage', 'node');
-    }
-    $_GET['destination'] = $dnode;
-    // And clear the one in the session.
-    unset($_SESSION['destination']);
-    // User module then does a drupal_goto() after we return from here.
+function customerror_drupal_goto_alter(&$path, &$options, &$http_response_code) {
+  if (!isset($_SESSION['customerror_destination'])) {
+    return;
   }
+  $dest = drupal_parse_url($_SESSION['customerror_destination']);
+  // If the password reset token is set: user needs a chance to change password.
+  if (isset($options['query']['pass-reset-token'])) {
+    $options['query']['destination'] = $dest['path'];
+  }
+  else {
+    $path = $dest['path'];
+    unset($dest['path']);
+    $options += $dest;
+  }
+  unset($_SESSION['customerror_destination']);
 }
 
 /**
@@ -303,16 +307,28 @@ function customerror_check_redirect() {
   if (empty($destination)) {
     return;
   }
-  $redirects = variable_get('customerror_redirect', '');
+  $redirects = trim(variable_get('customerror_redirect', ''));
   if (empty($redirects)) {
     return;
   }
   $redirect_list = explode("\n", $redirects);
   foreach ($redirect_list as $item) {
-    list($src, $dst) = explode(' ', $item);
-    if (isset($src) && isset($dst)) {
+    $pair = explode(' ', $item);
+    $src = trim($pair[0]);
+    if (isset($pair[1])) {
+      $dst = trim($pair[1]);
+    }
+    else {
+      $dst = NULL;
+    }
+    if (empty($src) || empty($dst)) {
+      $item = trim($item);
+      // Replace sp with nbsp.
+      $item = str_replace(' ', ' ', $item);
+      drupal_set_message(t('Malformet redirect <code>"@item"</code> in custom error 404 redirect list.', array('@item' => $item)),'error');
+    }
+    else {
       $src = str_replace("/", "\\/", $src);
-      $dst = str_replace("\r", "", $dst);
       // In case there are spaces in the URL, we escape them.
       $orig_dst = str_replace(" ", "%20", $destination);
       if (preg_match('/' . $src . '/', $orig_dst)) {
@@ -346,11 +362,11 @@ function customerror_form_search_theme_form_alter(&$form, &$form_state, $form_id
  */
 
 function customerror_custom_theme() {
- if (drupal_valid_path(current_path())) {
-    return;
-  }
   $theme = variable_get('customerror_theme', 0);
   if (!$theme) {
+    return;
+  }
+ if (drupal_valid_path(current_path())) {
     return;
   }
   return $theme;

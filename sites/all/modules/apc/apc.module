@@ -1,4 +1,48 @@
 <?php
+/**
+ * Implements hook_xmlrpc().
+ */
+function apc_xmlrpc() {
+  $methods[] =  array(
+    'apc_drush_flush', // Method name.
+    'apc_drush_flush', // Callback.
+    array(
+      'array', // Return variable.
+      'array', // Input variable.
+    ),
+    t('XMLRPC callback to enable cache clear from Drush/CLI.'), // Description
+  );
+
+  return $methods;
+}
+
+/**
+ * XMLRPC callback to enable cache clear from Drush/CLI.
+ */
+function apc_drush_flush($variables) {
+  $cron_key = isset($variables['cron_key']) ? $variables['cron_key'] : NULL;
+  $clears = isset($variables['clears']) ? $variables['clears'] : array();
+
+  if (empty($cron_key) || variable_get('cron_key', 'drupal') != $cron_key) {
+    watchdog('apc', 'APC could not flush cache(s) because an invalid key was used.', array(), WATCHDOG_ERROR);
+    return array(
+      'success' => FALSE,
+      'message' => t('APC could not flush cache(s) because an invalid key was used.'),
+    );
+  }
+  else {
+    foreach ($clears as $bin => $cids) {
+      $cache = _cache_get_object($bin);
+      foreach ($cids as $serialized_cid => $wildcard) {
+        $cache->clear(unserialize($serialized_cid), $wildcard);
+      }
+    }
+    return array(
+      'success' => TRUE,
+      'message' => t('APC all requested flushes done.'),
+    );
+  }
+}
 
 /**
  * Implementation of hook_init().
@@ -77,5 +121,51 @@ function apc_shutdown() {
       'rows' => $rows,
     ));
     print '</div>';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function apc_form_system_performance_settings_alter(&$form, $form_state) {
+  $form['clear_cache']['clear']['#submit'][] = 'apc_clear_user_cache';
+  $form['clear_cache']['clear']['#submit'][] = 'apc_clear_opcode_cache';
+
+  $form['clear_cache']['apc_user'] = array(
+    '#type' => 'submit',
+    '#value' => t('Clear APC user cache'),
+    '#submit' => array('apc_clear_user_cache'),
+  );
+
+  if (!extension_loaded('apcu')) {
+    $form['clear_cache']['apc_opcode'] = array(
+      '#type' => 'submit',
+      '#value' => t('Clear APC opcode cache'),
+      '#submit' => array('apc_clear_opcode_cache'),
+    );
+  }
+}
+
+/**
+ * Helper function to clear user cache.
+ */
+function apc_clear_user_cache() {
+  if (apc_clear_cache('user')) {
+    drupal_set_message(t('Cleared APC user cache.'));
+  }
+  else {
+    drupal_set_message(t('Unable to clear APC user cache.'), 'error');
+  }
+}
+
+/**
+ * Helper function to clear opcode cache.
+ */
+function apc_clear_opcode_cache() {
+  if (apc_clear_cache()) {
+    drupal_set_message(t('Cleared APC opcode cache.'));
+  }
+  else {
+    drupal_set_message(t('Unable to clear APC opcode cache.'), 'error');
   }
 }

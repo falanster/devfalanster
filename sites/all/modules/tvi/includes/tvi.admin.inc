@@ -166,6 +166,22 @@ function tvi_taxonomy_admin_form(&$form, $settings) {
       ),
     ),
   );
+  // Pass arguments
+  $form['tvi']['pass_arguments'] = array(
+    '#id' => 'tvi-pass-arguments',
+    '#type' => 'checkbox',
+    '#title' => t('Pass all arguments to views.'),
+    '#description' => t("Enable this checkbox, and your view's display will receive all arguments going after <em>/taxonomy/term/</em> in the path. If disabled, your view's display will only receive <em>tid</em>, and <em>tid_depth</em>."),
+    '#default_value' => isset($settings->pass_arguments) ? $settings->pass_arguments : 0,
+    '#states' => array(
+      'disabled' => array(
+        '#tvi-status-check' => array('checked' => FALSE),
+      ),
+      'visible' => array(
+        '#tvi-status-check' => array('checked' => TRUE),
+      ),
+    ),
+  );
   if ($settings->type == TVI_TYPE_TERM) {
     $form['tvi']['display']['#description'] =
       t('The view display you select from the option above will be used to render this taxonomy term.');

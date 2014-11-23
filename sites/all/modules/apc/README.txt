@@ -22,7 +22,7 @@ Add the following code to your settings.php file:
 /**
  * Add APC Caching.
  */
-$conf['cache_backends'] = array('sites/all/modules/apc/drupal_apc_cache.inc');
+$conf['cache_backends'][] = 'sites/all/modules/apc/drupal_apc_cache.inc';
 $conf['cache_class_cache'] = 'DrupalAPCCache';
 $conf['cache_class_cache_bootstrap'] = 'DrupalAPCCache';
 //$conf['apc_show_debug'] = TRUE;  // Remove the slashes to use debug mode.
@@ -33,7 +33,7 @@ Add the following code to your settings.php file:
 /**
  * Add APC Caching.
  */
-$conf['cache_backends'] = array('sites/all/modules/apc/drupal_apc_cache.inc');
+$conf['cache_backends'][] = 'sites/all/modules/apc/drupal_apc_cache.inc';
 $conf['cache_default_class'] = 'DrupalAPCCache';
 //$conf['apc_show_debug'] = TRUE;  // Remove the slashes to use debug mode.
 

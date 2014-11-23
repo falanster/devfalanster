@@ -17,6 +17,7 @@ function tvi_default_settings($type = TVI_TYPE_TERM, $xid = 0) {
   $settings->display = NULL;
   $settings->status  = 0;
   $settings->inherit = 0;
+  $settings->pass_arguments = 0;
 
   $settings->is_default = TRUE;
 
