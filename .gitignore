@@ -4,7 +4,7 @@ sites/*/settings*.php
 
 # Ignore paths that contain user-generated content.
 sites/default/files/styles
-sites/*/files
+# sites/*/files
 sites/*/private
 
 phpmyadmin
