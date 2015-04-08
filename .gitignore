@@ -25,3 +25,5 @@ sites/default/files/js*
 .ht.filecache
 db
 phpmyadmin
+
+robots.txt
