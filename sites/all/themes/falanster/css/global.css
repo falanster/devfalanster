@@ -307,3 +307,36 @@ article .caption p {
     font-size: 18px;
     font-weight: bold;
 }
+
+/* BUTTONS STYLES */
+
+.button{
+  text-transform: lowercase;
+  margin-top: 12px;
+  margin-bottom: 10px;
+  padding: 8px 16px;
+
+  width: auto;
+  color: #ffffff;
+  cursor: pointer;
+  width: auto;
+  font-size: 24px;
+  letter-spacing: 0.3px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.green {
+  background: #68dc6b;
+}
+
+.blue {
+  background: #68badc;
+}
+
+.button:hover {
+  opacity: 0.6;
+	text-decoration: none;
+}
