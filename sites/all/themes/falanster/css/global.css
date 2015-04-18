@@ -310,7 +310,7 @@ article .caption p {
 
 /* BUTTONS STYLES */
 
-.button{
+a.button{
   text-transform: lowercase;
   margin-top: 12px;
   margin-bottom: 10px;
@@ -328,15 +328,15 @@ article .caption p {
   -o-border-radius: 5px;
 }
 
-.green {
+a.green {
   background: #68dc6b;
 }
 
-.blue {
+a.blue {
   background: #68badc;
 }
 
-.button:hover {
+a.button:hover {
   opacity: 0.6;
 	text-decoration: none;
 }
