@@ -1,0 +1,111 @@
+<?php
+/**
+ * @file
+ * Install, uninstall and update the module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function yandex_metrics_reports_uninstall() {
+  // Delete module variables and clear variables cache.
+  db_delete('variable')
+    ->condition('name', 'yandex_metrics_reports_%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function yandex_metrics_reports_schema() {
+  $schema['yandex_metrics_reports_popular_content'] = array(
+    'description' => 'Stores the popular content.',
+    'fields' => array(
+      'yid' => array(
+        'description' => 'The id for url.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'url' => array(
+        'description' => 'The url obtained from Yandex.metrika.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'language' => array(
+        'description' => 'Language of the page.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'page_title' => array(
+        'description' => 'The page title of the url.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'page_views' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Page views of this url.',
+      )
+    ),
+    'primary key' => array('yid'),
+    'unique keys' => array('url' => array('url')),
+    'indexes' => array(
+      'language' => array('language'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function yandex_metrics_reports_requirements($phase) {
+  $t = get_t();
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    if (function_exists('yandex_services_auth_info') && !yandex_services_auth_info('token')) {
+      $message = $t('Please, <a href="!module_config_url">configure @module</a> module.', array('!module_config_url' => url('admin/config/system/yandex_services_auth'), '@module' => 'Yandex Services Authorization API'));
+
+      $requirements['yandex_metrics_reports'] = array(
+        'title' => t('Yandex.Metrics Reports'),
+        'value' => $message,
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Use Yandex Services Authorization API (yandex_services_auth).
+ */
+function yandex_metrics_reports_update_7201() {
+  // Enable yandex_services_auth module.
+  if (!module_enable(array('yandex_services_auth'))) {
+    throw new Exception('The Yandex.Metrics Reports requires Yandex Services Authorization API (https://drupal.org/project/yandex_services_auth) module.');
+  }
+
+  if (!yandex_services_auth_info('token')) {
+    variable_set('yandex_services_auth_token', variable_get('yandex_metrics_reports_auth_token', ''));
+    variable_set('yandex_services_auth_client_id', variable_get('yandex_metrics_reports_client_id', ''));
+    variable_set('yandex_services_auth_client_secret', variable_get('yandex_metrics_reports_client_secret', ''));
+  }
+
+  variable_del('yandex_metrics_reports_client_id');
+  variable_del('yandex_metrics_reports_client_secret');
+  variable_del('yandex_metrics_reports_auth_token');
+
+}

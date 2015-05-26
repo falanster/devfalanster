@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * API usage example.
+ */
+
+/**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Implements of hook_yandex_metrics_reports_list().
+ *
+ * Provides metadata for custom reports.
+ * You can add as many custom reports as you need.
+ *
+ * @return
+ *   An associative array of available reports.
+ */
+function MYMODULE_yandex_metrics_reports_list() {
+  $reports = array();
+
+  // It's strongly recommended only use letters, numbers and underscores for keys of this array!
+  $reports['my_custom_report'] = array(
+    // Title of report/chart that is displayed on Reports settings and Summary Report pages.
+    'title' => t('My Custom Report'),
+    // Callback function name that generates your report data.
+    'callback' => 'mymodule_my_custom_report',
+  );
+
+  return $reports;
+}
+
+/**
+ * @} End of "addtogroup hooks".
+ */
+
+/*
+ * The example of user-defined callback for My Custom Report.
+ *
+ * It should handle $counter_id and $filter parameters.
+ * This function MUST return HTML string, not an array or object.
+ *
+ * Make sure you escaped output to prevent security vulnerabilities.
+ *
+ * @see MYMODULE_yandex_metrics_reports_list()
+ *
+ * @param $counter_id
+ * @param $filter
+ * @return string
+ */
+function MYMODULE_my_custom_report($counter_id, $filter) {
+  return '<p>' . t('My custom report by') . check_plain($counter_id) . ' for ' . check_plain($filter) . '</p>';
+}

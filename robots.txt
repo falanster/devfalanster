@@ -1,60 +1,60 @@
-#
-# robots.txt
-#
-# This file is to prevent the crawling and indexing of certain parts
-# of your site by web crawlers and spiders run by sites like Yahoo!
-# and Google. By telling these "robots" where not to go on your site,
-# you save bandwidth and server resources.
-#
-# This file will be ignored unless it is at the root of your host:
-# Used:    http://example.com/robots.txt
-# Ignored: http://example.com/site/robots.txt
-#
-# For more information about the robots.txt standard, see:
-# http://www.robotstxt.org/robotstxt.html
-#
-# For syntax checking, see:
-# http://www.frobee.com/robots-txt-check
-
 User-agent: *
-Crawl-delay: 10
+
 # Directories
+
+Disallow: /database/
 Disallow: /includes/
 Disallow: /misc/
 Disallow: /modules/
+Disallow: /updates/
 Disallow: /profiles/
 Disallow: /scripts/
 Disallow: /themes/
+
 # Files
-Disallow: /CHANGELOG.txt
+
+Disallow: /index.php
+Disallow: /xmlrpc.php
 Disallow: /cron.php
+Disallow: /CHANGELOG.txt
 Disallow: /INSTALL.mysql.txt
 Disallow: /INSTALL.pgsql.txt
 Disallow: /INSTALL.sqlite.txt
-Disallow: /install.php
 Disallow: /INSTALL.txt
 Disallow: /LICENSE.txt
 Disallow: /MAINTAINERS.txt
-Disallow: /update.php
 Disallow: /UPGRADE.txt
-Disallow: /xmlrpc.php
+Disallow: /install.php
+Disallow: /update.php
+
 # Paths (clean URLs)
+
 Disallow: /admin/
 Disallow: /comment/reply/
+Disallow: /contact/
+Disallow: */logout/*
+Disallow: /search/
 Disallow: /filter/tips/
 Disallow: /node/add/
-Disallow: /search/
 Disallow: /user/register/
-Disallow: /user/password/
+Disallow: /user/password
 Disallow: /user/login/
-Disallow: /user/logout/
-# Paths (no clean URLs)
-Disallow: /?q=admin/
-Disallow: /?q=comment/reply/
-Disallow: /?q=filter/tips/
-Disallow: /?q=node/add/
-Disallow: /?q=search/
-Disallow: /?q=user/password/
-Disallow: /?q=user/register/
-Disallow: /?q=user/login/
-Disallow: /?q=user/logout/
+Disallow: /comments/recent
+Disallow: /*/edit/
+Disallow: /*/delete/
+Disallow: /*/export/html/
+Disallow: /*/edit$
+Disallow: /*/outline$
+Disallow: /*/revisions$
+Disallow: /*/contact$
+Disallow: /node$
+Disallow: /node/
+Disallow: /*&
+Disallow: /*?page=0
+Disallow: /*?page=
+Disallow: /*?
+
+# Content duplicates
+
+Disallow: /ru/gallery
+Host: falanster.by

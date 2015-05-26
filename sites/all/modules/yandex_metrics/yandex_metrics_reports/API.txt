@@ -1,0 +1,18 @@
+------------------------------------------------------------------------------
+                            API for YANDEX.METRICS
+------------------------------------------------------------------------------
+
+
+Overview
+------------------------------------------------------------------------
+The API is aimed to provide extensibility for Yandex.Metrics Reports module.
+Currently one hook is available for implementation in custom modules.
+
+
+hook_yandex_metrics_reports_list()
+------------------------------------------------------------------------
+The hook allows to add custom reports on Yandex.Metrics Summary Report page.
+See usage example in yandex_metrics_reports.api.txt .
+
+Please report about problems in issue queue of Yandex.Metrics project:
+http://drupal.org/project/issues/yandex_metrics

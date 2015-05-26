@@ -1,0 +1,13 @@
+name = Image Hide
+description = Provides a check box next to each image on the image field form, which allows the image to be hidden.
+dependencies[] = image
+dependencies[] = system (>=7.22)
+package = Fields
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-08-10
+version = "7.x-1.2"
+core = "7.x"
+project = "image_hide"
+datestamp = "1376123265"
+

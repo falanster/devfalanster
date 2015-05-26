@@ -1,0 +1,100 @@
+<?php
+/**
+ * @file
+ * Install, uninstall and update the module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function yandex_metrics_uninstall() {
+  // Delete module variables and clear variables cache.
+  db_delete('variable')
+    ->condition('name', 'yandex_metrics_%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}
+
+/**
+ * Upgrade from 7.x-1.x to 7.x-2.x.
+ */
+function yandex_metrics_update_7200() {
+
+  // Enable yandex_metrics_reports.
+  if (!module_enable(array('yandex_metrics_reports'))) {
+    throw new Exception('The Yandex.Metrics Reports could not be enabled. Please, check the module dependencies (Yandex Services Authorization API, Views, Chart) then try to update the module again');
+  }
+
+  // If old table exists.
+  if (db_table_exists('yandex_metrics_popular_content')) {
+
+    // Added primary key field to old table with data.
+    $spec = array(
+      'description' => 'The id for url.',
+      'type' => 'serial',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    );
+    db_add_field('yandex_metrics_popular_content', 'yid', $spec, array('primary key' => array('yid')));
+
+    // Add language field.
+    $spec_lang = array(
+      'description' => 'Language of the page.',
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => ''
+    );
+    db_add_field('yandex_metrics_popular_content', 'language', $spec_lang, array('language' => array('language')));
+
+    // Drop empty new table which was created by enabling yandex_metrics_reports module.
+    db_drop_table('yandex_metrics_reports_popular_content');
+
+    // Rename old table with data.
+    db_rename_table('yandex_metrics_popular_content', 'yandex_metrics_reports_popular_content');
+  }
+
+  // Let's use Yandex Services Authorization API (yandex_services_auth).
+  variable_set('yandex_services_auth_token', variable_get('yandex_metrics_reports_auth_token', ''));
+  variable_set('yandex_services_auth_client_id', variable_get('yandex_metrics_reports_client_id', ''));
+  variable_set('yandex_services_auth_client_secret', variable_get('yandex_metrics_reports_client_secret', ''));
+
+  // Remap variables.
+  variable_set('yandex_metrics_reports_popular_content_date_period', variable_get('yandex_metrics_popular_content_date_period', 'week'));
+  variable_set('yandex_metrics_reports_counter_id', variable_get('yandex_metrics_counter_id', ''));
+  variable_set('yandex_metrics_reports_visits_chart_visible', variable_get('yandex_metrics_visits_chart_visible', TRUE));
+  variable_set('yandex_metrics_reports_sources_chart_visible', variable_get('yandex_metrics_sources_chart_visible', TRUE));
+  variable_set('yandex_metrics_reports_search_phrases_visible', variable_get('yandex_metrics_search_phrases_visible', TRUE));
+  variable_set('yandex_metrics_reports_popular_content_visible', variable_get('yandex_metrics_popular_content_visible', TRUE));
+  variable_set('yandex_metrics_reports_geo_chart_visible', variable_get('yandex_metrics_geo_chart_visible', TRUE));
+  // Remove unnecessary variables.
+  variable_del('yandex_metrics_popular_content_date_period');
+  variable_del('yandex_metrics_popular_content_links_count');
+  variable_del('yandex_metrics_client_id');
+  variable_del('yandex_metrics_client_secret');
+  variable_del('yandex_metrics_auth_token');
+  variable_del('yandex_metrics_counter_id');
+  variable_del('yandex_metrics_use_ajax');
+  variable_del('yandex_metrics_visits_chart_visible');
+  variable_del('yandex_metrics_sources_chart_visible');
+  variable_del('yandex_metrics_search_phrases_visible');
+  variable_del('yandex_metrics_popular_content_visible');
+  variable_del('yandex_metrics_geo_chart_visible');
+
+  // Clear variables cache.
+  cache_clear_all('variables', 'cache_bootstrap');
+
+  if (db_select('block')->condition('module', 'yandex_metrics')->countQuery()->execute()->fetchField() > 0) {
+    // Remove new block records.
+    db_delete('block')
+      ->condition('module', 'yandex_metrics')
+      ->execute();
+  }
+
+  // Clear CSS and JS caches.
+  drupal_clear_css_cache();
+  drupal_clear_js_cache();
+
+  // Rebuild the menu.
+  menu_rebuild();
+}

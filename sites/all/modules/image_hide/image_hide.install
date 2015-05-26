@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Update and install functions for Image Hide.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function image_hide_install() {
+  // Insert needs to load after both ImageField.
+  db_query("UPDATE {system} SET weight = 15 WHERE type = 'module' AND name = 'image_hide'");
+
+  // Add image_hide column to {file_managed} table.
+  db_add_field('file_managed', 'image_hide', image_hide_build_schema());
+}
+
+/**
+ * Implements hook_schema_alter().
+ */
+function image_hide_schema_alter(&$schema) {
+  $schema['file_managed']['fields']['image_hide'] = image_hide_build_schema();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function image_hide_uninstall() {
+  db_drop_field('file_managed', 'image_hide');
+}
+
+/**
+ * Helper function to supply the database column 'image_hide' schema.
+ */
+function image_hide_build_schema() {
+  return array(
+    'description' => 'A boolean indicating whether to SHOW (0) or HIDE (1) the image in its field display.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'size' => 'tiny',
+  );
+}
