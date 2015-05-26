@@ -1,0 +1,100 @@
+; All the dates reported here are referred to UTC.
+
+yandex_metrics 7.x-2.x, xxxx-xx-xx
+
+
+yandex_metrics 7.x-2.0, 2013-10-17
+#2025701 by konstantin.komelin: Updated automated tests.
+#2084687 by konstantin.komelin: Translated documentation to Russian.
+by dmitry.grigoryan | konstantin.komelin: Updated Ukrainian translation.
+
+
+yandex_metrics 7.x-2.0-beta4, 2013-10-06
+#2094885 by konstantin.komelin: Fixed issue: After module update to 7.x-2.x-beta3 my application is not authorized.
+#2094875 by konstantin.komelin: Added redirect from yandex_metrics/oauth to yandex_services_auth/oauth.
+#2105787 by konstantin.komelin: Added fake Authorization tab.
+#2084707 by konstantin.komelin: Changed message in case if application has not been authorised yet.
+#2094889 by kalabro, konstantin.komelin: Implement hook_requirements() in Yandex.Metrics Reports module.
+
+
+yandex_metrics 7.x-2.0-beta3, 2013-09-09
+#2013108 by kalabro, konstantin.komelin: Integration with Yandex Services Authorization API.
+#1984900 by kalabro: Improved colors for genders in Demography of Visits chart.
+#1981910 by dmitry.grigoryan, konstantin.komelin: Added Ukrainian translations.
+#1986632 by konstantin.komelin: Fixed invalid variable name in Yandex.Metrics Counter.
+#1561192 by konstantin.komelin, duozersk | info999: Fixed incompatibility with Overlay.
+#1957770 by konstantin.komelin: Improved documentation in English.
+#1848162 by konstantin.komelin, kalabro: Performed coding Standards Review.
+
+
+yandex_metrics 7.x-2.0-beta2, 2013-04-30
+#1983080 by kalabro: Added new report "Demography of Visits".
+#1983010 by konstantin.komelin: Fixed critical bug: Update procedure crashes with exception.
+#1983098 by konstantin.komelin: Renamed translation files and moved to common directory.
+#1983118 by konstantin.komelin: Fixed bug: Report titles are not translated.
+by konstantin.komelin: Changed some Russian translations.
+
+
+yandex_metrics 7.x-2.0-beta1, 2013-04-29
+#1491318 by konstantin.komelin: Split functionality to two modules.
+#1541560 by konstantin.komelin: Fixed displaying of AJAX reports in case Clean URLs are disabled.
+#1646118 by vvolkov: Added Configure link for YM Counter to the Modules page.
+#1740446 by konstantin.komelin, Vydrin_AP: Fixed watchdog parameter list.
+#1650086 by kalabro: Added API for custom reports adding.
+#1844200 by kalabro: Fixed color scheme settings for Traffic Sources chart.
+#1843264 by man-1982, kalabro, konstantin.komelin: Integrated Popular content with Views.
+#1643374 by konstantin.komelin, man-1982, boatsman: Replaced style tag of counter container with class.
+#1912794 by grigoriev: Enabled Ajax reports by default.
+#1912792 by Niremizov, kalabro, konstantin.komelin: Replaced Bar chart with linear one with grid on the visits report.
+#1912764 by konstantin.komelin, man-1982: Fixed reason of strict warning: Only variables should be passed by reference.
+#1848162 by kalabro, konstantin.komelin: Code cleanup.
+#1957736 by kalabro, konstantin.komelin: Moved report callbacks to separate file.
+#1645632 by kalabro, konstantin.komelin: Added automated tests for Yandex.Metrics Counter.
+#1976096 by kalabro: Improved grid system for charts. Added custom adjust algorithm.
+#1957308 by konstantin.komelin: Improved Popular Content block, fixed bugs and added tests.
+#1957684 by konstantin.komelin: Improved upgrade paths.
+#1957550 by kalabro: Added new report "Hourly Traffic".
+#1957550 by kalabro, konstantin.komelin: Made reports fluid.
+#1974722 by Niremizov, konstantin.komelin: Added language filter for Popular Content view.
+#1957770 by konstantin.komelin: Improved English documentation for Reports module.
+#1949876 by konstantin.komelin: Updated Russian translations.
+
+
+yandex_metrics 7.x-1.3, 2012-04-08
+#1428960 by konstantin.komelin: Added helpful descriptions via hook_help.
+#1477528 by konstantin.komelin: Renamed 'Views' text string.
+#1487828 by konstantin.komelin: Turned off automatic redirect from counter settings page to authorization settings page.
+#1488624 by konstantin.komelin: Replaced error message with watchdog record in Cron. Added saving counter ID to variables.
+
+
+yandex_metrics 7.x-1.2, 2011-12-07
+#1337922 by konstantin.komelin: Added 'Geography of Visits' chart.
+#1340000 by konstantin.komelin: Added support of internationalized domain names.
+#1361496 by konstantin.komelin: Fixed fatal error in cron because of deprecated taxonomy_get_term() call.
+#1362710 by konstantin.komelin: Added settings to show/hide reports.
+
+
+yandex_metrics 7.x-1.1, 2011-10-15
+#1293278 by konstantin.komelin: Added support of client_secret parameter.
+#1293272 by konstantin.komelin: Fixed bug with tracking code displaying.
+#1279362 by konstantin.komelin: Added option to use AJAX on Summary Report page.
+#1275566 by alextataurov: Added Popular Content block.
+
+
+yandex_metrics 7.x-1.0, 2011-07-18
+#1215320 by konstantin.komelin: Initial porting to D7.
+by konstantin.komelin: Wrapped some strings into t().
+
+
+yandex_metrics 6.x-1.1, 2011-07-08
+-------------------------------------
+by konstantin.komelin: Minor fix in README.txt.
+#1205922 by konstantin.komelin: Fixed bug: Unable to save empty counter code.
+#1206680 by konstantin.komelin: Made URLs clickable in the Popular content table.
+#1206268 by konstantin.komelin: Fixed bug; added support of site mirrors for counter.
+#1208062 by alex.sorokin.v: Added role specific tracking settings.
+
+
+yandex_metrics 6.x-1.0, 2011-06-27
+-------------------------------------
+First release of the module.

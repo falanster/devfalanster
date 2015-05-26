@@ -1,0 +1,13 @@
+.yandex_metrics_reports-report {
+  margin-bottom: 30px;
+  clear: both;
+}
+
+div#edit-filter-wrapper label {
+  display: inline;
+  margin-bottom: 30px;
+}
+
+.yandex_metrics_reports-report img {
+  max-width: 100%;
+}

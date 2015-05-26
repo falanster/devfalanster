@@ -1,0 +1,13 @@
+name = Drupal System Charting
+description = Charting for various core modules.
+package = Charting
+core = 7.x
+php = 5
+dependencies[] = chart
+
+; Information added by Drupal.org packaging script on 2014-11-06
+version = "7.x-1.1+13-dev"
+core = "7.x"
+project = "chart"
+datestamp = "1415317082"
+

@@ -1,0 +1,131 @@
+# Russian translation of Drupal module Yandex.Metrics Counter
+# Copyright Konstantin Komelin <konstantin.komelin@gmail.com>
+# Generated from files:
+#  yandex_metrics.module: n/a
+#  yandex_metrics.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: yandex_metrics 7.x-2.x\n"
+"POT-Creation-Date: 2013-10-06 21:37+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: Konstantin Komelin <konstantin.komelin@gmail.com>\n"
+"Language-Team: Russian <konstantin.komelin@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: yandex_metrics.module:18
+msgid "Administer Yandex.Metrics Settings"
+msgstr ""
+
+#: yandex_metrics.module:55;40
+msgid "Counter Code"
+msgstr ""
+
+#: yandex_metrics.module:58
+msgid "Paste Yandex.Metrica counter code for your site here."
+msgstr ""
+
+#: yandex_metrics.module:63
+msgid "Page specific tracking settings"
+msgstr ""
+
+#: yandex_metrics.module:70
+msgid "Add to every page except the listed pages."
+msgstr ""
+
+#: yandex_metrics.module:71
+msgid "Add to the listed pages only."
+msgstr ""
+
+#: yandex_metrics.module:75
+msgid "Add code to specific pages"
+msgstr ""
+
+#: yandex_metrics.module:81
+msgid "Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page."
+msgstr ""
+
+#: yandex_metrics.module:87
+msgid "Pages"
+msgstr ""
+
+#: yandex_metrics.module:97
+msgid "Role specific tracking settings"
+msgstr ""
+
+#: yandex_metrics.module:104
+msgid "Add tracking for specific roles"
+msgstr ""
+
+#: yandex_metrics.module:106
+msgid "Add to the selected roles only"
+msgstr ""
+
+#: yandex_metrics.module:107
+msgid "Add to every role except the selected ones"
+msgstr ""
+
+#: yandex_metrics.module:119
+msgid "Roles"
+msgstr ""
+
+#: yandex_metrics.module:122
+msgid "If none of the roles are selected, all users will be tracked. If a user has any of the roles checked, that user will be tracked (or excluded, depending on the setting above)."
+msgstr ""
+
+#: yandex_metrics.module:127
+msgid "Save"
+msgstr ""
+
+#: yandex_metrics.module:150
+msgid "The Counter Code settings has been saved successfully."
+msgstr ""
+
+#: yandex_metrics.module:253
+msgid "About the module"
+msgstr ""
+
+#: yandex_metrics.module:254
+msgid "The <a href=\"@yandex_metrika\" target=\"_blank\">Yandex.Metrica</a> service is European alternative of Google Analytics. This is a free tool that helps you to increase the conversion rate of your site."
+msgstr ""
+
+#: yandex_metrics.module:255
+msgid "The Yandex.Metrics Counter module allows to install <a href=\"@yandex_metrika\" target=\"_blank\">Yandex.Metrica</a> counter code on the site pages."
+msgstr ""
+
+#: yandex_metrics.module:256
+msgid "Usage"
+msgstr ""
+
+#: yandex_metrics.module:258
+msgid "Installing counter"
+msgstr ""
+
+#: yandex_metrics.module:259
+msgid "Yandex.Metrics counter is JavaScript code that monitors user behavior on your website. You should <a href=\"@create_counter\" target=\"_blank\">create</a> and <a href=\"@install_counter\">install</a> the counter to work with Yandex.Metrics service."
+msgstr ""
+
+#: yandex_metrics.module:263
+msgid "Yandex.Metrica counter is JavaScript code that monitors user behavior on your website. You should <a href=\"@create_counter\" target=\"_blank\">create</a> and install the counter code to work with Yandex.Metrica service."
+msgstr ""
+
+#: yandex_metrics.module:32 yandex_metrics.info:0
+msgid "Yandex.Metrics"
+msgstr ""
+
+#: yandex_metrics.module:34
+msgid "Integrate your site with Yandex.Metrica service."
+msgstr ""
+
+#: yandex_metrics.info:0
+msgid "Yandex.Metrics Counter"
+msgstr ""
+
+#: yandex_metrics.info:0
+msgid "Allows to install Yandex.Metrica counter on the site pages."
+msgstr ""
+

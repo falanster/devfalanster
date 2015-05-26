@@ -1,0 +1,359 @@
+# Russian translation of Drupal module Yandex.Metrics Reports
+# Copyright Konstantin Komelin <konstantin.komelin@gmail.com>
+# Generated from files:
+#  yandex_metrics_reports.reports.inc: n/a
+#  yandex_metrics_reports.module: n/a
+#  yandex_metrics_reports.install: n/a
+#  yandex_metrics_reports.info: n/a
+#  views/yandex_metrics_reports.views.inc: n/a
+#  views/handlers/views_handler_field_ym_title.inc: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: yandex_metrics_reports 7.x-2.x\n"
+"POT-Creation-Date: 2013-10-06 21:37+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: Konstantin Komelin <konstantin.komelin@gmail.com>\n"
+"Language-Team: Russian <konstantin.komelin@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: yandex_metrics_reports.reports.inc:26
+msgid "There is no information about search phrases for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:31
+msgid "Visits (%)"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:31
+msgid "Phrase"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:45 yandex_metrics_reports.module:670
+msgid "Popular Search Phrases"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:66
+msgid "There is no information about traffic sources for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:71 yandex_metrics_reports.module:666
+msgid "Traffic Sources"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:114
+msgid "There is no information about page views and visitors for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:152 yandex_metrics_reports.module:662
+msgid "Page Views, Visitors, New Visitors"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:178;229
+msgid "Page Views"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:179
+msgid "Visitors"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:180
+msgid "New Visitors"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:226
+msgid "There is no information about popular content for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:229
+msgid "URL"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:243 yandex_metrics_reports.module:674
+msgid "Popular Content"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:264
+msgid "There is no information about geography of visits for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:269 yandex_metrics_reports.module:678
+msgid "Geography of Visits"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:296
+msgid "Others"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:338
+msgid "There is no information about hourly traffic for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:361 yandex_metrics_reports.module:682
+msgid "Hourly Traffic"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:375
+msgid "Visits per hour"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:376
+msgid "Denials (visits with only one page view)"
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:419
+msgid "There is no demography information for the selected date range."
+msgstr ""
+
+#: yandex_metrics_reports.reports.inc:424 yandex_metrics_reports.module:686
+msgid "Demography of Visits"
+msgstr ""
+
+#: yandex_metrics_reports.module:32
+msgid "Access Yandex.Metrics report"
+msgstr ""
+
+#: yandex_metrics_reports.module:127;757
+msgid "Today"
+msgstr ""
+
+#: yandex_metrics_reports.module:128;758
+msgid "Yesterday"
+msgstr ""
+
+#: yandex_metrics_reports.module:129;759
+msgid "Week"
+msgstr ""
+
+#: yandex_metrics_reports.module:130;760
+msgid "Month"
+msgstr ""
+
+#: yandex_metrics_reports.module:134
+msgid "Quick filter"
+msgstr ""
+
+#: yandex_metrics_reports.module:141
+msgid "Submit"
+msgstr ""
+
+#: yandex_metrics_reports.module:207
+msgid "Couldn't get information about the counter from Yandex.Metrica. See more details in log."
+msgstr ""
+
+#: yandex_metrics_reports.module:208
+msgid "Also, make sure that you created the counter and authorized your site at Yandex."
+msgstr ""
+
+#: yandex_metrics_reports.module:217;333
+msgid "Perhaps you have not yet placed Yandex.Metrica counter code on the site. You can do this !link."
+msgstr ""
+
+#: yandex_metrics_reports.module:217;225;333;346;360
+msgid "here"
+msgstr ""
+
+#: yandex_metrics_reports.module:225;360
+msgid "Please make sure that your application is authorized !link."
+msgstr ""
+
+#: yandex_metrics_reports.module:346
+msgid "Please create Yandex.Metrica counter for the site first. See more details !link."
+msgstr ""
+
+#: yandex_metrics_reports.module:457
+msgid "Front page"
+msgstr ""
+
+#: yandex_metrics_reports.module:513
+msgid "Reports visibility settings"
+msgstr ""
+
+#: yandex_metrics_reports.module:514
+msgid "Choose reports to display on Yandex.Metrics Summary Report page."
+msgstr ""
+
+#: yandex_metrics_reports.module:612
+msgid "About the module"
+msgstr ""
+
+#: yandex_metrics_reports.module:613
+msgid "The <a href=\"@yandex_metrika\" target=\"_blank\">Yandex.Metrica</a> service is European alternative of Google Analytics. This is a free tool that helps you to increase the conversion rate of your site."
+msgstr ""
+
+#: yandex_metrics_reports.module:614
+msgid "The Yandex.Metrics Reports module allows to view basic reports by key effectiveness indicators."
+msgstr ""
+
+#: yandex_metrics_reports.module:615
+msgid "Usage"
+msgstr ""
+
+#: yandex_metrics_reports.module:617
+msgid "Authorizing site"
+msgstr ""
+
+#: yandex_metrics_reports.module:618
+msgid "Register Yandex application and authorize your site following <a href=\"!yandex_services_oauth\">the documentation of Yandex Services Authorization API module</a>."
+msgstr ""
+
+#: yandex_metrics_reports.module:619
+msgid "Configuring reports"
+msgstr ""
+
+#: yandex_metrics_reports.module:620
+msgid "You can choose necessary reports <a href=\"@report-setting-page\">here</a> to display on <a href=\"@summary-report-page\">Yandex.Metrics Summary Report</a> page."
+msgstr ""
+
+#: yandex_metrics_reports.module:621
+msgid "Configuring cron"
+msgstr ""
+
+#: yandex_metrics_reports.module:622
+msgid "You can configure cron settings for the module, such as date period of data for <a href=\"@popular-content-view-page\">Popular Content view</a>. To do it go to <a href=\"@cron-setting-page\">Cron settings page</a>."
+msgstr ""
+
+#: yandex_metrics_reports.module:623
+msgid "Reports API"
+msgstr ""
+
+#: yandex_metrics_reports.module:624
+msgid "The module has API for developers which allows you to implement new reports in own modules. Please read module README.txt file for more information."
+msgstr ""
+
+#: yandex_metrics_reports.module:628
+msgid "Here you can specify settings which are used in cron."
+msgstr ""
+
+#: yandex_metrics_reports.module:631
+msgid "You can choose necessary reports to display on <a href=\"@summary-report-page\">Yandex.Metrics Summary Report</a> page."
+msgstr ""
+
+#: yandex_metrics_reports.module:753
+msgid "Popular Content Block Data"
+msgstr ""
+
+#: yandex_metrics_reports.module:764
+msgid "Date period"
+msgstr ""
+
+#: yandex_metrics_reports.module:765
+msgid "This date period is used to fetch popular content from Yandex.Metrica by cron."
+msgstr ""
+
+#: yandex_metrics_reports.module:294;342;356;383;396;439
+msgid "yandex_metrics_reports"
+msgstr ""
+
+#: yandex_metrics_reports.module:294
+msgid "Counters request seems to be fail, due to \"%error\"."
+msgstr ""
+
+#: yandex_metrics_reports.module:342
+msgid "Cron: counter ID is not set."
+msgstr ""
+
+#: yandex_metrics_reports.module:356
+msgid "Cron: application is not authorised."
+msgstr ""
+
+#: yandex_metrics_reports.module:383
+msgid "Fetching of popular content failed due to error %error."
+msgstr ""
+
+#: yandex_metrics_reports.module:396
+msgid "There is no popular content for the selected date period %filter."
+msgstr ""
+
+#: yandex_metrics_reports.module:439
+msgid "Popular content for %filter has been fetched."
+msgstr ""
+
+#: yandex_metrics_reports.module:49
+msgid "Authorization"
+msgstr ""
+
+#: yandex_metrics_reports.module:59
+msgid "Reports"
+msgstr ""
+
+#: yandex_metrics_reports.module:67
+msgid "Cron"
+msgstr ""
+
+#: yandex_metrics_reports.module:74;81
+msgid "Yandex.Metrics Summary Report"
+msgstr ""
+
+#: yandex_metrics_reports.install:82 yandex_metrics_reports.info:0
+msgid "Yandex.Metrics Reports"
+msgstr ""
+
+#: (duplicate) yandex_metrics_reports.install:79 
+msgid "Please, <a href=\"!module_config_url\">configure @module</a> module."
+msgstr ""
+
+#: yandex_metrics_reports.info:0
+msgid "Allows to authorise application and display reports."
+msgstr ""
+
+#: yandex_metrics_reports.info:0 views/yandex_metrics_reports.views.inc:11
+msgid "Yandex.Metrics"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:15
+msgid "Popular content from Yandex.Metrica"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:16
+msgid "Popular content is obtained from Yandex.Metrica"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:21
+msgid "Popular URL"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:22
+msgid "Popular URL. It is obtained from Yandex.Metrica."
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:40
+msgid "Language"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:41
+msgid "Language of the page."
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:58
+msgid "Page title"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:59
+msgid "Page title of the popular URL."
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:77
+msgid "Number of views"
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:78
+msgid "Number of page views for the popular URL. It is obtained from Yandex.Metrica."
+msgstr ""
+
+#: views/yandex_metrics_reports.views.inc:161
+msgid "Popular content (Yandex.Metrics)"
+msgstr ""
+
+#: views/handlers/views_handler_field_ym_title.inc:36
+msgid "Link to Popular URL"
+msgstr ""
+
+#: views/handlers/views_handler_field_ym_title.inc:37
+msgid "Enable to link this field to the conforming Popular URL."
+msgstr ""
+

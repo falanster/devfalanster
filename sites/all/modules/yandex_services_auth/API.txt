@@ -1,0 +1,13 @@
+------------------------------------------------------------------------------
+              Yandex Services Authorization API (API DOCUMENTATION)
+------------------------------------------------------------------------------
+
+To get authorization data you may use function:
+
+yandex_services_auth_info($value = 'token')
+
+with parameter:
+
+'token' - default parameter, the function returns auth token. It's used in almost any requests to Yandex services.
+'client_id' - the function returns Client ID
+'client_secret' - the function returns Client Secret

@@ -1,0 +1,844 @@
+<?php
+/**
+ * @file
+ * The main code of Yandex.Metrics Reports module.
+ */
+
+// Include report callbacks.
+module_load_include('inc', 'yandex_metrics_reports', 'yandex_metrics_reports.reports');
+
+/**
+ * Quantity of popular search phrases.
+ */
+define('YANDEX_METRICS_REPORTS_SEARCH_PHRASES_QUANTITY', 12);
+
+
+/**
+ * Quantity of popular content lines.
+ */
+define('YANDEX_METRICS_REPORTS_POPULAR_CONTENT_COUNT', 30);
+
+/**
+ * Max count of links in Popular Content block.
+ */
+define('YANDEX_METRICS_REPORTS_POPULAR_CONTENT_BLOCK_LIMIT', 50);
+
+/**
+ * Implements hook_permission().
+ */
+function yandex_metrics_reports_permission() {
+  return array(
+    'access Yandex.Metrics report' => array(
+      'title' => t('Access Yandex.Metrics report')
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function yandex_metrics_reports_menu() {
+
+  // Display fake Authorization tab in case if we have yandex_services_auth module installed.
+  if (module_exists('yandex_services_auth')) {
+    $items['admin/config/system/yandex_metrics/authorization'] = array(
+      // The  yandex_services_auth module requires 'administer site configuration' permission.
+      'access arguments' => array('administer Yandex.Metrics settings'),
+      'page callback'   => 'drupal_goto',
+      'page arguments'  => array('admin/config/system/yandex_services_auth'),
+      'title'           => 'Authorization',
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 2
+    );
+  }
+
+  $items['admin/config/system/yandex_metrics/reports'] = array(
+    'access arguments' => array('administer Yandex.Metrics settings'),
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('yandex_metrics_reports_reports'),
+    'title'           => 'Reports',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3
+  );
+  $items['admin/config/system/yandex_metrics/cron'] = array(
+    'access arguments' => array('administer Yandex.Metrics settings'),
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('yandex_metrics_reports_cron_settings'),
+    'title'           => 'Cron',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4
+  );
+  $items['admin/reports/yandex_metrics_summary'] = array(
+    'access arguments' => array('access Yandex.Metrics report'),
+    'page callback'   => 'yandex_metrics_reports_report',
+    'title'           => 'Yandex.Metrics Summary Report',
+    'type' => MENU_NORMAL_ITEM
+  );
+  $items['admin/reports/yandex_metrics_summary/%'] = array(
+    'access arguments' => array('access Yandex.Metrics report'),
+    'page callback'   => 'yandex_metrics_reports_report',
+    'page arguments' => array(3),
+    'title'           => 'Yandex.Metrics Summary Report',
+    'load arguments' => array(3),
+    'type' => MENU_CALLBACK
+  );
+  $items['admin/yandex_metrics_ajax/%/%/%'] = array(
+    'access arguments' => array('access Yandex.Metrics report'),
+    'page callback'   => 'yandex_metrics_reports_ajax',
+    'page arguments' => array(2, 3, 4),
+    'load arguments' => array(2, 3, 4),
+    'type' => MENU_CALLBACK
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function yandex_metrics_reports_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'yandex_metrics_reports') . '/views',
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function yandex_metrics_reports_init() {
+  // Redirect from old authorization callback url to the new one.
+  // It's necessary because old Yandex applications have old urls in their settings.
+  if (arg(0) == 'yandex_metrics' && arg(1) == 'oauth' && module_exists('yandex_services_auth')) {
+    drupal_goto('yandex_services_auth/oauth', array('query' => drupal_get_query_parameters()));
+  }
+}
+
+/**
+ * It is quick filter form for report page.
+ * @return array
+ */
+function yandex_metrics_reports_filter_form() {
+  $form = array();
+
+  $current_filter = arg(3) ? arg(3) : 'week';
+
+  $options = array(
+    'day' => t('Today'),
+    'yesterday' => t('Yesterday'),
+    'week' => t('Week'),
+    'month' => t('Month')
+  );
+  $form['filter'] = array(
+    '#type' => 'select',
+    '#title' => t('Quick filter'),
+    '#default_value' => $current_filter,
+    '#options' => $options,
+    '#attributes' => array('onchange' => 'this.form.submit();')
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+    '#attributes' => array('style' => 'display:none;')
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit handler for yandex_metrics_reports_time_interval_form form.
+ */
+function yandex_metrics_reports_filter_form_submit($form, &$form_state) {
+
+  $filter = $form_state['values']['filter'];
+  if (!empty($filter)) {
+    drupal_goto('admin/reports/yandex_metrics_summary/' . $filter);
+  }
+}
+
+/**
+ * Converts filter value to date range array:
+ * array(
+ *   'start_date' => 'YYYYMMDD',
+ *   'end_date' => 'YYYYMMDD',
+ *   'group' => 'week' // It is optional element.
+ * );
+ *
+ * @param string $filter - (day, yesterday, week, month)
+ * @return array
+ */
+function _yandex_metrics_reports_filter_to_date_range($filter) {
+
+  switch ($filter) {
+    case 'day':
+      return array(
+        'start_date' => date('Ymd'),
+        'end_date' => date('Ymd')
+      );
+    case 'yesterday':
+      return array(
+        'start_date' => date('Ymd', time() - 60 * 60 * 24),
+        'end_date' => date('Ymd', time() - 60 * 60 * 24)
+      );
+    case 'week':
+    default:
+      return array(
+        'start_date' => date('Ymd', time() - 60 * 60 * 24 * 6),
+        'end_date' => date('Ymd')
+      );
+    case 'month':
+      return array(
+        'start_date' => date('Ymd', time() - 60 * 60 * 24 * 31),
+        'end_date' => date('Ymd'),
+        'group' => 'week'
+      );
+  }
+}
+
+/**
+ * Menu callback; displays a Summary page containing reports and charts.
+ */
+function yandex_metrics_reports_report($filter = 'week') {
+
+  $counter_id = yandex_metrics_reports_get_counter_for_current_site();
+
+  if (empty($counter_id)) {
+    drupal_set_message(
+      t('Couldn\'t get information about the counter from Yandex.Metrica. See more details in log.') . '<br/>' .
+      t('Also, make sure that you created the counter and authorized your site at Yandex.'),
+        'error'
+    );
+    return '';
+  }
+
+  $counter_code = variable_get('yandex_metrics_counter_code', '');
+  if (empty($counter_code)) {
+    drupal_set_message(
+      t('Perhaps you have not yet placed Yandex.Metrica counter code on the site. You can do this !link.', array('!link' => l(t('here'), 'admin/config/system/yandex_metrics'))),
+      'notice'
+    );
+  }
+
+  $authorisation_token = yandex_services_auth_info('token');
+  if (empty($authorisation_token)) {
+    drupal_set_message(
+      t('Please make sure that your application is authorized !link.', array('!link' => l(t('here'), 'admin/config/system/yandex_services_auth'))),
+      'error'
+    );
+    return '';
+  }
+
+  drupal_add_css(drupal_get_path('module', 'yandex_metrics_reports') . '/css/yandex_metrics_reports.css');
+
+  $output = '';
+
+  $form = drupal_get_form('yandex_metrics_reports_filter_form');
+
+  $output .= drupal_render($form);
+
+  $reports = yandex_metrics_reports_get_active_list();
+
+  $js_settings = array(
+    'modulePath' => drupal_get_path('module', 'yandex_metrics_reports'),
+    'cleanUrls' => variable_get('clean_url', 0),
+    'reportList' => array_keys($reports)
+  );
+
+  drupal_add_js(array('yandex_metrics_reports' => $js_settings), 'setting');
+  drupal_add_js(drupal_get_path('module', 'yandex_metrics_reports') . '/js/yandex_metrics_reports.js');
+  $output .= '<input type="hidden" id="yandex_metrics_reports_counter_id" value="' . $counter_id . '" />';
+  $output .= '<input type="hidden" id="yandex_metrics_reports_filter" value="' . $filter . '" />';
+
+  foreach ($reports as $report_name => $report_data) {
+    $output .= '<div class="yandex_metrics_reports-report" id="yandex_metrics_reports_' . $report_name . '"></div>';
+  }
+
+  return $output;
+}
+
+/**
+ * This is the helper function to retreive analytic information from Yandex.Metrica.
+ * @param string $service_uri - short uri of service
+ * @param array $parameters - associative array with parameters
+ * @param string $result_type - result type (json, xml)
+ */
+function yandex_metrics_reports_retreive_data($service_uri, $parameters = array(), $result_type = 'json') {
+
+  $parameters['oauth_token'] = yandex_services_auth_info('token');
+
+  $query_parts = array();
+  foreach ($parameters as $key => $value) {
+    $query_parts[] = $key . '=' . $value;
+  }
+
+  $parameter_string = implode('&', $query_parts);
+
+  $full_service_url = "http://api-metrika.yandex.ru" . $service_uri . "." . $result_type . "?" . $parameter_string;
+
+  return drupal_http_request($full_service_url);
+}
+
+/**
+ * Gets counter ID for the current site from Yandex.Metrica.
+ */
+function yandex_metrics_reports_get_counter_for_current_site() {
+
+  $counter_id = variable_get('yandex_metrics_reports_counter_id', '');
+  if (!empty($counter_id)) {
+    return $counter_id;
+  }
+
+  $result = yandex_metrics_reports_retreive_data('/counters', array('field' => 'mirrors'));
+
+  if (isset($result->error)) {
+    watchdog('yandex_metrics_reports', 'Counters request seems to be fail, due to "%error".', array('%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
+    return;
+  }
+
+  $counters = json_decode($result->data);
+
+  $current_host = $_SERVER['HTTP_HOST'];
+
+  // Try to decode national domain.
+  $decoded_domain = _yandex_metrics_reports_idna_decode($current_host);
+
+  if ($decoded_domain != FALSE && $decoded_domain != $current_host) {
+    $current_host = $decoded_domain;
+  }
+
+  foreach ($counters->counters as $key => $counter) {
+    if ($counter->site == $current_host) {
+      variable_set('yandex_metrics_reports_counter_id', $counter->id);
+      return $counter->id;
+    }
+
+    // If current host is equal of any site mirror.
+    if (isset($counter->mirrors) && in_array($current_host, $counter->mirrors)) {
+      variable_set('yandex_metrics_reports_counter_id', $counter->id);
+      return $counter->id;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Fetch Popuplar content from Yandex.metrika and save it to the database.
+ * @param bool $cron - Indicates that we run function in cron or another place.
+ */
+function yandex_metrics_reports_save_popular_content($cron = FALSE) {
+  $counter_code = variable_get('yandex_metrics_counter_code', '');
+  if (empty($counter_code) && !$cron) {
+    drupal_set_message(
+      t('Perhaps you have not yet placed Yandex.Metrica counter code on the site. You can do this !link.', array('!link' => l(t('here'), 'admin/settings/yandex_metrics'))),
+      'notice'
+    );
+    return;
+  }
+
+  $counter_id = yandex_metrics_reports_get_counter_for_current_site();
+  if (empty($counter_id)) {
+    if ($cron) {
+      watchdog('yandex_metrics_reports', 'Cron: counter ID is not set.', array(), WATCHDOG_WARNING);
+    }
+    else {
+      drupal_set_message(
+        t('Please create Yandex.Metrica counter for the site first. See more details !link.', array('!link' => l(t('here'), 'admin/config/system/yandex_metrics'))),
+        'error'
+      );
+    }
+    return;
+  }
+
+  $authorisation_token = yandex_services_auth_info('token');
+  if (empty($authorisation_token)) {
+    if ($cron) {
+      watchdog('yandex_metrics_reports', 'Cron: application is not authorised.', array(), WATCHDOG_WARNING);
+    }
+    else {
+      drupal_set_message(
+        t('Please make sure that your application is authorized !link.', array('!link' => l(t('here'), 'admin/settings/yandex_metrics/authorization'))),
+        'error'
+      );
+    }
+
+    return;
+  }
+
+  $filter = variable_get('yandex_metrics_reports_popular_content_date_period', 'week');
+  $date_range = _yandex_metrics_reports_filter_to_date_range($filter);
+
+  $parameters = array(
+    'id' => $counter_id,
+    'date1' => $date_range['start_date'],
+    'date2' => $date_range['end_date']
+  );
+
+  // Fetch popular content urls.
+  $report_content = yandex_metrics_reports_retreive_data('/stat/content/popular', $parameters);
+  $content = json_decode($report_content->data);
+
+  // Check for errors.
+  if (isset($content->errors) && count($content->errors) > 0 && $content->errors[0]->code != 'ERR_NO_DATA') {
+    watchdog(
+      'yandex_metrics_reports',
+      'Fetching of popular content failed due to error %error.',
+      array('%error' => $content->errors[0]->text),
+      WATCHDOG_ERROR
+    );
+    return;
+  }
+
+  // Remove outdated data.
+  db_truncate('yandex_metrics_reports_popular_content')->execute();
+
+  if (empty($content->data)) {
+    watchdog(
+      'yandex_metrics_reports',
+      'There is no popular content for the selected date period %filter.',
+      array('%filter' => $filter),
+      WATCHDOG_NOTICE
+    );
+    return;
+  }
+
+  $counter = 1;
+  foreach ($content->data as $value) {
+
+    $parsed_url = parse_url($value->url);
+
+    // Ignore external urls.
+    // Let's consider third level domains as internal, e.g. es.domain.com.
+    global $base_root;
+    $base_root_parts = parse_url($base_root);
+    $pattern = "/(\.|^)" . preg_quote($base_root_parts['host'], "/") . "$/i";
+    if (!preg_match($pattern, $parsed_url['host'], $matches)) {
+      continue;
+    }
+
+    // Obtain page language.
+    $page_language = yandex_metrics_reports_language_from_url($value->url);
+
+    // Obtain page title if it is possible.
+    $page_title = yandex_metrics_reports_obtain_page_title($parsed_url['path'], $page_language);
+
+    db_insert('yandex_metrics_reports_popular_content')
+      ->fields(array(
+        'url' => $value->url,
+        'language' => $page_language,
+        'page_title' => $page_title,
+        'page_views' => $value->page_views,
+      ))
+      ->execute();
+
+    if ($counter++ >= YANDEX_METRICS_REPORTS_POPULAR_CONTENT_BLOCK_LIMIT) {
+      break;
+    }
+  }
+
+  watchdog('yandex_metrics_reports', 'Popular content for %filter has been fetched.', array('%filter' => $filter), WATCHDOG_NOTICE);
+}
+
+/**
+ * Obtain page title by path and language if possible.
+ *
+ * @param string $path
+ * @param string $language
+ *
+ * @return string
+ */
+function yandex_metrics_reports_obtain_page_title($path, $language = 'en') {
+
+  $path = ltrim($path, '/');
+
+  $site_frontpage = variable_get('site_frontpage', 'node');
+
+  if (empty($path) || $path == $site_frontpage || $path == $language . '/' . $site_frontpage) {
+    return variable_get('site_name', t('Front page', array(), array('langcode' => $language)));
+  }
+
+  // Get normal path, like node/1.
+  $normal_path = drupal_get_normal_path($path, $language);
+
+  $item = menu_get_item($normal_path);
+
+  if (empty($item) || empty($item['title'])) {
+    return $path;
+  }
+
+  return $item['title'];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function yandex_metrics_reports_cron() {
+  // Skip cron execution if Popular Content block is not enabled.
+  if (!_yandex_metrics_reports_is_popular_content_enabled()) {
+    return;
+  }
+
+  yandex_metrics_reports_save_popular_content(TRUE);
+}
+
+/**
+ * Menu callback; outputs content of one of the 4 reports.
+ * It is intended for AJAX calls.
+ * @param $counter_id
+ * @param $filter
+ * @param $type
+ * @return void
+ */
+function yandex_metrics_reports_ajax($counter_id, $filter, $type) {
+  $output = '';
+  $reports = yandex_metrics_reports_get_list();
+  if (isset($reports[$type]) && isset($reports[$type]['callback']) && function_exists($reports[$type]['callback'])) {
+    $output = call_user_func($reports[$type]['callback'], $counter_id, $filter);
+  }
+
+  print $output;
+  die;
+}
+
+/**
+ * Menu callback. Reports setting form.
+ * @return array
+ */
+function yandex_metrics_reports_reports() {
+
+  $form = array();
+
+  $form['reports'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Reports visibility settings'),
+      '#description' => t('Choose reports to display on Yandex.Metrics Summary Report page.')
+  );
+
+  $reports = yandex_metrics_reports_get_list(TRUE);
+
+  foreach ($reports as $report_name => $report_data) {
+    $form['reports']['yandex_metrics_reports_' . $report_name . '_visible'] = array(
+      '#type' => 'checkbox',
+      '#title' => $report_data['title'],
+      '#default_value' => variable_get('yandex_metrics_reports_' . $report_name . '_visible', TRUE),
+    );
+  }
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_chart_color_schemes().
+ * Define color schemes for Chart module.
+ */
+function yandex_metrics_reports_chart_color_schemes() {
+  return array(
+    'yandex_metrics_reports' => array(
+      'ff3030',
+      'ff8800',
+      '00b6f7',
+      '95d900',
+      'ffea00',
+      'bb7bf1',
+      '0080ff',
+      'ff8888',
+      '87888e',
+      '457f51',
+      'b5b6be'
+    ),
+  );
+}
+
+/**
+ * Returns path of idna_convert class.
+ * @return bool|string
+ */
+function _yandex_metrics_reports_get_idna_library_path() {
+  $file = 'idna_convert.class.php';
+  $library = 'idna_convert';
+  if (module_exists('libraries') && file_exists(libraries_get_path($library) . "/$file")) {
+    return libraries_get_path($library) . "/$file";
+  }
+  else {
+    $paths = array(
+      drupal_get_path('module', 'yandex_metrics'),
+      drupal_get_path('module', 'yandex_metrics') . "/libraries",
+      drupal_get_path('module', 'yandex_metrics_reports'),
+      drupal_get_path('module', 'yandex_metrics_reports') . "/libraries",
+      'profiles/' . variable_get('install_profile', 'default') . '/libraries',
+      'profiles/' . variable_get('install_profile', 'default') . '/libraries/' . $library,
+      'sites/all/libraries',
+      'sites/all/libraries/' . $library,
+    );
+    foreach ($paths as $library_path) {
+      $path = $library_path . "/$file";
+      if (file_exists($path)) {
+        return $path;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Decode ASCII 'xn--*' domain name to Unicode national domain name if it is possible.
+ * Used idna_convert class created by Matthias Sommerfeld <mso@phlylabs.de> and licensed under LGPL.
+ * @see http://www.phpclasses.org/package/1509-PHP-Convert-from-and-to-IDNA-Punycode-domain-names.html
+ * @param $domain
+ * @return string
+ */
+function _yandex_metrics_reports_idna_decode($domain) {
+  $idna_library_path = _yandex_metrics_reports_get_idna_library_path();
+
+  // Library has not been found.
+  if ($idna_library_path == FALSE) {
+    return $domain;
+  }
+
+  require_once($idna_library_path);
+
+  $IDN = new idna_convert();
+
+  return $IDN->decode($domain);
+}
+
+/**
+ * Implements hook_help().
+ */
+function yandex_metrics_reports_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#yandex_metrics_reports':
+      $output = '';
+      $output .= '<h3>' . t('About the module') . '</h3>';
+      $output .= '<p>' . t('The <a href="@yandex_metrika" target="_blank">Yandex.Metrica</a> service is European alternative of Google Analytics. This is a free tool that helps you to increase the conversion rate of your site.', array('@yandex_metrika' => 'http://metrika.yandex.ru/')) . '</p>';
+      $output .= '<p>' . t('The Yandex.Metrics Reports module allows to view basic reports by key effectiveness indicators.') . '</p>';
+      $output .= '<h3>' . t('Usage') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Authorizing site') . '</dt>';
+      $output .= '<dd>' . t('Register Yandex application and authorize your site following <a href="!yandex_services_oauth">the documentation of Yandex Services Authorization API module</a>.', array('!yandex_services_oauth' => url('admin/help/yandex_services_auth'))) . '</dd>';
+      $output .= '<dt>' . t('Configuring reports') . '</dt>';
+      $output .= '<dd>' . t('You can choose necessary reports <a href="@report-setting-page">here</a> to display on <a href="@summary-report-page">Yandex.Metrics Summary Report</a> page.', array('@summary-report-page' => url('admin/reports/yandex_metrics_summary'), '@report-setting-page' => url('admin/config/system/yandex_metrics/reports'))) . '</dd>';
+      $output .= '<dt>' . t('Configuring cron') . '</dt>';
+      $output .= '<dd>' . t('You can configure cron settings for the module, such as date period of data for <a href="@popular-content-view-page">Popular Content view</a>. To do it go to <a href="@cron-setting-page">Cron settings page</a>.', array('@cron-setting-page' => url('admin/config/system/yandex_metrics/cron'), '@popular-content-view-page' => url('admin/structure/views/view/popular_content'))) . '</dd>';
+      $output .= '<dt>' . t('Reports API') . '</dt>';
+      $output .= '<dd>' . t('The module has API for developers which allows you to implement new reports in own modules. Please read module README.txt file for more information.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+    case 'admin/config/system/yandex_metrics/cron':
+      $output = '<p>' . t('Here you can specify settings which are used in cron.') . '</p>';
+      return $output;
+    case 'admin/config/system/yandex_metrics/reports':
+      return '<p>' . t('You can choose necessary reports to display on <a href="@summary-report-page">Yandex.Metrics Summary Report</a> page.', array('@summary-report-page' => url('admin/reports/yandex_metrics_summary'))) . '</p>';
+  }
+}
+
+/*
+ * Check whether Popular Content view and block are enabled.
+ */
+function _yandex_metrics_reports_is_popular_content_enabled() {
+  $result = db_select("block")
+    ->condition("module", "yandex_metrics_reports")
+    ->condition("delta", "popular_content")
+    ->condition("status", 1)
+    ->fields('block')
+    ->execute()->fetchField();
+
+  $views = views_get_view('popular_content');
+  // if views is present and it`s enabled
+  if (!empty($views) && !$views->disabled) {
+    $result = 1;
+  }
+
+  return !empty($result);
+}
+
+/**
+ * Implements hook_yandex_metrics_reports_list().
+ */
+function yandex_metrics_reports_yandex_metrics_reports_list() {
+  $reports = array();
+
+  $reports['visits_chart'] = array(
+    'title' => t('Page Views, Visitors, New Visitors'),
+    'callback' => 'yandex_metrics_reports_visits_chart',
+  );
+  $reports['sources_chart'] = array(
+    'title' => t('Traffic Sources'),
+    'callback' => 'yandex_metrics_reports_sources_chart',
+  );
+  $reports['search_phrases'] = array(
+    'title' => t('Popular Search Phrases'),
+    'callback' => 'yandex_metrics_reports_search_phrases',
+  );
+  $reports['popular_content'] = array(
+    'title' => t('Popular Content'),
+    'callback' => 'yandex_metrics_reports_popular_content',
+  );
+  $reports['geo_chart'] = array(
+    'title' => t('Geography of Visits'),
+    'callback' => 'yandex_metrics_reports_geo_chart',
+  );
+  $reports['hourly_chart'] = array(
+    'title' => t('Hourly Traffic'),
+    'callback' => 'yandex_metrics_reports_traffic_hourly_chart',
+  );
+  $reports['gender_chart'] = array(
+    'title' => t('Demography of Visits'),
+    'callback' => 'yandex_metrics_reports_gender_chart',
+  );
+
+  return $reports;
+}
+
+/**
+ * Returns list of all reports.
+ *
+ * @return array
+ */
+function yandex_metrics_reports_get_list($reset = FALSE) {
+  $reports = &drupal_static(__FUNCTION__);
+
+  if (!isset($reports) || $reset) {
+    // Permanent cache.
+    $cache = cache_get('yandex_metrics_reports_list');
+    if ($cache === FALSE || $reset) {
+      $reports = array();
+
+      foreach (module_implements('yandex_metrics_reports_list') as $module) {
+        $module_report_list = module_invoke($module, 'yandex_metrics_reports_list');
+        if (isset($module_report_list) && is_array($module_report_list)) {
+          $reports = array_merge($reports, $module_report_list);
+        }
+      }
+      // Allow other modules to alter reports list before caching.
+      drupal_alter('yandex_metrics_reports_list', $reports);
+
+      cache_set('yandex_metrics_reports_list', $reports);
+    }
+    else {
+      $reports = $cache->data;
+    }
+  }
+
+  return $reports;
+}
+
+/**
+ * Returns list of available and enabled reports only.
+ *
+ * @return array
+ */
+function yandex_metrics_reports_get_active_list() {
+  $reports = yandex_metrics_reports_get_list();
+
+  foreach ($reports as $report_name => $report_data) {
+    if (
+      !variable_get('yandex_metrics_reports_' . $report_name . '_visible', TRUE) ||
+      !function_exists($report_data['callback'])
+    ) {
+      unset($reports[$report_name]);
+    }
+  }
+
+  return $reports;
+}
+
+/**
+ * Menu callback; cron settings form.
+ */
+function yandex_metrics_reports_cron_settings() {
+
+  $form['popular_content'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Popular Content Block Data')
+  );
+
+  $options = array(
+    'day' => t('Today'),
+    'yesterday' => t('Yesterday'),
+    'week' => t('Week'),
+    'month' => t('Month')
+  );
+  $form['popular_content']['yandex_metrics_reports_popular_content_date_period'] = array(
+    '#type' => 'select',
+    '#title' => t('Date period'),
+    '#description' => t('This date period is used to fetch popular content from Yandex.Metrica by cron.'),
+    '#options' => $options,
+    '#default_value' => variable_get('yandex_metrics_reports_popular_content_date_period', 'week'),
+  );
+
+  return system_settings_form($form);
+}
+
+
+/**
+ * Implements hook_chart_alter().
+ */
+function yandex_metrics_reports_chart_alter(&$chart) {
+  if (!empty($chart['#fluid_grid_adjust']['#max'])) {
+    _yandex_metrics_chart_adjust_resolution($chart['#data'], $chart['#fluid_grid_adjust']['#max']);
+    // Disable default adjust logic.
+    $chart['#adjust_resolution'] = FALSE;
+  }
+}
+
+
+/**
+ * Identify language via URL prefix or domain.
+ *
+ * @see locale_language_from_url().
+ *
+ * @param $url
+ *   A URL.
+ *
+ * @return
+ *   A valid language code.
+ */
+function yandex_metrics_reports_language_from_url($url) {
+
+  // Include necessary libraries.
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
+  require_once DRUPAL_ROOT . '/includes/language.inc';
+
+  $default_language = language_default();
+
+  $url_language = $default_language->language;
+
+  if (!language_negotiation_get_any(LOCALE_LANGUAGE_NEGOTIATION_URL)) {
+    return $url_language;
+  }
+
+  $languages = language_list();
+
+  $url_parts = parse_url($url);
+
+  $host = $url_parts['host'];
+  $path = ltrim($url_parts['path'], '/');
+
+  switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
+    case LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX:
+      list($language, $path) = language_url_split_prefix($path, $languages);
+      if ($language !== FALSE) {
+        $url_language = $language->language;
+      }
+      break;
+
+    case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
+      foreach ($languages as $language) {
+        // Skip check if the language doesn't have a domain.
+        if ($language->domain) {
+          // Only compare the domains not the protocols or ports.
+          // Remove protocol and add http:// so parse_url works.
+          $language_host = 'http://' . str_replace(array('http://', 'https://'), '', $language->domain);
+          $language_host = parse_url($language_host, PHP_URL_HOST);
+          if ($host == $language_host) {
+            $url_language = $language->language;
+            break;
+          }
+        }
+      }
+      break;
+  }
+
+  return $url_language;
+}

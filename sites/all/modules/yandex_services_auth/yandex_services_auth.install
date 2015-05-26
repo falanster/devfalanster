@@ -1,0 +1,52 @@
+<?php
+/**
+ * @file
+ * Install and uninstall functions for the Yandex Services Authorization API module.
+ */
+
+/**
+ * Implements hook_uninstall.
+ */
+function yandex_services_auth_uninstall() {
+  variable_del('yandex_services_auth_client_id');
+  variable_del('yandex_services_auth_client_secret');
+  variable_del('yandex_services_auth_token');
+  variable_del('yandex_services_auth_timestamp');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function yandex_services_auth_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    module_load_include('module', 'yandex_services_auth');
+    $auth_timestamp = variable_get('yandex_services_auth_timestamp', '');
+    $requirements = array(
+      'yandex_services_auth' => array(
+        'title' => t('Yandex Services Authorization expiration'),
+        'value' => $auth_timestamp ? format_date($auth_timestamp) : '',
+        'description' => t('You should authorize your application at <a href="!link">Yandex Services Authorization settings page</a>.',
+          array('!link' => url('admin/config/system/yandex_services_auth'))),
+        'severity' => REQUIREMENT_OK,
+      ),
+    );
+
+    switch (yandex_services_auth_status()) {
+      case 'not authorized':
+        $requirements['yandex_services_auth']['severity'] = REQUIREMENT_ERROR;
+        break;
+      case 'authorized':
+        unset($requirements['yandex_services_auth']['description']);
+        break;
+      case 'expiring':
+        $requirements['yandex_services_auth']['severity'] = REQUIREMENT_WARNING;
+        break;
+      case 'expired':
+        $requirements['yandex_services_auth']['severity'] = REQUIREMENT_ERROR;
+        break;
+    }
+  }
+
+  return $requirements;
+}

@@ -1,0 +1,13 @@
+; All the dates reported here are referred to UTC.
+
+yandex_services_auth 7.x-1.x, xxxx-xx-xx
+
+
+yandex_services_auth 7.x-1.1, 2015-03-06
+#2013421 by duozersk: Implemented application authorization expiration logic.
+#2122979 by podarok: Fixed reason of notice: Undefined variable: requirements in yandex_services_auth_requirements.
+#2437565 by konstantin.komelin, duozersk: Show instructions from hook_help() on the settings form.
+
+
+yandex_services_auth 7.x-1.0, 2013-08-09
+by duozersk, konstantin.komelin, kalabro: Extracted from Yandex.Metrics project.

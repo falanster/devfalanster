@@ -1,0 +1,195 @@
+<?php
+
+/**
+ * @file
+ * Tests for Yandex.Metrics Counter module.
+ */
+
+
+/**
+ * Tests of functionality and settings of Yandex.Metrics Counter module.
+ */
+class YandexMetricsCounterTestCase extends DrupalWebTestCase {
+
+  /**
+   * Return information about test case.
+   *
+   * @return array
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Yandex.Metrics Counter',
+      'description' => 'Tests of functionality and settings of Yandex.Metrics Counter module.',
+      'group' => 'Yandex.Metrics',
+    );
+  }
+
+  /**
+   * Simple counter code.
+   * @var string
+   */
+  protected $yandex_metrics_code = '';
+
+  /**
+   * Test case presets.
+   *
+   * @return bool|void
+   */
+  function setUp() {
+    // Install the Yandex.Metrics Counter module.
+    parent::setUp('yandex_metrics');
+
+    // Set simple string as counter code.
+    $this->yandex_metrics_code = '<!-- Yandex.Metrika counter -->' . $this->randomName(8);
+    variable_set('yandex_metrics_counter_code', $this->yandex_metrics_code);
+
+    // Create admin user.
+    $admin_user_permissions = array(
+      'administer Yandex.Metrics settings',
+      'access administration pages',
+      'access content overview'
+    );
+    $this->admin_user = $this->drupalCreateUser($admin_user_permissions);
+
+    // Create regular user.
+    $regular_user_permissions = array(
+      'access content',
+      'access comments'
+    );
+    $this->regular_user = $this->drupalCreateUser($regular_user_permissions);
+  }
+
+  /**
+   * Try to find Yandex.Metrics counter code on current page.
+   *
+   * @return bool
+   */
+  function checkCounter() {
+    return $this->assertPattern('@<div class="ym-counter">' . $this->yandex_metrics_code . '</div>@', 'Yandex.Metrica counter was outputed on page.');
+  }
+
+  /**
+   * Try not to find Yandex.Metrics counter code on current page.
+   *
+   * @return bool
+   */
+  function checkNoCounter() {
+    return $this->assertNoPattern('@<div class="ym-counter">' . $this->yandex_metrics_code . '</div>@', 'Yandex.Metrica counter was not found on page.');
+  }
+
+  /**
+   * Test counter code with default module settings.
+   */
+  function testCounterCodeDefault() {
+    // Anonymous user.
+
+    // Front page.
+    $this->drupalGet('');
+    $this->checkCounter();
+
+    // 404 page.
+    $this->drupalGet('404');
+    $this->checkCounter();
+
+    // Administration page.
+    $this->drupalGet('admin');
+    $this->checkNoCounter();
+
+    // Login as administrator.
+    $this->drupalLogin($this->admin_user);
+
+    // Front page.
+    $this->drupalGet('');
+    $this->checkCounter();
+
+    // Administration page.
+    $this->drupalGet('admin/content');
+    $this->checkNoCounter();
+  }
+
+  /**
+   * Test Yandex.Metrics page specific settings.
+   */
+  function testCounterCodePagesSettings() {
+    // Login as administrator.
+    $this->drupalLogin($this->admin_user);
+
+    // Create test node.
+    $node = $this->drupalCreateNode();
+    // Check if counter exists.
+    $this->drupalGet('node');
+    $this->checkCounter();
+    $this->drupalGet('node/' . $node->nid);
+    $this->checkCounter();
+
+    // Disable counter on node overview and node full pages.
+    $edit = array();
+    $edit["yandex_metrics_pages"] = variable_get('yandex_metrics_pages', YANDEX_METRICS_PAGES) . "\n" . 'node' . "\n" . 'node/*';
+    $this->drupalPost('admin/config/system/yandex_metrics', $edit, t('Save'));
+    // Check if counter doesn't exist.
+    $this->drupalGet('node');
+    $this->checkNoCounter();
+    $this->drupalGet('node/' . $node->nid);
+    $this->checkNoCounter();
+
+    // Enable counter only on node pages.
+    $edit = array();
+    $edit['yandex_metrics_visibility'] = 1;
+    $edit['yandex_metrics_pages'] = 'node/*';
+    $this->drupalPost('admin/config/system/yandex_metrics', $edit, t('Save'));
+    // Check if counter exists.
+    $this->drupalGet('node/' . $node->nid);
+    $this->checkCounter();
+    // Check if counter doesn't exist.
+    $this->drupalGet('');
+    $this->checkNoCounter();
+    $this->drupalGet('user');
+    $this->checkNoCounter();
+  }
+
+  /**
+   * Test Yandex.Metrics role specific settings.
+   */
+  function testCounterCodeRolesSettings() {
+
+    // Login as administrator.
+    $this->drupalLogin($this->admin_user);
+
+    // Add Yandex.Metrica counter code only for anonymous users.
+    $edit = array();
+    $edit['yandex_metrics_roles[' . DRUPAL_ANONYMOUS_RID . ']'] = DRUPAL_ANONYMOUS_RID;
+    $this->drupalPost('admin/config/system/yandex_metrics', $edit, t('Save'));
+    // Check if counter doesn't exist for admin.
+    $this->drupalGet('');
+    $this->checkNoCounter();
+    // Check if counter exists for anonymous user.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->checkCounter();
+    // Check if counter doesn't exist for normal user.
+    $this->drupalLogin($this->regular_user);
+    $this->drupalGet('');
+    $this->checkNoCounter();
+
+    // Add Yandex.Metrica counter code for all roles except administrators.
+    $this->drupalLogin($this->admin_user);
+    $admin_role_id = key(array_diff_key($this->admin_user->roles, array(DRUPAL_AUTHENTICATED_RID => 0)));
+    $edit = array();
+    $edit['yandex_metrics_visibility_roles'] = 1;
+    $edit['yandex_metrics_roles[' . $admin_role_id . ']'] = $admin_role_id;
+    // Unset previous setting for anonymous role.
+    $edit['yandex_metrics_roles[' . DRUPAL_ANONYMOUS_RID . ']'] = FALSE;
+    $this->drupalPost('admin/config/system/yandex_metrics', $edit, t('Save'));
+    // Check if counter doesn't exist for admin.
+    $this->drupalGet('');
+    $this->checkNoCounter();
+    // Check if counter exists for anonymous user.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->checkCounter();
+    // Check if counter exists for normal user.
+    $this->drupalLogin($this->regular_user);
+    $this->drupalGet('');
+    $this->checkCounter();
+  }
+}

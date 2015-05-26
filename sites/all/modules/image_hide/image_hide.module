@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Allows all or individual images of an image field to be hidden,
+ * and displayed by other means, such as via 'Insert' module.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function image_hide_form_field_ui_field_edit_form_alter(&$form, $form_state) {
+  // Adds setting to the Image field edit form.
+  $instance = $form['#instance'];
+  if ($instance['widget']['type'] == 'image_image') {
+    if (empty($form['instance']['settings'])) {
+      $form['instance']['settings'] = array();
+    }
+    $form['instance']['settings']['image_hide'] = array(
+      '#type' => 'select',
+      '#title' => t('Image Hide'),
+      '#options' => array(
+        0 => t('Disabled'),
+        1 => t('Enabled - Images VISIBLE by default'),
+        2 => t('Enabled - Images HIDDEN by default'),
+      ),
+      '#default_value' => isset($form['#instance']['settings']['image_hide']) ? $form['#instance']['settings']['image_hide'] : 0,
+      '#description' => t('If you want to enable Image Hide for this widget, you must choose if images are hidden or visible by default.'),
+      '#weight' => 10,
+    );
+  }
+}
+
+/**
+ * Implements hook_field_widget_FORM_ID_form_alter().
+ */
+function image_hide_field_widget_image_image_form_alter(&$element, &$form_state, $context) {
+  // Add process, which adds fields, that will be shown on the entity edit form.
+  foreach (element_children($element) as $delta) {
+    $element[$delta]['#process'][] = 'image_hide_field_widget_process';
+  }
+}
+
+/**
+ * An element #process callback for the image_image field type.
+ */
+function image_hide_field_widget_process($element, &$form_state, $form) {
+
+  $item = $element['#value'];
+
+  $instance = field_widget_instance($element, $form_state);
+
+  if (!empty($instance['settings']['image_hide'])) {
+    $element['image_hide'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide Image'),
+      '#default_value' => isset($item['image_hide']) ? $item['image_hide'] : ($instance['settings']['image_hide'] - 1),
+      '#description' => t('Tick to flag the image to be hidden on node views.'),
+      '#weight' => -3,
+      // It would be preferable to hide this field, if an image has not been
+      // uploaded yet. This would be accomplished using
+      // '#printed' => (bool) !$item['fid']
+      // as per image alt and title field. Unfortunately, this means the default
+      // is not saved with the field, and it reverts to database default. There
+      // is no context in hook_entity_insert(), so it cannot be set accordingly.
+    );
+  }
+
+  return $element;
+
+}
+
+/**
+ * Implements hook_field_attach_insert().
+ */
+function image_hide_field_attach_insert($entity_type, $entity) {
+  // Force an update when new images are inserted.
+  image_hide_field_attach_update($entity_type, $entity);
+}
+
+/**
+ * Implements hook_field_attach_update().
+ */
+function image_hide_field_attach_update($entity_type, $entity) {
+  // Checks for an image field with updated image_hide, then updates database.
+  foreach (field_info_field_map() as $field_name => $field) {
+    if ($field['type'] == 'image' && isset($entity->{$field_name})) {
+      foreach ($entity->{$field_name} as $langcode => $deltas) {
+        foreach ($deltas as $delta => $item) {
+          if (!isset($item['image_hide'])) continue;
+          // Update DB if the image is new (ie there is no original),
+          // or the image_hide property has changed.
+          if (!isset($entity->original->{$field_name}[$langcode][$delta]['image_hide']) ||
+          $item['image_hide'] != $entity->original->{$field_name}[$langcode][$delta]['image_hide']) {
+            db_update('file_managed')
+              ->fields(array('image_hide' => $item['image_hide']))
+              ->condition('fid', $item['fid'])
+              ->execute();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function image_hide_entity_view_alter(&$build, $type) {
+  // Checks for an image field, and hides the necessary images.
+  foreach (field_info_field_map() as $field_name => $field) {
+    if ($field['type'] == 'image' && isset($build[$field_name])) {
+      $instance = field_info_instance($build[$field_name]['#entity_type'], $build[$field_name]['#field_name'], $build[$field_name]['#bundle']);
+      if (!empty($instance['settings']['image_hide'])) {
+        foreach (element_children($build[$field_name]) as $delta) {
+          if ($build[$field_name][$delta]['#item']['image_hide'] == 1) {
+            $build[$field_name][$delta]['#printed'] = TRUE;
+          }
+        }
+      }
+    }
+  }
+}

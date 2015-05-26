@@ -1,0 +1,88 @@
+<?php
+/**
+ * @file
+ * Tests for Yandex.Metrics Reports module.
+ */
+
+
+/**
+ * Tests of functionality and settings of Yandex.Metrics Counter module.
+ */
+class YandexMetricsReportsTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Yandex.Metrics Reports',
+      'description' => 'Tests some functions of the module.',
+      'group' => 'Yandex.Metrics',
+    );
+  }
+
+  protected $admin_user;
+
+  function setUp() {
+    // Install the Yandex.Metrics Reports module.
+    parent::setUp(
+      'yandex_metrics_reports',
+      'locale'
+    );
+
+    // User to add and remove language.
+    $this->admin_user = $this->drupalCreateUser(
+      array(
+        'administer languages',
+        'create page content',
+        'administer url aliases',
+        'create url aliases',
+        'access administration pages'
+      )
+    );
+  }
+
+  // @todo: Write tests for yandex_metrics_reports_language_from_url().
+
+  /**
+   * Test for yandex_metrics_reports_obtain_page_title() function.
+   * @see yandex_metrics_reports_obtain_page_title()
+   */
+  function testObtainPageTitle() {
+    /* Homepage */
+
+    $page_title = yandex_metrics_reports_obtain_page_title('/');
+    $this->assertEqual($page_title, variable_get('site_name', t('Front page')), 'Obtain default homepage title.');
+
+    $page_title = yandex_metrics_reports_obtain_page_title(variable_get('site_frontpage', 'node'));
+    $this->assertEqual($page_title, variable_get('site_name', t('Front page')), 'Obtain homepage title.');
+
+    /* Simple page */
+
+    $page_title = yandex_metrics_reports_obtain_page_title('/contact');
+    $this->assertEqual($page_title, 'contact', 'Obtain page title for contact page.');
+
+    /* Node */
+
+    $this->drupalLogin($this->admin_user);
+
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => 1);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Create a node.
+    $node = $this->drupalCreateNode(array('type' => 'page'));
+
+    // Create a path alias in default language (English).
+    $english_path = $this->randomName(8);
+    $edit = array(
+      'source'   => 'node/' . $node->nid,
+      'alias'    => $english_path,
+      'language' => 'en',
+    );
+    path_save($edit);
+
+    // Get title.
+    $page_title = yandex_metrics_reports_obtain_page_title('/' . $english_path);
+    $this->assertEqual($page_title, $node->title, 'Check page title for node.');
+
+    // TODO: Taxonomy.
+  }
+}

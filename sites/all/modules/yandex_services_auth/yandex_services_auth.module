@@ -1,0 +1,113 @@
+<?php
+/**
+ * @file
+ * Main file for the Yandex Services Authorization API module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function yandex_services_auth_menu() {
+  $items = array();
+
+  $items['admin/config/system/yandex_services_auth'] = array(
+    'title' => 'Yandex Services Authorization',
+    'description' => 'Authorize your site to utilize Yandex services.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('yandex_services_auth_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'yandex_services_auth.admin.inc',
+  );
+  $items['yandex_services_auth/oauth'] = array(
+    'page callback'   => 'yandex_services_auth_oauth_callback',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'yandex_services_auth.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * API function to return information for other modules.
+ *
+ * @param string $value
+ *  - client_id
+ *  - client_secret
+ *  - token
+ */
+function yandex_services_auth_info($value = 'token') {
+  switch ($value) {
+    case 'client_id':
+      return variable_get('yandex_services_auth_client_id', '');
+    case 'client_secret':
+      return variable_get('yandex_services_auth_client_secret', '');
+    case 'token':
+    default:
+      return variable_get('yandex_services_auth_token', '');
+  }
+}
+
+/**
+ * Implements hook_help().
+ */
+function yandex_services_auth_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#yandex_services_auth':
+      $output = '';
+      $output .= '<h3>' . t('Overview') . '</h3>';
+      $output .= '<p>' . t('This project is the common authorization API for all Yandex services which support Yandex OAuth method.') . '</p>';
+      $output .= '<dl>';
+      $output .= '<dt><b>' . t('Authorization') . '</b></dt>';
+      $output .= '<dt>' . t('To authorize your site you should register Yandex application at !app_register_link. Then enter your application Client ID and Client Secret in the appropriate fields on !settings_page. The list of your Yandex applications is located !app_list_link.', array('!app_register_link' => l('https://oauth.yandex.ru/client/new', 'https://oauth.yandex.ru/client/new', array('attributes' => array('target' => '_blank'))), '!app_list_link' => l(t('here'), 'https://oauth.yandex.ru/client/my', array('attributes' => array('target' => '_blank'))), '!settings_page' => l(t('the module settings page'), 'admin/config/system/yandex_services_auth'))) . '</dt>';
+      $output .= '<dt>' . t('There are more details in the module documentation.') . '</dt>';
+      $output .= '</dl>';
+      return $output;
+    case 'admin/config/system/yandex_services_auth':
+      $output = '<p>' . t('To authorize your site you should register Yandex application at !app_register_link. Then enter your application Client ID and Client Secret in the appropriate fields on this page. The list of your Yandex applications is located !app_list_link.', array('!app_register_link' => l('https://oauth.yandex.ru/client/new', 'https://oauth.yandex.ru/client/new', array('attributes' => array('target' => '_blank'))), '!app_list_link' => l(t('here'), 'https://oauth.yandex.ru/client/my', array('attributes' => array('target' => '_blank'))), '@reports-url' => url('admin/reports/yandex_metrics_summary'))) . '</p>';
+      $output .= '<p>' . t('Your Yandex application Callback URI should be set to: @callback-uri', array('@callback-uri' => url('yandex_services_auth/oauth', array('absolute' => TRUE)))) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Helper function to determine the authorization status.
+ */
+function yandex_services_auth_status($period = 604800) {
+  $auth_token = variable_get('yandex_services_auth_token', '');
+  $auth_timestamp = variable_get('yandex_services_auth_timestamp', '');
+
+  if (empty($auth_token)) {
+    return 'not authorized';
+  }
+  if (empty($auth_timestamp)) {
+    return 'authorized';
+  }
+  if (($auth_timestamp - REQUEST_TIME) < 0) {
+    return 'expired';
+  }
+  if (($auth_timestamp - REQUEST_TIME) < $period) {
+    return 'expiring';
+  }
+  else {
+    return 'authorized';
+  }
+}
+
+/**
+ * Check whether system help block is enabled.
+ * @return bool
+ */
+function _yandex_services_auth_is_system_help_block_enabled() {
+  global $theme;
+
+  $result = db_select("block", 'b')
+    ->condition("module", "system")
+    ->condition("delta", "help")
+    ->condition("theme", $theme)
+    ->condition("status", 1)
+    ->fields('b')
+    ->execute()->rowCount();
+
+  return (bool)$result;
+}
