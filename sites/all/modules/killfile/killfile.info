@@ -1,0 +1,22 @@
+name = Killfile
+description = "Provides soft-delete/trash-bin functionality for drupal content."
+core = 7.x
+package = Content
+
+dependencies[] = cf (7.x-2.x)
+dependencies[] = node
+
+files[] = killfile.module
+files[] = killfile.rules.inc
+files[] = killfile.views.inc
+files[] = killfile.install
+files[] = includes/feeds.inc
+files[] = includes/unkillfile.inc
+files[] = includes/killfile_handler_link_unkillfile.inc
+
+; Information added by Drupal.org packaging script on 2014-12-02
+version = "7.x-1.5"
+core = "7.x"
+project = "killfile"
+datestamp = "1417559606"
+

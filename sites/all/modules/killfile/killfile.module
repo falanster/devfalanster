@@ -1,0 +1,1195 @@
+<?php
+
+/**
+ * Global Flags.
+ */
+define('KILLFILE_FAKE_DELETE', 1);
+define('KILLFILE_UNDELETE', 2);
+
+// @todo: using killfile.rdf for backwards compatibility with 6.x-1.x, but it would be nice to be able to define this on a site-by-site basis using variables.
+define('KILLFILE_FEED_PATH', 'killfile.rdf');
+define('KILLFILE_NAMESPACE', 'http://drupal.org/project/killfile/rdf#');
+
+/**
+ * Implements hook_help().
+ */
+function killfile_help($path, $arg = NULL) {
+  if (cf_is_empty_or_non_string('path', $path, WATCHDOG_ERROR)){
+    return;
+  }
+
+  switch ($path) {
+    case 'admin/help#killfile':
+      $help = "Provides a killfile or trash-bin functionality for drupal node content.";
+      $help .= " Killfile can be enabled/disabled on a per content type basis.";
+      $help .= " Integrates with views api, such as filtering out killfile nodes from a view.";
+      $help .= " Integrates with rules api, such as having a given node be auto-deleted after some given amount of time.";
+      $help .= " Integrates with token api, providing tokens for different killfile variables.";
+
+      return "<p>" . t($help) . "</p>";
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function killfile_permission() {
+  $perms = array();
+
+  $perms['access killfiled content'] = array(
+      'title' => t("Access Killfiled Content"),
+      'description' => t("Specify whether or not killfiled content may be accessed by some user or role."),
+  );
+
+  $perms['bypass killfiled content'] = array(
+      'title' => t("Bypass Killfiled Content"),
+      'description' => t("Grant the user or role the ability to bypass the killfile and permanently delete a node."),
+  );
+
+  $perms['undelete killfiled content'] = array(
+      'title' => t("Undelete Killfiled Content"),
+      'description' => t("Specify whether or not killfiled content may be undeleted by some user or role."),
+  );
+
+  $perms['access killfile feed'] = array(
+      'title' => t("Access Killfiled Feed"),
+      'description' => t("Specify whether or not killfiled feed '%feed_path' may be accessed by some user or role.", array('%feed_path' => KILLFILE_FEED_PATH)),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function killfile_admin_paths() {
+  $paths = array(
+    'node/*/undelete' => TRUE,
+  );
+
+  return $paths;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function killfile_menu() {
+  $items = array();
+
+  $items['node/%node/undelete'] = array(
+    'title' => "Undelete",
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('killfile_unkillfile_form', 1),
+    'access callback' => 'killfile_can_undelete',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
+    'file' => 'unkillfile.inc',
+    'file path' => drupal_get_path('module', 'killfile') . '/includes',
+  );
+
+  $items[KILLFILE_FEED_PATH] = array(
+    'page callback' => 'killfile_feed_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('access killfile feed'),
+    'type' => MENU_CALLBACK,
+    'file' => 'feeds.inc',
+    'file path' => drupal_get_path('module', 'killfile') . '/includes',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_node_operations().
+ */
+function killfile_node_operations() {
+  $operations = array(
+    'killfile_operation_delete' => array(
+      'label' => t("Killfile selected content"),
+      'callback' => 'killfile_operation_update',
+      'callback arguments' => array('updates' => array('operation' => KILLFILE_FAKE_DELETE)),
+    ),
+    'killfile_operation_undelete' => array(
+      'label' => t("Un-killfile selected content"),
+      'callback' => 'killfile_operation_update',
+      'callback arguments' => array('updates' => array('operation' => KILLFILE_UNDELETE)),
+    ),
+  );
+
+  return $operations;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the node type form.
+ */
+function killfile_form_node_type_form_alter(&$form, &$form_state, $form_id) {
+  if (!is_array($form)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('form');
+    }
+
+    return;
+  }
+
+  if (cf_is_not_form_state('form_state', $form_state, WATCHDOG_ERROR)) {
+    return;
+  }
+
+  $node_type_settings_object = FALSE;
+  $node_type_settings_array  = array('type' => NULL, 'publish_on_undelete' => NULL);
+
+  if (!empty($form['#node_type']->type)){
+    $node_type_settings_objects = killfile_get_node_type_settings(array($form['#node_type']));
+
+    if (!empty($node_type_settings_objects)){
+      $node_type_settings_object = $node_type_settings_objects['0'];
+    }
+  }
+
+  if (is_object($node_type_settings_object)){
+    $node_type_settings_array['type'] = 'type';
+    $node_type_settings_array['publish_on_undelete'] = ($node_type_settings_object->publish_on_undelete) ? 'publish_on_undelete' : NULL;
+  }
+
+  $form['killfile'] = array(
+    '#type' => 'fieldset',
+    '#title' => t("Killfile"),
+    '#collapsible' => FALSE,
+    '#group' => 'additional_settings',
+    '#tree' => TRUE,
+  );
+
+  $form['killfile']['setting_options'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t("Killfile Settings"),
+    '#default_value' => $node_type_settings_array,
+    '#options' => array(
+      'type' => t("Enable Killfile for this Node Type"),
+      'publish_on_undelete' => t("Publish nodes when that node is undeleted"),
+    ),
+  );
+
+  $form['#validate'][] = 'killfile_node_type_form_validate';
+  $form['#submit'][] = 'killfile_node_type_form_submit';
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function killfile_form_alter(&$form, &$form_state, $form_id) {
+  if (!is_array($form)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('form');
+    }
+    return;
+  }
+
+  if (cf_is_not_form_state('form_state', $form_state, WATCHDOG_ERROR)){
+    return;
+  }
+
+  if (cf_is_empty_or_non_string('form_id', $form_id, WATCHDOG_ERROR)){
+    return;
+  }
+
+  if ($form_id == 'node_delete_confirm'){
+    if (!array_key_exists('#node', $form) || !is_object($form['#node']) || !killfile_is_enabled($form['#node']->type)){
+      return;
+    }
+
+    // Override node_delete_confirm_submit() submit handler
+    $form['#submit'][0] = 'killfile_node_delete_confirm_submit';
+
+    if (user_access('bypass killfiled content')) {
+      $form['permanent'] = array(
+        '#type'          => 'checkbox',
+        '#title'         => t("Permanently delete this node"),
+        '#default_value' => '',
+      );
+    }
+    else {
+      // users can still manually go to /node/edit/[nid]/delete
+      // already deleted content cannot be deleted again so if the user does not have permanent delete access, let them know that the content is already deleted
+      // the form submit buttons and actions will be removed in this case
+      $results = killfile_get_node_delete_settings(array($form['#node']));
+
+      if (!empty($results)){
+        drupal_set_message(t("This content is already deleted, you are not authorized to permanently delete this content."), 'warning');
+
+        unset($form['#submit']);
+        unset($form['actions']['submit']);
+      }
+    }
+  }
+  else if (array_key_exists('type', $form) && cf_has_array_key('#value', $form['type'])){
+    if (!array_key_exists('#node', $form) || !is_object($form['#node'])){
+      return;
+    }
+
+    // alter the node edit form to alter the delete button
+    if ($form['type']['#value'] . '_node_form' == $form_id){
+      if (property_exists($form['#node'], 'nid') && node_access('delete', $form['#node']->nid)){
+        $results = killfile_get_node_delete_settings(array($form['#node']));
+
+        if (!empty($results)){
+          if (killfile_can_undelete($form['#node'], NULL)) {
+            $form['actions']['undelete'] = array(
+              '#type' => 'submit',
+              '#value' => t("Undelete"),
+              '#weight' => 16,
+              '#submit' => array('killfile_node_undelete_submit'),
+            );
+          }
+
+          // remove the delete button for uses who cannot bypass killfile functionality
+          if (!user_access('bypass killfiled content')) {
+            unset($form['actions']['delete']);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Button submit function: handle the 'undelete' button on the node form.
+ */
+function killfile_node_undelete_submit($form, &$form_state) {
+  if (!is_array($form)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('form');
+    }
+    return;
+  }
+
+  if (!array_key_exists('#node', $form)){
+    cf_error::missing_array_key('form', '#node');
+    return;
+  }
+
+  if (!is_object($form['#node'])){
+    cf_error::invalid_object('form[\'#node\']');
+    return;
+  }
+
+  if (cf_is_not_form_state('form_state', $form_state)){
+    return;
+  }
+
+  if (!killfile_can_undelete($form['#node'], NULL)) {
+    return;
+  }
+
+  $result = killfile_undelete_nodes(array($form['#node']), NULL);
+
+
+  if ($result){
+    // redirect to if not already redirecting somewhere
+    if (!isset($form_state['redirect'])){
+      if (property_exists($form['#node'], 'uri')){
+        $form_state['redirect'] = $form['#node']->uri['path'];
+      }
+    }
+
+    drupal_set_message(t("This node has been undeleted."));
+  }
+  else {
+    drupal_set_message(t("Failed to undelete this node."), 'error');
+  }
+}
+
+
+/**
+ * Implements hook_node_load().
+ */
+function killfile_node_load($nodes, $types) {
+  if (!is_array($nodes)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('nodes', $nodes);
+    }
+    return;
+  }
+
+  $all_nodes = array();
+
+  foreach($nodes as $key => $node){
+    $all_nodes[$node->nid] = &$nodes[$key];
+    $all_nodes[$node->nid]->deleted = FALSE;
+  }
+
+  $results = killfile_get_node_delete_settings($all_nodes);
+
+  foreach ($results as $result){
+    $all_nodes[$result->nid]->deleted = array();
+
+    foreach ($result as $key => $value){
+      $all_nodes[$result->nid]->deleted[$key] = $value;
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function killfile_node_view($node, $view_mode, $langcode){
+  killfile_node_deleted_notice($node);
+}
+
+/**
+ * Implements hook_node_prepare().
+ */
+function killfile_node_prepare($node) {
+  killfile_node_deleted_notice($node);
+}
+
+/**
+ * Impliments hook_node_access().
+ */
+function killfile_node_access($node, $op, $account){
+  if (cf_is_empty_or_non_string('op', $op, WATCHDOG_ERROR)){
+    return NODE_ACCESS_IGNORE;
+  }
+
+  if (!is_object($account)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_object('account');
+    }
+    return NODE_ACCESS_IGNORE;
+  }
+
+  // when node is a string, then it does not exist and therefore cannot have been deleted
+  if (is_string($node)){
+    return NODE_ACCESS_IGNORE;
+  }
+
+  if (!is_object($node)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_object('node');
+    }
+
+    return NODE_ACCESS_IGNORE;
+  }
+
+  // only process deleted nodes
+  if (!property_exists($node, 'deleted') || $node->deleted === FALSE){
+    return NODE_ACCESS_IGNORE;
+  }
+
+  // if the user is allowed to access deleted content, return ignore so that other modules can determine if the user has access to this content for other reasons
+  if (user_access('access killfiled content', $account)){
+    return NODE_ACCESS_IGNORE;
+  }
+
+  return NODE_ACCESS_DENY;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function killfile_views_api() {
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'killfile'),
+  );
+}
+
+/**
+ * Implements hook_rdf_mapping().
+ */
+function killfile_rdf_mapping() {
+  return array(
+    array(
+      'type' => 'killfile',
+      'bundle' => RDF_DEFAULT_BUNDLE,
+      'mapping' => array(
+        'rdftype' => array('rss:channel'),
+        'title' => array(
+          'predicates' => array('rss:title'),
+        ),
+        'link' => array(
+          'predicates' => array('rss:link'),
+          'type' => 'rel',
+        ),
+        'description' => array(
+          'predicates' => array('rss:description'),
+        ),
+        'items' => array(
+          'predicates' => array('rss:items'),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function killfile_token_info() {
+  $info = array('tokens' => array('node' => array()));
+
+  $info['tokens']['node']['is-killfiled'] = array(
+    'name' => t("Is Killfiled"),
+    'description' => t("A boolean represinting whether or not this node was killfiled."),
+  );
+
+  $info['tokens']['node']['killfiled-on'] = array(
+    'name' => t("Killfiled On"),
+    'description' => t("The date the node was killfiled."),
+    'type' => 'date',
+  );
+
+  $info['tokens']['node']['killfiled-by'] = array(
+    'name' => t("Killfiled By"),
+    'description' => t("The user who killfiled the node."),
+    'type' => 'user',
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function killfile_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if ($type == 'node' && isset($data['node']) && is_object($data['node'])){
+    $node = $data['node'];
+
+    if (!property_exists($node, 'deleted') || $node->deleted === FALSE){
+      foreach ($tokens as $name => $original) {
+        if ($name == 'is-killfiled') {
+          $replacements[$original] = FALSE;
+        }
+        else if ($name == 'killfiled-on') {
+          $replacements[$original] = NULL;
+        }
+        else if ($name == 'killfiled-by') {
+          $replacements[$original] = NULL;
+        }
+      }
+    }
+    else {
+      foreach ($tokens as $name => $original) {
+        if ($name == 'is-killfiled') {
+          $replacements[$original] = TRUE;
+        }
+        else if ($name == 'killfiled-on') {
+          $replacements[$original] = $node->deleted['timestamp'];
+        }
+        else if ($name == 'killfiled-by') {
+          $replacements[$original] = $node->deleted['uid'];
+        }
+      }
+    }
+
+    if ($killfiled_by_tokens = token_find_with_prefix($tokens, 'killfiled-by')) {
+      $killfiled_by = user_load($node->deleted['uid']);
+      $replacements += token_generate('user', $killfiled_by_tokens, array('user' => $killfiled_by), $options);
+    }
+
+    if ($killfiled_on_tokens = token_find_with_prefix($tokens, 'killfiled-on')) {
+      $replacements += token_generate('date', $killfiled_on_tokens, array('date' => $node->deleted['timestamp']), $options);
+    }
+  }
+
+  return $replacements;
+}
+
+/**
+ * Change any number of nodes.
+ *
+ * @param $nodes_or_nids
+ *   An array of node objects or node ids
+ * @param $updates
+ *   An array of operations to perform for each node id in the nodes_or_nids parameter
+ */
+function killfile_operation_update($nodes_or_nids, $updates) {
+  if (!is_array($updates)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('updates');
+    }
+
+    return;
+  }
+
+  if (!is_array($nodes_or_nids)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('nodes_or_nids');
+    }
+
+    return;
+  }
+
+  if (count($nodes_or_nids) == 0){
+    return;
+  }
+
+  if (!array_key_exists('operation', $updates)) {
+    if (class_exists('cf_error')) {
+      cf_error::missing_array_key('updates', 'operation');
+    }
+
+    return;
+  }
+
+  if ($updates['operation'] == KILLFILE_FAKE_DELETE || $updates['operation'] == KILLFILE_UNDELETE){
+    $nodes = array();
+
+    foreach ($nodes_or_nids as $key => $nid){
+      if (is_object($nid)){
+        $nodes[] = $nid;
+        unset($nodes_or_nids[$key]);
+      }
+    }
+
+    if (count($nodes_or_nids) > 0){
+      $nodes += node_load_multiple($nodes_or_nids);
+    }
+
+    $node_type_settings_objects = killfile_get_node_type_settings($nodes);
+    $node_type_settings_types = array();
+
+    foreach ($node_type_settings_objects as $node_type_settings_object){
+      if (is_object($node_type_settings_object)){
+        $node_type_settings_types[] = $node_type_settings_object->type;
+      }
+    }
+
+    foreach ($nodes as $key => $node){
+      if (is_object($node)){
+        if (!in_array($node->type, $node_type_settings_types)){
+          // @todo: present some sort of watchdog message about not being able to killfile or unkillfile a node because the content type does not have killfile enabled
+          unset($nodes[$key]);
+        }
+      }
+    }
+
+    $result = TRUE;
+
+    if ($updates['operation'] == KILLFILE_FAKE_DELETE){
+      $result = killfile_fake_delete_nodes($nodes, NULL);
+    }
+    else if ($updates['operation'] == KILLFILE_UNDELETE){
+      $result = killfile_undelete_nodes($nodes, NULL);
+    }
+
+    if ($result){
+      drupal_set_message(t("The update has been performed."));
+    }
+    else {
+      drupal_set_message(t("The update has failed."), 'error');
+    }
+  }
+}
+
+/**
+ * Provides a delete submit confirmation page handles soft and hard deletes.
+ *
+ * @param $form
+ *   A form array
+ * @param $form_state
+ *   A form state
+ */
+function killfile_node_delete_confirm_submit($form, &$form_state){
+  if (!is_array($form)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('form');
+    }
+
+    return;
+  }
+
+  if (cf_is_not_form_state('form_state', $form_state)) {
+    return;
+  }
+
+  if (!array_key_exists('confirm', $form_state['values'])) {
+    if (class_exists('cf_error')) {
+      cf_error::missing_array_key('form_state[\'values\']', 'confirm');
+    }
+    return;
+  }
+
+  $redirect_to = '<front>';
+
+  if (!empty($form_state['values']['confirm'])){
+    if (user_access('bypass killfiled content') && !empty($form_state['values']['permanent'])){
+      killfile_permanent_delete_nodes(array($form['#node']));
+    }
+    else {
+      killfile_fake_delete_nodes(array($form['#node']), NULL);
+
+      // redirect to the front only if the user does not have view access on killfiled content
+      if (user_access('access killfiled content')){
+        $redirect_to = 'node/' . $form['#node']->nid;
+      }
+    }
+  }
+
+  $form_state['redirect'] = $redirect_to;
+}
+
+/**
+ * Handles submitting the killfile specific node type settings into the database.
+ *
+ * @param $form
+ *   A form array
+ * @param $form_state
+ *   A form state
+ */
+function killfile_node_type_form_validate($form, &$form_state) {
+  if (cf_is_not_form_state('form_state', $form_state, WATCHDOG_ERROR)) {
+    return;
+  }
+
+  if (!isset($form_state['values']['killfile']) || !cf_has_array_key('setting_options', $form_state['values']['killfile'])){
+    if (class_exists('cf_error')) {
+      cf_error::missing_array_key('form_state[\'values\'][\'killfile\']', 'setting_options');
+    }
+
+    return;
+  }
+
+  if (cf_has_array_key('type', $form_state['values']['killfile']['setting_options']) && $form_state['values']['killfile']['setting_options']['type'] === 0){
+    $has_error = FALSE;
+
+    foreach ($form_state['values']['killfile']['setting_options'] as $key => $value){
+      if ($key === 'type') continue;
+
+      if ($value !== 0) $has_error = TRUE;
+    }
+
+    if ($has_error){
+      form_set_error('killfile][setting_options', t("'Enable Killfile for this Node Type' must be enabled for any killfile setting to be enabled."));
+    }
+  }
+}
+
+/**
+ * Handles submitting the killfile specific node type settings into the database.
+ *
+ * @param $form
+ *   A form array
+ * @param $form_state
+ *   A form state
+ */
+function killfile_node_type_form_submit($form, &$form_state) {
+  if (cf_is_not_form_state('form_state', $form_state, WATCHDOG_ERROR)) {
+    return;
+  }
+
+  if (!cf_has_array_key('setting_options', $form_state['values']['killfile'])) {
+    if (class_exists('cf_error')) {
+      cf_error::missing_array_key('form_state[\'values\'][\'killfile\']', 'setting_options');
+    }
+
+    return;
+  }
+
+  $node_type_settings_objects = killfile_get_node_type_settings(array($form_state['values']['type']));
+  $node_type_settings_object = FALSE;
+
+  if (!empty($node_type_settings_objects)) {
+    $node_type_settings_object = $node_type_settings_objects['0'];
+  }
+
+  if ($form_state['values']['killfile']['setting_options']['type'] === 'type') {
+    $record = array();
+    $record['type'] = $form_state['values']['type'];
+    $record['publish_on_undelete'] = ($form_state['values']['killfile']['setting_options']['publish_on_undelete'] === 0) ? FALSE : TRUE;
+
+    if (is_object($node_type_settings_object)){
+      $primary_keys = array('type');
+      $results = drupal_write_record('killfile_node_types', $record, $primary_keys);
+    }
+    else {
+      $results = drupal_write_record('killfile_node_types', $record);
+    }
+  }
+  else if (is_object($node_type_settings_object)) {
+    db_delete('killfile_node_types')
+      ->condition('type', $form['#node_type']->type)
+      ->execute();
+  }
+}
+
+/**
+ * Loads the node type settings table data for the given node type.
+ *
+ * @param $node_types
+ *   An array of node type strings or node objects
+ *
+ * @return
+ *   A prepared statement object, already executed.
+ */
+function killfile_get_node_type_settings($node_types) {
+  if (!is_array($node_types)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('node_types');
+    }
+
+    return array();
+  }
+
+  if (count($node_types) == 0){
+    return array();
+  }
+
+  $query = db_select('killfile_node_types', 'knt');
+
+  $query->fields('knt');
+  $query->orderBy('knt.type', 'ASC');
+
+  $or = NULL;
+
+  foreach ($node_types as $node_type){
+    if (is_null($or)) $or = db_or();
+
+    if (is_object($node_type)){
+      $or->condition('type', $node_type->type, '=');
+    }
+    else {
+      $or->condition('type', $node_type, '=');
+    }
+  }
+
+  if (is_object($or)){
+    $query->condition($or);
+  }
+
+  return $query->execute()->fetchAll();
+}
+
+/**
+ * Loads the killfiled node settings table data for the given node ids or nodes.
+ *
+ * @param $nodes_or_nids
+ *   An array of node objects or node ids
+ *
+ * @return
+ *   An array of node delete settings.
+ */
+function killfile_get_node_delete_settings($nodes_or_nids) {
+  if (!is_array($nodes_or_nids)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('nodes_or_nids');
+    }
+    return array();
+  }
+
+  if (count($nodes_or_nids) == 0){
+    return array();
+  }
+
+  $query = db_select('killfile_nodes', 'kn');
+
+  $query->fields('kn');
+  $query->orderBy('kn.nid', 'ASC');
+
+  $or = NULL;
+
+  foreach ($nodes_or_nids as $node_or_nid){
+    if (is_null($or)) $or = db_or();
+
+    if (is_object($node_or_nid)){
+      $or->condition('nid', $node_or_nid->nid, '=');
+    }
+    else {
+      $or->condition('nid', $node_or_nid, '=');
+    }
+  }
+
+  if (is_object($or)){
+    $query->condition($or);
+  }
+
+  return $query->execute()->fetchAll();
+}
+
+/**
+ * Returns an array of all killfiled nodes, sorted by timestamp.
+ *
+ * @return
+ *   An array of node delete settings.
+ */
+function killfile_get_killfiled_nodes(){
+  $query = db_select('killfile_nodes', 'kn');
+
+  $query->innerjoin('node', 'n', 'kn.nid = n.nid');
+  $query->innerjoin('node_revision', 'nr', 'kn.nid = nr.nid AND kn.vid = nr.vid');
+  $query->fields('kn');
+  $query->fields('n');
+  $query->fields('nr');
+  $query->orderBy('kn.timestamp', 'DESC');
+
+  return $query->execute()->fetchAll();
+}
+
+/**
+ * If the given node has been killfiled, then print a message to the screen.
+ *
+ * @param $node
+ *   A node object
+ */
+function killfile_node_deleted_notice($node){
+  if (!is_object($node)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_object('node');
+    }
+
+    return;
+  }
+
+  if (property_exists($node, 'deleted') && $node->deleted !== FALSE){
+    $node_type_name = node_type_get_name($node);
+    $node_title = isset($node->title) ? $node->title : '';
+
+    if ($node_type_name == FALSE){
+      $node_type_name = '';
+    }
+
+    if (isset($node->deleted['timestamp'])){
+      $formatted_date = format_date($node->deleted['timestamp'], 'short');
+    }
+    else {
+      $formatted_date = '';
+    }
+
+    $account = user_load($node->deleted['uid']);
+
+    if (is_object($account)){
+      $username = $account->name;
+    }
+    else {
+      $username = '';
+    }
+
+    drupal_set_message(t("The @type '@title' has been deleted on @date by @user.", array('@type' => $node_type_name, '@title' => $node_title, '@date' => $formatted_date, '@user' => $username)), 'warning', FALSE);
+  }
+}
+
+/**
+ * Killfiles an array of nodes.
+ *
+ * @param $nodes_or_nids
+ *   An array of node objects or node ids
+ * @param $account
+ *   (optional) A user object of the user who is performing this operation
+ *
+ * @return
+ *   An array of booleans representing whether or not that node or nid was successfully deleted.
+ *   FALSE is returned if there was a problem with one of the parameters.
+ */
+function killfile_fake_delete_nodes($nodes_or_nids, $account = NULL) {
+  if (!is_array($nodes_or_nids)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('nodes_or_nids');
+    }
+
+    return FALSE;
+  }
+
+  $results = array();
+
+  if (!is_object($account)){
+    $acting_user = cf_current_user();
+  }
+  else {
+    $acting_user = $account;
+  }
+
+  foreach ($nodes_or_nids as $key => $node_or_nid){
+    if (is_object($node_or_nid)){
+      $node = $node_or_nid;
+    }
+    else if (is_numeric($node_or_nid)){
+      $node = node_load($node_or_nid);
+
+      if (!is_object($node)){
+        if (class_exists('cf_error')) {
+          cf_error::invalid_object('node');
+        }
+
+        $results[$key] = FALSE;
+        continue;
+      }
+    }
+    else {
+      if (class_exists('cf_error')) {
+        cf_error::invalid_variable('node_or_nid', "Must be either a node object or a number");
+      }
+
+      $results[$key] = FALSE;
+      continue;
+    }
+
+    // Make sure the node is not already killfiled
+    $setting_results = killfile_get_node_delete_settings(array($node));
+
+    if (count($setting_results) > 0){
+      $results[$key] = TRUE;
+      continue;
+    }
+
+    // first unpublish the node
+    $node->status = NODE_NOT_PUBLISHED;
+    $node->revision = TRUE;
+    $node->log = t("Deleted by %username.", array('%username' => $acting_user->name));
+
+    // last register the node as killfiled
+    $record = array();
+    $record['nid'] = $node->nid;
+    $record['vid'] = $node->vid;
+    $record['uid'] = $acting_user->uid;
+    $record['timestamp'] = time();
+
+    $node->deleted = $record;
+
+    node_save($node);
+
+    $results[$key] = drupal_write_record('killfile_nodes', $record);
+
+    if ($results[$key]){
+      if (module_exists('rules')){
+        rules_invoke_event('killfile_after_deleting', $node);
+      }
+    }
+  }
+
+  return $results;
+}
+
+/**
+ * Permanently deletes a node.
+ *
+ * @param $nodes_or_nids
+ *   An array of node objects or node ids
+ *
+ * @return
+ *   An array of booleans representing whether or not that node or nid was successfully deleted.
+ *   FALSE is returned if there was a problem with one of the parameters.
+ */
+function killfile_permanent_delete_nodes($nodes_or_nids) {
+  if (!is_array($nodes_or_nids)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('nodes_or_nids');
+    }
+
+    return FALSE;
+  }
+
+  $nids = array();
+  $results = array();
+
+  // convert array of nodes into an array of nids
+  foreach ($nodes_or_nids as $key => $node_or_nid){
+    if (is_object($node_or_nid)){
+      $nids[$key] = $node_or_nid->nid;
+    }
+    else if (is_numeric($node_or_nid)){
+      $nids[$key] = $node_or_nid[$key];
+    }
+    else {
+      $results[$key] = FALSE;
+
+      if (class_exists('cf_error')) {
+        cf_error::invalid_variable('node_or_nid', "Must be either a node object or a number");
+      }
+
+      continue;
+    }
+
+    $results[$key] = TRUE;
+  }
+
+  $transaction = db_transaction();
+
+  try {
+    db_delete('killfile_nodes')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
+
+    node_delete_multiple($nids);
+
+    // force transaction to execute
+    unset($transaction);
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('killfile', $e);
+    throw $e;
+  }
+
+  return $results;
+}
+
+/**
+ * Un deletes killfiled nodes.
+ * (Does not publish the nodes.)
+ *
+ * @param $nodes_or_nids
+ *   An array of node objects or node ids
+ * @param $account
+ *   (optional) A user object of the user who is performing this operation
+ *
+ * @return
+ *   An array of booleans representing whether or not that node or nid was successfully deleted.
+ *   FALSE is returned if there was a problem with one of the parameters.
+ */
+function killfile_undelete_nodes($nodes_or_nids, $account = NULL) {
+  if (!is_array($nodes_or_nids)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('nodes_or_nids');
+    }
+
+    return FALSE;
+  }
+
+  $results = array();
+
+  if (!is_object($account)){
+    $acting_user = cf_current_user();
+  }
+  else {
+    $acting_user = $account;
+  }
+
+  $transaction = db_transaction();
+
+  try {
+    foreach ($nodes_or_nids as $key => $node_or_nid){
+      if (is_object($node_or_nid)){
+        $node = $node_or_nid;
+      }
+      else if (is_numeric($node_or_nid)){
+        $node = node_load($node_or_nid);
+
+        if (!is_object($node)){
+          if (class_exists('cf_error')) {
+            cf_error::invalid_object('node');
+          }
+
+          $results[$key] = FALSE;
+          continue;
+        }
+      }
+      else {
+        if (class_exists('cf_error')) {
+          cf_error::invalid_variable('node_or_nid', "Must be either a node object or a number");
+        }
+
+        $results[$key] = FALSE;
+        continue;
+      }
+
+      // Make sure the node is already killfiled
+      $setting_results = killfile_get_node_delete_settings(array($node));
+
+      if (count($setting_results) == 0){
+        $results[$key] = TRUE;
+        continue;
+      }
+
+      $node_type_settings_objects = killfile_get_node_type_settings(array($node));
+      $node_type_settings_object = FALSE;
+
+      if (!empty($node_type_settings_objects)){
+        $node_type_settings_object = $node_type_settings_objects['0'];
+      }
+
+      if (is_object($node_type_settings_object)){
+        // publish if necessary
+        if ($node_type_settings_object->publish_on_undelete){
+          $node->status = NODE_PUBLISHED;
+        }
+      }
+
+      // make sure a record of this undelete exists
+      $node->revision = TRUE;
+      $node->log = t("Undeleted by %username.", array('%username' => $acting_user->name));
+      $node->deleted = FALSE;
+
+      node_save($node);
+
+      $results[$key] = db_delete('killfile_nodes')
+        ->condition('nid', $node->nid)
+        ->execute();
+
+      if (module_exists('rules')){
+        rules_invoke_event('killfile_after_undeleting', $node);
+      }
+    }
+
+    // force transaction to execute
+    unset($transaction);
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('killfile', $e);
+    throw $e;
+  }
+
+  return $results;
+}
+
+/**
+ * Returns TRUE if killfile functionality is enabled for the given node type.
+ *
+ * @param $node_type
+ *   A node type string
+ *
+ * @return
+ *   TRUE or FALSE depending on whether or not killfile functionality is enabled for the given node type.
+ */
+function killfile_is_enabled($node_type){
+  if (cf_is_empty_or_non_string('node_type', $node_type)){
+    return FALSE;
+  }
+
+  $node_type_settings_objects = killfile_get_node_type_settings(array($node_type));
+
+  if (!empty($node_type_settings_objects) && is_object($node_type_settings_objects['0'])){
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * This returns TRUE or FALSE depending on whether or not a user can undelete content.
+ *
+ * There are two possible approaches here:
+ *   The first is to allow undelete if the user has node update permissions.
+ *   The second is to allow undelete if the user has node delete permissions.
+ *
+ * The function chooses the second approach to allow roles to exist such that a role has no update permissions but can delete/undelete content.
+ *
+ * @param $nodes_or_nids
+ *   An array of node objects or node ids
+ * @param $account
+ *   (optional) A user object of the user who is performing this operation
+ *
+ * @return
+ *   TRUE or FALSE depending on whether or not a user can undelete content.
+ */
+function killfile_can_undelete($node, $account = NULL){
+  if (!is_object($node)){
+    if (class_exists('cf_error')) {
+      cf_error::invalid_object('node');
+    }
+
+    return FALSE;
+  }
+
+  return (node_access('delete', $node, $account) && user_access('undelete killfiled content', $account));
+}
+
+/**
+ * Implements hook_query_TAG_alter() for workbench_menu_autocomplete_nid().
+ */
+function killfile_query_workbench_menu_autocomplete_nid_alter(QueryAlterableInterface $query) {
+  $query->leftjoin('killfile_nodes', 'kn', 'kn.nid = n.nid');
+  $query->isNull('kn.nid');
+}

@@ -1,0 +1,7 @@
+Upgrading from killfile-6.x-1.x to killfile-7.x-1.x
+
+  - Killfile functionality is now enabled on a per node type basis.
+    To mass add node types, an SQL insert into the killfile_node_types table for each node type is needed.
+    For example, to manually enable killfile for the node type 'page', the following SQL insert does the trick:
+      INSERT INTO {killfile_node_types} (type, publish_on_undelete) VALUES ('page', 0);
+
