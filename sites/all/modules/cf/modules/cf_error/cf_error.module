@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - Error Module.
+ */
+
+/**
+ * @defgroup cf_error Common Functionality - Error
+ * @ingroup cf
+ * @{
+ * Provides runtime error reporting.
+ *
+ * This provides error reporting for use by projects that wish to perform
+ * sanity checking to ensure application integrity. The reporting is provided
+ * in such a way that it does not hinder the end-user experience of the
+ * application while still providing the necessary information to system
+ * administrators.
+ *
+ * This is not intended to replace the devel module.
+ * The devel module does report backtrace, but solely for the purposes of
+ * development.
+ *
+ * Justification:
+ *   It is a common practice in the drupal community to not perform sanity
+ *   checking. Sanity checking is a form of runtime integrity management that
+ *   is used to ensure that an application runs as expected and that states of
+ *   inconsistency are avoided.
+ *
+ *   While sanity checking may incur a slight performance penalty, the gains
+ *   of security and data integrity vastly outweight the peformance penalties.
+ *
+ *   Maintaining application integrity provides the following benifits:
+ *   - Security via Integrity.
+ *     That is, the fewer inconsistent states that exist, then fewer attack
+ *     vectors exist.
+ *   - Reliability and Quality of Code
+ *     The application will provide a higher grade of quaility and reliability
+ *     that which can be offered by applications that do not perform
+ *     sanitization.
+ *   - Improved Debugability
+ *     By reporting errors, warnings, and other inconsistent information, site
+ *     administrators should have an easier time debugging runtime problems.
+ */
+
+/**
+ * Implements hook_cf_permission_alter().
+ *
+ * @see cf_permission()
+ */
+function cf_error_cf_permission_alter(&$permissions) {
+  if (!is_array($permissions)) {
+    $permissions = array();
+  }
+
+  $permissions['administer cf_error reporting'] = array(
+    'title' => t("Administer Error Reporting"),
+    'description' => t("Grants permissions to administer error reporting provided by the cf_error module."),
+    'restrict access' => TRUE,
+  );
+
+  $permissions['view cf emergency messages'] = array(
+    'title' => t("View Emergency Messages"),
+    'description' => t("Grants permissions to view emergency messages presented by cf_error module."),
+  );
+
+  $permissions['view cf error messages'] = array(
+    'title' => t("View Error Messages"),
+    'description' => t("Grants permissions to view error messages presented by cf_error module."),
+  );
+
+  $permissions['view cf warning messages'] = array(
+    'title' => t("View Warning Messages"),
+    'description' => t("Grants permissions to view warning messages presented by cf_error module."),
+  );
+
+  $permissions['view cf information messages'] = array(
+    'title' => t("View Information Messages"),
+    'description' => t("Grants permissions to view information messages presented by cf_error module."),
+  );
+
+  $permissions['view cf debug messages'] = array(
+    'title' => t("View Debug Messages"),
+    'description' => t("Grants permissions to view debug messages presented by cf_error module."),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function cf_error_menu() {
+  $items = array();
+
+  $items['admin/config/development/error_reporting'] = array(
+    'title' => "Error Reporting",
+    'description' => "Manage error reporting settings.",
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cf_error_reporting_form'),
+    'file' => 'cf_error_reporting.admin.inc',
+    'file path' => drupal_get_path('module', 'cf_error') . '/pages',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer cf_error reporting'),
+  );
+
+  return $items;
+}
+
+/**
+ * @} End of '@defgroup cf_error Common Functionality - Error'.
+ */

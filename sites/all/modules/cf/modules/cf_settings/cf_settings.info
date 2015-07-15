@@ -1,0 +1,20 @@
+name = CF Settings
+description = "Provides a way to provide drupal projects with a way to manage or communicate custom php or drupal settings."
+core = 7.x
+php = 5.3
+package = Common Functionality
+
+configure = admin/config/system/settings_registry
+
+dependencies[] = cf
+dependencies[] = cf_db_options
+
+files[] = cf_settings.module
+files[] = cf_settings.install
+
+; Information added by Drupal.org packaging script on 2014-12-02
+version = "7.x-2.1"
+core = "7.x"
+project = "cf"
+datestamp = "1417559602"
+

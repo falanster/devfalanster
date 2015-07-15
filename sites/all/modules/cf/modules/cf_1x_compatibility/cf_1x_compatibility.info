@@ -1,0 +1,17 @@
+name = CF 1.x Compatibility
+description = "Provides backwards compatibility with the 7.x-1.x versions of the CF module."
+core = 7.x
+php = 5.3
+package = Common Functionality
+
+dependencies[] = cf
+dependencies[] = cf_error
+
+files[] = cf_1x_compatibility.module
+
+; Information added by Drupal.org packaging script on 2014-12-02
+version = "7.x-2.1"
+core = "7.x"
+project = "cf"
+datestamp = "1417559602"
+

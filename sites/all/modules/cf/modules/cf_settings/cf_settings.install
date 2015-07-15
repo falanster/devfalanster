@@ -1,0 +1,195 @@
+<?php
+
+/**
+ * @file
+ * Install file for cf_settings module.
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function cf_settings_schema() {
+  $schema = array();
+
+  $t = get_t();
+
+  $schema['cf_settings_register'] = array(
+    'description' => $t("Provides a registry for custom variables defined by a module."),
+    'fields' => array(
+      'id' => array(
+        'description' => $t("The primary key used to represent a single registered setting."),
+        'type' => 'serial',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'variable_name' => array(
+        'description' => $t("The variable name of the registered setting."),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'variable_type' => array(
+        'description' => $t("The type of variable in which this registered setting is."),
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'module_name' => array(
+        'description' => $t("The machine-readable name of the module associated with this registered setting."),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'register_item' => array('variable_name', 'variable_type', 'module_name'),
+    ),
+  );
+
+  cf_db_options_create_options_schema('cf_settings', 'variable_type', $schema);
+
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function cf_settings_install() {
+  db_query('UPDATE {system} SET weight = -6 WHERE name = \'cf_settings\'');
+  $t = get_t();
+
+  $variable_types = array();
+
+  $variable_types[] = array(
+    'machine_name' => 'php_ini',
+    'human_name' => $t("PHP INI"),
+    'description' => $t("Settings variables that are defined inside of the appropriate php.ini file."),
+  );
+
+  $variable_types[] = array(
+    'machine_name' => 'drupal_settings',
+    'human_name' => $t("Drupal Settings"),
+    'description' => $t("Settings variables that are defined inside of the appropriate drupal sites/default/settings.php file."),
+  );
+
+  $variable_types[] = array(
+    'machine_name' => 'drupal_variables',
+    'human_name' => $t("Drupal Variables"),
+    'description' => $t("Settings variables that are defined in the database table called variable."),
+  );
+
+  cf_db_options_add_options('cf_settings', 'variable_type', $variable_types);
+
+
+  // register all known drupal core settings.
+  cf_settings_register('site_name', 'drupal_settings', 'drupal');
+  cf_settings_register('theme_default', 'drupal_settings', 'drupal');
+  cf_settings_register('anonymous', 'drupal_settings', 'drupal');
+  cf_settings_register('maintenance_theme', 'drupal_settings', 'drupal');
+  cf_settings_register('reverse_proxy', 'drupal_settings', 'drupal');
+  cf_settings_register('reverse_proxy_header', 'drupal_settings', 'drupal');
+  cf_settings_register('reverse_proxy_addresses', 'drupal_settings', 'drupal');
+  cf_settings_register('omit_vary_cookie', 'drupal_settings', 'drupal');
+  cf_settings_register('css_gzip_compression', 'drupal_settings', 'drupal');
+  cf_settings_register('js_gzip_compression', 'drupal_settings', 'drupal');
+  cf_settings_register('locale_custom_strings_en', 'drupal_settings', 'drupal');
+  cf_settings_register('blocked_ips', 'drupal_settings', 'drupal');
+  cf_settings_register('allow_authorize_operations', 'drupal_settings', 'drupal');
+
+
+  // register some php ini settings that are considered important or are believed to be commonly used.
+  cf_settings_register('session.gc_probability', 'php_ini', 'drupal');
+  cf_settings_register('session.gc_divisor', 'php_ini', 'drupal');
+  cf_settings_register('session.gc_maxlifetime', 'php_ini', 'drupal');
+  cf_settings_register('session.cookie_lifetime', 'php_ini', 'drupal');
+  cf_settings_register('pcre.backtrack_limit', 'php_ini', 'drupal');
+  cf_settings_register('pcre.recursion_limit', 'php_ini', 'drupal');
+  cf_settings_register('date.timezone', 'php_ini', 'drupal');
+  cf_settings_register('default_charset', 'php_ini', 'drupal');
+  cf_settings_register('memory_limit', 'php_ini', 'drupal');
+  cf_settings_register('post_max_size', 'php_ini', 'drupal');
+  cf_settings_register('precision', 'php_ini', 'drupal');
+  cf_settings_register('max_execution_time', 'php_ini', 'drupal');
+  cf_settings_register('max_file_uploads', 'php_ini', 'drupal');
+  cf_settings_register('upload_max_filesize', 'php_ini', 'drupal');
+  cf_settings_register('display_errors', 'php_ini', 'drupal');
+  cf_settings_register('error_reporting', 'php_ini', 'drupal');
+  cf_settings_register('html_errors', 'php_ini', 'drupal');
+
+
+  // register cf_settings settings
+  cf_settings_register('role_php_ini', 'drupal_settings', 'cf_settings');
+  cf_settings_register('user_php_ini', 'drupal_settings', 'cf_settings');
+
+
+  // register known drupal core variables
+  cf_settings_register('admin_theme', 'drupal_variables', 'drupal');
+  cf_settings_register('authorize_filetransfer_default', 'drupal_variables', 'drupal');
+  cf_settings_register('cache_class_cache_page', 'drupal_variables', 'drupal');
+  cf_settings_register('cache_class_custom_bin', 'drupal_variables', 'drupal');
+  cf_settings_register('cache_default_class', 'drupal_variables', 'drupal');
+  cf_settings_register('clean_url', 'drupal_variables', 'drupal');
+  cf_settings_register('cron_key', 'drupal_variables', 'drupal');
+  cf_settings_register('cron_last', 'drupal_variables', 'drupal');
+  cf_settings_register('css_js_query_string', 'drupal_variables', 'drupal');
+  cf_settings_register('date_default_timezone', 'drupal_variables', 'drupal');
+  cf_settings_register('date_temporary_timezone', 'drupal_variables', 'drupal');
+  cf_settings_register('drupal_css_cache_files', 'drupal_variables', 'drupal');
+  cf_settings_register('drupal_http_request_fails', 'drupal_variables', 'drupal');
+  cf_settings_register('drupal_js_cache_files', 'drupal_variables', 'drupal');
+  cf_settings_register('drupal_private_key', 'drupal_variables', 'drupal');
+  cf_settings_register('file_temporary_path', 'drupal_variables', 'drupal');
+  cf_settings_register('filter_fallback_format', 'drupal_variables', 'drupal');
+  cf_settings_register('install_current_batch', 'drupal_variables', 'drupal');
+  cf_settings_register('install_locale_batch_components', 'drupal_variables', 'drupal');
+  cf_settings_register('install_profile', 'drupal_variables', 'drupal');
+  cf_settings_register('install_profile_modules', 'drupal_variables', 'drupal');
+  cf_settings_register('install_task', 'drupal_variables', 'drupal');
+  cf_settings_register('install_time', 'drupal_variables', 'drupal');
+  cf_settings_register('javascript_parsed', 'drupal_variables', 'drupal');
+  cf_settings_register('language_count', 'drupal_variables', 'drupal');
+  cf_settings_register('language_default', 'drupal_variables', 'drupal');
+  cf_settings_register('language_types', 'drupal_variables', 'drupal');
+  cf_settings_register('maintenance_mode', 'drupal_variables', 'drupal');
+  cf_settings_register('maintenance_mode_message', 'drupal_variables', 'drupal');
+  cf_settings_register('menu_expanded', 'drupal_variables', 'drupal');
+  cf_settings_register('menu_masks', 'drupal_variables', 'drupal');
+  cf_settings_register('menu_rebuild_needed', 'drupal_variables', 'drupal');
+  cf_settings_register('node_admin_theme', 'drupal_variables', 'drupal');
+  cf_settings_register('node_options_page', 'drupal_variables', 'drupal');
+  cf_settings_register('node_submitted_page', 'drupal_variables', 'drupal');
+  cf_settings_register('path_alias_whitelist', 'drupal_variables', 'drupal');
+  cf_settings_register('site_default_country', 'drupal_variables', 'drupal');
+  cf_settings_register('site_mail', 'drupal_variables', 'drupal');
+  cf_settings_register('site_name', 'drupal_variables', 'drupal');
+  cf_settings_register('theme_default', 'drupal_variables', 'drupal');
+  cf_settings_register('update_d6', 'drupal_variables', 'drupal');
+  cf_settings_register('update_d7_requirements', 'drupal_variables', 'drupal');
+  cf_settings_register('update_notify_emails', 'drupal_variables', 'drupal');
+  cf_settings_register('user_admin_role', 'drupal_variables', 'drupal');
+  cf_settings_register('user_picture_dimensions', 'drupal_variables', 'drupal');
+  cf_settings_register('user_picture_file_size', 'drupal_variables', 'drupal');
+  cf_settings_register('user_pictures', 'drupal_variables', 'drupal');
+  cf_settings_register('user_picture_style', 'drupal_variables', 'drupal');
+  cf_settings_register('user_register', 'drupal_variables', 'drupal');
+
+
+  // cf_error is treated as a soft-dependency and so manually add the cf_error variables.
+  if (module_exists('cf_error')) {
+    cf_settings_register('cf_error_backtrace_show', 'drupal_variables', 'cf_error', 2);
+  }
+}
+
+/**
+ * Upgrade module from 7.x-1.x to 7.x-2.x.
+ */
+function cf_settings_update_7200() {
+  drupal_install_schema('cf_settings');
+  cf_settings_install();
+}

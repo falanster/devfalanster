@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - Node module.
+ */
+
+/**
+ * @defgroup cf_node Common Functionality - Node
+ * @ingroup cf
+ * @{
+ * Provides a collection of node-specific functions.
+ *
+ * This module provides the following benefits:
+ * - Initialization of a node class object.
+ * - Programmatically create a valid node form object.
+ *
+ * Justification:
+ *   There are many arguments of drupal_execute() vs node_save() to the point
+ *   that I had no idea which was better than the other.
+ *
+ * References:
+ * - https://drupal.org/node/178506
+ * - https://drupal.org/node/131704
+ * - https://drupal.org/node/293663
+ * - https://drupal.org/node/604532
+ * - https://drupal.org/node/530332
+ * - .. and many many more ..
+ */
+
+/**
+ * Create a node class object.
+ *
+ * This is designed to be used for cf_node_create() or drupal_execute()
+ * functions. This generates the minimum fields required.
+ *
+ * @param string $node_type
+ *   The node type to initialize.
+ * @param string $node_title
+ *   The note title to use.
+ * @param string $node_body
+ *   (optional) The node body to use.
+ *
+ * @return object
+ *   A basic node object that can be safely passed to drupal_execute().
+ */
+function cf_node_initialize_class($node_type, $node_title, $node_body = '') {
+  $node_class = new stdClass();
+
+  if (cf_is_empty_or_non_string('node_type', $node_type, WATCHDOG_ERROR)) {
+    return $node_class;
+  }
+
+  if (cf_is_empty_or_non_string('node_title', $node_title, WATCHDOG_ERROR)) {
+    return $node_class;
+  }
+
+  if (!is_string($node_body)) {
+    $node_body = '';
+  }
+
+  // node_object_prepare requires the node.pages.inc be loaded to be called
+  module_load_include('inc', 'node', 'node.pages');
+
+  node_object_prepare($node_class);
+
+  $node_class->type = $node_type;
+  $node_class->title = $node_title;
+  $node_class->body = $node_body;
+  $node_class->active = TRUE;
+
+  return $node_class;
+}
+
+/**
+ * Programatically creates a node of the form type and returns any errors.
+ *
+ * This flushes the error buffer allowing for multiple calls.
+ * This will always return an array.
+ *
+ * @param string $form_id
+ *   The node type to initialize.
+ * @param string $node_class
+ *   Should be created via the cf_node_initialize_class() function and then
+ *   altered as necessary.
+ *
+ * @return array
+ *   An array of all errors (if any) that occurred during the creation process.
+ **/
+function cf_node_create($form_id, $node_class) {
+  if (cf_is_empty_or_non_string('form_id', $form_id, WATCHDOG_ERROR)) {
+    return array();
+  }
+
+  if (!is_object($node_class)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_object('node_class');
+    }
+
+    return array();
+  }
+
+  $node_state = array('values' => (array) $node_class);
+  $node_state['values']['op'] = t('Save');
+
+  if (!cf_has_array_key('name', $node_state['values'])) {
+    $current_user = cf_current_user();
+
+    $node_state['values']['name'] = $current_user->name;
+  }
+
+  drupal_execute($form_id, $custom_state, $custom_node);
+
+  $form_errors = form_get_errors();
+
+  if (!is_array($form_errors)) {
+    $form_errors = array();
+  }
+
+  // reset form error array
+  form_set_error(NULL, '', TRUE);
+
+  return $form_errors;
+}
+
+/**
+ * @} End of '@defgroup cf_node Common Functionality - Node'.
+ */

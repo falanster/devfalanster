@@ -1,0 +1,722 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - Theme module.
+ */
+
+/**
+ * @defgroup cf_theme Common Functionality - Theme
+ * @ingroup cf
+ * @{
+ * Provides theme-specific functions for themes to call.
+ */
+
+/**
+ * Returns an array of variables to be used by a given theme.
+ *
+ * Justification:
+ *   see: cf_theme_generate_headers().
+ *
+ * @param array $variables
+ *   The variables array from the theme template functions.
+ *
+ * @return array
+ *   An array of variables to be provided to the calling theme.
+ */
+function cf_theme_get_variables(array &$variables) {
+  $cf = &drupal_static(__FUNCTION__, array());
+
+  if (!empty($cf)) {
+    return $cf;
+  }
+
+  $cf['css'] = array();
+  $cf['meta'] = array('charset' => 'UTF-8', 'content' => NULL, 'http-equiv' => array(), 'name' => array());
+  $cf['link'] = array();
+  $cf['agent'] = array('machine_name' => 'unknown', 'human_name' => 'unknown', 'major_version' => 'unknown', 'engine' => 'unknown', 'raw' => '');
+  $cf['breadcrumb'] = array();
+  $cf['markup_css'] = array('body' => array('id' => '', 'class' => ''));
+  $cf['at'] = array('machine_name' => '', 'human_name' => '', 'url' => '', 'base' => '', 'path' => '', 'alias' => '', 'css' => '');
+  $cf['date'] = array('enabled' => FALSE, 'year' => '', 'month' => '', 'day' => '', 'week' => '', 'hour' => '', 'minute' => '', 'timezone' => '');
+  $cf['theme'] = array('path' => '', 'machine_name' => '', 'human_name' => '');
+  $cf['is'] = array();
+  $cf['is_data'] = array();
+  $cf['show'] = array();
+  $cf['data'] = array();
+  $cf['user'] = array('object' => NULL);
+
+  foreach (array('front', 'admin', 'admin_path', 'using_database', 'node', 'profile', 'emergency', 'maintenance', 'unsupported', 'debug', 'overlay', 'logged_in', 'anonymous', 'published', 'unpublished', 'promoted', 'sticky') as $key) {
+    $cf['is'][$key] = FALSE;
+    $cf['is_data'][$key] = array();
+  }
+
+  $cf['user']['object'] = cf_current_user();
+
+  // set the request time if it exists
+  if (empty($_SERVER['REQUEST_TIME'])) {
+    $cf['request'] = microtime();
+  }
+  else {
+    $cf['request'] = $_SERVER['REQUEST_TIME'];
+  }
+
+  // do not cache maintenance mode pages.
+  $maintenance_mode = variable_get('maintenance_mode', 0);
+
+  if ($maintenance_mode || defined('MAINTENANCE_MODE')) {
+    $cf['meta']['name']['googlebot'] = 'noarchive,noindex,nofollow,nosnippet';
+    $cf['meta']['name']['robots'] = 'NONE';
+    $cf['meta']['http-equiv']['cache-control'] = 'no-cache';
+    $cf['is']['maintenance'] = TRUE;
+    $cf['is_data']['maintenance']['type'] = 'normal';
+    $cf['is_data']['maintenance']['mode'] = $maintenance_mode;
+
+    if (defined('MAINTENANCE_MODE')) {
+      $cf['is_data']['maintenance']['type'] = check_plain(MAINTENANCE_MODE);
+    }
+
+    $cf['is']['maintenance-type-' . $cf['is_data']['maintenance']['type']] = TRUE;
+    $cf['is_data']['maintenance-type-' . $cf['is_data']['maintenance']['type']] = array();
+  }
+
+  // set the user agent
+  if (function_exists('get_browser') && !empty($_SERVER['HTTP_USER_AGENT'])) {
+    $browser_details = get_browser(NULL, TRUE);
+
+    $cf['agent']['raw'] = $_SERVER['HTTP_USER_AGENT'];
+
+    if (!empty($cf['agent']['raw'])) {
+      // Gecko
+      $matches = array();
+      $result = preg_match('/ Gecko\b/i', $cf['agent']['raw'], $matches);
+      if ($result > 0) {
+        $cf['agent']['engine'] = 'gecko';
+      }
+
+      // webkit
+      $matches = array();
+      $result = preg_match('/ AppleWebKit\b/i', $cf['agent']['raw'], $matches);
+      if ($result > 0) {
+        $cf['agent']['engine'] = 'webkit';
+      }
+    }
+
+    if (!empty($browser_details['browser'])) {
+      if ($browser_details['browser'] != 'Default Browser') {
+        $cf['agent']['machine_name'] = strtolower($browser_details['browser']);
+        $cf['agent']['human_name'] = $browser_details['browser'];
+      }
+    }
+
+    if (!empty($browser_details['majorver'])) {
+      $cf['agent']['major_version'] = $browser_details['majorver'];
+    }
+
+    switch ($cf['agent']['machine_name']) {
+      case 'firefox':
+        if ($cf['agent']['major_version'] < 3) {
+          $cf['is']['unsupported'] = TRUE;
+        }
+        $cf['agent']['human_name'] = 'Firefox';
+        $cf['agent']['engine'] = 'gecko';
+        break;
+      case 'mozilla':
+        $cf['agent']['human_name'] = 'Mozilla';
+        $cf['agent']['engine'] = 'gecko';
+        break;
+      case 'ie':
+        $cf['agent']['human_name'] = 'Internet Explorer';
+        $cf['agent']['engine'] = 'trident';
+        break;
+      case 'opera':
+        $cf['agent']['human_name'] = 'Opera';
+        $cf['agent']['engine'] = 'presto';
+        break;
+      case 'chrome':
+        $cf['agent']['human_name'] = 'Google Chrome';
+        $cf['agent']['engine'] = 'webkit';
+        break;
+      default:
+        if (!empty($cf['agent']['raw'])) {
+          $matches = array();
+          $result = preg_match('/ Midori\b/i', $cf['agent']['raw'], $matches);
+
+          if ($result > 0) {
+            $cf['agent']['machine_name'] = 'midori';
+            $cf['agent']['human_name'] = 'Midori';
+            $cf['agent']['engine'] = 'webkit';
+          }
+
+          if ($result == 0) {
+            $matches = array();
+            $result = preg_match('/ Konqueror\b/i', $cf['agent']['raw'], $matches);
+
+            if ($result > 0) {
+              $cf['agent']['machine_name'] = 'konqueror';
+              $cf['agent']['human_name'] = 'Konqueror';
+              $cf['agent']['engine'] = 'gecko';
+            }
+          }
+
+          if ($result == 0) {
+            $matches = array();
+            $result = preg_match('/ Ephiphany\b/i', $cf['agent']['raw'], $matches);
+
+            if ($result > 0) {
+              $cf['agent']['machine_name'] = 'ephiphany';
+              $cf['agent']['human_name'] = 'Ephiphany';
+              $cf['agent']['engine'] = 'gecko';
+            }
+          }
+
+          // both ephiphany and konqueror have gecko AND webkit variants, try to detect webkit ones
+          if ($cf['agent']['machine_name'] == 'ephiphany' || $cf['agent']['machine_name'] == 'konqueror') {
+            $matches = array();
+            $result = preg_match('/ KHTML\b/i', $cf['agent']['raw'], $matches);
+            if ($result > 0) {
+              $cf['agent']['engine'] = 'webkit';
+            }
+          }
+        }
+        break;
+    }
+  }
+
+  // set frontpage defaults
+  if (drupal_is_front_page()) {
+    $cf['is']['front'] = TRUE;
+    $cf['meta']['name']['robots'] = 'INDEX,FOLLOW';
+  }
+
+  if (!empty($variables['is_admin'])) {
+    $cf['is']['admin'] = TRUE;
+  }
+
+  if (is_object($cf['user']['object']) && property_exists($cf['user']['object'], 'uid') && $cf['user']['object']->uid > 0) {
+    $cf['is']['logged_in'] = TRUE;
+    $cf['is_data']['logged_in']['user'] = &$cf['user']['object'];
+  }
+  else {
+    $cf['is']['anonymous'] = TRUE;
+    $cf['is_data']['anonymous']['user'] = &$cf['user']['object'];
+  }
+
+  if (!empty($variables['db_is_active'])) {
+    $cf['is']['using_database'] = TRUE;
+    $cf['is_data']['using_database']['database'] = db_driver();
+  }
+
+  $node_object = NULL;
+  $node_id_matches = array();
+  if (preg_match('@^node/(\d+)(/.*|$|\?.*|#.*)@', current_path(), $node_id_matches)) {
+    if (!empty($node_id_matches[1])) {
+      $revision_id_matches = array();
+
+      if (!empty($node_id_matches[2]) && preg_match('@^/revisions/(\d+)(/.*|$|\?.*|#.*)@', $node_id_matches[2], $revision_id_matches)) {
+        if (!empty($revision_id_matches[1])) {
+          $node_object = node_load($node_id_matches[1], $revision_id_matches[1]);
+        }
+        else {
+          $node_object = node_load($node_id_matches[1]);
+        }
+      }
+      else {
+        $node_object = node_load($node_id_matches[1]);
+      }
+    }
+  }
+  unset($node_id_matches);
+
+  if (is_object($node_object)) {
+    if (property_exists($node_object, 'nid') && !empty($node_object->nid)) {
+      $cf['is']['node'] = TRUE;
+      $cf['is_data']['node']['object'] = &$node_object;
+
+      if ($cf['is_data']['node']['object']->status == NODE_PUBLISHED) {
+        $cf['is']['published'] = TRUE;
+        $cf['is_data']['published']['value'] = $node_object->status;
+      }
+
+      if ($cf['is_data']['node']['object']->status != NODE_PUBLISHED) {
+        $cf['is']['unpublished'] = TRUE;
+        $cf['is_data']['unpublished']['value'] = $node_object->status;
+      }
+
+      if ($cf['is_data']['node']['object']->promote == NODE_PROMOTED) {
+        $cf['is']['promoted'] = TRUE;
+        $cf['is_data']['promoted']['value'] = $node_object->promote;
+      }
+
+      if ($cf['is_data']['node']['object']->promote == NODE_STICKY) {
+        $cf['is']['sticky'] = TRUE;
+        $cf['is_data']['sticky']['value'] = $node_object->sticky;
+      }
+    }
+  }
+
+  $user_id_matches = array();
+  if (preg_match('@^user/(\d+)(/.*|$|\?.*|#.*)@', current_path(), $user_id_matches)) {
+    if (!empty($user_id_matches[1])) {
+      $cf['is_data']['profile']['object'] = user_load($user_id_matches[1]);
+
+      if (is_object($cf['is_data']['profile']['object'] )) {
+        $cf['is']['profile'] = TRUE;
+      }
+    }
+  }
+  unset($user_id_matches);
+
+  if (module_exists('overlay')) {
+    $overlay_mode = overlay_get_mode();
+
+    if ($overlay_mode == 'child') {
+      $cf['is']['overlay'] = TRUE;
+    }
+  }
+
+  // add url specific css
+  global $base_url;
+  global $base_dir;
+  $cf['at']['machine_name'] = preg_replace('/^.*\/\//i', '', $base_url);
+  $cf['at']['human_name'] = variable_get('site_name');
+  $cf['at']['url'] = $base_url;
+  $cf['at']['base'] = $base_dir;
+
+  if (!is_string($cf['at']['machine_name'])) {
+   $cf['at']['machine_name'] = '';
+  }
+
+  if (!empty($cf['at']['machine_name'])) {
+    $cf['at']['css'] = ' at-' . cf_theme_safe_css_string_part($cf['at']['machine_name']);
+  }
+
+  if (function_exists('current_path')) {
+    $cf['at']['path'] = current_path();
+  }
+  elseif (isset($_GET['q'])) {
+    $cf['at']['path'] = $_GET['q'];
+  }
+
+  if (function_exists('request_path')) {
+    $cf['at']['alias'] = request_path();
+  }
+  elseif (isset($_GET['q'])) {
+    $cf['at']['alias'] = $_GET['q'];
+  }
+
+  if (!empty($cf['at']['path'])) {
+    $cf['at']['css'] .=  ' path-' . cf_theme_safe_css_string_part($cf['at']['path']);
+  }
+
+  if (!empty($cf['at']['alias'])) {
+    $cf['at']['css'] .=  ' alias-' . cf_theme_safe_css_string_part($cf['at']['alias']);
+  }
+
+  if (path_is_admin($cf['at']['path'])) {
+    $cf['is']['admin_path'] = TRUE;
+  }
+
+  // Add date-specific css
+  $timezone = date_default_timezone_get();
+  date_default_timezone_set('UTC');
+  $cf['date']['year'] = date('Y', REQUEST_TIME);
+  $cf['date']['month'] = date('m', REQUEST_TIME);
+  $cf['date']['day'] = date('d', REQUEST_TIME);
+  $cf['date']['week'] = date('W', REQUEST_TIME);
+  $cf['date']['hour'] = date('H', REQUEST_TIME);
+  $cf['date']['minute'] = date('i', REQUEST_TIME);
+  date_default_timezone_set($timezone);
+  unset($timezone);
+
+  drupal_alter('cf_theme_get_variables', $cf, $variables);
+
+  // populate the body and content css tags
+  foreach ($cf['is'] as $key => $value) {
+    if ($value === TRUE) {
+      $cf['markup_css']['body']['class'] .= ' is-' . $key;
+    }
+  }
+
+  $cf['markup_css']['body']['class'] .= $cf['at']['css'];
+
+  if (!empty($cf['agent']['machine_name'])) {
+    $class_part = cf_theme_safe_css_string_part($cf['agent']['machine_name']);
+    $cf['markup_css']['body']['class'] .= ' agent-name-' . $class_part;
+  }
+
+  if (!empty($cf['agent']['engine'])) {
+    $class_part = cf_theme_safe_css_string_part($cf['agent']['engine']);
+    $cf['markup_css']['body']['class'] .= ' agent-engine-' . $class_part;
+  }
+
+  if (!empty($cf['agent']['major_version'])) {
+    $class_part = cf_theme_safe_css_string_part($cf['agent']['major_version']);
+    $cf['markup_css']['body']['class'] .= ' agent-major_version-' . $class_part;
+  }
+
+
+  if ($cf['is']['node']) {
+    $class_part = cf_theme_safe_css_string_part($cf['is_data']['node']['object']->nid);
+    $cf['markup_css']['body']['class'] .= ' node-id-' . $class_part;
+
+    $class_part = cf_theme_safe_css_string_part($cf['is_data']['node']['object']->type);
+    $cf['markup_css']['body']['class'] .= ' node-type-' . $class_part;
+
+    if (!empty($cf['is_data']['node']['object']->path['alias'])) {
+      $class_part = cf_theme_safe_css_string_part(drupal_get_path_alias($cf['is_data']['node']['object']->path['alias']));
+      $cf['markup_css']['body']['class'] .= ' node-path-' . $class_part;
+    }
+    elseif (!empty($cf['is_data']['node']['object']->path['source'])) {
+      $class_part = cf_theme_safe_css_string_part(drupal_get_path_alias($cf['is_data']['node']['object']->path['source']));
+      $cf['markup_css']['body']['class'] .= ' node-path-' . $class_part;
+    }
+  }
+
+  if ($cf['date']['enabled']) {
+    foreach (array('year', 'month', 'day', 'week', 'hour', 'minute') as $key) {
+      if (!empty($cf['date'][$key])) {
+        $class_part = cf_theme_safe_css_string_part($cf['date'][$key]);
+        $cf['markup_css']['body']['class'] .= ' date-' . $key . '-' . $class_part;
+      }
+    }
+
+    if (!empty($cf['date']['timezone'])) {
+      $timezone = preg_replace('/^\+/i', 'P', $cf['date']['timezone']);
+      $timezone = preg_replace('/^\-/i', 'N', $timezone);
+
+      if (is_string($timezone)) {
+        $timezone_css = cf_theme_safe_css_string_part($timezone);
+
+        if ($timezone_css !== FALSE) {
+          $cf['markup_css']['body']['class'] .= ' date-timezone-' . $timezone_css;
+        }
+      }
+    }
+  }
+
+  return $cf;
+}
+
+/**
+ * Properly generates html headers based on the contents of the $cf parameter.
+ *
+ * This will auto-add all appropriate css headers through the appropriate
+ * drupal css calls.
+ *
+ * The following meta are ignored because drupal core already handles them:
+ *   - Content-Type
+ *   - Generator
+ *
+ * Justification:
+ *   Theme *.tpl.php files should not ever have to call generate or perform
+ *   isset()/empty() checks to prevent errors from happening. All of this work
+ *   should be done in the template.php. There is not a standard way of doin
+ *   this such that other modules and themes can hook into. This also allows
+ *   custom modules to alter themes without having to hack or alter any
+ *   existing theme that supports these functions.
+ *
+ * @param array $cf
+ *   An array of header elements to process.
+ *
+ * @return string
+ *   A string of html data.
+ */
+function cf_theme_generate_headers(array $cf) {
+  $output = '';
+
+  // handle meta tags
+  if (!empty($cf['meta']['charset'])) {
+    $output .= '<meta charset="' . filter_xss($cf['meta']['charset'], array()) . '">' . "\n";
+  }
+
+  $supported_meta = array();
+  $supported_meta[] = 'abstract';
+  $supported_meta[] = 'author';
+  $supported_meta[] = 'classification';
+  $supported_meta[] = 'copyright';
+  $supported_meta[] = 'description';
+  $supported_meta[] = 'distribution';
+  $supported_meta[] = 'doc-class';
+  $supported_meta[] = 'doc-rights';
+  $supported_meta[] = 'doc-type';
+  $supported_meta[] = 'DownloadOptions';
+  $supported_meta[] = 'expires';
+  $supported_meta[] = 'generator';
+  $supported_meta[] = 'googlebot';
+  $supported_meta[] = 'keywords';
+  $supported_meta[] = 'MSSmartTagsPreventParsing';
+  $supported_meta[] = 'name';
+  $supported_meta[] = 'owner';
+  $supported_meta[] = 'progid';
+  $supported_meta[] = 'rating';
+  $supported_meta[] = 'refresh';
+  $supported_meta[] = 'reply-to';
+  $supported_meta[] = 'resource-type';
+  $supported_meta[] = 'revisit-after';
+  $supported_meta[] = 'robots';
+  $supported_meta[] = 'Template';
+  $supported_meta[] = 'google-site-verification';
+
+  foreach ($supported_meta as $tag) {
+    if (!empty($cf['meta']['name'][$tag])) {
+      $output .= '<meta name="' . $tag . '" content="' . filter_xss($cf['meta']['name'][$tag], array()) . '">' . "\n";
+    }
+  }
+
+  $supported_http_equiv = array();
+  $supported_http_equiv[] = 'cache-control';
+  $supported_http_equiv[] = 'content-language';
+  $supported_http_equiv[] = 'content-type';
+  $supported_http_equiv[] = 'date';
+  $supported_http_equiv[] = 'expires';
+  $supported_http_equiv[] = 'last-modified';
+  $supported_http_equiv[] = 'location';
+  $supported_http_equiv[] = 'refresh';
+  $supported_http_equiv[] = 'set-cookie';
+  $supported_http_equiv[] = 'window-target';
+  $supported_http_equiv[] = 'X-UA-Compatible'; // for specifying minimum Internet Explorer version
+
+  foreach ($supported_http_equiv as $tag) {
+    if (!empty($cf['meta']['http-equiv'][$tag])) {
+      $output .= '<meta http-equiv="' . $tag . '" content="' . filter_xss($cf['meta']['http-equiv'][$tag], array()) . '">' . "\n";
+    }
+  }
+
+  // handle css (Currently not working)
+  /*
+  foreach ($cf['css'] as $key => &$css) {
+    if (!empty($css['data'])) {
+      drupal_add_css($css['data'], (!empty($css['options']) ? $css['options'] : NULL));
+    }
+  }
+  */
+
+  // handle custom links
+  $supported_link_media = array();
+  $supported_link_media[] = 'screen';
+  $supported_link_media[] = 'tty';
+  $supported_link_media[] = 'tv';
+  $supported_link_media[] = 'projection';
+  $supported_link_media[] = 'handheld';
+  $supported_link_media[] = 'print';
+  $supported_link_media[] = 'braille';
+  $supported_link_media[] = 'aural';
+  $supported_link_media[] = 'all';
+
+  $supported_link_rel = array();
+  $supported_link_rel[] = 'alternate';
+  $supported_link_rel[] = 'appendix';
+  $supported_link_rel[] = 'bookmark';
+  $supported_link_rel[] = 'canonical';
+  $supported_link_rel[] = 'chapter';
+  $supported_link_rel[] = 'contents';
+  $supported_link_rel[] = 'copyright';
+  $supported_link_rel[] = 'glossary';
+  $supported_link_rel[] = 'help';
+  $supported_link_rel[] = 'home';
+  $supported_link_rel[] = 'index';
+  $supported_link_rel[] = 'next';
+  $supported_link_rel[] = 'prev';
+  $supported_link_rel[] = 'section';
+  $supported_link_rel[] = 'shortlink';
+  $supported_link_rel[] = 'start';
+  $supported_link_rel[] = 'stylesheet';
+  $supported_link_rel[] = 'subsection';
+  $supported_link_rel[] = 'shortcut icon';
+  $supported_link_rel[] = 'apple-touch-icon';
+  $supported_link_rel[] = 'apple-touch-icon-precomposed';
+
+  foreach ($cf['link'] as $key => &$link) {
+    if (empty($link['href'])) continue;
+
+    $output .= '<link';
+
+    foreach (array('charset', 'href', 'hreflang', 'media', 'rel', 'target', 'type') as $type) {
+      if ($type == 'rel') {
+        if (empty($link['rel'])) {
+          if (!empty($link['rev']) && in_array($link['rev'], $supported_link_rel)) {
+            $output .= ' rev="' . $link['rev'] . '"';
+          }
+        }
+        else {
+          if (in_array($link['rel'], $supported_link_rel)) {
+            $output .= ' rel="' . $link['rel'] . '"';
+          }
+        }
+      }
+      else if ($type == 'media') {
+        if (!empty($link['media']) && in_array($link['media'], $supported_link_media)) {
+          $output .= ' media="' . $link['media'] . '"';
+        }
+      }
+      else {
+        if (!empty($link[$type])) {
+          $output .= ' ' . $type . '="' . filter_xss($link[$type], array()) . '"';
+        }
+      }
+    }
+
+    $output .= '>' . "\n";
+  }
+
+  return $output;
+}
+
+/**
+ * Safely render all variables specified in the $keys array.
+ *
+ * Why:
+ *   Theme *.tpl.php files should not ever have to call generate or perform
+ *   isset()/empty() checks to prevent errors from happening.
+ *   All of this work should be done in the template.php.
+ *   There is not a standard way of doing this such that other modules and
+ *   themes can hook into.
+ *   This also allows custom modules to alter themes without having to hack or
+ *   alter any existing theme that supports these functions.
+ *
+ * @param array $variables
+ *   The variables array to process.
+ * @param array $keys
+ *   An array of key names to process.
+ * @param string $subdir
+ *   (optional) A string representing a subdirectory inside of the variables
+ *   parameter.
+ */
+function cf_theme_render_variables(&$variables, $keys, $subdir = NULL) {
+  if (is_null($subdir)) {
+    foreach ($keys as $key) {
+      if (empty($variables[$key])) {
+        $variables[$key] = '';
+        $variables['cf']['show'][$key] = FALSE;
+      }
+      else {
+        $variables[$key] = render($variables[$key]);
+        $variables['cf']['show'][$key] = TRUE;
+      }
+    }
+  }
+  else {
+    $variables['cf']['show'][$subdir] = array();
+
+    foreach ($keys as $key) {
+      if (empty($variables[$subdir][$key])) {
+        $variables[$subdir][$key] = '';
+        $variables['cf']['show'][$subdir][$key] = FALSE;
+      }
+      else {
+        $variables[$subdir][$key] = render($variables[$subdir][$key]);
+        $variables['cf']['show'][$subdir][$key] = TRUE;
+      }
+    }
+  }
+}
+
+/**
+ * Safely render all cf variables specified in the $keys array.
+ *
+ * This is useful as a post-process render, such as inside of *.tpl.php.
+ *
+ * Why:
+ *   Theme *.tpl.php files should not ever have to call generate or perform
+ *   isset()/empty() checks to prevent errors from happening.
+ *   All of this work should be done in the template.php.
+ *   There is a standard way of doing this such that other modules and themes
+ *   can hook into.
+ *   This also allows custom modules to alter themes without having to hack or
+ *   alter any existing theme that supports these functions.
+ *
+ * @param array $cf
+ *   The cf variables array to process.
+ * @param array $keys
+ *   An array of key names to process.
+ * @param string $subdir
+ *   (optional) A string representing a subdirectory inside of the variables
+ *   parameter.
+ *
+ * @see cf_theme_render_variables()
+ */
+function cf_theme_render_cf(&$cf, $keys, $subdir = NULL) {
+  if (is_null($subdir)) {
+    foreach ($keys as $key) {
+      if (empty($cf[$key])) {
+        $cf['data'][$key] = '';
+        $cf['show'][$key] = FALSE;
+      }
+      else {
+        $cf['data'][$key] = render($cf[$key]);
+        $cf['show'][$key] = TRUE;
+      }
+    }
+  }
+  else {
+    foreach ($keys as $key) {
+      if (empty($cf[$subdir][$key])) {
+        $cf['data'][$subdir][$key] = '';
+        $cf['show'][$subdir][$key] = FALSE;
+      }
+      else {
+        $cf['data'][$subdir][$key] = render($cf[$subdir][$key]);
+        $cf['show'][$subdir][$key] = TRUE;
+      }
+    }
+  }
+}
+
+/**
+ * A wrapper around drupal_clean_css_identifier that allows underscores.
+ *
+ * Justification:
+ *   Drupals core css cleanup code does not properly handle all allowed css,
+ *   namely underscores. This is a quick-way to ensure that all non-word
+ *   characters are removed from a string to be used in css.
+ *
+ * @param string $string
+ *   The string to cleanup.
+ *
+ * @return string|false
+ *   FALSE is returned if the preg_replace() functions returns something other
+ *   than a string.
+ */
+function cf_theme_safe_css($string) {
+  $replacement = drupal_clean_css_identifier($string, array(' ' => '-', '_' => '_', '/' => '-', '[' => '-', ']' => ''));
+
+  if (is_string($replacement)) {
+    return $replacement;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Returns a string with all non-word characters turned into underscores.
+ *
+ * Justification:
+ *   Drupals core css cleanup code does not properly handle all allowed css,
+ *   namely underscores. This is a quick-way to ensure that all non-word
+ *   characters are removed from a string to be used in css. This function is
+ *   intended to be used to only create part of a string as done throughout
+ *   the cf_theme_* functions to generate css names, such as:
+ *   at-www_drupal_org.
+ *
+ * @param string $string
+ *   The string to cleanup.
+ *
+ * @return string|false
+ *   A string with all non-word characters turned into underscores.
+ *   FALSE is returned if the preg_replace() functions returns something other
+ *   than a string.
+ */
+function cf_theme_safe_css_string_part($string) {
+  $replacement = preg_replace('/(\W)+/i', '_', $string);
+
+  if (is_string($replacement)) {
+    return $replacement;
+  }
+
+  return FALSE;
+}
+
+/**
+ * @} End of '@defgroup cf_node Common Functionality - Theme'.
+ */

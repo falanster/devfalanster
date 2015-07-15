@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - Menu View Unpublished Module.
+ */
+
+/**
+ * @defgroup cf_menu_view_unpublished Common Functionality - Menu View Unpublished
+ * @ingroup cf
+ * @{
+ * Allow appropriately privileged users to view unpublished nodes in a menu.
+ *
+ * Justification:
+ *   The drupal menu core prevents users from seeing the unpublished nodes in the menus.
+ *
+ * Errata:
+ *   This requires a patch against drupal core function (drupal-7.x-add_menu_tree_check_access-1.patch).
+ *   To apply this patch, got do the root of your drupal directory and issue the following command
+ *   patch -p1 -i sites/all/modules/cf/modules/cf_menu_view_unpublished/miscellaneous/drupal-7.x-add_menu_tree_check_access-1.patch
+ *
+ * References:
+ *  - https://drupal.org/node/460408#comment-4367202
+ *  - https://drupal.org/node/460408#comment-4525794
+ */
+
+/**
+ * Implements hook_cf_permission_alter().
+ *
+ * @see cf_permission()
+ */
+function cf_menu_view_unpublished_cf_permission_alter(&$permissions) {
+  if (!is_array($permissions)) {
+    $permissions = array();
+  }
+
+  $permissions['view unpublished content in menu'] = array(
+    'title' => t("View Unpublished Content in Menu"),
+    'description' => t("Grants permissions to view menu items that is unpublished content. (This requires a patch against drupal core in order to function.)"),
+  );
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function cf_menu_view_unpublished_query_menu_tree_check_access_alter(&$query) {
+  if (user_access('view unpublished content in menu')) {
+    $where =& $query->conditions();
+
+    foreach ($where as $key => &$value) {
+      if (isset($value['field']) && $value['field'] == 'n.status') unset($where[$key]);
+    }
+  }
+}
+
+/**
+ * @} End of '@defgroup cf_menu_view_unpublished Common Functionality - Menu View Unpublished'.
+ */

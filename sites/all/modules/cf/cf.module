@@ -1,0 +1,500 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality module.
+ */
+
+/**
+ * @defgroup cf Common Functionality
+ * @{
+ * Provides a collection of commonly needed functionality not in drupal core.
+ *
+ * The reasons for adding each functionality could be any of the following:
+ *  - Drupal removed support for some functionality.
+ *  - The requested functionality is notably arguable, many users or developers
+ *    agree and disagree.
+ *  - The existing module does not support this functionality, such as backports
+ *    from the core module of a later drupal version.
+ *  - Snippets of code that are used often, but not often enough to make it into
+ *    core.
+ *  - Experimental (but production ready) or new functionality that is either
+ *    generic or not complicated enough to have an entire module of its own.
+ *  - Needs to act as a library and provide integration with (but not
+ *    implementation of) other modules or third party resources.
+ *  - Provides a solution (or workaround) for common problems encountered by
+ *    drupal users and developers.
+ *
+ * The reasons for not adding functionality here:
+ *  - Large or complicated projects.
+ *  - Implementing functionality already provided by an existing module.
+ *  - Providing something for purposes other than for being used as a library or
+ *    as code snippets.
+ *  - Implementing third part resources.
+ *  - Is experimental and not intended to be used in production.
+ *  - Providing a solution (or workaround) for common problems that already have
+ *    valid solutions already provided at drupal.org.
+ *
+ * The common functionality module should be thought of as a toolkit and not as
+ * a solution itself. However, because some solutions and workarounds can be
+ * solved with nothing more than a snippet of code, some solutions may be found
+ * here.
+ *
+ * To ensure that a reduce the need for including modules and functionality that
+ * is not needed, most of the functions provided by the common functionality
+ * module will be provided in its own sub-module.
+ *
+ * Each function (and sub-module) added to this project must have an argument
+ * attached to each comment as to why it is considered needed. Sited urls are
+ * requested but not required.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function cf_permission() {
+  $permissions = array();
+
+  drupal_alter('cf_permission', $permissions);
+
+  return $permissions;
+}
+
+/**
+ * Provide a safe way to get the current user.
+ *
+ * This protects the user global from coding accidents.
+ *
+ * Justification:
+ *   The global $user data may not have contrib modules data included, so
+ *   accessing $user directly is generally not a good idea.
+ *   This function seems rather waseteful given its simplicity.
+ *   It may be better if drupal core would allow $uid to be left empty such
+ *   that the user_load() function would handle accessing the global $user->id if $uid is empty.
+ *
+ *   Also, this is too easy to accidentally do: 'if ($user->uid = 1) {'.
+ *
+ *   See: https://drupal.org/node/57287
+ *   See: http://api.drupal.org/api/drupal/developer--globals.php/global/user/7#comment-7324
+ *
+ * @param bool $reset
+ *   TRUE to reset the internal cache and load from the database.
+ *   FALSE (default) to load from the internal cache, if set.
+ *
+ * @return object|FALSE
+ *   A copy of the global variable $user.
+ *   Changes to this variable will not be retained.
+ */
+function cf_current_user($reset = FALSE) {
+  global $user;
+
+  if (!is_object($user) || !property_exists($user, 'uid')) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_variable('user', "Not a valid user object.");
+    }
+
+    return FALSE;
+  }
+
+  return user_load($user->uid, $reset);
+}
+
+/**
+ * Converts the passed arguments into a single number.
+ *
+ * The passed arguments are booleans.
+ *
+ * Crud works in the same way that the linux filesystem permissions tend to be:
+ * - create = 1
+ * - read   = 2
+ * - update = 4
+ * - delete = 8
+ *
+ * Justification:
+ *   For efficiency reasons it may make more sense to store these boolean
+ *   values into a single database column similar to how the unix permission
+ *   umask works.
+ *
+ * @param bool $create
+ *   Boolean that represents whether or not the CREATE flag is set to TRUE or
+ *   FALSE.
+ * @param bool $read
+ *   Boolean that represents whether or not the READ flag is set to TRUE or
+ *   FALSE.
+ * @param bool $update
+ *   Boolean that represents whether or not the UPDATE flag is set to TRUE or
+ *   FALSE.
+ * @param bool delete
+ *   Boolean that represents whether or not the DELETE flag is set to TRUE or
+ *   FALSE.
+ *
+ * @return int
+ *   A single numerical value that represents all 4 permissions.
+ */
+function cf_convert_to_crud($create, $read, $update, $delete) {
+  $crud = 0;
+
+  if ($create) {
+    $crud += 1;
+  }
+
+  if ($read) {
+    $crud += 2;
+  }
+
+  if ($update) {
+    $crud += 4;
+  }
+
+  if ($delete) {
+    $crud += 8;
+  }
+
+  return $crud;
+}
+
+/**
+ * Converts the passed argument into an array of multiple booleans.
+ *
+ * An array of booleans is returned whose keys are: create, read, update, and
+ * delete
+ *
+ * Crud works in the same way that the linux filesystem permissions tend to be:
+ * - create = 1
+ * - read   = 2
+ * - update = 4
+ * - delete = 8
+ *
+ * Justification:
+ *   For efficiency reasons it may make more sense to store these boolean
+ *   values into a single database column similar to how the unix permission
+ *   umask works.
+ *
+ * @param int $crud
+ *   An integer representing the crud that is to be converted into an array of
+ *   booleans.
+ *
+ * @return array
+ *   An array containing the following keys:
+ *   - create: A boolean representing create permissions.
+ *   - read: A boolean representing read permissions.
+ *   - update: A boolean representing update permissions.
+ *   - delete: A boolean representing delete permissions.
+ */
+function cf_convert_from_crud($crud) {
+  $uncrud = array();
+  $uncrud['create'] = FALSE;
+  $uncrud['read']   = FALSE;
+  $uncrud['update'] = FALSE;
+  $uncrud['delete'] = FALSE;
+
+  if (!isset($crud)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_variable('crud', 'Not defined');
+    }
+
+    return $uncrud;
+  }
+
+  if (!is_numeric($crud)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_numeric('crud');
+    }
+
+    return $uncrud;
+  }
+
+  if ($crud - 8 >= 0) {
+    $uncrud['delete'] = TRUE;
+    $crud -= 8;
+  }
+
+  if ($crud - 4 >= 0) {
+    $uncrud['update'] = TRUE;
+    $crud -= 4;
+  }
+
+  if ($crud - 2 >= 0) {
+    $uncrud['read'] = TRUE;
+    $crud -= 2;
+  }
+
+  if ($crud - 1 >= 0) {
+    $uncrud['create'] = TRUE;
+  }
+
+  return $uncrud;
+}
+
+/**
+ * Check to see if the variable is an array and if the given key exists.
+ *
+ * Justification:
+ *   According to the PHP documentation: isset() does not return TRUE for array
+ *   keys that correspond to a NULL value, while array_key_exists() does. This
+ *   means that array_key_exists() should be used to guarantee that a key exists
+ *   as opposed to isset().
+ *
+ *   The problem here is that PHP throws an error when the variable is not an
+ *   array. This means that if (is_array($variable) && array_key_exists($key,
+ *   $variable)) must be done.
+ *
+ * @param string $key
+ *   The key to look for.
+ * @param string $variable
+ *   The possible array to search through for the given key.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the
+ *   severity of the report.
+ *
+ * @return bool
+ *   TRUE if the array key exists.
+ *   FALSE if the array key does not exist or a parameter is invalid.
+ */
+function cf_has_array_key($key, $variable, $severity = WATCHDOG_WARNING) {
+  if (cf_is_empty_or_non_string('key', $key)) {
+    return FALSE;
+  }
+
+  if (is_array($variable)) {
+    return array_key_exists($key, $variable);
+  }
+
+  return FALSE;
+}
+
+/**
+ * Checks if a variable is an empty string is empty or not a string at all.
+ *
+ * Justification:
+ *   Checking that a string is empty may also require a check to see if a
+ *   variable is a string.
+ *   This provides a way to do that two step process in 1 step.
+ *   Do not use this for any other purpose.
+ *
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param $variable
+ *   The argument that is to be validated.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the
+ *   severity of the report.
+ *
+ * @return bool
+ *   When the check passed returns TRUE, FALSE otherwise.
+ */
+function cf_is_empty_or_non_string($argument_name, $variable, $severity = WATCHDOG_WARNING) {
+  if ($argument_name == '') {
+    if (class_exists('cf_error')) {
+      cf_error::empty_string('argument_name');
+    }
+  }
+
+  if (!is_string($variable)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_string($argument_name, $severity);
+    }
+
+    return TRUE;
+  }
+
+  if ($variable == '') {
+    if (class_exists('cf_error')) {
+      cf_error::empty_string($argument_name, $severity);
+    }
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Checks if a variable is an empty array is empty or not an array at all.
+ *
+ * Justification:
+ *   Checking that an array is empty may also require a check to see if a
+ *   variable is an array.
+ *   This provides a way to do that two step process in 1 step.
+ *   Do not use this for any other purpose.
+ *
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param $variable
+ *   The argument that is to be validated.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the
+ *   severity of the report.
+ *
+ * @return bool
+ *   When the check passed returns TRUE, FALSE otherwise.
+ */
+function cf_is_empty_or_non_array($argument_name, $variable, $severity = WATCHDOG_WARNING) {
+  if ($argument_name == '') {
+    if (class_exists('cf_error')) {
+      cf_error::empty_string('argument_name');
+    }
+  }
+
+  if (!is_array($variable)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array($argument_name, $severity);
+    }
+
+    return TRUE;
+  }
+
+  if (empty($variable)) {
+    if (class_exists('cf_error')) {
+      cf_error::empty_array($argument_name, $severity);
+    }
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Checks if the argument is a valid drupal form state array.
+ *
+ * A valid form state is defined by form_state_defaults().
+ * This helps ensure that this argument is a valid form state.
+ * This handles reporting if the form state is invalid.
+ *
+ * Justification:
+ *   Checking if the form_state is valid on every function call can quickly
+ *   clutter up the code, reducing readability.
+ *   form state is common enough to have its own cf error checking function.
+ *
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param $variable
+ *   The argument that is to be validated.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ *
+ * @return bool
+ *   When the check passed returns TRUE, FALSE otherwise.
+ */
+function cf_is_not_form_state($argument_name, $variable, $severity = WATCHDOG_WARNING) {
+  if ($argument_name == '') {
+    if (class_exists('cf_error')) {
+      cf_error::empty_string('argument_name');
+    }
+  }
+
+  if (!is_array($variable)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('argument_name', $variable, $severity);
+    }
+
+    return TRUE;
+  }
+
+  foreach (array_keys(form_state_defaults()) as $key) {
+    if (!array_key_exists($key, $variable)) {
+      if (class_exists('cf_error')) {
+        cf_error::missing_array_key($argument_name, $key, $severity);
+      }
+
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Detect if a specific version of a module exists.
+ *
+ * If the module does not define a version setting in the *.info file, then
+ * this function will fail to detect the version number.
+ *
+ * Justification:
+ *   Modules may need to act differently based on the version number of a
+ *   particular module.
+ *
+ * References:
+ * - http://api.drupal.org/api/drupal/includes!module.inc/function/module_exists/7#comment-11559
+ *
+ * @param string $module
+ *   The name of the module (without the .module extension).
+ * @param string $version
+ *   The desired version number.
+ * @param bool $exact
+ *   (optional) When FALSE, a regular expression is performed against the
+ *   passed version number. When TRUE, only the exact version number will
+ *   be accepted.
+ *
+ * @return bool
+ *   Returns TRUE when the version of a module matches the requested version,
+ *   FALSE otherwise.
+ */
+function cf_version_exists($module, $version, $exact = FALSE) {
+  if (cf_is_empty_or_non_string('module', $module)) {
+    return FALSE;
+  }
+
+  if (cf_is_empty_or_non_string('version', $version)) {
+    return FALSE;
+  }
+
+  if (!is_bool($exact)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_bool('exact');
+    }
+
+    return FALSE;
+  }
+
+  if (!module_exists($module)) {
+    return FALSE;
+  }
+
+  $path = drupal_get_path('module', $module);
+  $info = drupal_parse_info_file($path .'/' . $module . '.info');
+
+  if ($exact) {
+    return ($info['version'] == $version);
+  }
+
+  return preg_match('/^(' . $version . '|' . $version . '\..*)$/i', $info['version']);
+}
+
+
+/**
+ * Determine if the argument is an integer.
+ *
+ * Justification:
+ *   The PHP function is_int() does not return TRUE for numeric strings.
+ *   Doing a is_numeric() returns TRUE for floats.
+ *   There is no way to test to see if a numeric string is an integer.
+ *
+ *   The test for ($argument == (int) $argument) does not work because PHP
+ *   will auto-case both sides of the argument to an integer. The end result
+ *   is that arguments that are floats will return TRUE when it should not.
+ *
+ * References:
+ * - https://drupal.org/node/1003788#comment-4958332
+ * - http://us3.php.net/manual/en/function.is-int.php
+ * - http://us3.php.net/manual/en/function.is-numeric.php
+ *
+ * @param string $argument
+ *   The argument to test if it is an integer.
+ *
+ * @return bool
+ *   Returns TRUE for an integer or a string that represents a valid integer.
+ *   FALSE is returned for all non-integers, including floats.
+ */
+function cf_is_integer($argument) {
+  if (!is_numeric($argument)) return FALSE;
+
+  return (float) $argument === round($argument);
+}
+
+
+/**
+ * @} End of '@defgroup cf Common Functionality'.
+ */

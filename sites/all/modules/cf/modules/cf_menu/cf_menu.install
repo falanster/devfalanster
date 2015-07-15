@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install file for cf_menu module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function cf_menu_install() {
+  cf_settings_register('accessibility_admin_page', 'drupal_variables', 'cf_menu', TRUE);
+  cf_settings_register('management_admin_page', 'drupal_variables', 'cf_menu', TRUE);
+}
+
+/**
+ * Upgrade module from 7.x-1.x to 7.x-2.x.
+ */
+function cf_menu_update_7200() {
+  cf_settings_register('accessibility_admin_page', 'drupal_variables', 'cf_menu', TRUE);
+}
+
+/**
+ * Register the new management_admin_page drupal variable.
+ */
+function cf_menu_update_7201() {
+  cf_settings_register('management_admin_page', 'drupal_variables', 'cf_menu', TRUE);
+}

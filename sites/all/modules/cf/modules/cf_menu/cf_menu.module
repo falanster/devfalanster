@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - Menu Module.
+ */
+
+/**
+ * @defgroup cf_menu Common Functionality - Menu
+ * @ingroup cf
+ * @{
+ * Provides common menu or administrative menu pages and options.
+ *
+ * This module provides the following benefits:
+ * - Standardized content accessibility administration page.
+ *   To make an accessibility administration page visible on this page,
+ *   simply defined its admin path to be a child of the path:
+ *  'admin/content/accessibility'.
+ *
+ * Justification:
+ *   One of the more rising topics in drupal web design is accessibility
+ *   compliance. It would be very useful for all accessibility related
+ *   administrative tasks to be located in one location.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * @see: cf_menu_accessibility_page()
+ */
+function cf_menu_menu() {
+  $items = array();
+
+  $accessibility_page = variable_get('accessibility_admin_page', TRUE);
+
+  if ($accessibility_page) {
+    $items['admin/content/accessibility'] = array(
+      'title' => "Accessibility",
+      'description' => "Content accessibility administrative pages.",
+      'page callback' => 'cf_menu_accessibility_page',
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'menu.inc',
+      'file path' => drupal_get_path('module', 'cf_menu') . '/pages',
+      'access callback' => 'user_access',
+      'access arguments' => array('view content accessibility administration page'),
+    );
+  }
+
+  $management_page = variable_get('management_admin_page', TRUE);
+
+  if ($management_page) {
+    $items['admin/content/management'] = array(
+      'title' => "Management",
+      'description' => "Content management administrative pages.",
+      'page callback' => 'cf_menu_management_page',
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'menu.inc',
+      'file path' => drupal_get_path('module', 'cf_menu') . '/pages',
+      'access callback' => 'user_access',
+      'access arguments' => array('view content management administration page'),
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_cf_permission_alter().
+ *
+ * @see cf_permission()
+ */
+function cf_menu_cf_permission_alter(&$permissions) {
+  if (!is_array($permissions)) {
+    $permissions = array();
+  }
+
+  $accessibility_page = variable_get('accessibility_admin_page', TRUE);
+
+  if ($accessibility_page) {
+    $permissions['view content accessibility administration page'] = array(
+      'title' => t("View Content Accessibility Administration Page"),
+      'description' => t("Grants permissions to view the content accessibility administration page."),
+    );
+  }
+
+  $management_page = variable_get('management_admin_page', TRUE);
+
+  if ($management_page) {
+    $permissions['view content management administration page'] = array(
+      'title' => t("View Content Management Administration Page"),
+      'description' => t("Grants permissions to view the content management administration page."),
+    );
+  }
+}
+
+/**
+ * @} End of '@defgroup cf_menu Common Functionality - Menu'.
+ */

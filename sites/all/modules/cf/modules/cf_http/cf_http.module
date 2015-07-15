@@ -1,0 +1,805 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - HTTP module.
+ */
+
+/**
+ * @defgroup cf_http Common Functionality - HTTP
+ * @ingroup cf
+ * @{
+ * A set of functions to get content from remote web pages.
+ *
+ * Justification:
+ *   Custom php scripts need a straight-forward and easy way to pull data from
+ *   another website. This is useful as an alternative to iframe and has
+ *   advantages and disadvantages to iframes. An advantage is that this allows
+ *   showing remote content even if the remote url is down (via caching).
+ *   A disadvantage is that remote images and links need to be processed,
+ *   updated, and possibly even manually cached.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function cf_http_init() {
+  $cf_http_html_headers = &drupal_static(__FUNCTION__, FALSE);
+
+  if (!$cf_http_html_headers) {
+    drupal_add_css(drupal_get_path('module', 'cf_http') . '/css/cf_http_html_headers.css');
+    $cf_http_html_headers = TRUE;
+  }
+}
+
+/**
+ * Reads an http page at the given path and returns an unprocessed response.
+ *
+ * @param string $server
+ *   Hostname or ip address of the server.
+ *   Should not contain http:// or similary prefixes.
+ * @param string $path
+ *  The file/path on the server to
+ * @param int $port
+ *   (optional) port number of the page to read (defaults to 80).
+ * @param string $headers
+ *   (optional) additional headers to pass when requesting the url.
+ * @param $timeout
+ *  (optional) Socket open and stream timeout when connecting to remove host, in seconds.
+ * @param $buffer
+ *  (optional) Buffer size to use when reading from the socket, in bytes.
+ *
+ * @return array
+ *   An array containing the connection status and return http response.
+ *   The array keys:
+ *   - connected: A boolean with TRUE representing that the connection to the
+ *   server was established and FALSE otherwise.
+ *   - response: The http response as returned by the target server.
+ *     This http response must be processed.
+ *   - socket_error: An array containing the error code and message returned by
+ *     fsockopen() on error.
+ *
+ * @see: cf_http_get_webpage()
+ * @see: fsockopen()
+ */
+function cf_http_get_response($server, $path, $port = 80, $headers = "Accept-Encoding: deflate\r\n", $timeout = 8, $buffer = 8192) {
+  $results = array('connected' => FALSE, 'response' => '', 'is_local' => FALSE, 'socket_error' => array('code' => 0, 'message' => NULL));
+
+  if (cf_is_empty_or_non_string('server', $server, WATCHDOG_ERROR)) {
+    return $results;
+  }
+
+  if (cf_is_empty_or_non_string('path', $path, WATCHDOG_ERROR)) {
+    return $results;
+  }
+
+  if (!is_numeric($port)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_numeric('port');
+    }
+
+    return $results;
+  }
+
+  if (!empty($headers) && !is_string($headers)) {
+    cf_error::invalid_string('headers');
+    return $results;
+  }
+
+  $fp = fsockopen($server, $port, $errno, $errstr, $timeout);
+
+  if ($errno != 0) {
+    $results['socket_error']['code'] = $errno;
+    $results['socket_error']['message'] = $errstr;
+
+    return $results;
+  }
+
+  $server_address = preg_replace('@^\w+://@i', '', $server);
+  if ($fp && is_string($server_address)) {
+    $request = 'GET ' . $path . ' HTTP/1.1' . "\r\n";
+    $request .= 'Host: ' . $server_address . "\r\n";
+    $request .= $headers;
+    $request .= 'Connection: Close' . "\r\n\r\n";
+    fwrite($fp, $request);
+
+    stream_set_timeout($fp, $timeout);
+
+    $results['is_local'] = stream_is_local($fp);
+
+    while (!feof($fp)) {
+      $results['response'] .= fgets($fp, $buffer);
+
+      $info = stream_get_meta_data($fp);
+
+      if ($info['timed_out']) {
+        fclose($fp);
+        return $results;
+      }
+    }
+
+    $results['connected'] = TRUE;
+    fclose($fp);
+    return $results;
+  }
+
+  return $results;
+}
+
+/**
+ * Validate http responses by checking header.
+ *
+ * Originally From: http://php.net/manual/en/function.fsockopen.php#85572
+ *
+ * @param array $headers
+ *   An array of http headers to validate.
+ *
+ * @return bool
+ *   A boolean with TRUE representing that the headers are valid, FALSE
+ *   otherwise.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_validate_response(array $headers) {
+  if (empty($headers)) return FALSE;
+
+  switch (trim(strtolower($headers[0]))) {
+    case 'http/1.0 100 ok':
+    case 'http/1.0 200 ok':
+    case 'http/1.1 100 ok':
+    case 'http/1.1 200 ok':
+      return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Search through an array of http errors for common 400 and 500 http codes.
+ *
+ * @param array $headers
+ *   An array of http headers.
+ *
+ * @return array
+ *   An array with the following structure:
+ *   - error_code: number representing the error code of the error found,
+ *   0 otherwise.
+ *   - key: array key of the header with the error.
+ *   - value: error information associated with the error code.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_headers_errors(array &$headers) {
+  foreach ($headers as $key => &$value) {
+    $matches = array();
+
+    if (preg_match('/^([45]\d\d)\s/i', $value, $matches) > 0) {
+      return array('error_code' => $matches[1], 'key' => $key, 'value' => &$value);
+    }
+  }
+
+  return array('error_code' => 0, 'key' => '', 'value' => '');
+}
+
+/**
+ * Unchunk http content.
+ *
+ * Originally From: http://php.net/manual/en/function.fsockopen.php#85572
+ *
+ * @param string $document
+ *   An string representing an html document.
+ *
+ * @return array
+ *   An array containing the unchunk status and unchunked string.
+ *   The array keys:
+ *   - unchunked: A boolean with TRUE representing that the document string was
+ *   successfully unchunked, FALSE otherwise.
+ *   - document: The complete (unchunked) html document.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_unchunk_response($document) {
+  $results = array('unchunked' => FALSE, 'document' => '');
+
+  if (empty($document)) return $results;
+
+  $eol = "\r\n";
+  $add = strlen($eol);
+  $tmp = $document;
+
+  do {
+    $tmp = ltrim($tmp);
+    $position = strpos($tmp, $eol);
+
+    if ($position === FALSE) return $results;
+
+    $length = hexdec(substr($tmp, 0, $position));
+
+    if (!is_numeric($length) || $length < 0) return $results;
+
+    $results['document'] .= substr($tmp, ($position + $add), $length);
+    $tmp = substr($tmp, ($length + $position + $add));
+    $check = trim($tmp);
+  } while (!empty($check));
+
+  unset($tmp);
+  return $results;
+}
+
+/**
+ * Accepts and processes provided http content.
+ *
+ * This process checks for a valid http response, unchunks if needed, returns
+ * http content without headers on success, false on any errors.
+ *
+ * Originally From: http://php.net/manual/en/function.fsockopen.php#85572
+ *
+ * @param string $http_response
+ *   An http response string.
+ * @param string $path
+ *   The file/path on the server to.
+ * @param int $port
+ *   (optional) port number of the page to read (defaults to 80).
+ *
+ * @return array
+ *   An array containing the connection status and return http response.
+ *   The array keys:
+ *   - parsed: A boolean with TRUE representing that the http request string
+ *   was successfully parsed, FALSE otherwise.
+ *   - headers: The http header from the httpd response.
+ *   - document: The complete html document from the http response.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_parse_response($http_response) {
+  $results = array('parsed' => FALSE, 'header' => '', 'document' => '', 'http_error' => array('error_code' => 0, 'key' => '', 'value' => ''));
+
+  if (cf_is_empty_or_non_string('http_response', $http_response, WATCHDOG_ERROR)) {
+    return $results;
+  }
+
+  // split into array, headers and content.
+  $hunks = explode("\r\n\r\n", trim($http_response));
+  if (!is_array($hunks) || count($hunks) < 2) {
+    return $results;
+  }
+
+  $header = $hunks[count($hunks) - 2];
+  $document = $hunks[count($hunks) - 1];
+  $headers = explode("\n", $header);
+  $results['headers'] = $headers;
+  $results['document'] = $document;
+  unset($hunks);
+  unset($header);
+  unset($document);
+
+  if (!cf_http_validate_response($results['headers'])) {
+    $results['http_error'] = cf_http_headers_errors($results['headers']);
+  }
+
+  if (in_array('Transfer-Coding: chunked', $results['headers'])) {
+    $result = cf_http_unchunk_response($results['document']);
+
+    if ($result['unchunked']) {
+      $results['document'] = $result['document'];
+    }
+  }
+
+  $results['document'] = trim($results['document']);
+
+  // remove some additional trash not removed by the original function
+  $results['document'] = preg_replace("/^[[:alnum:]]+\r\n/i", '', $results['document']);
+  $results['document'] = preg_replace("/\r\n0$/i", '', $results['document']);
+
+  if (!is_string($results['document'])) {
+    $results['document'] = '';
+    return $results;
+  }
+
+  $results['parsed'] = TRUE;
+
+  return $results;
+}
+
+/**
+ * Breaks apart an html formatted document string.
+ *
+ * The string is broken into an array containing two parts: 'head' and 'body'.
+ * All other elements before, between, or after the html <head> and <body> tags
+ * are lost/ignored.
+ *
+ * @param string $document
+ *   An http response string.
+ *
+ * @return array
+ *   An array containing the connection status and return http response.
+ *   The array keys:
+ *   - split: A boolean with TRUE representing that the document string was
+ *   successfully split, FALSE otherwise.
+ *   - head: The HTML head code (if cf_dom is enabled, then this is empty).
+ *   - body: The HTML body code (if cf_dom is enabled, then this is empty).
+ *   - dom: If cf_dom is enabled, then this is the cf_dom object.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_split_response($document) {
+  $results = array('split' => FALSE, 'head' => '', 'body' => '', 'dom' => NULL);
+
+  if (cf_is_empty_or_non_string('document', $document, WATCHDOG_ERROR)) {
+    return $results;
+  }
+
+  // cf_dom is a new class that uses PHP DOM to more efficiently process markup.
+  if (class_exists('cf_dom')) {
+    $dom = new cf_dom(NULL, TRUE, TRUE, $document);
+
+    if (!$dom->is_loaded()) {
+      return $results;
+    }
+
+    $dom->set_doctype(variable_get('cf_dom_doctype', cf_dom::DOCTYPE));
+    $results['dom'] = $dom;
+
+    // @todo: optionally populate head and body tags for compatibility.
+    $results['head'] = $dom->get_markup(TRUE, FALSE);
+    $results['body'] = $dom->get_markup(TRUE);
+  }
+  else {
+    $matches = array();
+    $result = preg_match('/<head[^>]*>(.*)<\/head>/sim', $document, $matches);
+
+    if ($result > 0 && isset($matches[1])) {
+      $results['head'] = $matches[1];
+    }
+    else {
+      return $results;
+    }
+
+    $matches = array();
+    $result = preg_match('/<body[^>]*>(.*)<\/body>/sim', $document, $matches);
+
+    if ($result > 0 && isset($matches[1])) {
+      $results['body'] = $matches[1];
+    }
+    else {
+      return $results;
+    }
+  }
+
+  $results['split'] = TRUE;
+  return $results;
+}
+
+/**
+ * Fix relative urls pulled from the remote server.
+ *
+ * These urls are turned into absolute urls.
+ *
+ * @param string|cf_dom $text_or_dom
+ *   The html document text whose urls are to be altered.
+ *   If cf_dom is enabled, then this can instead be the cf_dom object.
+ * @param string $server
+ *   The hostname or ip address of the server to use when generating absolute urls.
+ *   This must not contain the 'http://' prefixes nor the suffixes such as '/' or ':80'.
+ * @param string $relative_path
+ *   all relative paths will have this prepended to the absolute url.
+ * @param string $scheme
+ *   (optional) The 'http' at the front of most urls.
+ *   A common alternative is 'https'.
+ * @param string $suffix
+ *   (optional) The suffix to prepend to the url.
+ *   Most cases this should be '/', but if the links are being cached on a
+ *   different server and a different sub-path, then this must be used.
+ * @param int $port
+ *   (optional) The port number of the web-server.
+ *   In almost all cases this should be 80.
+ *   If $schema is set to 'https', then normally this should instead be 443.
+ *
+ * @return array
+ *   An array containing the connection status and return http response.
+ *   The array keys:
+ *   - adjusted: A boolean with TRUE representing that the text's urls were
+ *   successfully adjuested, FALSE otherwise.
+ *   - text: The complete html text with all links adjusted to absolute paths.
+ *     This is an empty string if $text_or_dom is a cf_dom object.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_adjust_urls($text_or_dom, $server, $relative_path, $scheme = 'http', $suffix = '/', $port = 80) {
+  $results = array('adjusted' => FALSE, 'text' => $text_or_dom);
+  $matches = array();
+
+  if (class_exists('cf_dom') && ($text_or_dom instanceOf cf_dom) && $text_or_dom->is_loaded()) {
+    $results['text'] = '';
+
+    $head = $text_or_dom->get_head();
+    $tags = array();
+
+    if (!is_null($head)) {
+      $tags = $head->getElementsByTagName('*');
+    }
+
+    foreach ($tags as $tag) {
+      $attributes = array('src' => NULL, 'href' => NULL);
+
+      if ($tag->hasAttribute('href')) {
+        $attributes['href'] = $tag->getAttribute('href');
+      }
+
+      if ($tag->hasAttribute('src')) {
+        $attributes['src'] = $tag->getAttribute('src');
+      }
+
+      foreach ($attributes as $attribute_name => $attribute) {
+        if (is_null($attribute)) continue;
+
+        $generated_url = cf_adjust_url($attribute, $server, $relative_path, $scheme, $suffix, $port);
+
+        if (is_string($generated_url)) {
+          $tag->setAttribute($attribute_name, $generated_url);
+        }
+      }
+    }
+
+    $body = $text_or_dom->get_body();
+    $tags = array();
+
+    if (!is_null($body)) {
+      $tags = $body->getElementsByTagName('*');
+    }
+
+    foreach ($tags as $tag) {
+      $attributes = array('src' => NULL, 'href' => NULL);
+
+      if ($tag->hasAttribute('href')) {
+        $attributes['href'] = $tag->getAttribute('href');
+      }
+
+      if ($tag->hasAttribute('src')) {
+        $attributes['src'] = $tag->getAttribute('src');
+      }
+
+      foreach ($attributes as $attribute_name => $attribute) {
+        if (is_null($attribute)) continue;
+
+        $generated_url = cf_adjust_url($attribute, $server, $relative_path, $scheme, $suffix, $port);
+
+        if (is_string($generated_url)) {
+          $tag->setAttribute($attribute_name, $generated_url);
+        }
+      }
+    }
+
+    $results['adjusted'] = TRUE;
+    return $results;
+  }
+  else {
+    if (!is_string($text_or_dom)) {
+      if (class_exists('cf_error')) {
+        cf_error::invalid_string('text_or_dom');
+      }
+
+      return $results;
+    }
+  }
+
+  foreach (array('src', 'href') as $attr_key => $attribute) {
+    $result = preg_match_all('/(<[^>]*' . $attribute . '\s*=\s*)(["|\'])([^>]*)>/i', $text_or_dom, $matches);
+
+    if ($result > 0) {
+      foreach ($matches[0] as $key => &$value) {
+        $parts = explode($matches[2][$key], $matches[3][$key], 2);
+
+        $generated_url = cf_adjust_url($parts[0], $server, $relative_path, $scheme, $suffix, $port);
+
+        $safe_expression = preg_replace('/\`/i', '\`', $matches[1][$key] . $matches[2][$key] . $parts[0] . $matches[2][$key]);
+        $safe_expression = preg_replace('/\?/i', '\?', $safe_expression);
+        $safe_expression = preg_replace('/\./i', '\.', $safe_expression);
+        $safe_expression = preg_replace('/\~/i', '\~', $safe_expression);
+        $safe_text = preg_replace('`' . $safe_expression . '`si', $matches[1][$key] . $matches[2][$key] . $generated_url . $matches[2][$key], $results['text']);
+
+        if (is_string($safe_text)) {
+          $results['text'] = $safe_text;
+        }
+      }
+    }
+
+    $results['adjusted'] = TRUE;
+  }
+
+  return $results;
+}
+
+/**
+ * Fix relative url pulled from the remote server.
+ *
+ * This url is turned into an absolute url.
+ *
+ * @param string $url
+ *   The URL to change.
+ * @param string $server
+ *   The hostname or ip address of the server to use when generating absolute urls.
+ *   This must not contain the 'http://' prefixes nor the suffixes such as '/' or ':80'.
+ * @param string $relative_path
+ *   all relative paths will have this prepended to the absolute url.
+ * @param string $scheme
+ *   (optional) The 'http' at the front of most urls.
+ *   A common alternative is 'https'.
+ * @param string $suffix
+ *   (optional) The suffix to prepend to the url.
+ *   Most cases this should be '/', but if the links are being cached on a
+ *   different server and a different sub-path, then this must be used.
+ * @param int $port
+ *   (optional) The port number of the web-server.
+ *   In almost all cases this should be 80.
+ *   If $schema is set to 'https', then normally this should instead be 443.
+ *
+ * @return string|bool
+ *   The new string if it was successfully altered and FALSE otherwise.
+ *
+ * @see: cf_adjust_urls()
+ */
+function cf_adjust_url($url, $server, $relative_path, $scheme = 'http', $suffix = '/', $port = 80) {
+  if (!is_string($url)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_string('url');
+    }
+
+    return FALSE;
+  }
+
+  $parsed_url = parse_url($url);
+
+  if (!isset($parsed_url['host'])) {
+    $parsed_url['scheme'] = $scheme;
+    $parsed_url['host'] = $server;
+
+    if (!($scheme == 'http' && $port == 80) && !($scheme == 'https' && $port == 443)) {
+      $parsed_url['port'] = $port;
+    }
+
+    $generated_url = $parsed_url['scheme'] . '://';
+    $generated_url .= $parsed_url['host'];
+
+    if (!empty($parsed_url['port'])) {
+      $generated_url .= ':' . $parsed_url['port'];
+    }
+
+    if (!empty($parsed_url['path'])) {
+      if (preg_match('/^\//i', $parsed_url['path']) == 0) {
+        $generated_url .= $relative_path . '/';
+      }
+
+      $generated_url .= $parsed_url['path'];
+    }
+    else {
+      $generated_url .= $relative_path . '/';
+    }
+
+    if (!empty($parsed_url['query'])) {
+      $generated_url .= '?' . $parsed_url['query'];
+    }
+
+    if (!empty($parsed_url['fragment'])) {
+      $generated_url .= '#' . $parsed_url['fragment'];
+    }
+
+    return $generated_url;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Reads and processes a website page at the given path.
+ *
+ * @param string $server
+ *   Hostname or ip address of the server.
+ *   Should not contain http:// or similary prefixes.
+ * @param string $path
+ *  The file/path on the server to.
+ * @param int $port
+ *   (optional) Port number of the page to read (defaults to 80).
+ * @param string $headers
+ *   (optional) additional headers to pass when requesting the url.
+ * @param $timeout
+ *  (optional) Socket open and stream timeout when connecting to remove host, in seconds.
+ * @param $buffer
+ *  (optional) Buffer size to use when reading from the socket, in bytes.
+ *
+ * @return array
+ *   An array containing the connection status and return http response.
+ *   The array keys:
+ *   - read: A boolean with TRUE representing that the read was successful and
+ *   FALSE otherwise.
+ *   - headers: The http header from the httpd response.
+ *   - document: The complete html document from the http response.
+ */
+function cf_http_get_webpage($server, $path, $port = 80, $headers = "Accept-Encoding: deflate\r\n", $timeout = 8, $buffer = 8192) {
+  $results = array('read' => FALSE, 'headers' => '', 'document' => '', 'http_error' => array('error_code' => 0, 'key' => '', 'value' => ''), 'socket_error' => array('code' => 0, 'message' => NULL));
+
+  $result = cf_http_get_response($server, $path, $port, $headers, $timeout, $buffer);
+
+  if (isset($results['socket_error'])) {
+    $results['socket_error'] = $result['socket_error'];
+  }
+
+  if (isset($result['connected']) && $result['connected'] && isset($result['response'])) {
+    $result = cf_http_parse_response($result['response']);
+
+    if ($result['parsed']) {
+      $results['headers'] = $result['headers'];
+      $results['document'] = $result['document'];
+      $results['http_error'] = $result['http_error'];
+      $results['read'] = TRUE;
+    }
+  }
+
+  return $results;
+}
+
+
+/**
+ * Reads and processes a website page at the given path.
+ *
+ * @param $text_or_dom
+ *   Hostname or ip address of the server.
+ *   Should not contain http:// or similary prefixes.
+ *   If cf_dom is enabled, then this can instead be the cf_dom object.
+ * @param $depth
+ *   The amount of shrinkage to perform. Any number from 1 to 6.
+ * @param $preserve
+ *   A boolean representing whether or not to preserve the header structure
+ *   when the depth of a given header is reduced to a number greater than 6.
+ *   If preserve is false, all header formatting will be lost.
+ *
+ * @return array
+ *   An array containing the connection status and return http response.
+ *   The array keys:
+ *   - reduced: A boolean with TRUE representing that the text was successful
+ *   reduced and FALSE otherwise.
+ *   - text: The http text with all html headers reduced by $depth.
+ *     This is an empty string if $text_or_dom is a cf_dom object.
+ *
+ * @see: cf_http_get_webpage()
+ */
+function cf_http_reduce_html_headers($text_or_dom, $depth = 1, $preserve = TRUE) {
+  $results = array('reduced' => FALSE, 'text' => '');
+
+  if ($depth < 0 || $depth > 6) return $results;
+
+  if (class_exists('cf_dom') && ($text_or_dom instanceOf cf_dom)) {
+    if ($text_or_dom->is_loaded()) {
+      $body = $text_or_dom->get_body();
+
+      // HTML5 with hgroup allows for multiple simultaneous headers, do not change header if a parent is an hgroup.
+      $has_hgroup_parent = array();
+      $has_hgroup_parent[1] = array();
+      $has_hgroup_parent[2] = array();
+      $has_hgroup_parent[3] = array();
+      $has_hgroup_parent[4] = array();
+      $has_hgroup_parent[5] = array();
+      $has_hgroup_parent[6] = array();
+      $hgroups = $body->getElementsByTagName('hgroup');
+      foreach ($hgroups as $hgroup) {
+        foreach (array(6, 5, 4, 3, 2, 1) as $number) {
+          $header = $hgroup->getElementsByTagName('h' . $number);
+
+          foreach ($header as $h) {
+            $has_hgroup_parent[$number][] = $h;
+          }
+        }
+      }
+
+      foreach (array(6, 5, 4, 3, 2, 1) as $number) {
+        $reduced = $number + $depth;
+        $tag_name = 'h' . $number;
+
+        if ($reduced >= 6) {
+          $tag_next = 'div';
+        }
+        else {
+          $tag_next = 'h' . $reduced;
+        }
+
+        $elements = $body->getElementsByTagName($tag_name);
+
+        foreach ($elements as $element) {
+          $found_hgroup_element = FALSE;
+          foreach ($has_hgroup_parent[$number] as $e) {
+            if ($element === $e) {
+              $found_hgroup_element = TRUE;
+              break;
+            }
+          }
+
+          if ($found_hgroup_element) continue;
+
+          if ($element->hasAttribute('class')) {
+            $class = explode(' ', $element->getAttribute('class'));
+          }
+          else {
+            $class = array();
+          }
+
+          if ($reduced < 6 || $preserve) {
+            $class_name = 'cf_http-was_' . $tag_name;
+            if (!in_array($class_name, $class)) {
+              $class[] = $class_name;
+              $element->setAttribute('class', implode(' ', $class));
+            }
+          }
+
+          $text_or_dom->change_element($element, $tag_next);
+        }
+      }
+
+      $results['reduced'] = TRUE;
+    }
+
+    return $results;
+  }
+  else {
+    if (!is_string($text_or_dom)) {
+      if (class_exists('cf_error')) {
+        cf_error::invalid_string('text_or_dom');
+      }
+
+      return $results;
+    }
+  }
+
+  $results['text'] = $text_or_dom;
+
+  foreach (array(6, 5, 4, 3, 2, 1) as $number) {
+    $reduced = $number + $depth;
+    $tag = 'h' . $reduced;
+    $matches = array();
+
+    if ($reduced > 6) $tag = 'div';
+
+    if ($tag != 'div' || $preserve) {
+      if (preg_match_all('/<h' . $number . '([^>]*)>/i', $results['text'], $matches) > 0) {
+        $results['text'] = preg_replace('/<h' . $number . '>/i', '<' . $tag . ' class="cf_http-was_h' . $number . '">', $results['text']);
+
+        foreach ($matches[1] as $match_key => $match) {
+          if (!empty($match)) {
+            $class_matches = array();
+            if (preg_match('/class="([^"]*)"/i', $match, $class_matches) == 0) {
+              $class_matches = array();
+              if (preg_match("/class='([^']*)'/i", $match, $class_matches) == 0) {
+                $results['text'] = preg_replace('/<h' . $number . '([^>]*)>/i', '<' . $tag . ' ${1} class="cf_http-was_h' . $number . '">', $results['text']);
+              }
+              else {
+                $new_attributes = preg_replace("/\bclass='([^']*)'/i", "class='" . $class_matches[1] . ' cf_http-was_h' . $number . "'", $match);
+                $results['text'] = preg_replace('/<h' . $number . '[^>]*>/i', '<' . $tag . ' ' . $new_attributes .  '>', $results['text']);
+              }
+            }
+            else {
+              $new_attributes = preg_replace('/\bclass="([^"]*)"/i', 'class="' . $class_matches[1] . ' cf_http-was_h' . $number . '"', $match);
+              $results['text'] = preg_replace('/<h' . $number . '[^>]*>/i', '<' . $tag . ' ' . $new_attributes .  '>', $results['text']);
+            }
+          }
+        }
+
+        $results['text'] = preg_replace('/<\/h' . $number . '>/i', '</' . $tag . '>', $results['text']);
+      }
+    }
+    else {
+      $results['text'] = preg_replace('/<h' . $number . '([^>]*)>/i', '<' . $tag . ' ${1}' . '">', $results['text']);
+      $results['text'] = preg_replace('/<\/h' . $number . '>/i', '</' . $tag . '>', $results['text']);
+    }
+  }
+
+  if (!is_string($results['text'])) {
+    $results['text'] = '';
+    return $results;
+  }
+
+  $results['reduced'] = TRUE;
+  return $results;
+}
+
+/**
+ * @} End of '@defgroup cf_http Common Functionality - HTTP'.
+ */

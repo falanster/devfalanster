@@ -1,0 +1,393 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - 1.x Compatibility module.
+ */
+
+/**
+ * @defgroup cf_1x_compatibility Common Functionality - 1.x Compatibility
+ * @ingroup cf
+ * @{
+ * Provides backwards compatibility with the 1.x versions of the CF module.
+ */
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_current_user() instead.
+ *
+ * @param bool $reset
+ *   TRUE to reset the internal cache and load from the database.
+ *   FALSE (default) to load from the internal cache, if set.
+ * @param array $function_history
+ *   (optional) An array of function names, ie:
+ *   array('0' => 'my_function_name').
+ *
+ * @return object|FALSE
+ *   A copy of the global variable $user.
+ *   Changes to this variable will not be retained.
+ *
+ * @see: cf_current_user()
+ */
+function cf_get_user($reset = FALSE, $function_history = array()) {
+  return cf_current_user($reset);
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * It has no purpose in the 2.x versions and therefore does nothing.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param string $why
+ *   The specific reason for this watchdog report.
+ * @param array $variables
+ *   (optional) Locale safe parameter handling for all text found in the 'why'
+ *   parameter.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the
+ *   severity of the report.
+ */
+function cf_error_append_history(&$function_history, $function_name) {
+  // there is nothing for this function to do.
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_scalar() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param string $why
+ *   The specific reason for this watchdog report.
+ * @param array $variables
+ *   (optional) Locale safe parameter handling for all text found in the 'why'
+ *   parameter.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the
+ *   severity of the report.
+ */
+function cf_error_invalid_variable($function_history, $argument_name, $why, array $variables = array(), $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_variable($argument_name, $why, $variables, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_string() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the
+ *   severity of the report.
+ */
+function cf_error_not_string($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_string($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::empty_string() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *    of the report.
+ */
+function cf_error_empty_string($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::empty_string($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_array() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_array($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_array($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_object() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_object($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_object($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::missing_array_key() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param string $key_name
+ *   Name of the array key that is missing.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_missing_array_key($function_history, $argument_name, $key_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::missing_array_key($argument_name, $key_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::missing_object_property() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param string $property_name
+ *   Name of the array key that is missing.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_missing_object_property($function_history, $argument_name, $property_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::missing_object_property($argument_name, $property_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_numeric() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_not_numeric($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_numeric($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::on_query_execution() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param object $exception
+ *   The query exception object.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ *
+ */
+function cf_error_on_query_execution($function_history, $exception, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::on_query_execution($exception, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_bool() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_bool($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_bool($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_float() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_float($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_float($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_callable() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_callable($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_callable($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_integer() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_integer($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_integer($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_resource() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_resource($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_resource($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_scalar() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_scalar($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_scalar($argument_name, $severity);
+  }
+}
+
+/**
+ * This is a compatibility function for cf-1.x.
+ *
+ * Do not use this.
+ * Use cf_error::invalid_null() instead.
+ *
+ * @param array $function_history
+ *   An array of function names, ie: array('0' => 'my_function_name').
+ * @param string $argument_name
+ *   The variable name of the argument in question.
+ * @param int $severity
+ *   (optional) This is passed directly to watchdog and represents the severity
+ *   of the report.
+ */
+function cf_error_invalid_null($function_history, $argument_name, $severity = WATCHDOG_ERROR) {
+  if (class_exists('cf_error')) {
+    cf_error::invalid_null($argument_name, $severity);
+  }
+}
+
+/**
+ * @} End of '@defgroup cf_1x_compatibility Common Functionality - 1.x Compatibility'.
+ */
