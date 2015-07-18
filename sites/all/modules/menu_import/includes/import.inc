@@ -170,6 +170,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
 
   $path = $description = $expanded = $hidden = '';
   $language = NULL;
+  $weight = NULL;
 
   // JSON is used.
   // @todo: make the input JSON not so strict.
@@ -190,6 +191,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
       $hidden = !empty($details['hidden']);
       $language = !empty($details['lang']) && in_array($details['lang'], $langs)
                     ? $details['lang'] : NULL;
+      $weight = isset($details['weight']) ? intval($details['weight']) : NULL;
       $link_options = empty($details['options']) ? array() : $details['options'];
     }
     else {
@@ -218,7 +220,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
     return _menu_import_mark_error_item($menuitem, t('wrong indentation'), $line);
   }
 
-  if (isset($weights[$level])) {
+  if (isset($weights[$level]) && is_null($weight)) {
     if ($level > $prev_level) {
       $weight = 0;
     }
@@ -226,7 +228,7 @@ function menu_import_parse_line($line, $prev_level, array $weights, array $paren
       $weight = $weights[$level] + 1;
     }
   }
-  else {
+  elseif (is_null($weight)) {
     $weight = 0;
   }
   $menuitem['weight'] = $weight;

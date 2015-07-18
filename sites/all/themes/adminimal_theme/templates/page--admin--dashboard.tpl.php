@@ -17,14 +17,21 @@
 
 	<?php print render($title_suffix); ?>
 
-	<?php print render($primary_local_tasks); ?>
+</div>
+
+<div id="navigation">
+
+  <?php if ($primary_local_tasks): ?>
+    <?php print render($primary_local_tasks); ?>
+  <?php endif; ?>
+
+  <?php if ($secondary_local_tasks): ?>
+    <div class="tabs-secondary clearfix"><ul class="tabs secondary"><?php print render($secondary_local_tasks); ?></ul></div>
+  <?php endif; ?>
 
 </div>
 
 <div id="page">
-	<?php if ($secondary_local_tasks): ?>
-		<div class="tabs-secondary clearfix"><ul class="tabs secondary"><?php print render($secondary_local_tasks); ?></ul></div>
-	<?php endif; ?>
 
 	<div id="content" class="clearfix">
 		<div class="element-invisible"><a id="main-content"></a></div>
@@ -56,14 +63,7 @@
     <?php endif; ?>
 
     <div id="main-content">
-
-      <?php if (isset($page['content']['dashboard'])): ?>
-        <div id="dashboard-wrapper">
-          <?php print render($page['content']['dashboard']); ?>
-        </div>
-      <?php endif; ?>
-
-      <?php print render($page['content']['system_main']); ?>
+      <?php print render($page['content']); ?>
     </div>
 
     <?php if (isset($page['sidebar_right'])): ?>
