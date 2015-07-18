@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - Field Cardinality module.
+ */
+
+/**
+ * @defgroup cf_field_cardinality Common Functionality - Field Cardinality
+ * @ingroup cf
+ * @{
+ * Provide a more direct and flexible way to designate a fields cardinality.
+ *
+ * Justification:
+ *   By default drupal only provides users with a small selection of
+ *   cardinality choices, ranging from 1 to 10. This is unreasonable as it is
+ *   very much possible that a user may need to have 11, 12, or 10000 fields.
+ */
+
+/**
+ * Implements hook_form_alter() for field_ui_field_edit_form.
+ */
+function cf_field_cardinality_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  if (!is_array($form)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('form');
+    }
+    return;
+  }
+
+  // Having a select list with only 10 fields is a problem.
+  // This removes the idea of having only options of 1->10 or infinite to the extend that any number may be used.
+  $form['field']['cardinality']['#type'] = 'textfield';
+  $form['field']['cardinality']['#description'] = t("Maximum number of values users can enter for this field.") . "<br>\n" . t("To have an UNLIMITED amount of values, enter in the value: %unlimited_cardinality.", array('%unlimited_cardinality' => FIELD_CARDINALITY_UNLIMITED));
+  unset($form['field']['cardinality']['#options']);
+
+  if (!is_array($form['#validate'])) {
+    $form['#validate'] = array();
+  }
+
+  $form['#validate'][] = 'cf_field_cardinality_validate';
+}
+
+/**
+ * When the cardinality was changed, the possible options had to be removed.
+ * This, however, allows for non-numeric values to be inserted and therefore additional validation is needed.
+ */
+function cf_field_cardinality_validate($form, &$form_state) {
+  if (cf_is_not_form_state('form_state', $form_state)) {
+    return;
+  }
+
+  if (isset($form_state['values']['field']['cardinality'])) {
+    if (!is_numeric($form_state['values']['field']['cardinality']) || ($form_state['values']['field']['cardinality'] != FIELD_CARDINALITY_UNLIMITED && $form_state['values']['field']['cardinality'] < 0)) {
+      form_set_error('field][cardinality', t("The Number of Values must be either %unlimited_cardinality for an unlimited number of values or a positive number.", array('%unlimited_cardinality' => FIELD_CARDINALITY_UNLIMITED)));
+    }
+  }
+}
+
+/**
+ * @} End of 'cf_field_cardinality Common Functionality - Field Cardinality'.
+ */

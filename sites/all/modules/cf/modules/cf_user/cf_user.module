@@ -1,0 +1,216 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - User module.
+ */
+
+/**
+ * @defgroup cf_user Common Functionality - User
+ * @ingroup cf
+ * @{
+ * Provides commonly needed user-specific functionality.
+ */
+
+/**
+ * Provide a simple way to get the roles ids for the current or specified user.
+ *
+ * Returns a query object meant to return all rids for a given uid.
+ * This does not call ->execute() on the query object.
+ *
+ * Can return an array of rids and will included the roles 0 and 2.
+ *
+ * Justification:
+ *  see cf_user_has_role().
+ *
+ * @param int $uid
+ *   (optional) a uid of the user to get the role ids of if the current user is
+ *   not to be used.
+ * @param int $object
+ *   (optional) If TRUE, then an un-executed query object is returned.
+ *   If FALSE, then an array of rids is returned.
+ *
+ * @return object|array
+ *   Either a SelectQuery database object, this object has not been executed
+ *   or an array of rids is returned.
+ */
+function cf_user_get_rids($uid = NULL, $object = TRUE) {
+  if ($uid == NULL) {
+    $current_user = cf_current_user(FALSE);
+    $uid = $current_user->uid;
+  }
+  elseif (!is_numeric($uid)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_numeric('uid');
+    }
+
+    return FALSE;
+  }
+
+  $query = db_select('role', 'r');
+
+  $query->innerjoin('users_roles', 'ur', 'r.rid = ur.rid');
+  $query->fields('r');
+  $query->fields('ur');
+
+  $and = db_and();
+  $and->condition('uid', $uid, '=');
+
+  $query->condition($and);
+
+  if ($object) {
+    return $query;
+  }
+
+  global $user;
+  $rids = array();
+
+  try {
+    $query_execute = $query->execute();
+
+    $rids = array_keys($query_execute->fetchAllAssoc('rid'));
+  }
+  catch (Exception $e) {
+    if (class_exists('cf_error')) {
+      cf_error::on_query_execution($e);
+    }
+  }
+
+  if ($user->uid == 0) {
+    if (!in_array(0, $rids)) {
+      $rids[] = 0;
+    }
+  }
+  else {
+    if (!in_array(2, $rids)) {
+      $rids[] = 2;
+    }
+
+    if ($user->uid == 1 && !in_array(1, $rids)) {
+      $rids[] = 1;
+    }
+  }
+
+
+  return $rids;
+}
+
+/**
+ * Confirm whether a user is in a given role by the role id.
+ *
+ * Justification:
+ *   The roles stored in the global $user variable are role names and not ids.
+ *   This provides a way to get user role ids without having to load the user
+ *   data, process each role, and produce an array of role ids.
+ *
+ * @param int $rid
+ *   a rid of the role to check to see if a user has the given permission.
+ * @param int $uid
+ *   (optional) a uid of the user to get the role ids of if the current user is
+ *   not to be used.
+ *
+ * @return bool
+ *   FALSE on error, FALSE if not in role, and TRUE if in role.
+ */
+function cf_user_has_role($rid, $uid = NULL) {
+  if (!is_numeric($rid)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_numeric('rid');
+    }
+
+    return FALSE;
+  }
+
+  if ($uid == NULL) {
+    $current_user = cf_current_user(FALSE);
+    $uid = $current_user->uid;
+  }
+  elseif (!is_numeric($uid)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_numeric('uid');
+    }
+
+    return FALSE;
+  }
+
+  // Roles 0, 1, and 2 don't actually get assigned and can be guessed based on uid.
+  if ($rid == 0) {
+    return $uid == 0;
+  }
+  elseif ($rid == 1) {
+    return $uid == 1;
+  }
+  elseif ($rid == 2) {
+    return $uid != 0;
+  }
+
+  $query = cf_user_get_rids($uid);
+
+  if (is_object($query)) {
+    $and = db_and();
+    $and->condition('r.rid', $rid, '=');
+
+    $query->condition($and);
+
+    try {
+      $query_execute = $query->execute();
+
+      if ($query_execute->rowCount() == 1) {
+        return TRUE;
+      }
+    }
+    catch (Exception $e) {
+      if (class_exists('cf_error')) {
+        cf_error::on_query_execution($e);
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Provide a simple way to load users that have any of the given role ids.
+ *
+ * Justification:
+ *   I have not found a way to do this with drupal core functions in a single
+ *   database transaction.
+ *
+ * @param array $rids
+ *   an array rid of the role to check to see if a user has the given
+ *   permission.
+ *
+ * @return object
+ *   A SelectQuery database object, this object has not been executed.
+ */
+function cf_user_get_users_by_rids($rids) {
+  if (!is_array($rids) || empty($rids)) {
+    if (class_exists('cf_error')) {
+      cf_error::invalid_array('rids');
+    }
+
+    return FALSE;
+  }
+
+  $query = db_select('role', 'r');
+
+  $query->innerjoin('users_roles', 'ur', 'r.rid = ur.rid');
+  $query->innerjoin('users', 'u', 'u.uid = ur.uid');
+  $query->fields('r');
+  $query->fields('ur');
+  $query->fields('u');
+
+  $or = db_or();
+
+  foreach ($rids as $rid) {
+    $or->condition('ur.rid', $rid, '=');
+  }
+
+  $query->condition($or);
+
+  return $query;
+}
+
+/**
+ * @} End of '@defgroup cf_user Common Functionality - User'.
+ */

@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Install file for cf_error module.
+ */
+
+ /**
+ * Implementation of hook_install().
+ */
+function cf_error_install() {
+  db_query('UPDATE {system} SET weight = -10 WHERE name = \'cf_error\'');
+
+  // cf_settings is treated as a soft-dependency and so register the variables only if cf_settings is loaded.
+  if (module_exists('cf_settings')) {
+    $registration = cf_settings_register('cf_error_backtrace_mode', 'drupal_variables', 'cf_error', 2);
+
+    if (!$registration) {
+      watchdog('cf_error', "Failed to register settings variable: cf_error_backtrace_show");
+    }
+  }
+  else {
+    variable_set('cf_error_backtrace_show', 2);
+  }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function cf_error_uninstall() {
+  // cf_settings is treated as a soft-dependency and so manually delete variables when cf_settings is disabled.
+  if (!module_exists('cf_settings')) {
+    variable_del('cf_error_backtrace_show');
+  }
+}
+
+/**
+ * Upgrade module from 7.x-1.x to 7.x-2.x.
+ */
+function cf_error_update_7200() {
+  db_query('UPDATE {system} SET weight = -10 WHERE name = \'cf_error\'');
+
+  // cf_settings is treated as a soft-dependency and so register the variables only if cf_settings is loaded.
+  if (module_exists('cf_settings')) {
+    $registration = cf_settings_register('cf_error_backtrace_mode', 'drupal_variables', 'cf_error', 2);
+
+    if (!$registration) {
+      watchdog('cf_error', "Failed to register settings variable: cf_error_backtrace_show");
+    }
+  }
+  else {
+    variable_set('cf_error_backtrace_show', 2);
+  }
+}

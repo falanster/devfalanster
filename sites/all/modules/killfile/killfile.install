@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * Implementation of hook_uninstall().
+ *
+ * Having this empty function ensures that RDF/RSS will properly uninstall.
+ * See "Best Practices" from: http://drupal.org/node/622174
+ */
+function killfile_uninstall(){
+  return;
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function killfile_schema() {
+  return array(
+    'killfile_nodes' => array(
+      'description' => st("Nodes that have been killfiled."),
+      'fields' => array(
+        'nid' => array(
+          'description' => st("The node's ID from {node}.nid, serving as the primary key."),
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'vid' => array(
+          'description' => st("The node's version ID from {node}.vid. For information only."),
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'uid' => array(
+          'description' => st("The user ID from {users}.uid, of the user who killfiled the node."),
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'timestamp' => array(
+          'description' => st("The Unix timestamp indicating when the node was killfiled."),
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0
+        ),
+      ),
+      'primary key' => array('nid'),
+      'foreign keys' => array(
+        'nid' => array(
+          'table' => 'node',
+          'columns' => array('nid' => 'nid'),
+        ),
+      ),
+    ),
+    // NOTE: any/all node_type-specific settings will be added to this table
+    'killfile_node_types' => array(
+      'description' => st("Content type specific settings for killfile."),
+      'fields' => array(
+        'type' => array(
+          'description' => st("The machine-readable name of the node type that has killfile enabled."),
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => TRUE,
+        ),
+        'publish_on_undelete' => array(
+          'description' => st("A boolean that designates whether or not to auto-publish killfiled content during an undelete process."),
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => TRUE,
+        ),
+      ),
+      'primary key' => array('type'),
+      'foreign keys' => array(
+        'type' => array(
+          'table' => 'node_type',
+          'columns' => array('type' => 'type'),
+        ),
+      ),
+    ),
+  );
+}

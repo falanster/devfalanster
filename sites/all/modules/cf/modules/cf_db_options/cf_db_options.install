@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install file for cf_db_options module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function cf_db_options_install() {
+  db_query('UPDATE {system} SET weight = -8 WHERE name = \'cf_db_options\'');
+}
+
+/**
+ * Upgrade module from 7.x-1.x to 7.x-2.x.
+ */
+function cf_db_options_update_7200() {
+  db_query('UPDATE {system} SET weight = -10 WHERE name = \'cf_db_options\'');
+}

@@ -1,0 +1,52 @@
+.cf_http-was_h1,
+.cf_http-was_h2,
+.cf_http-was_h3 {
+  margin: 0.5em 0;
+  font-weight: bold;
+}
+
+.cf_http-was_h4,
+.cf_http-was_h5,
+.cf_http-was_h6 {
+  margin: 0.4em 0;
+  font-weight: bold;
+}
+
+h2.cf_http-was_h1 {
+  font-size: 1.9em;
+}
+
+h3.cf_http-was_h1,
+h3.cf_http-was_h2 {
+  font-size: 1.75em;
+}
+
+h4.cf_http-was_h1,
+h4.cf_http-was_h2,
+h4.cf_http-was_h3 {
+  font-size: 1.6em;
+}
+
+h5.cf_http-was_h1,
+h5.cf_http-was_h2,
+h5.cf_http-was_h3,
+h5.cf_http-was_h4 {
+  font-size: 1.45em;
+}
+
+h6.cf_http-was_h1,
+h6.cf_http-was_h2,
+h6.cf_http-was_h3,
+h6.cf_http-was_h4,
+h6.cf_http-was_h5 {
+  font-size: 1.3em;
+}
+
+div.cf_http-was_h1,
+div.cf_http-was_h2,
+div.cf_http-was_h3,
+div.cf_http-was_h4,
+div.cf_http-was_h5,
+div.cf_http-was_h6 {
+  font-size: 1.15em;
+}

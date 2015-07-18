@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - DOM module.
+ */
+
+/**
+ * @defgroup cf_dom Common Functionality - DOM
+ * @ingroup cf
+ * @{
+ * A set of functions to process and alter DOM markup.
+ *
+ * Justification:
+ *   PHP DOM is an effective means to process markup. However, it is lacking
+ *   some functionality. For example, PHP DOM does not provide a function to
+ *   change the type of an element.
+ *
+ *   Drupal core does not provide a standard means to utilize PHP DOM. There
+ *   is some functionality defined in the filter module, but this is limited
+ *   to the filter module. The filter module should not be forced to be
+ *   enabled if the functionality of the filter module is not needed.
+ *
+ *   The cf_http module previously used regular expressions to manipulate html
+ *   markup. However, cf_http is older, so to avoid forcing a new dependency,
+ *   using cf_dom is optional and only performed when the cf_dom class is
+ *   properly loaded.
+ */
+
+
+/**
+ * @} End of '@defgroup cf_dom Common Functionality - DOM'.
+ */

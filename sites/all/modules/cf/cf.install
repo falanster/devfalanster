@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install file for common functionality module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function cf_install() {
+  db_query('UPDATE {system} SET weight = -10 WHERE name = \'cf\'');
+}
+
+/**
+ * Upgrade module from 7.x-1.x to 7.x-2.x.
+ */
+function cf_update_7200() {
+  db_query('UPDATE {system} SET weight = -10 WHERE name = \'cf\'');
+}

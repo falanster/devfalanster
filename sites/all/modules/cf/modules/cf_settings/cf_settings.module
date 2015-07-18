@@ -1,0 +1,492 @@
+<?php
+
+/**
+ * @file
+ * Common Functionality - PHP INI module.
+ */
+
+/**
+ * @defgroup cf_settings Common Functionality - Settings
+ * @ingroup cf
+ * @{
+ * Provides dynamic management for php ini settings.
+ *
+ * Justification:
+ *   Modules may depend on php ini settings or even provide their own global
+ *   settings that must be defined in drupals settings.php. While defining these
+ *   settings inside of the /sites/default/settings.php file is the more
+ *   efficient way to go, this is not a good idea for systems that need these
+ *   settings to be dynamic.
+ *
+ *   Some modules, such as the insert module, even define their own custom
+ *   settings that must go inside of the /sites/default/settings.php file, but
+ *   end-users have no obvious way of knowing about and managing these settings.
+ *
+ *   For those modules that do define their own custom settings.php variables,
+ *   there also exists the possibility of naming conflicts.
+ *
+ *   This module defines a toolkit that helps manage and communicate these
+ *   php settings and custom variables.
+ *
+ * References:
+ *  - https://drupal.org/node/1149910
+ *  - https://drupal.org/node/622964
+ */
+
+/**
+ * Implements hook_boot().
+ */
+function cf_settings_boot() {
+  global $conf;
+  global $user;
+
+  if (!isset($conf['role_php_ini']) || !is_array($conf['role_php_ini'])) {
+    $conf['role_php_ini'] = array();
+  }
+
+  if (!isset($conf['user_php_ini']) || !is_array($conf['user_php_ini'])) {
+    $conf['user_php_ini'] = array();
+  }
+
+  if (!isset($conf['ip_php_ini']) || !is_array($conf['ip_php_ini'])) {
+    $conf['ip_php_ini'] = array();
+  }
+
+  // External functions cannot be called during hook_boot() so do things manually here.
+  $static_vars = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($static_vars['roles'])) {
+    if ($user->uid == 0) {
+      $static_vars['roles'] = array(1);
+    }
+    else {
+      $roles_object = db_query('SELECT rid from {users_roles} where uid = :uid', array(':uid' => $user->uid));
+
+      if (!is_object($roles_object)) return;
+
+      $static_vars['roles'] = array_keys($roles_object->fetchAllAssoc('rid'));
+
+      if (!in_array(2, $static_vars['roles'])) {
+        $static_vars['roles'][] = 2;
+      }
+    }
+  }
+
+  if (!isset($static_vars['registered_type'])) {
+    $registered_types_object = db_query('SELECT * from {cf_settings_options_variable_type} where machine_name = \'php_ini\'');
+
+    if (!is_object($registered_types_object)) return;
+
+    $registered_types = $registered_types_object->fetchAll();
+    $static_vars['registered_type'] = reset($registered_types);
+  }
+
+  $registered_php_ini = cf_settings_get_registered(array('variable_type' => $static_vars['registered_type']->id), 'id');
+
+  if (empty($registered_php_ini)) return;
+
+  $client_ip = ip_address();
+
+  foreach ($registered_php_ini as $id => &$variable) {
+    if (array_key_exists($variable->variable_name, $conf['role_php_ini'])) {
+      foreach ($conf['role_php_ini'][$variable->variable_name] as $key => &$value) {
+        if (in_array($key, $static_vars['roles'])) {
+          ini_set($variable->variable_name, $value);
+        }
+      }
+    }
+
+    if (array_key_exists($variable->variable_name, $conf['user_php_ini'])) {
+      foreach ($conf['user_php_ini'][$variable->variable_name] as $key => &$value) {
+        if ($key == $user->uid) {
+          ini_set($variable->variable_name, $value);
+        }
+      }
+    }
+
+    if (array_key_exists($variable->variable_name, $conf['ip_php_ini'])) {
+      foreach ($conf['ip_php_ini'][$variable->variable_name] as $key => &$value) {
+        if (!empty($value) && $key == $client_ip) {
+          ini_set($variable->variable_name, $value);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_cf_permission_alter().
+ *
+ * @see cf_permission()
+ */
+function cf_settings_cf_permission_alter(&$permissions) {
+  if (!is_array($permissions)) $permissions = array();
+
+  $permissions['view cf settings registry'] = array(
+    'title' => t("View CF Settings Registry"),
+    'description' => t("Specify whether or not a user or role is allowed to view the common functionality settings registry."),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function cf_settings_menu() {
+  $items = array();
+
+  $items['admin/reports/settings_registry'] = array(
+    'title' => "Settings Registry",
+    'description' => "View common functionality settings registry.",
+    'page callback' => 'cf_settings_administer_variables',
+    'file' => 'variables.admin.inc',
+    'file path' => drupal_get_path('module', 'cf_settings') . '/pages',
+    'access callback' => 'user_access',
+    'access arguments' => array('view cf settings registry'),
+  );
+
+  $items['admin/reports/settings_registry/%'] = array(
+    'title' => "Settings Registry",
+    'description' => "View common functionality settings registry for a specific registry type.",
+    'page callback' => 'cf_settings_administer_variables',
+    'page arguments' => array(4),
+    'file' => 'variables.admin.inc',
+    'file path' => drupal_get_path('module', 'cf_settings') . '/pages',
+    'access callback' => 'user_access',
+    'access arguments' => array('view cf settings registry'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function cf_settings_theme($existing, $type, $theme, $path) {
+  $themes = array();
+
+  $themes['cf_settings_view_registry'] = array(
+    'template' => 'cf_settings_view_registry',
+    'variables' => array(),
+    'path' => drupal_get_path('module', 'cf_settings') . '/templates',
+  );
+
+  return $themes;
+}
+
+/**
+ * Add a variable name and type to the variables registry.
+ *
+ * For variable types that can be added, this will add/initialize the variable
+ * in the database. This add operation will only happen if other modules have
+ * registered the variable.
+ *
+ * @param string $variable_name
+ *   A string representing the variable name.
+ * @param string $variable_type
+ *   A string representing the variable type.
+ * @param string $module_name
+ *   A string representing the module name.
+ * @param $value
+ *  (optional) The value to set. This can be any PHP data type;
+ *  these functions take care of serialization as necessary.
+ *  If NULL is passed, then variable_set() is not called.
+ *
+ * @return bool
+ *   TRUE if registration was successfull, FALSE otherwise.
+ *
+ * @see variable_set()
+ */
+function cf_settings_register($variable_name, $variable_type, $module_name, $value = NULL) {
+  if (!is_string($variable_name) || empty($variable_name)) return FALSE;
+  if (!is_string($variable_type) || empty($variable_type)) return FALSE;
+  if (!is_string($module_name) || empty($module_name)) return FALSE;
+
+  $setting = cf_db_options_get_options('cf_settings', 'variable_type', $variable_type);
+
+  if (empty($setting)) return FALSE;
+
+  $existing = cf_settings_get_registered(array('variable_name' => $variable_name, 'variable_type' => $setting->id, 'module_name' => $module_name));
+
+  if (!empty($existing)) return FALSE;
+
+  if ($variable_type == 'drupal_variables' && $value !== NULL) {
+    if (!cf_settings_is_registered($variable_name, $variable_type)) {
+      variable_set($variable_name, $value);
+    }
+  }
+
+  $record = array();
+  $record['variable_name'] = $variable_name;
+  $record['variable_type'] = $setting->id;
+  $record['module_name'] = $module_name;
+
+  $query = db_insert('cf_settings_register');
+  $query->fields($record);
+  $query->execute();
+
+  watchdog('register', "The module %module_name has registered the %variable_type: %variable_name.", array('%variable_name' => $variable_name, '%variable_type' => $variable_type, '%module_name' => $module_name));
+
+  return TRUE;
+}
+
+/**
+ * Remove a registered variable from the variables registry.
+ *
+ * For variable types that can be deleted, this will remove/delete the variable
+ * from the database. This delete operation will only happen if no other modules
+ * are registered with the variable.
+ *
+ * @param string $variable_name
+ *   A string representing the variable name.
+ * @param string $variable_type
+ *   A string representing the variable type.
+ * @param string $module_name
+ *   A string representing the module name.
+ *
+ * @return bool
+ *   TRUE if unregistration was successfull, FALSE otherwise.
+ *
+ * @see variable_del()
+ */
+function cf_settings_unregister($variable_name, $variable_type, $module_name) {
+  if (!is_string($variable_name) || empty($variable_name)) return FALSE;
+  if (!is_string($variable_type) || empty($variable_type)) return FALSE;
+  if (!is_string($module_name) || empty($module_name)) return FALSE;
+
+  $options_table = cf_db_options_get_options_name('cf_settings', 'variable_type');
+
+  if ($options_table === FALSE) return FALSE;
+
+  $subquery =  db_select($options_table, 'csot');
+  $subquery->fields('csot', array('id'));
+  $subquery->condition('machine_name', $variable_type);
+
+  $query = db_delete('cf_settings_register');
+  $query->condition('variable_name', $variable_name);
+  $query->condition('module_name', $module_name);
+  $query->condition('variable_type', $subquery, 'IN');
+  $query->execute();
+
+  if ($variable_type == 'drupal_variables') {
+    if (!cf_settings_is_registered($variable_name, $variable_type)) {
+      variable_del($variable_name);
+    }
+  }
+
+  watchdog('unregister', "The module %module_name has unregistered the %variable_type: %variable_name.", array('%variable_name' => $variable_name, '%variable_type' => $variable_type, '%module_name' => $module_name));
+
+  return TRUE;
+}
+
+/**
+ * Obtains the registered variables based on the given conditions.
+ *
+ * @param array $conditions
+ *   (optional) An array with the following possible keys:
+ *   - id: A unique id or an array of unique ids representing regisitered
+ *   variables.
+ *   - variable_name: A string or an array of strings that are represent
+ *   the names of variables to load.
+ *   - variable_type: A numeric id or an array of numeric ids that represent
+ *     the types of variables to load.
+ *   - module_name: A string or an array of strings that are represent
+ *   the modules associated with variables to load.
+ * @param string|null $keyed
+ *   (optional) A string matching one of the following: 'id'
+ *   When this is NULL, the default behavior is to return the array
+ *   exactly as it was returned by the database call.
+ *   When this is a valid string, the key names of the returned array
+ *   will use the specified key name.
+ *
+ * @return array
+ *   An array of registered variable objects.
+ */
+function cf_settings_get_registered($conditions = array(), $keyed = NULL) {
+  if (!is_array($conditions)) return array();
+
+  $query = db_select('cf_settings_register', 'csr');
+  $query->fields('csr');
+  $query->orderBy('id', 'ASC');
+
+  $and = NULL;
+
+  if (isset($conditions['id'])) {
+    if (is_null($and)) $and = db_and();
+
+    if (is_numeric($conditions['id'])) {
+      $and->condition('id', $conditions['id']);
+    }
+    elseif (is_array($conditions['id']) && !empty($conditions['id'])) {
+      $and->condition('id', $conditions['id'], 'IN');
+    }
+  }
+
+  if (isset($conditions['variable_name'])) {
+    if (is_null($and)) $and = db_and();
+
+    if (is_string($conditions['variable_name']) && !empty($conditions['variable_name'])) {
+      $and->condition('variable_name', $conditions['variable_name']);
+    }
+    elseif (is_array($conditions['variable_name']) && !empty($conditions['variable_name'])) {
+      $and->condition('variable_name', $conditions['variable_name'], 'IN');
+    }
+  }
+
+  if (isset($conditions['variable_type'])) {
+    if (is_null($and)) $and = db_and();
+
+    if (is_numeric($conditions['variable_type'])) {
+      $and->condition('variable_type', $conditions['variable_type']);
+    }
+    elseif (is_array($conditions['variable_type']) && !empty($conditions['variable_type'])) {
+      $and->condition('variable_type', $conditions['variable_type'], 'IN');
+    }
+  }
+
+  if (isset($conditions['module_name'])) {
+    if (is_null($and)) $and = db_and();
+
+    if (is_string($conditions['module_name']) && !empty($conditions['module_name'])) {
+      $and->condition('module_name', $conditions['module_name']);
+    }
+    elseif (is_array($conditions['module_name']) && !empty($conditions['module_name'])) {
+      $and->condition('module_name', $conditions['module_name'], 'IN');
+    }
+  }
+
+  if (!is_null($and)) {
+    $query->condition($and);
+  }
+
+  $registered = array();
+
+  if ($keyed == 'id') {
+    $records = $query->execute();
+
+    foreach ($records as $record) {
+      if (!is_object($record)) continue;
+
+      $registered[$record->$keyed] = $record;
+    }
+  }
+  else {
+    $registered = (array) $query->execute()->fetchAll();
+  }
+
+  return $registered;
+}
+
+/**
+ * Determine if a variable is registered or not.
+ *
+ * @param string $variable_name:
+ *   A string or an array of strings that are represent the names of variables
+ *   to load.
+ * @param null|string $variable_type:
+ *   A numeric id or an array of numeric ids that are represent the types of
+ *   variables to load.
+ *   If null is given, then the variable type is not used.
+ *
+ * @return bool
+ *   TRUE is returned when the variable name (or variable name + variable type)
+ *   is registered and FALSE otherwise.
+ */
+function cf_settings_is_registered($variable_name, $variable_type = NULL) {
+  if (!is_string($variable_name) || empty($variable_name)) return FALSE;
+  if (!is_null($variable_type) && (!is_string($variable_type) || empty($variable_type))) return FALSE;
+
+  $conditions = array('variable_name' => $variable_name);
+
+  if (!is_null($variable_type)) {
+    $conditions['variable_type'] = $variable_type;
+  }
+
+  $registered = cf_settings_get_registered($conditions);
+
+  return !empty($registered);
+}
+
+/**
+ * Get an array of supported variable type options.
+ *
+ * @param int|string|null $option
+ *   (optional) Providing a valid numeric id or machine name string
+ *   will cause the return value to only contain the option that
+ *   matches this string or numeric id.
+ *
+ * @return array
+ *   An array of supported options.
+ *   The array keys are the machine names for each option.
+ *
+ * @see: cf_db_options_get_options()
+ */
+function cf_settings_get_variable_types($option = NULL) {
+  return cf_db_options_get_options('cf_settings', 'variable_type', $option);
+}
+
+/**
+ * Get an array of supported variable type options list.
+ *
+ * @param array|null $options
+ *   (optional) Providing a valid array of options as returned by
+ *   cf_db_options_get_options() and it will be properly converted
+ *   into a options list.
+ *
+ * @return array
+ *   An array of supported options.
+ *   The array keys are the machine names for each option.
+ *
+ * @see: cf_db_options_get_options()
+ */
+function cf_settings_get_variable_types_list($options = NULL) {
+  return cf_db_options_get_options_list('cf_settings', 'variable_type', $option);
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function cf_settings_modules_uninstalled($module_list) {
+  foreach ($module_list as $module) {
+
+    // when a module gets uninstalled, ensure that all of its registered variables get deleted.
+    try {
+      $query = db_select('cf_settings_register', 'csr');
+
+      $query->fields('csr');
+      $query->innerjoin('cf_settings_options_variable_type', 'csovt', 'csr.variable_type = csovt.id');
+      $query->condition('csr.module_name', $module);
+      $query->condition('csovt.machine_name', 'drupal_variables');
+      $results = $query->execute();
+
+      foreach ($results->fetchAll() as $result) {
+        cf_settings_unregister($result->variable_name, $result->variable_type, $module);
+      }
+    }
+    catch (Exception $e) {
+      if (class_exists('cf_error')) {
+        cf_error::on_query_execution($e);
+      }
+
+      throw $e;
+    }
+
+    // delete all registered items made by this module.
+    try {
+      $query = db_delete('cf_settings_register');
+
+      $query->condition('module_name', $module);
+      $query->execute();
+    }
+    catch (Exception $e) {
+      if (class_exists('cf_error')) {
+        cf_error::on_query_execution($e);
+      }
+
+      throw $e;
+    }
+  }
+}
+
+/**
+ * @} End of '@defgroup cf_settings Common Functionality - Settings'.
+ */
