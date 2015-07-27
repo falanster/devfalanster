@@ -234,3 +234,39 @@
 .content .content blockquote {
   font-style: italic;
 }
+
+/* important info and tags*/
+
+.field-name-field-image {
+    margin-bottom: 28px;
+}
+
+.field-type-node-reference, .field-name-field-open-tag {
+    box-sizing: border-box;
+    width: 100%; 
+    font-size: 1.3em;
+}
+
+.field-type-node-reference {
+    background: #f3f4f5;
+    padding: 15px 20px;
+}
+
+.field-name-field-open-tag {
+     margin-bottom: 50px;
+}
+
+.field-name-field-related-node .field-item{    
+    clear: both;
+}
+
+.field-name-field-related-node  .field-label, .field-name-field-related-node .field-items {
+	clear: both;
+}
+
+.field .field-label {
+    color: #6c6b69;
+    font-weight: normal;
+}
+
+/* end of important info and tags*/
