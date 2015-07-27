@@ -7,12 +7,6 @@ function weight_schema() {
   $schema['weight_settings'] = array(
     'description' => 'Table for storing Weight configuration',
     'fields' => array(
-      'id' => array(
-        'description' => 'The primary identifier for a content type configuration',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
       'type' => array(
         'type' => 'varchar',
         'length' => 32,
@@ -55,7 +49,7 @@ function weight_schema() {
         'default' => 0,
       ),
     ),
-    'primary key' => array('id'),
+    'primary key' => array('type'),
     'foreign keys' => array(
       'node_type' => array(
         'table' => 'node_type',
@@ -95,12 +89,6 @@ function weight_schema_7200() {
   $schema['weight_settings'] = array(
     'description' => 'Table for storing Weight configuration',
     'fields' => array(
-      'id' => array(
-        'description' => 'The primary identifier for a content type configuration',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
       'type' => array(
         'type' => 'varchar',
         'length' => 32,
@@ -136,7 +124,7 @@ function weight_schema_7200() {
         'default' => 0,
       ),
     ),
-    'primary key' => array('id'),
+    'primary key' => array('type'),
     'foreign keys' => array(
       'node_type' => array(
         'table' => 'node_type',
@@ -178,8 +166,8 @@ function weight_update_7200() {
   $types = node_type_get_names();
   $weight_types = variable_get('weight_node_types', array());
   $range = variable_get('weight_range', 20);
-  $menu_weight = variable_get('weight_use_menu', 0);
-  $default = variable_get('weight_default', 0);
+  $menu_weight = (int) variable_get('weight_use_menu', 0);
+  $default = (int) variable_get('weight_default', 0);
 
   // This is essentially the same as calling drupal_install_schema(), but
   // using weight_schema_7200() rather than the default weight_schema().
@@ -481,6 +469,42 @@ function weight_update_7210(&$sandbox) {
     }
 
     $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  }
+}
+
+/**
+ * Make sure all content types have an entry in {weight_settings}.
+ */
+function weight_update_7211() {
+  $types = node_type_get_names();
+  $settings = _weight_get_settings();
+
+  $range = variable_get('weight_range', 20);
+  $menu_weight = (int) variable_get('weight_use_menu', 0);
+  $default = (int) variable_get('weight_default', 0);
+
+  foreach ($types as $type => $name) {
+    if (!array_key_exists($type, $settings)) {
+      $query = db_insert('weight_settings')
+        ->fields(array(
+          'type' => $type,
+          'weight_enabled' => 0,
+          'weight_range' => $range,
+          'menu_weight' => $menu_weight,
+          'weight_default' => $default,
+        ))
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Remove unused id column from {weight_settings}.
+ */
+function weight_update_7212() {
+  if (db_field_exists('weight_settings', 'id')) {
+    db_drop_field('weight_settings', 'id');
+    db_add_primary_key('weight_settings', array('type'));
   }
 }
 

@@ -9,9 +9,9 @@ files[] = menu_import.test
 
 configure = admin/structure/menu/import
 
-; Information added by Drupal.org packaging script on 2014-04-19
-version = "7.x-1.6"
+; Information added by Drupal.org packaging script on 2015-04-13
+version = "7.x-1.7"
 core = "7.x"
 project = "menu_import"
-datestamp = "1397928231"
+datestamp = "1428944532"
 

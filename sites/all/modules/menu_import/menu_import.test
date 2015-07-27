@@ -123,14 +123,14 @@ class MenuImportTestCase extends DrupalWebTestCase {
     $this->drupalPost($export_url, $post_data, t('Export'));
     $exported_menu = $this->drupalGetContent();
     $expected_exported_menu =
-'Home {"url":"<front>"}
-Page 1 {"url":"node\/1","options":{"attributes":{"title":"Test description"}}}
--Page 12 {"url":"admin\/structure\/menu\/import","hidden":true}
--Page 13 {"url":"admin\/structure\/menu\/export","options":{"query":{"arg":"val"}}}
---Page 131 {"url":"node\/3"}
-Page 2 {"url":"node\/2","expanded":true}
--Page 21 {"url":"node\/4"}
---Page 211 {"url":"node\/5"}
+'Home {"url":"<front>","weight":"0"}
+Page 1 {"url":"node\/1","description":"Test description","weight":"1"}
+-Page 12 {"url":"admin\/structure\/menu\/import","hidden":true,"weight":"0"}
+-Page 13 {"url":"admin\/structure\/menu\/export","options":{"query":{"arg":"val"}},"weight":"1"}
+--Page 131 {"url":"node\/3","weight":"0"}
+Page 2 {"url":"node\/2","expanded":true,"weight":"2"}
+-Page 21 {"url":"node\/4","weight":"0"}
+--Page 211 {"url":"node\/5","weight":"0"}
 ';
     $this->assertEqual($exported_menu, $expected_exported_menu, 'Exported menu ok.');
 

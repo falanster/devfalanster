@@ -61,21 +61,3 @@ function weight_views_data() {
   return $data;
 }
 
-/**
- * Implements of hook_views_handlers().
- */
-function weight_views_handlers() {
-  return array(
-    'info' => array(
-      'path' => drupal_get_path('module', 'weight') . '/views',
-    ),
-    'handlers' => array(
-      'weight_handler_field_weight' => array(
-        'parent' => 'views_handler_field',
-      ),
-      'weight_handler_filter_weight_enabled' => array(
-        'parent' => 'views_handler_filter',
-      ),
-    ),
-  );
-}

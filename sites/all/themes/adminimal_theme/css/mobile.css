@@ -30,14 +30,23 @@ ul.primary {
   float: none;
   clear: both;
   display: block;
-  padding: 0 50px 0 10px;
+  padding: 0 10px 0 10px;
+  background: #333;
+  width: 100%;
+  border-bottom: 5px solid #0074BD;
+  box-sizing: border-box;
 }
 
 ul.primary li {
   clear: both;
-  display: block;
+  display: table;
   float: none;
   margin: 0;
+  width: 100%;
+}
+
+body.adminimal-theme #navigation ul.primary li:first-of-type {
+  margin-left: 0;
 }
 
 body.adminimal-theme ul.primary li a:active, body.adminimal-theme ul.primary li a:link, body.adminimal-theme ul.primary li a:visited {
@@ -91,10 +100,6 @@ body.adminimal-theme div.admin .right, body.adminimal-theme div.admin .left {
 .exposed-filters .form-select {
   clear: both;
   margin-bottom: 10px;
-  width: 100%;
-}
-
-.views-exposed-form .views-exposed-widget {
   width: 100%;
 }
 
@@ -252,4 +257,8 @@ html.js .adminimal-theme #module-filter-show-wrapper .form-item {
 
 #sidebar-right .region-sidebar-right {
   padding-left: 0px;
+}
+
+.adminimal-theme #module-filter-tabs.top-fixed{
+  position: relative;
 }

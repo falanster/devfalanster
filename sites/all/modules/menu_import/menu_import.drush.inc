@@ -51,10 +51,10 @@ function menu_import_drush_command() {
       'menu-name' => 'Required. Name of the menu to export.',
     ),
     'options' => array(
-      'export-language' => 'Export language',
+      'export-language' => 'Language will be exported in menu item metadata. This can be useful for a multilingual site',
       'line-ending' => 'Line endings to be used. Allowed values are: unix, mac, dos.'
        . ' Defaults to current system\'s line ending.',
-      'export-options' => 'Export options',
+      'export-options' => 'Export menu item options, used to store various menu item metadata by other contribs.',
     ),
     'aliases' => array('mi-export', 'me'),
   );
@@ -230,6 +230,9 @@ function drush_menu_import_export() {
   if (count($export_options)) {
     $options['options'] = 1;
   }
+
+  // Export menu item weight by default.
+  $options['export_weight'] = 1;
 
   module_load_include('inc', 'menu_import', 'includes/export');
   $result = menu_import_export_menu($menu_name, $options);

@@ -77,11 +77,11 @@ Drupal.behaviors.adminimal_move_active_primary_tab = {
 			breakpoint: 'mobile',
 				enter: function() {
 					$( "ul.tabs.primary li.active" ).clone().appendTo( "ul.tabs.primary" ).removeClass( "active" ).addClass( "current" );
-					$( "ul.tabs.primary li.active" ).hide();
+					$( "ul.tabs.primary li.active" ).css("display", "none");
 				},
 				exit: function() {
-					$( "ul.tabs.primary li.active" ).show();
-					$( "ul.tabs.primary li.current" ).hide();
+					$( "ul.tabs.primary li.active" ).css("display", "table");
+					$( "ul.tabs.primary li.current" ).css("display", "none");
 				}
 		});
 	}

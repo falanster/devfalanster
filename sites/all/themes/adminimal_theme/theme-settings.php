@@ -17,8 +17,31 @@
 function adminimal_form_system_theme_settings_alter(&$form, &$form_state) {
 
   // Get adminimal theme path.
+  global $base_url;
   $adminimal_path = drupal_get_path('theme', 'adminimal');
-  $custom_css_path = $adminimal_path . '/css/custom.css';
+  $old_css_path = $adminimal_path . '/css/custom.css';
+  $custom_css_path = 'public://adminimal-custom.css';
+  $custom_css_dir = str_replace($base_url . '/', "", file_create_url($custom_css_path));
+  $custom_css_url = file_create_url($custom_css_path);
+
+  // Try to create the adminimal-custom.css file automatically.
+  if (!file_exists($custom_css_path)) {
+
+    // Try to migrate from the old css.
+    if (file_exists($old_css_path)) {
+      file_unmanaged_copy($old_css_path, $custom_css_path, FILE_EXISTS_ERROR);
+    }
+    // Else create e new blank css file.
+    else {
+      file_unmanaged_save_data("", $custom_css_path, FILE_EXISTS_ERROR);
+    }
+
+  }
+
+  // Notify user to remove his old css file.
+  if (file_exists($old_css_path)) {
+    drupal_set_message(t('Please delete the old @css_location file, as its no longer used.', array('@css_location file' => $old_css_path)), 'warning');
+  }
 
   $form['adminimal_custom'] = array(
     '#type' => 'fieldset',
@@ -66,9 +89,8 @@ function adminimal_form_system_theme_settings_alter(&$form, &$form_state) {
 
   $form['adminimal_custom']['custom_css'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use "custom.css"'),
-    '#description' => t('Include custom.css file to override default Adminimal styles
-     or add additional styles without subthememing/hacking Adminimal Theme.'),
+    '#title' => t('Use "adminimal-custom.css"'),
+    '#description' => t('Include adminimal-custom.css file to override or add custom css code without subthememing/hacking Adminimal Theme.'),
     '#default_value' => theme_get_setting('custom_css'),
   );
 
@@ -86,14 +108,14 @@ function adminimal_form_system_theme_settings_alter(&$form, &$form_state) {
 
   if (file_exists($custom_css_path)) {
     $form['adminimal_custom']['adminimal_custom_check']['custom_css_description'] = array(
-      '#markup' => t('Custom CSS file Found in: !css', array('!css' => "<span class='css_path'>" . $custom_css_path . "</span>")),
+      '#markup' => t('Custom CSS file Found in: !css', array('!css' => "<span class='css_path'>" . $custom_css_dir . "</span>")),
       '#prefix' => '<div class="messages status custom_css_found">',
       '#suffix' => '</div>',
     );
   }
   else {
     $form['adminimal_custom']['adminimal_custom_check']['custom_css_not_found'] = array(
-      '#markup' => t('Custom CSS file not found. You must create the !css file manually.', array('!css' => "<span class='css_path'>" . $custom_css_path . "</span>")),
+      '#markup' => t('Custom CSS file not found. You must create the !css file manually.', array('!css' => "<span class='css_path'>" . $custom_css_dir . "</span>")),
       '#prefix' => '<div class="messages error custom_css_not_found">',
       '#suffix' => '</div>',
     );

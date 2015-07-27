@@ -398,8 +398,7 @@ function i18n_string_locale_translate_edit_form_submit($form, &$form_state) {
   // Invoke locale submission.
   locale_translate_edit_form_submit($form, $form_state);
   $lid = $form_state['values']['lid'];
-  $i18n_string_object = i18n_string_get_by_lid($lid);
-  if(is_object($i18n_string_object)) {
+  if ($i18n_string_object = i18n_string_get_by_lid($lid)) {
     $i18n_string_object->cache_reset();
   }
   foreach ($form_state['values']['translations'] as $key => $value) {
