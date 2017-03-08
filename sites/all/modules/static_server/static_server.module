@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Defines url for all the static files "static_server" module.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * This function add a menu item to admin menus for our module configurations.
+ */
+function static_server_menu() {
+  $items = array();
+  $items['admin/config/system/files-static-url'] = array(
+    'title' => 'Static Server URLs',
+    'description' => 'Change URl for CSS, JS And Images Path',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('static_server_admin_setting_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_admin_setting_form().
+ *
+ * This function provides a form to admin interface.
+ */
+function static_server_admin_setting_form() {
+  global $base_url;
+
+  $form['static_server']['static_server_css_path'] = array(
+    '#title' => t("CSS Files Path"),
+    '#type' => 'textfield',
+    '#default_value' => variable_get('static_server_css_path', $base_url),
+  );
+
+  $form['static_server']['static_server_js_path'] = array(
+    '#title' => t("JS Files Path"),
+    '#type' => 'textfield',
+    '#default_value' => variable_get('static_server_js_path', $base_url),
+  );
+
+  $form['static_server']['static_server_files_path'] = array(
+    '#title' => t("Files Path"),
+    '#type' => 'textfield',
+    '#default_value' => variable_get('static_server_files_path', $base_url),
+  );
+
+  $form['static_server']['static_server_files_extension'] = array(
+    '#title' => t("Files Extension"),
+    '#type' => 'textfield',
+    '#default_value' => variable_get('static_server_files_extension', array(
+      'gif',
+      'jpg',
+      'jpeg',
+      'png',
+      )
+    ),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_file_url_alter().
+ *
+ * This function alter files url.
+ */
+function static_server_file_url_alter(&$uri) {
+  global $base_url;
+
+  $files_path = variable_get('static_server_files_path', $base_url);
+  $js_path = variable_get('static_server_js_path', $base_url);
+  $css_path = variable_get('static_server_css_path', $base_url);
+  $variable = variable_get('static_server_files_extension', array(
+    'gif',
+    'jpg',
+    'jpeg',
+    'png',
+    'ico',
+    )
+  );
+
+  if (is_array($variable)) {
+    $files_extensions = $variable;
+  }
+  else {
+    $files_extensions = explode(' ', $variable);
+  }
+
+  $css_file_extensions = array('css');
+
+  $js_file_extensions = array('js');
+
+  // Serve only public files.
+  $schemes = array('public');
+  $scheme = file_uri_scheme($uri);
+
+  // Only serve shipped files and public created files from the Static Server.
+  if (!$scheme || in_array($scheme, $schemes)) {
+    if (!$scheme) {
+      $path = $uri;
+    }
+
+    // Public created files.
+    else {
+      $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+      $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+    }
+
+    // Clean up Windows paths.
+    $path = str_replace('\\', '/', $path);
+
+    // Serve files with one of the files extensions from static servers.
+    $pathinfo = pathinfo($path);
+    if (isset($pathinfo['extension'])) {
+      if (in_array($pathinfo['extension'], $css_file_extensions)) {
+        $uri = $css_path . '/' . $path;
+      }
+      elseif (in_array($pathinfo['extension'], $js_file_extensions)) {
+        $uri = $js_path . '/' . $path;
+      }
+      elseif (in_array($pathinfo['extension'], $files_extensions)) {
+        $uri = $files_path . '/' . $path;
+      }
+      else {
+        $uri = $base_url . '/' . $path;
+      }
+    }
+  }
+}

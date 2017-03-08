@@ -1,0 +1,10 @@
+name = Static Server 
+description = Call Files From Static Server 
+core = "7.x"
+
+; Information added by Drupal.org packaging script on 2015-01-17
+version = "7.x-1.0"
+core = "7.x"
+project = "static_server"
+datestamp = "1421474582"
+

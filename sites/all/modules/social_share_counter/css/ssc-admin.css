@@ -1,0 +1,21 @@
+/*#social-share-counter-settings-form fieldset {
+  float: left;
+  width: 47%;
+  margin: 0 15px;
+}*/
+
+.fieldset-wrapper .form-type-checkboxes  {
+  float: left;
+  width:100%;
+}
+.fieldset-wrapper  .description {
+  float: left;
+  width: 100%;
+}
+.form-type-checkbox  {
+  float: left;
+  padding: 0 10px !important;
+}
+.form-type-checkbox:first-child{
+  padding: 0 !important;
+}

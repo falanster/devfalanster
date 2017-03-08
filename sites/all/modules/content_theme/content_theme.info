@@ -1,0 +1,14 @@
+
+name = Content Theme
+description = Allows to use different themes than the site default on content creating, editing, and viewing pages.
+
+core = 7.x
+package = Theme related
+configure = admin/structure/content-theme
+
+; Information added by Drupal.org packaging script on 2017-01-18
+version = "7.x-1.2"
+core = "7.x"
+project = "content_theme"
+datestamp = "1484721486"
+

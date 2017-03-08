@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the content_theme module.
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function content_theme_schema() {
+
+  $schema = array();
+  $schema['content_theme_node'] = array(
+    'description' => 'Stores themes when creating, editing, or viewing content.',
+    'fields' => array(
+      'ctnid' => array(
+        'description' => 'Primary Key: Unique content node theme ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nid' => array(
+        'description' => 'Node id to which the theme is assigned.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'action' => array(
+        'description' => 'Node action to which the theme is assigned.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'theme' => array(
+        'description' => 'Theme name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('ctnid'),
+    'unique keys' => array(
+      'node_action' => array('nid', 'action'),
+    ),
+    'indexes' => array(
+      'list' => array('nid', 'action', 'theme'),
+    ),
+  );
+
+  return $schema;
+}
+
+
+/**
+* Implements hook_uninstall().
+*/
+function content_theme_uninstall() {
+
+  foreach (node_type_get_types() as $node_type => $value) {
+    variable_del('content_theme_content_type_edit_'. $node_type);
+    variable_del('content_theme_content_type_view_'. $node_type);
+  }
+  variable_del('content_theme_content_wide_edit');
+  variable_del('content_theme_content_wide_view');
+  variable_del('content_theme_content_node_list');
+  variable_del('content_theme_content_type_list');
+  variable_del('content_theme_content_wide_list');
+}
+
+
+/**
+ * Change default value for theme field.
+ */
+function content_theme_update_6100() {
+
+  db_drop_primary_key('content_theme_node');
+  db_change_field('content_theme_node', 'theme', 'theme', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''), array('primary key' => array('nid', 'action')));
+}
+
+/**
+ * Add content node theme ID field and updates table indices.
+ */
+function content_theme_update_6101() {
+
+  db_drop_primary_key('content_theme_node');
+  db_add_field('content_theme_node', 'ctnid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('ctnid')));
+  db_add_unique_key('content_theme_node', 'node_action', array('nid', 'action'));
+  db_add_index('content_theme_node', 'list', array('nid', 'action', 'theme'));
+}
+
+/**
+ * Update content theme permissions.
+ */
+function content_theme_update_6102() {
+
+  $perm = array();
+  foreach (node_type_get_types() as $type => $value) {
+    $perm[] = "select $type content editing theme";
+    $perm[] = "select $type content viewing theme";
+  }
+
+  $result = db_query("SELECT * FROM {role_permission} WHERE permission = 'create content theme'");
+  foreach ($result as $role_permission) {
+    user_role_grant_permissions($role_permission->rid, $perm);
+  }
+  db_delete('role_permission')
+    ->condition('permission', 'create content theme')
+    ->execute();
+}
+
+/**
+ * Check if all defined themes are available otherwise display a notice.
+ */
+function content_theme_update_7000() {
+
+  $themes = content_theme_get_themes();
+
+  $result = db_query('SELECT DISTINCT theme FROM {content_theme_node}');
+  foreach ($result as $content_theme_node) {
+    if (!isset($themes[$content_theme_node->theme])) {
+      return t('Not all defined themes are available, please check your configuration.');
+    }
+  }
+
+  foreach (node_type_get_types() as $type => $value) {
+    $type_theme = variable_get('content_theme_content_type_edit_'. $type, '-content_wide-');
+    if ($type_theme != '-content_wide-' && !isset($themes[$type_theme])) {
+      return t('Not all defined themes are available, please check your configuration.');
+    }
+    $type_theme = variable_get('content_theme_content_type_view_'. $type, '-content_wide-');
+    if ($type_theme != '-content_wide-' && !isset($themes[$type_theme])) {
+      return t('Not all defined themes are available, please check your configuration.');
+    }
+  }
+
+  $type_theme = variable_get('content_theme_content_wide_edit', '0');
+  if ($type_theme != '0' && !isset($themes[$type_theme])) {
+    return t('Not all defined themes are available, please check your configuration.');
+  }
+  $type_theme = variable_get('content_theme_content_wide_view', '0');
+  if ($type_theme != '0' && !isset($themes[$type_theme])) {
+    return t('Not all defined themes are available, please check your configuration.');
+  }
+}

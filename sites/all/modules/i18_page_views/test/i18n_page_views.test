@@ -1,0 +1,23 @@
+<?php
+
+class i18nPageViewsTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'i18n page views: Module tests',
+      'description' => 'Tests the i18n_page_views module.',
+      'group' => 'Views Modules',
+    );
+  }
+
+  protected function setUp() {
+    parent::setUp('ctools', 'views', 'views_ui', 'i18n_page_views', 'i18n_page_views_test');
+    $this->resetAll();
+  }
+
+  function test_view_response_after_import() {
+    $this->drupalGet('tests');
+    $this->assertResponse(200);
+  }
+
+}

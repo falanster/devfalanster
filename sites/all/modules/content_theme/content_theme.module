@@ -1,0 +1,450 @@
+<?php
+
+/**
+ * @file
+ * This module allows to use different themes than the site default on content
+ * creating, editing, and viewing pages.
+ */
+
+
+/**
+ * Implements hook_help().
+ */
+function content_theme_help($path, $arg) {
+
+  switch ($path) {
+
+    case 'admin/help#content_theme':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Content Theme module is a simple and easy module to use which allows you to use different themes than the site default on content creating, editing, and viewing pages. For more information, see the online handbook entry for <a href="@content_theme">Content Theme module</a>.', array('@content_theme' => 'http://drupal.org/project/content_theme')) . '</p>';
+      return $output;
+
+    case 'admin/structure/content-theme':
+    case 'admin/structure/content-theme/content-node':
+      $output = '<p>' . t('<em>Content node themes</em> apply only to its own content and override the content type themes, content wide themes, and the system default theme.') . '</p>';
+      return $output;
+
+    case 'admin/structure/content-theme/content-type':
+      $output = '<p>' . t('<em>Content type themes</em> apply to all content based on its content type and override content wide themes and the system default theme. But these settings can be overridden by content node settings.') . '</p>';
+      return $output;
+
+    case 'admin/structure/content-theme/content-wide':
+      $output = '<p>' . t('<em>Content wide themes</em> apply to all content and override the system default theme. But these settings can be overridden by content type or content node settings.') . '</p>';
+      return $output;
+  }
+}
+
+
+/**
+ * Implements hook_permission().
+ */
+function content_theme_permission() {
+
+  $perm = array();
+  $perm['administer content theme'] = array(
+    'title' => t('Administer content theme settings'),
+  );
+  foreach (node_type_get_types() as $type => $value) {
+    $info = node_type_get_type($type);
+
+    $perm["select $type content editing theme"] = array(
+      'title' => t('%type_name: Select content editing theme', array('%type_name' => $info->name)),
+    );
+    $perm["select $type content viewing theme"] = array(
+      'title' => t('%type_name: Select content viewing theme', array('%type_name' => $info->name)),
+    );
+  }
+
+  return $perm;
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function content_theme_menu() {
+
+  $menu = array();
+  $menu['admin/structure/content-theme'] = array(
+    'title' => 'Content theme',
+    'description' => 'Configure which theme is used when content is created, edited or be viewed.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('content_theme_admin_content_node'),
+    'access arguments' => array('administer content theme'),
+    'file' => 'content_theme.admin.inc',
+  );
+  $menu['admin/structure/content-theme/content-node'] = array(
+    'title' => 'Content node',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $menu['admin/structure/content-theme/content-type'] = array(
+    'title' => 'Content type',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('content_theme_admin_content_type'),
+    'access arguments' => array('administer content theme'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 0,
+    'file' => 'content_theme.admin.inc',
+  );
+  $menu['admin/structure/content-theme/content-wide'] = array(
+    'title' => 'Content wide',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('content_theme_admin_content_wide'),
+    'access arguments' => array('administer content theme'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+    'file' => 'content_theme.admin.inc',
+  );
+  $menu['admin/structure/content-theme/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('content_theme_admin_settings'),
+    'access arguments' => array('administer content theme'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+    'file' => 'content_theme.admin.inc',
+  );
+
+  return $menu;
+}
+
+
+/**
+ * Implements hook_custom_theme().
+ */
+function content_theme_custom_theme() {
+
+  if (arg(0) == 'node' && (is_numeric(arg(1)) || (arg(1) == 'add' && !is_null(arg(2))))) {
+
+    if (arg(1) == 'add') {
+      $theme_node = FALSE;
+      $theme_type = variable_get('content_theme_content_type_edit_'. str_replace('-', '_', arg(2)), '-content_wide-');
+      $theme_wide = variable_get('content_theme_content_wide_edit', '0');
+    }
+    elseif (arg(2) == 'edit') {
+      $theme_node = db_query('SELECT theme FROM {content_theme_node} WHERE nid = :nid AND action = :action', array(':nid' => arg(1), ':action' => 'edit'))->fetchField();
+      $theme_type = variable_get('content_theme_content_type_edit_'. db_query('SELECT type FROM {node} WHERE nid = :nid', array(':nid' => arg(1)))->fetchField(), '-content_wide-');
+      $theme_wide = variable_get('content_theme_content_wide_edit', '0');
+    }
+    else {
+      $theme_node = db_query('SELECT theme FROM {content_theme_node} WHERE nid = :nid AND action = :action', array(':nid' => arg(1), ':action' => 'view'))->fetchField();
+      $theme_type = variable_get('content_theme_content_type_view_'. db_query('SELECT type FROM {node} WHERE nid = :nid', array(':nid' => arg(1)))->fetchField(), '-content_wide-');
+      $theme_wide = variable_get('content_theme_content_wide_view', '0');
+    }
+
+    if ($theme_node !== FALSE && $theme_node != '-content_wide-') {
+      $custom_theme = $theme_node;
+    }
+    else {
+      if ($theme_type != '-content_wide-' && !$theme_node) {
+        $custom_theme = $theme_type;
+      }
+      else {
+        $custom_theme = $theme_wide;
+      }
+    }
+
+    return $custom_theme;
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function content_theme_form_node_type_form_alter(&$form, $form_state) {
+
+  $edit_theme = variable_get('content_theme_content_type_edit_'. $form['#node_type']->type, '-content_wide-');
+  $view_theme = variable_get('content_theme_content_type_view_'. $form['#node_type']->type, '-content_wide-');
+
+  // Add content type theme options to content type form.
+  $form['content_theme'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content theme settings'),
+    '#description' => t('Applies to all content based on this content type and overrides content wide themes and the system default. But these settings can be overridden by content node settings.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => $edit_theme == '-content_wide-' && $view_theme == '-content_wide-',
+    '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('content-theme-content-type-form'),
+    ),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'content_theme') . '/scripts/content_theme.js'),
+    ),
+  );
+  $form['content_theme']['content_theme_content_type_edit'] = array(
+    '#type' => 'select',
+    '#title' => t('Creating & editing theme'),
+    '#description' => t('Choose which theme the content creating and editing pages should display in. Content wide theme: %content_wide_theme; system default theme: %system_default_theme.', array('%content_wide_theme' => content_theme_get_info_theme_name('content_wide', 'edit'), '%system_default_theme' => content_theme_get_info_theme_name())),
+    '#default_value' => $edit_theme,
+    '#options' => content_theme_get_content_type_options(),
+  );
+  $form['content_theme']['content_theme_content_type_view'] = array(
+    '#type' => 'select',
+    '#title' => t('Viewing theme'),
+    '#description' => t('Choose which theme the content viewing pages should display in. Content wide theme: %content_wide_theme; system default theme: %system_default_theme.', array('%content_wide_theme' => content_theme_get_info_theme_name('content_wide', 'view'), '%system_default_theme' => content_theme_get_info_theme_name())),
+    '#default_value' => $view_theme,
+    '#options' => content_theme_get_content_type_options(),
+  );
+}
+
+
+/**
+ * Implements hook_node_type_delete().
+ */
+function content_theme_node_type_delete($info) {
+
+  variable_del('content_theme_content_type_edit_' . $info->type);
+  variable_del('content_theme_content_type_view_' . $info->type);
+}
+
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function content_theme_form_node_form_alter(&$form, $form_state) {
+
+  $edit_theme = isset($form['#node']->content_theme_content_node_edit) ? $form['#node']->content_theme_content_node_edit : '-content_type-';
+  $view_theme = isset($form['#node']->content_theme_content_node_view) ? $form['#node']->content_theme_content_node_view : '-content_type-';
+
+  $edit_access = user_access('select '. $form['type']['#value'] .' content editing theme');
+  $view_access = user_access('select '. $form['type']['#value'] .' content viewing theme');
+
+  // Add content node theme options to content node form.
+  $form['content_theme'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content theme settings'),
+    '#description' => t('Applies only to this content node and overrides the content type themes, content wide themes, and the system default.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => $edit_theme == '-content_type-' && $view_theme == '-content_type-',
+    '#group' => 'additional_settings',
+    '#access' => $edit_access || $view_access,
+    '#weight' => 40,
+    '#attributes' => array(
+      'class' => array('content-theme-content-node-form'),
+    ),
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'content_theme') . '/scripts/content_theme.js'),
+    ),
+  );
+  $form['content_theme']['content_theme_content_node_edit'] = array(
+    '#type' => 'select',
+    '#title' => t('Editing theme'),
+    '#description' => t('Choose which theme the content creating and editing pages should display in. Content type theme: %content_type_theme; content wide theme: %content_wide_theme; system default theme: %system_default_theme.', array('%content_type_theme' => content_theme_get_info_theme_name('content_type', 'edit', $form['type']['#value']), '%content_wide_theme' => content_theme_get_info_theme_name('content_wide', 'edit'), '%system_default_theme' => content_theme_get_info_theme_name())),
+    '#default_value' => $edit_theme,
+    '#options' => content_theme_get_content_node_options(),
+    '#access' => $edit_access,
+  );
+  $form['content_theme']['content_theme_content_node_view'] = array(
+    '#type' => 'select',
+    '#title' => t('Viewing theme'),
+    '#description' => t('Choose which theme the content viewing pages should display in. Content type theme: %content_type_theme; content wide theme: %content_wide_theme; system default theme: %system_default_theme.', array('%content_type_theme' => content_theme_get_info_theme_name('content_type', 'view', $form['type']['#value']), '%content_wide_theme' => content_theme_get_info_theme_name('content_wide', 'view'), '%system_default_theme' => content_theme_get_info_theme_name())),
+    '#default_value' => $view_theme,
+    '#options' => content_theme_get_content_node_options(),
+    '#access' => $view_access,
+  );
+}
+
+
+/**
+ * Implements hook_node_load().
+ */
+function content_theme_node_load($nodes, $types) {
+
+  foreach ($nodes as $nid => $node) {
+    $nodes[$nid]->content_theme_content_node_edit = '-content_type-';
+    $nodes[$nid]->content_theme_content_node_view = '-content_type-';
+  }
+
+  $result = db_query('SELECT nid, action, theme FROM {content_theme_node} WHERE nid IN (:nids)', array(':nids' =>  array_keys($nodes)));
+  foreach ($result as $record) {
+
+    if ($record->action == 'edit') {
+      $nodes[$record->nid]->content_theme_content_node_edit = $record->theme;
+    }
+    if ($record->action == 'view') {
+      $nodes[$record->nid]->content_theme_content_node_view = $record->theme;
+    }
+  }
+}
+
+
+/**
+ * Implements hook_node_insert().
+ */
+function content_theme_node_insert($node) {
+
+  $theme = isset($node->content_theme_content_node_edit) ? $node->content_theme_content_node_edit : '-content_type-';
+  if ($theme != '-content_type-') {
+    db_insert('content_theme_node')
+      ->fields(array('nid' => $node->nid, 'action' => 'edit', 'theme' => $theme))
+      ->execute();
+  }
+
+  $theme = isset($node->content_theme_content_node_view) ? $node->content_theme_content_node_view : '-content_type-';
+  if ($theme != '-content_type-') {
+    db_insert('content_theme_node')
+      ->fields(array('nid' => $node->nid, 'action' => 'view', 'theme' => $theme))
+      ->execute();
+  }
+}
+
+
+/**
+ * Implements hook_node_update().
+ */
+function content_theme_node_update($node) {
+
+  content_theme_node_delete($node);
+  content_theme_node_insert($node);
+}
+
+
+/**
+ * Implements hook_node_delete().
+ */
+function content_theme_node_delete($node) {
+
+  db_delete('content_theme_node')
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+
+/**
+ * Helper functions.
+ */
+function content_theme_get_content_wide_options() {
+
+  static $options = array();
+
+  if (!$options) {
+
+    $themes = content_theme_get_themes();
+    $list = variable_get('content_theme_content_wide_list', 'enabled');
+
+    $options['0'] = '- '. t('System default theme') .' -';
+    foreach ($themes as $theme => $theme_name) {
+      $status = content_theme_get_theme_status($theme);
+      if (($list == 'enabled' && $status) || $list == 'all') {
+        $options[$theme] = $status ? $theme_name : t('!theme (disabled)', array('!theme' => $theme_name));
+      }
+    }
+  }
+
+  return $options;
+}
+
+function content_theme_get_content_type_options() {
+
+  static $options = array();
+
+  if (!$options) {
+
+    $themes = content_theme_get_themes();
+    $list = variable_get('content_theme_content_type_list', 'enabled');
+
+    $options['0'] = '- '. t('System default theme') .' -';
+    $options['-content_wide-'] = '- '. t('Content wide theme') .' -';
+    foreach ($themes as $theme => $theme_name) {
+      $status = content_theme_get_theme_status($theme);
+      if (($list == 'enabled' && $status) || $list == 'all') {
+        $options[$theme] = $status ? $theme_name : t('!theme (disabled)', array('!theme' => $theme_name));
+      }
+    }
+  }
+
+  return $options;
+}
+
+function content_theme_get_content_node_options() {
+
+  static $options = array();
+
+  if (!$options) {
+
+    $themes = content_theme_get_themes();
+    $list = variable_get('content_theme_content_node_list', 'enabled');
+
+    $options['0'] = '- '. t('System default theme') .' -';
+    $options['-content_wide-'] = '- '. t('Content wide theme') .' -';
+    $options['-content_type-'] = '- '. t('Content type theme') .' -';
+    foreach ($themes as $theme => $theme_name) {
+      $status = content_theme_get_theme_status($theme);
+      if (($list == 'enabled' && $status) || $list == 'all') {
+        $options[$theme] = $status ? $theme_name : t('!theme (disabled)', array('!theme' => $theme_name));
+      }
+    }
+  }
+
+  return $options;
+}
+
+function content_theme_get_themes($theme = NULL) {
+
+  static $themes = array();
+
+  if (!$themes) {
+
+    $result = db_query('SELECT name, status, info FROM {system} WHERE type = :type', array(':type' => 'theme'));
+    foreach ($result as $value) {
+      $value->info = unserialize($value->info);
+
+      if (empty($value->info['hidden']) || !$value->info['hidden']) {
+        $themes[$value->name] = $value->info['name'];
+      }
+    }
+
+    asort($themes);
+  }
+
+  return !is_null($theme) ? (isset($themes[$theme]) ? $themes[$theme] : $theme) : $themes;
+}
+
+function content_theme_get_theme_name($theme) {
+
+  static $themes = array();
+
+  if (!$themes) {
+
+    $themes['0'] = t('%system_default_theme', array('%system_default_theme' => 'System default theme'));
+    $themes['-content_wide-'] = t('%content_wide_theme', array('%content_wide_theme' => 'Content wide theme'));
+    $themes['-content_type-'] = t('%content_type_theme', array('%content_type_theme' => 'Content type theme'));
+    $themes += content_theme_get_themes();
+  }
+
+  return isset($themes[$theme]) ? ($theme == '0' || $theme == '-content_wide-' || $theme == '-content_type-' || content_theme_get_theme_status($theme) ? $themes[$theme] : t('!theme (disabled)', array('!theme' => $themes[$theme]))) : t('!theme (not available)', array('!theme' => $theme));
+}
+
+function content_theme_get_info_theme_name($mode = 'system_default', $action = NULL, $type = NULL) {
+
+  $name = $system_default_theme = content_theme_get_theme_name(variable_get('theme_default', 'bartik'));
+
+  if ($mode == 'content_wide' || $mode == 'content_type') {
+    if ($action == 'edit' || $action == 'view') {
+      $theme = variable_get('content_theme_content_wide_'. $action, '0');
+      $name = ($theme != '0') ? content_theme_get_theme_name($theme) : $system_default_theme;
+
+      if ($mode == 'content_type') {
+        $theme = variable_get('content_theme_content_type_'. $action .'_'. $type, '-content_wide-');
+        if ($theme != '-content_wide-') {
+          $name = ($theme != '0') ? content_theme_get_theme_name($theme) : $system_default_theme;
+        }
+      }
+    }
+    else {
+      $name = t('%none', array('%none' => 'none'));
+    }
+  }
+
+  return $name;
+}
+
+function content_theme_get_theme_status($theme) {
+
+  $system = db_query('SELECT status FROM {system} WHERE name = :name', array(':name' => $theme))
+    ->fetchObject();
+
+  return $system->status;
+}

@@ -1,0 +1,289 @@
+<?php
+/**
+ * @file
+ * Module code for Social Share Counter.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function social_share_counter_permission() {
+  return array(
+    'administer social_share_counter' => array(
+      'title' => t('Administer Social Share Counter module'),
+      'description' => t('Perform administration tasks for social_share_counter module.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function social_share_counter_menu() {
+  $items['admin/config/social_share_counter'] = array(
+    'title' => 'Social Share Counter',
+    'description' => 'Admin Social Share Counter',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('social_share_counter_settings_form'),
+    'access arguments' => array('administer social_share_counter'),
+    'file' => 'social_share_counter.admin.inc',
+  );
+  $items['admin/config/social_share_counter/share'] = array(
+    'title' => 'Share',
+    'description' => 'Configure Social Share Counter Follow Box',
+    'access arguments' => array('administer social_share_counter'),
+    'file' => 'social_share_counter.admin.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/social_share_counter/follow'] = array(
+    'title' => 'Follow',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('social_share_counter_follow_settings_form'),
+    'access arguments' => array('administer social_share_counter'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 20,
+    'file' => 'social_share_counter.admin.inc',
+  );
+  $items['social_share_counter/share'] = array(
+    'page callback' => 'social_share_counter_share',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements of hook_init().
+ */
+function social_share_counter_init() {
+
+}
+
+/**
+ * Implements of hook_page_build().
+ */
+function social_share_counter_page_build(&$page) {
+  // Enable by default or if enabled.
+  if (variable_get('ssc_status', 1) == 1) {
+    drupal_add_css(drupal_get_path('module', 'social_share_counter') . '/css/font-awesome.min.css');
+    drupal_add_css(drupal_get_path('module', 'social_share_counter') . '/css/ssc.css');
+    $protocol = 'http';
+    if((!empty($_SERVER['HTTPS']))) {
+      $protocol = 'https';
+    }
+    $url = $protocol . "://" . $_SERVER['SERVER_NAME'] . request_uri();
+    $my_settings = array(
+      'share' => url('social_share_counter/share', array('absolute' => TRUE)),
+      'page' =>  $url,
+    );
+    $my_settings['isClean'] = 0;
+    if (variable_get('clean_url') == 1) {
+      $my_settings['isClean'] = 1;
+    }
+    drupal_add_js(array('SSC' => $my_settings), "setting");
+    $option = array(
+      'type' => 'file',
+      'scope' => 'footer',
+      'group' => JS_LIBRARY,
+      'cache' => FALSE,
+      'weight' => 10
+    );
+    drupal_add_js(drupal_get_path('module', 'social_share_counter') . '/js/ssc_main.js', $option);
+    drupal_add_js(drupal_get_path('module', 'social_share_counter') . '/js/ssc_floating_navigation.js', $option);
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function social_share_counter_node_view($node, $view_mode) {
+  // Don't display if the user is currently searching, or in the RSS feed.
+  switch ($view_mode) {
+    case 'search_result':
+    case 'search_index':
+    case 'rss':
+      return;
+  }
+  $types = variable_get('ssc_nodetypes', array('page', 'article'));
+  $teaser = ($view_mode == 'teaser') ? TRUE : FALSE;
+
+  $enabled_view_modes = variable_get('ssc_' . $node->type . '_options', array());
+  if (isset($enabled_view_modes[$view_mode]) && $enabled_view_modes[$view_mode]) {
+    $node->content['ssc'] = array(
+      'html' => TRUE,
+      '#markup' => _ssc_create_button($node),
+      '#weight' => intval(variable_get('ssc_display_weight', -10)),
+    );
+    if ($view_mode == 'full') {
+      $node->page_bottom['devel'] = array(
+        '#weight' => 25,
+        '#markup' => '<div style="clear:both;">gergter</div>',
+      );
+    }
+  }
+}
+/**
+ * Internal function to generate code for Social Share Counter buttons.
+ *
+ * @param object $node
+ *   Optional parameter
+ *
+ * @return string
+ *   String containing HTML code for the buttons
+ */
+function _ssc_create_button($node=NULL) {
+  global $_ssc_num, $base_path;
+
+  $_ssc_num++;
+
+  if (is_object($node)) {
+    $link_name = (module_exists('page_title')) ? page_title_page_get_title() : $node->title;
+    $link_url = url('node/' . $node->nid, array('absolute' => TRUE));
+  }
+  else {
+    $path = isset($_GET['q']) ? $_GET['q'] : '<front>';
+    if ($path == variable_get('site_frontpage')) {
+      $path = "<front>";
+    }
+    $link_name = (module_exists('page_title')) ? page_title_page_get_title() : decode_entities(drupal_get_title());
+    $link_url = url($path, array('absolute' => TRUE));
+  }
+
+  $data = social_share_counter_get_options_array();
+  $data['title'] = $link_name;
+  $data['link_url'] = $link_url;
+  return theme('social_share_counter', array('data' => $data));
+}
+
+/**
+ * Implements hook_theme().
+ */
+function social_share_counter_theme($existing, $type, $theme, $path) {
+  return array(
+    'social_share_counter' => array(
+      'template' => 'social-share-counter',
+      'variables' => array('data' => NULL),
+      'path' => drupal_get_path('module', 'social_share_counter') . '/',
+    ),
+    'social_share_counter_follow_box' => array(
+      'template' => 'social-share-counter-follow-box',
+      'variables' => array('data' => NULL),
+      'path' => drupal_get_path('module', 'social_share_counter') . '/',
+    ),
+  );
+}
+/**
+ * Implements hook_block_info().
+ */
+function social_share_counter_block_info() {
+  $blocks['ssc_follow_box'] = array(
+    'info' => t('Social Share Counter Follow Box'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  $blocks['ssc_block'] = array(
+    'info' => t('Social Share Counter Box'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements of hook_block_view().
+ */
+function social_share_counter_block_view($delta='') {
+  $block = array();
+  switch ($delta) {
+    case 'ssc_follow_box':
+      $block['content'] = _social_share_counter_follow_block_contents();
+      break;
+    case 'ssc_block':
+      $block['content'] = _ssc_create_button();
+      break;
+  }
+  return $block;
+}
+/**
+ * custom html block
+ * @return string
+ */
+function _social_share_counter_follow_block_contents() {
+  $data = array();
+  $data['profile_links']['facebook'] = variable_get('ssc_social_media_profile_facebook');
+  $data['profile_links']['twitter'] = variable_get('ssc_social_media_profile_twitter');
+  $data['profile_links']['google_plus'] = variable_get('ssc_social_media_profile_google_plus');
+  $data['profile_links']['linkedin'] = variable_get('ssc_social_media_profile_linkedin');
+  $data['profile_links']['pinterest'] = variable_get('ssc_social_media_profile_pinterest');
+  $data['profile_links']['stumbleupon'] = variable_get('ssc_social_media_profile_stumbleupon');
+  $data['profile_links']['rss'] = variable_get('ssc_profile_rss');
+
+  return theme('social_share_counter_follow_box', array('data' => $data));
+}
+
+/**
+ * Function to get real time counter.
+ */
+function social_share_counter_share() {
+  header('content-type: application/json');
+  $json = array('url' => '', 'count' => 0);
+
+  if (isset($_GET['url']) && filter_var($_GET['url'], FILTER_VALIDATE_URL)) {
+    $json['url'] = $_GET['url'];
+    $url = urlencode($_GET['url']);
+    $service = urlencode($_GET['service']);
+    include_once 'social_share_counter.inc';
+    $json['count'] = call_user_func("get_count_{$service}", $url);
+  }
+  echo str_replace('\\/', '/', json_encode($json));
+}
+
+/**
+ * Function to parse real time counter request.
+ */
+function _social_share_counter_parse($enc_url) {
+  $options = array(
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_HEADER => FALSE,
+    CURLOPT_FOLLOWLOCATION => TRUE,
+    CURLOPT_ENCODING => "",
+    CURLOPT_USERAGENT => 'sharrre',
+    CURLOPT_AUTOREFERER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 5,
+    CURLOPT_TIMEOUT => 10,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_SSL_VERIFYHOST => 0,
+    CURLOPT_SSL_VERIFYPEER => FALSE,
+  );
+  $ch = curl_init();
+
+  $options[CURLOPT_URL] = $enc_url;
+  curl_setopt_array($ch, $options);
+
+  $content = curl_exec($ch);
+  $err = curl_errno($ch);
+  $errmsg = curl_error($ch);
+
+  curl_close($ch);
+
+  if ($errmsg != '' || $err != '') {
+    /*print_r($errmsg);
+    print_r($errmsg);*/
+  }
+  return $content;
+}
+
+/**
+ * A helper function for DB access.
+ *
+ * Returns options that have been stored in the database.
+ *
+ */
+function social_share_counter_get_options_array() {
+  $data['button_text'] = array(
+    'facebook' => variable_get('ssc_facebook_button_text', 'Share on Facebook'),
+    'twitter' => variable_get('ssc_facebook_twitter_text', 'Share on Twitter'),
+  );
+  $data['ssc_min_to_show'] = variable_get('ssc_min_to_show', 0);
+  $data['count_text'] = variable_get('ssc_text_below_count', 'Share');
+  $data['via'] = variable_get('site_name');
+  return $data;
+}

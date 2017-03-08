@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Defines url for all the static files "static_server" module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function static_server_uninstall() {
+  variable_del('static_server_css_path');
+  variable_del('static_server_js_path');
+  variable_del('static_server_files_path');
+  variable_del('static_server_files_extension');
+}

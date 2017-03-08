@@ -1,0 +1,27 @@
+<?php
+
+class i18nPageViewsSwitchLanguageTest extends Drupali18nTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'i18n page views: Switch language in views tests',
+      'description' => 'Tests the switching languages in i18n_page_views module.',
+      'group' => 'Views Modules',
+    );
+  }
+
+  protected function setUp() {
+    parent::setUp('ctools', 'locale', 'variable', 'views', 'views_ui', 'i18n', 'i18n_page_views', 'i18n_page_views_test');
+    parent::setUpLanguages();
+    $this->resetAll();
+  }
+  
+  function test_view_path_after_switching_language() {
+    $this->i18nGet('en','tests');
+    $this->assertResponse(200);
+    
+    $this->i18nGet('es', 'pruebas');
+    $this->assertResponse(200);
+  }
+
+}

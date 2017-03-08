@@ -1,0 +1,17 @@
+name = i18n page views test module
+
+description = Test module for i18n page views.
+dependencies[] = i18n
+dependencies[] = i18n_page_views
+dependencies[] = views_ui
+package = Views
+core = 7.x
+
+files[] = i18n_page_views_test.module
+files[] = i18n_page_views_test.views.inc
+; Information added by Drupal.org packaging script on 2016-02-02
+version = "7.x-1.2"
+core = "7.x"
+project = "i18_page_views"
+datestamp = "1454417049"
+

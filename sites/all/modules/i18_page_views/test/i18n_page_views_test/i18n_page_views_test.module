@@ -1,0 +1,9 @@
+<?php
+
+function i18n_page_views_test_views_api() {
+  return array(
+    'api' => 3, 
+    'path' => drupal_get_path('module', 'i18n_page_views_test'), 
+    'template path' => drupal_get_path('module', 'i18n_page_views_test') . '/themes',
+  );
+}
