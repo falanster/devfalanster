@@ -25,7 +25,7 @@ function i18n_page_views_url_outbound_alter(&$path, &$options, $original_path) {
 
         $languages = locale_language_list();
         foreach ($languages as $langcode => $langname) {
-          if ($path == $view->display[$id]->display_options['path_'. $langcode]) {
+          if (isset($view->display[$id]->display_options['path_'. $langcode]) && $path == $view->display[$id]->display_options['path_'. $langcode]) {
             if (isset($options['language'])) {
               $path = $view->display[$id]->display_options['path_'. $options['language']->language];
             }
@@ -36,3 +36,48 @@ function i18n_page_views_url_outbound_alter(&$path, &$options, $original_path) {
   } 
 }
 
+/**
+ * Implements hook_context_plugins().
+ *
+ * Register our context plugins.
+ */
+function i18n_page_views_context_plugins() {
+  $plugins = array();
+  $plugins['context_condition_i18n_views'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'i18n_page_views'),
+      'file' => 'context_condition_i18n_views.inc',
+      'class' => 'context_condition_i18n_views',
+      'parent' => 'context_condition',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_context_registry().
+ *
+ * Provice a context condition plugin for i18n_page views.
+ */
+function i18n_page_views_context_registry() {
+  return array(
+    'conditions' => array(
+      'context_condition_i18n_views' => array(
+        'title' => t('i18n Views'),
+        'plugin' => 'context_condition_i18n_views',
+        'description' => t('Set this context when displaying the page of one of these i18n views.'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_views_pre_view().
+ */
+function i18n_page_views_views_pre_view($view, $args) {
+  if (module_exists('context')) {
+    if ($plugin = context_get_plugin('condition', 'context_condition_i18n_views')) {
+      $plugin->execute($view);
+    }
+  }
+}

@@ -8,11 +8,13 @@ core = 7.x
 files[] = i18n_page_views.module
 files[] = views_plugin_display_i18n_page.inc
 files[] = includes/i18n_page_views.views.inc
+files[] = test/i18n_page_views.test
+files[] = test/i18n_page_views_switch_language.test
 
 
-; Information added by drupal.org packaging script on 2012-01-19
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2016-02-02
+version = "7.x-1.2"
 core = "7.x"
 project = "i18_page_views"
-datestamp = "1326982542"
+datestamp = "1454417049"
 

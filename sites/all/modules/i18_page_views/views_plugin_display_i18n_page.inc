@@ -94,8 +94,39 @@ class views_plugin_display_i18n_page extends views_plugin_display {
 
     $this->view->get_breadcrumb(TRUE);
 
-    // And the title, which is much easier.
-    drupal_set_title(filter_xss_admin($this->view->get_title()), PASS_THROUGH);
+    // Get the default page title
+    $title = $this->view->get_title();
+
+    // Translate the title if necessary
+    if ($this->view->is_translatable()) {
+      // Most of this is copied from unpack_options() in views/includes/base.inc
+      // Set up default localization keys. Handlers and such set this for us
+      if (empty($localization_keys) && isset($this->localization_keys)) {
+        $localization_keys = $this->localization_keys;
+      }
+      // but plugins don't because there isn't a common init() these days.
+      else if (!empty($this->is_plugin)) {
+        if ($this->plugin_type != 'display') {
+          $localization_keys = array($this->view->current_display);
+          $localization_keys[] = $this->plugin_type;
+        }
+      }
+
+      // Build the array of data to pass to translate()
+      $format = NULL;
+      $key = 'title';
+      $value = $title;
+      $translation_data = array(
+        'value' => $value,
+        'format' => $format,
+        'keys' => array_merge(array($this->view->name), $localization_keys, array($key)),
+      );
+
+      // Do the translation
+      $title = $this->view->localization_plugin->translate($translation_data);
+    }
+    // Set the title, using the translated title if it was set.
+    drupal_set_title(filter_xss_admin($title), PASS_THROUGH);
 
     // And now render the view.
     return $this->view->render();

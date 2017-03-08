@@ -7,9 +7,9 @@ dependencies[]=webform
 files[] = webform_conditional.install
 files[] = webform_conditional.module
 
-; Information added by drupal.org packaging script on 2013-10-17
-version = "7.x-1.0-beta2"
+; Information added by Drupal.org packaging script on 2016-03-29
+version = "7.x-1.2"
 core = "7.x"
 project = "webform_conditional"
-datestamp = "1382017823"
+datestamp = "1459260548"
 

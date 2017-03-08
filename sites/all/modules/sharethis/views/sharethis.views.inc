@@ -29,7 +29,6 @@ function sharethis_views_data() {
  */
 function sharethis_views_data_alter(&$data) {
   if (module_exists('search_api_views')) {
-    $entity_types = entity_get_info();
     foreach (search_api_index_load_multiple(FALSE) as $index) {
       $key = 'search_api_index_' . $index->machine_name;
       if (isset($data[$key])) {

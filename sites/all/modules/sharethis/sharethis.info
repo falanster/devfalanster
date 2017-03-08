@@ -7,9 +7,9 @@ configure = admin/config/services/sharethis
 ; Views handlers
 files[] = views/sharethis_handler_field_link.inc
 
-; Information added by Drupal.org packaging script on 2015-07-03
-version = "7.x-2.12"
+; Information added by Drupal.org packaging script on 2016-07-15
+version = "7.x-2.13"
 core = "7.x"
 project = "sharethis"
-datestamp = "1435896247"
+datestamp = "1468581840"
 

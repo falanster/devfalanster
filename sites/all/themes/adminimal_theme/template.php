@@ -30,20 +30,50 @@ function adminimal_preprocess_html(&$vars) {
   drupal_add_css($adminimal_path . '/css/style.css', array('group' => CSS_THEME, 'media' => 'all', 'weight' => 1));
 
   // Add conditional CSS for IE8 and below.
-  drupal_add_css($adminimal_path . '/css/ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE), 'weight' => 999, 'preprocess' => FALSE));
+  drupal_add_css($adminimal_path . '/css/ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE), 'weight' => 999, 'preprocess' => TRUE));
 
   // Add conditional CSS for IE7 and below.
-  drupal_add_css($adminimal_path . '/css/ie7.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 7', '!IE' => FALSE), 'weight' => 999, 'preprocess' => FALSE));
+  drupal_add_css($adminimal_path . '/css/ie7.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 7', '!IE' => FALSE), 'weight' => 999, 'preprocess' => TRUE));
 
   // Add conditional CSS for IE6.
-  drupal_add_css($adminimal_path . '/css/ie6.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 6', '!IE' => FALSE), 'weight' => 999, 'preprocess' => FALSE));
+  drupal_add_css($adminimal_path . '/css/ie6.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 6', '!IE' => FALSE), 'weight' => 999, 'preprocess' => TRUE));
+
+  //Add Homebox module support
+  if (module_exists('homebox')) {
+    drupal_add_css($adminimal_path . '/css/homebox_custom.css', array('group' => CSS_THEME, 'media' => 'all', 'weight' => 1));
+  }
 
   // Add theme name to body class.
   $vars['classes_array'][] = 'adminimal-theme';
 
+  // Style checkbox and radio buttons in Webkit Browsers.
+  if (theme_get_setting('style_checkboxes')) {
+    $vars['classes_array'][] = 'style-checkboxes';
+  }
+
+  // Disable rounded buttons setting.
+  if (!theme_get_setting('rounded_buttons')) {
+    $vars['classes_array'][] = 'no-rounded-buttons';
+  }
+
+  // Enable sticky action buttons.
+  if (theme_get_setting('sticky_actions')) {
+    $vars['classes_array'][] = 'sticky-actions';
+  }
+
   // Add icons to the admin configuration page.
   if (theme_get_setting('display_icons_config')) {
-    drupal_add_css($adminimal_path . '/css/icons-config.css', array('group' => CSS_THEME, 'weight' => 10, 'preprocess' => FALSE));
+    drupal_add_css($adminimal_path . '/css/icons-config.css', array('group' => CSS_THEME, 'weight' => 10, 'preprocess' => TRUE));
+  }
+
+  // Add icons to the admin configuration page.
+  if (theme_get_setting('avoid_custom_font')) {
+    drupal_add_css($adminimal_path . '/css/avoid_custom_font.css', array('group' => CSS_THEME, 'weight' => 9000, 'preprocess' => TRUE));
+  }
+
+  // Load CKEditor styles if enabled in settings.
+  if (theme_get_setting('adminimal_ckeditor')) {
+    drupal_add_css($adminimal_path . '/css/ckeditor-adminimal.css', array('group' => CSS_THEME, 'media' => 'all', 'weight' => 2));
   }
 
   // Define Default media queries.
@@ -56,6 +86,23 @@ function adminimal_preprocess_html(&$vars) {
     $media_query_tablet = theme_get_setting('media_query_tablet');
   }
 
+  // Load custom Adminimal skin.
+  $adminimal_skin = theme_get_setting('adminimal_theme_skin');
+  if ((!is_null($adminimal_skin))) {
+    drupal_add_css($adminimal_path . '/skins/' . $adminimal_skin . '/' . $adminimal_skin . '.css', array('group' => CSS_THEME, 'weight' => 900, 'preprocess' => TRUE));
+    // Add conditional CSS for Mac OS X.
+    drupal_add_css($adminimal_path . '/skins/' . $adminimal_skin . '/mac_os_x.css', array('group' => CSS_THEME, 'weight' => 950, 'preprocess' => TRUE));
+    drupal_add_js($adminimal_path . '/skins/' . $adminimal_skin . '/' . $adminimal_skin . '.js');
+    $vars['classes_array'][] = 'adminimal-skin-' . $adminimal_skin ;
+  }
+  else {
+    drupal_add_css($adminimal_path . '/skins/default/default.css', array('group' => CSS_THEME, 'weight' => 900, 'preprocess' => TRUE));
+    // Add conditional CSS for Mac OS X.
+    drupal_add_css($adminimal_path . '/skins/default/mac_os_x.css', array('group' => CSS_THEME, 'weight' => 950, 'preprocess' => TRUE));
+    drupal_add_js($adminimal_path . '/skins/default/default.js');
+    $vars['classes_array'][] = 'adminimal-skin-default' ;
+  }
+
   // Add responsive styles.
   drupal_add_css($adminimal_path . '/css/mobile.css', array('group' => CSS_THEME, 'media' => $media_query_mobile, 'weight' => 1000));
   drupal_add_css($adminimal_path . '/css/tablet.css', array('group' => CSS_THEME, 'media' => $media_query_tablet, 'weight' => 1000));
@@ -63,7 +110,7 @@ function adminimal_preprocess_html(&$vars) {
   // Add custom CSS.
   $custom_css_path = 'public://adminimal-custom.css';
   if (theme_get_setting('custom_css') && file_exists($custom_css_path)) {
-    drupal_add_css($custom_css_path, array('group' => CSS_THEME, 'weight' => 9999, 'preprocess' => FALSE));
+    drupal_add_css($custom_css_path, array('group' => CSS_THEME, 'weight' => 9999, 'preprocess' => TRUE));
   }
 
   // Fix the viewport and zooming in mobile devices.
@@ -76,6 +123,26 @@ function adminimal_preprocess_html(&$vars) {
   );
   drupal_add_html_head($viewport, 'viewport');
 
+  // Remove the no-sidebars class which is always added by core. Core assumes
+  // the sidebar regions are called sidebar_first and sidebar_second, which
+  // is not the case in this theme.
+  $key = array_search('no-sidebars', $vars['classes_array']);
+  if ($key !== FALSE) {
+    unset($vars['classes_array'][$key]);
+  }
+  // Add information about the number of sidebars.
+  if (!empty($vars['page']['sidebar_left']) && !empty($vars['page']['sidebar_right'])) {
+    $vars['classes_array'][] = 'two-sidebars';
+  }
+  elseif (!empty($vars['page']['sidebar_left'])) {
+    $vars['classes_array'][] = 'one-sidebar sidebar-left';
+  }
+  elseif (!empty($vars['page']['sidebar_right'])) {
+    $vars['classes_array'][] = 'one-sidebar sidebar-right';
+  }
+  else {
+    $vars['classes_array'][] = 'no-sidebars';
+  }
 }
 
 /**
@@ -88,7 +155,7 @@ function adminimal_preprocess_page(&$vars) {
     '#theme' => 'menu_local_tasks',
     '#secondary' => $vars['tabs']['#secondary'],
   );
-
+  unset($vars['page']['hidden']);
 }
 
 /**
@@ -138,7 +205,7 @@ function adminimal_adminimal_block_content($variables) {
 
 /**
  * Implements theme_tablesort_indicator().
- * 
+ *
  * Use our own image versions, so they show up as black and not gray on gray.
  */
 function adminimal_tablesort_indicator($variables) {
@@ -166,6 +233,16 @@ function adminimal_css_alter(&$css) {
   // Use Seven's jQuery UI theme style instead of the default one.
   if (isset($css['misc/ui/jquery.ui.theme.css'])) {
     $css['misc/ui/jquery.ui.theme.css']['data'] = drupal_get_path('theme', 'adminimal') . '/css/jquery.ui.theme.css';
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function adminimal_js_alter(&$javascript) {
+  // Fix module filter available updates page.
+  if (isset($javascript[drupal_get_path('module','module_filter').'/js/update_status.js'])) {
+    $javascript[drupal_get_path('module','module_filter').'/js/update_status.js']['data'] = drupal_get_path('theme', 'adminimal') . '/js/update_status.js';
   }
 }
 
@@ -206,7 +283,6 @@ function adminimal_admin_block($variables) {
   $output .= '</div>';
 
   return $output;
-
 }
 
 /**

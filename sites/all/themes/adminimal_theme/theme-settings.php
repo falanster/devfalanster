@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @file
  * Theme setting callbacks for the Adminimal theme.
@@ -49,10 +48,68 @@ function adminimal_form_system_theme_settings_alter(&$form, &$form_state) {
     '#weight' => -10,
   );
 
+  $form['skin'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Adminimal skin'),
+    '#weight' => -11,
+  );
+
+  // Create the select list.
+  $form['skin']['adminimal_theme_skin'] = array(
+    '#type' => 'select',
+    '#title' => t('Skin selection'),
+    '#default_value' => theme_get_setting('adminimal_theme_skin'),
+    '#options' => array(
+      'default' => t('Adminimal Default'),
+      //'dark' => t('Dark'),
+      //'flat' => t('Flat'),
+      'material' => t('Material (BETA version)'),
+      'alternative' => t('Alternative'),
+    ),
+    '#description' => t('Select desired skin style. Note that this feature is in beta stage and there might be some issues.'),
+    '#required' => FALSE,
+  );
+
+  $form['adminimal_custom']['style_checkboxes'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Style checkboxes and radio buttons in Webkit browsers.'),
+    '#description' => t('Enabling this option will style checkbox and radio buttons for Webkit browsers like Google Chrome, Safari, Opera and their mobile versions.
+     Enabling this option will <strong>not</strong> have any negative impact on older browsers that dont support pure CSS styling of checkboxes like Internet Explorer or Firefox.'),
+    '#default_value' => theme_get_setting('style_checkboxes'),
+  );
+
   $form['adminimal_custom']['display_icons_config'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display icons in Configuration page'),
     '#default_value' => theme_get_setting('display_icons_config'),
+  );
+
+  $form['adminimal_custom']['rounded_buttons'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use rounded buttons'),
+    '#description' => t('Uncheck this setting if you dont like the rounded button styling for some action links'),
+    '#default_value' => theme_get_setting('rounded_buttons'),
+  );
+
+  $form['adminimal_custom']['sticky_actions'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Sticky form actions'),
+    '#description' => t('This will make the form actions div fixed bottom positioning. So for example when you visit the node edit page you wont need to scroll down to save/preview/delete the node. The form action buttons will be sticky to the bottom of the screen.'),
+    '#default_value' => theme_get_setting('sticky_actions'),
+  );
+
+  $form['adminimal_custom']['avoid_custom_font'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Avoid using "Open Sans" font'),
+    '#description' => t('(useful for languages that are not well supported by the "Open sans" font. Like Japanese for example)'),
+    '#default_value' => theme_get_setting('avoid_custom_font'),
+  );
+
+  $form['adminimal_custom']['adminimal_ckeditor'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('CKEditor support'),
+    '#description' => t('Loads custom adminimal css skin for CKEditor. Disable this to avoid css conflicts when using other CKEditor skins.'),
+    '#default_value' => theme_get_setting('adminimal_ckeditor'),
   );
 
   $form['adminimal_custom']['use_custom_media_queries'] = array(
