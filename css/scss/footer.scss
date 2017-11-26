@@ -1,0 +1,60 @@
+.footer {
+    background-color: $second-back-color;
+
+    .container {
+      max-width: 1000px;
+      background-image: url($img-path + "footer.png");
+      background-repeat: no-repeat;
+      background-size: auto 60px;
+      background-position: bottom 15px center;
+
+      @include desktop {
+        background-size: 100% auto;
+      }
+    }  
+}
+
+.contacts {
+  padding-top: 20px;
+
+  dt, dd {
+    display: inline;
+    font-size: $font-size-link;
+    color: $second-font-color;
+    font-family: 'PT Sans', sans-serif;
+    padding: 0 5px;
+    white-space: nowrap;
+  }
+  dt {
+    font-weight: 400;
+  }
+}
+
+.socials {
+  li {
+    display: inline-block;
+    font-size: 1.3rem;
+    margin: 0 5px;
+  }
+}
+
+.copyright__icons {
+  a {
+    text-decoration: none;
+    font-size: 0.5rem;
+    i {
+        font-size: 1.5rem;
+    }
+  }
+}
+
+.copyright {
+  min-height: 100px;
+  @include desktop {
+    min-height: 135px;
+  }
+  a {
+    vertical-align: top;
+    padding: 0 5px;
+  }
+}

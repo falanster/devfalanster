@@ -1,0 +1,20 @@
+name = Gradka
+description = Landing page for Creatrive commons.
+core = 7.x
+engine = phptemplate
+stylesheets[all][] = css/main.css
+scripts[] = js/main.js
+scripts[] = js/bootstrap.min.js
+
+regions[content] = Content
+regions[about_us] = Раздел "О нас"
+regions[what_is] = Што такое Creative Commons?
+regions[why_falanster] = Чаму Фаланстэр займаецца гэтым?
+regions[why_not] = А калі кінуць гэту справу?
+regions[consultations] = Кансультацыі стваральнікам
+regions[volunteers] = Стажыроўкі і валанцерства
+regions[lections] = Лекцыі і прэзентацыі
+regions[summary] = Вынікі працы на Градцы
+regions[books] = дапаможнікі
+regions[stickers] = налепкі
+regions[contacts] = кантакты

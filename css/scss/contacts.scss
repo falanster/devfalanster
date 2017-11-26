@@ -1,0 +1,22 @@
+.contact-us {
+  background-color: #f2f2f2;
+  padding: 8vh 0 0 0;
+
+  @include desktop {
+    padding: 55px 0 0 0;
+  }
+
+  .container {
+    width: 80%;
+    padding-right: 0;
+    padding-left: 0;
+    @include desktop {
+      width: 800px;
+    }
+  }
+  .button {
+    box-shadow: 0px 2px 2px #999;
+    margin-bottom: 4px;
+    margin-top: 75px;
+  }
+}
