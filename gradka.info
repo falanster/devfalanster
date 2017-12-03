@@ -1,0 +1,7 @@
+name = Gradka
+description = Landing page for Creatrive commons.
+core = 7.x
+engine = phptemplate
+stylesheets[all][] = css/main.css
+scripts[] = js/main.js
+scripts[] = js/bootstrap.min.js
