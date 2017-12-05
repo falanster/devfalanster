@@ -1,9 +1,6 @@
 <?php // -*- indent-tabs-mode:nil -*-
 
-/**
- * Maximum files to delete in a single cron run.
- */
-define('FILECACHE_CRON_MAX_FILES', 10);
+module_load_include('inc', 'filecache', 'filecache'); // load filecache.inc
 
 /**
  * Implements hook_cron().
@@ -12,54 +9,37 @@ define('FILECACHE_CRON_MAX_FILES', 10);
  */
 function filecache_cron() {
 
-  if (!function_exists('filecache_directory')) {
-    // filecache.inc is not included
-    return;
+  // Check if filecache is enabled in settings.php
+  $filecache_enabled = FALSE;
+  global $conf;
+  foreach ($conf as $setting => $value) {
+    if ($setting == 'cache_default_class' || substr($setting, 0, strlen('cache_class_')) === 'cache_class_') {
+      if ($value === 'DrupalFileCache') {
+        $filecache_enabled = TRUE;
+        break;
+      }
+    }
   }
 
-  $filecache_directory = filecache_directory();
-  if ($filecache_directory === FALSE) {
+  // If filecache is disabled, be sure to remove filecache bin registry
+  $filecache_registry_pathname = filecache_registry_pathname();
+  if (!$filecache_enabled) {
+    @unlink($filecache_registry_pathname);
     return;
   }
-
-  // XXX just adapted from DrupalFileCache::delete_expired()
-
+  
+  // Load cache bin registry
+  $registry = @unserialize(@file_get_contents($filecache_registry_pathname));
+  if (!is_array($registry)) {
+    @unlink($filecache_registry_pathname);
+    return;
+  }
+  
   $cache_size = 0;
-  $cwd = getcwd();
-  chdir($filecache_directory);
-  $dh = opendir('.');
-  while (($filename = readdir($dh)) !== FALSE) {
-    // XXX this tries to read every file regardless if it's cache entry
-    // XXX reads all entries XXX
-    $content = @file_get_contents($filename);
-    if ($content === FALSE) {
-      continue; // some problem in reading but we don't care
-    }
-    $cache = @unserialize($content);
-    if ($content === FALSE || !is_object($cache)) {
-      continue; // broken file - don't remove it because it may not belong to us
-    }
-
-    // gather statistics
-    $stat = @stat($filename);
-    if ($stat === FALSE) {
-      continue;
-    }
-    $cache_size += $stat['blocks'] >= 0 ? $stat['blocks']*512 : $stat['size'];
-
-    if ($cache->expire == CACHE_PERMANENT) {
-      continue;
-    }
-    $expiry_date = $cache->expire;
-    if ($cache->expire == CACHE_TEMPORARY) {
-      $expiry_date = $cache->created + variable_get('cache_lifetime', 0);
-    }
-    if ($expiry_date < REQUEST_TIME) {
-      @unlink($filename);
-    }
-  } // foreach $filename
-  closedir($dh);
-  chdir($cwd);
+  foreach ($registry as $bin => $value) {
+    $cache = new DrupalFileCache($bin);
+    $cache_size += $cache->delete_expired();
+  }
 
   cache_set('filecache_space', array('cache_size' => $cache_size));
 }
@@ -76,78 +56,73 @@ function filecache_requirements($phase) {
   $t = get_t();
   $requirements = array('title' => $t('File Cache'));
   $requirements['severity'] = REQUIREMENT_ERROR; // Assume error first
-  $readme_hint = $t('Please follow instructions in %readme.',
-                    array('%readme' => dirname(__FILE__) . '/README.txt'));
-
-  if (!function_exists('filecache_directory')) {
-    // filecache.inc is not included
-    $requirements['value'] = $t('No File Cache setup in %settings.',
-                                array('%settings' => conf_path() . '/settings.php'));
-    $requirements['description'] = $readme_hint;
-    return array('filecache' => $requirements);
-  }
+  $readme_hint = $t('Please follow the instructions in <a href="!readmetxt">README.txt</a>.',
+                    array('!readmetxt' => base_path() . drupal_get_path('module', 'filecache') . '/README.txt'));
 
   $filecache_directory = filecache_directory();
 
-  // Scan what cache bins we serve
-  $default_bin = (variable_get('cache_default_class', '') == 'DrupalFileCache');
-  $filecache_bins = array();
-  $other_bins = array();
-  global $conf;
-  foreach ($conf as $key => $value) {
-    if (strpos($key, 'cache_class_') === 0) {
-      $bin = implode('_', array_slice(explode('_', $key), 2));
-      if ($value == 'DrupalFileCache') {
-        $filecache_bins[] = $bin;
-      }
-      else {
-        $other_bins[] = $bin;
-      }
-    }
+  $registry_pathname = filecache_registry_pathname();
+  $registry = @unserialize(@file_get_contents($registry_pathname));
+  if (!isset($registry) || !is_array($registry))  {
+    $registry = array();
   }
-  $filecache_bins = implode(', ', $filecache_bins);
-  $other_bins = implode(', ', $other_bins);
+  $filecache_bins = array_keys($registry);
+  sort($filecache_bins);
 
-  if (!$default_bin && empty($filecache_bins)) {
+  if (empty($filecache_bins)) {
     $requirements['severity'] = REQUIREMENT_WARNING;
     $requirements['value'] = $t('No cache bins are served by File Cache.');
     $requirements['description'] = $readme_hint;
     return array('filecache' => $requirements);
   }
 
+  $not_ok_bins = array();
+  foreach ($filecache_bins as $bin) {
+    $cache = new DrupalFileCache($bin);
+    if (!$cache->ok) {
+      array_push($not_ok_bins, $bin);
+    }
+  }
+  if (!empty($not_ok_bins)) {
+    $requirements['severity'] = REQUIREMENT_WARNING;
+    $requirements['value'] = $t('The following File Cache cache bins has problems: %bins. Look at <em>Recent log messages</em> for details.',
+        array('%bins' => implode(', ', $not_ok_bins)));
+    $requirements['description'] = $readme_hint;
+    return array('filecache' => $requirements);
+  }
+  
   // Show what cache bins we serve (in $requirements['value'])
   $requirements['severity'] = REQUIREMENT_OK;
-  if ($default_bin) {
-    if (empty($other_bins)) {
-      $requirements['value'] =
-        $t('All cache bins are served by File Cache.');
-    }
-    else {
-      $requirements['value'] =
-        $t('All cache bins except %bins are served by File Cache.',
-	   array('%bins' => $other_bins));
-    }
-  }
-  else {
-    $requirements['value'] =
-      $t('File Cache serves the following cache bins: %bins.',
-	 array('%bins' => $filecache_bins));
-  }
+  $requirements['value'] = $t('File Cache serves %bins cache bins.',
+       array('%bins' => count($filecache_bins)));
 
   // Show filecache_directory and its size (in $requirements['description'])
   $space = cache_get('filecache_space');
   $cron_last = variable_get('cron_last');
   if ($space) {
     $requirements['description'] =
-      $t('File Cache directory %dir uses !size (!time ago)',
-	 array('%dir' => $filecache_directory,
-	       '!size' => format_size($space->data['cache_size']),
+      $t('Cache files use !size (calculated !time ago)',
+	 array('!size' => format_size($space->data['cache_size']),
 	       '!time' => format_interval(REQUEST_TIME - $cron_last)));
   }
   else {
     $requirements['description'] =
-      $t('File Cache directory %dir uses unknown disk space. Run cron to update.',
-	 array('%dir' => $filecache_directory));
+      $t('Cache files use unknown disk space. Run cron to update.');
+  }
+
+  if ($filecache_directory == filecache_default_directory()) {
+    $url = substr($filecache_directory, strlen(DRUPAL_ROOT)) . '/' . FILECACHE_CACHE_BIN_REGISTRY;
+    $requirements['severity'] = REQUIREMENT_WARNING;
+    $requirements['description'] .= $t(
+        '<br>You use default directory location %default_dir. ' .
+        'Make sure your webserver denies access to files and directories starting with ".ht" like in the following link: ' .
+        '<a href="!link">link</a>. If you deny access to directories starting with ".ht" and you want to remove this message, ' .
+        'add the following line to your <code>settings.php</code> and then remove the <code>!quickstart</code> directory:<br>' .
+        '<code>$conf[\'filecache_directory\'] = \'!new_dir\';</code>',
+        array('%default_dir' => $filecache_directory,
+            '!link' => $url,
+            '!quickstart' => FILECACHE_QUICKSTART_DIRECTORY,
+            '!new_dir' => filecache_default_directory(FALSE)));
   }
 
   return array('filecache' => $requirements);

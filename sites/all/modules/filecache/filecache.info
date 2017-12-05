@@ -2,10 +2,9 @@ name = File Cache
 description = Cache backend that uses file system for storage.
 core = 7.x
 package = Performance and scalability
-
-; Information added by Drupal.org packaging script on 2015-07-19
-version = "7.x-1.0-beta4"
+; Information added by Drupal.org packaging script on 2017-05-24
+version = "7.x-1.0-beta6"
 core = "7.x"
 project = "filecache"
-datestamp = "1437305341"
+datestamp = "1495634885"
 

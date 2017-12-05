@@ -41,7 +41,7 @@ class Google_Cache_File extends Google_Cache_Abstract
     $storageFile = $this->getCacheFile($key);
     $data = false;
     
-    if (!file_exists($storageFile)) {
+    if (@!file_exists($storageFile)) {
       return false;
     }
 

@@ -1,57 +1,75 @@
-Menu per Role Module
-------------------------
-by Wolfgang Ziegler, nuppla@zites.net
+CONTENTS OF THIS FILE
+---------------------
 
-Modified for D6 by
-jrowny, jrowng@gmail.com on 12/5/2008
-hutch
-AlexisWilke
+ * Introduction
+ * Requirements
+ * Similar modules
+ * Known conflicts
+ * Installation
+ * Configuration
+ * Maintainers
 
 
-
-Description
------------
-This module allows you to restrict access of menu items per roles. It depends on the
-drupal core menu.module - just activate both modules and edit a menu item as usual.
-There will be a new fieldset that allows you to restrict access by role.
-
-<DRUPAL 5>
-Installation
+INTRODUCTION
 ------------
-Unfortunately you need to patch the drupal file includes/menu.inc. Use the the patch
-provided with the module. If you don't know how to patch, you can just insert the three
-additional lines manually - but remove the leading plus.
 
-Then copy the module's whole directory in your drupal modules directory and activate it.
+This module allows you to restrict access of menu items per roles.
 
-<DRUPAL 6>
-Installation
+
+REQUIREMENTS
 ------------
-Up to Drupal 6.9, you need to apply a patch to a menu file from Drupal core.
-This bug has now been fixed in the core (6.10+).
 
-o Patch drupal-6.6-menu-submit.patch
-  (same patch for 6.7, 6.8 and 6.9)
+There is no special requirement for this module.
 
-  Fix a problem with the menu/add feature (that does not otherwise give
-  you the mlid and thus renders the submit function totally useless.)
 
-  See http://drupal.org/node/326210 for more information
+SIMILAR MODULES
+---------------
 
-It is smart to patch the menu file before installing the Menu per Role
-so it works immediately. Although you can patch at any time. It just
-won't work 100% properly until then.
+ * Menu Admin per Menu (https://www.drupal.org/project/menu_admin_per_menu):
+   By default, Drupal allows only users with "administrer menu permission" to
+   add, modify or delete menu items. In case you want for instance to let
+   certain users manage primary links or secondary links but not navigation
+   menu, this module provides this functionality.
+ * Menu item visibility (https://www.drupal.org/project/menu_item_visibility):
+   Does the same thing as Menu per role.
 
-<DRUPAL 7>
-Installation
+
+KNOWN CONFLICTS
+---------------
+
+ * Menu token (https://www.drupal.org/project/menu_token): Menu token erase the
+   access result of Menu per role, see https://www.drupal.org/node/2044963
+
+
+INSTALLATION
 ------------
-There is no patch for Drupal 7.x. Simply go to the module administration
-screen and select the module and click Save.
 
-How to use it
+Once enabled, go to the global settings of the module to configure the module.
+
+
+CONFIGURATION
 -------------
-Just activate the menu and the menu_per_role modules and edit a menu item as usual at
-/admin/build/menu. There will be a fieldset that allows you to restrict access by role.
 
-If you don't check any roles the default access permissions will be kept. Otherwise the
-module will additionally restrict access to the chosen user roles.
+Global settings: /admin/config/system/menu_per_role
+
+Just activate the menu_per_role module and edit a menu item as usual. There will
+be one or two fieldsets, depending on the configuration of the module, that
+allows you to restrict access by role.
+
+If you don't check any roles the default access permissions will be kept.
+Otherwise the module will additionally restrict access to the chosen user roles.
+
+
+MAINTAINERS
+-----------
+
+Current maintainers:
+ * Daniel Wehner (dawehner) - https://www.drupal.org/user/99340
+ * Florent Torregrosa (Grimreaper) - https://www.drupal.org/user/2388214
+
+Previous maintainers:
+ * Wolfgang Ziegler (fago) - https://www.drupal.org/user/16747
+ * AlexisWilke (AlexisWilke) - https://www.drupal.org/user/356197
+
+This project has been sponsored by:
+ * Made to Order Software Corporation - https://www.m2osw.com

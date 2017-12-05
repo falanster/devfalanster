@@ -1,0 +1,245 @@
+--- core/lib/Drupal/Core/Cache/ChainedFastBackend.php	2016-07-14 01:30:00.000000000 -0700
++++ chained_fast.cache.inc	2016-08-18 08:35:57.000000000 -0700
+@@ -1,6 +1,6 @@
+ <?php
+ 
+-namespace Drupal\Core\Cache;
++require_once DRUPAL_ROOT . '/includes/cache.inc';
+ 
+ /**
+  * Defines a backend with a fast and a consistent backend chain.
+@@ -37,15 +37,11 @@
+  * Note that this is designed specifically for combining a fast inconsistent
+  * cache backend with a slower consistent cache back-end. To still function
+  * correctly, it needs to do a consistency check (see the "last write timestamp"
+- * logic). This contrasts with \Drupal\Core\Cache\BackendChain, which assumes
+- * both chained cache backends are consistent, thus a consistency check being
+- * pointless.
+- *
+- * @see \Drupal\Core\Cache\BackendChain
++ * logic).
+  *
+  * @ingroup cache
+  */
+-class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorInterface {
++class ChainedFastBackend implements \DrupalCacheInterface {
+ 
+   /**
+    * Cache key prefix for the bin-specific entry to track the last write.
+@@ -60,14 +56,14 @@
+   /**
+    * The consistent cache backend.
+    *
+-   * @var \Drupal\Core\Cache\CacheBackendInterface
++   * @var \DrupalCacheInterface
+    */
+   protected $consistentBackend;
+ 
+   /**
+    * The fast cache backend.
+    *
+-   * @var \Drupal\Core\Cache\CacheBackendInterface
++   * @var \DrupalCacheInterface
+    */
+   protected $fastBackend;
+ 
+@@ -81,41 +77,46 @@
+   /**
+    * Constructs a ChainedFastBackend object.
+    *
+-   * @param \Drupal\Core\Cache\CacheBackendInterface $consistent_backend
+-   *   The consistent cache backend.
+-   * @param \Drupal\Core\Cache\CacheBackendInterface $fast_backend
+-   *   The fast cache backend.
+    * @param string $bin
+    *   The cache bin for which the object is created.
+-   *
+-   * @throws \Exception
+-   *   When the consistent cache backend and the fast cache backend are the same
+-   *   service.
+-   */
+-  public function __construct(CacheBackendInterface $consistent_backend, CacheBackendInterface $fast_backend, $bin) {
+-    if ($consistent_backend == $fast_backend) {
+-      // @todo: should throw a proper exception. See https://www.drupal.org/node/2751847.
+-      trigger_error('Consistent cache backend and fast cache backend cannot use the same service.', E_USER_ERROR);
+-    }
+-    $this->consistentBackend = $consistent_backend;
+-    $this->fastBackend = $fast_backend;
++   */
++  public function __construct($bin) {
++    global $conf;
++
+     $this->bin = 'cache_' . $bin;
+     $this->lastWriteTimestamp = NULL;
++
++    $consistent_class = 'DrupalDatabaseCache';
++    if (!empty($conf['chained_fast']['consistent_backend'])) {
++      $consistent_class = $conf['chained_fast']['consistent_backend'];
++    }
++    $this->consistentBackend = new $consistent_class($bin);
++
++    if (empty($conf['chained_fast']['fast_backend'])) {
++      throw new \Exception('No fast backend configured.');
++    }
++
++    $fast_class = $conf['chained_fast']['fast_backend'];
++    $this->fastBackend = new $fast_class($bin);
++
++    if ($consistent_class === $fast_class) {
++      trigger_error('Consistent cache backend and fast cache backend cannot use the same cache backend class.', E_USER_ERROR);
++    }
+   }
+ 
+   /**
+    * {@inheritdoc}
+    */
+-  public function get($cid, $allow_invalid = FALSE) {
++  public function get($cid) {
+     $cids = array($cid);
+-    $cache = $this->getMultiple($cids, $allow_invalid);
++    $cache = $this->getMultiple($cids);
+     return reset($cache);
+   }
+ 
+   /**
+    * {@inheritdoc}
+    */
+-  public function getMultiple(&$cids, $allow_invalid = FALSE) {
++  public function getMultiple(&$cids) {
+     $cids_copy = $cids;
+     $cache = array();
+ 
+@@ -146,7 +147,7 @@
+       // exceptions, we proceed to check the consistent (authoritative) backend
+       // and allow exceptions from that to bubble up.
+       try {
+-        $items = $this->fastBackend->getMultiple($cids, $allow_invalid);
++        $items = $this->fastBackend->getMultiple($cids);
+       }
+       catch (\Exception $e) {
+         $cids = $cids_copy;
+@@ -157,7 +158,8 @@
+       // are potentially invalid if older than the last time the bin was
+       // written to in the consistent backend, so only keep ones that aren't.
+       foreach ($items as $item) {
+-        if ($item->created < $last_write_timestamp) {
++        $created = isset($item->created_microtime) ? $item->created_microtime : $item->created;
++        if ($created < $last_write_timestamp) {
+           $cids[array_search($item->cid, $cids_copy)] = $item->cid;
+         }
+         else {
+@@ -170,10 +172,8 @@
+     // backend, retrieve them from the consistent backend and store them in the
+     // fast one.
+     if ($cids) {
+-      foreach ($this->consistentBackend->getMultiple($cids, $allow_invalid) as $item) {
++      foreach ($this->consistentBackend->getMultiple($cids) as $item) {
+         $cache[$item->cid] = $item;
+-        // Don't write the cache tags to the fast backend as any cache tag
+-        // invalidation results in an invalidation of the whole fast backend.
+         $this->fastBackend->set($item->cid, $item->data, $item->expire);
+       }
+     }
+@@ -184,11 +184,9 @@
+   /**
+    * {@inheritdoc}
+    */
+-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
+-    $this->consistentBackend->set($cid, $data, $expire, $tags);
++  public function set($cid, $data, $expire = Cache::PERMANENT) {
++    $this->consistentBackend->set($cid, $data, $expire);
+     $this->markAsOutdated();
+-    // Don't write the cache tags to the fast backend as any cache tag
+-    // invalidation results in an invalidation of the whole fast backend.
+     $this->fastBackend->set($cid, $data, $expire);
+   }
+ 
+@@ -198,69 +196,22 @@
+   public function setMultiple(array $items) {
+     $this->consistentBackend->setMultiple($items);
+     $this->markAsOutdated();
+-    // Don't write the cache tags to the fast backend as any cache tag
+-    // invalidation results in an invalidation of the whole fast backend.
+-    foreach ($items as &$item) {
+-      unset($item['tags']);
+-    }
+     $this->fastBackend->setMultiple($items);
+   }
+ 
+   /**
+    * {@inheritdoc}
+    */
+-  public function delete($cid) {
+-    $this->consistentBackend->deleteMultiple(array($cid));
+-    $this->markAsOutdated();
+-  }
+-
+-  /**
+-   * {@inheritdoc}
+-   */
+-  public function deleteMultiple(array $cids) {
+-    $this->consistentBackend->deleteMultiple($cids);
+-    $this->markAsOutdated();
+-  }
+-
+-  /**
+-   * {@inheritdoc}
+-   */
+-  public function deleteAll() {
+-    $this->consistentBackend->deleteAll();
++  public function clear($cid = NULL, $wildcard = FALSE) {
++    $this->consistentBackend->clear($cid, $wildcard);
+     $this->markAsOutdated();
+   }
+ 
+   /**
+    * {@inheritdoc}
+    */
+-  public function invalidate($cid) {
+-    $this->invalidateMultiple(array($cid));
+-  }
+-
+-  /**
+-   * {@inheritdoc}
+-   */
+-  public function invalidateMultiple(array $cids) {
+-    $this->consistentBackend->invalidateMultiple($cids);
+-    $this->markAsOutdated();
+-  }
+-
+-  /**
+-   * {@inheritdoc}
+-   */
+-  public function invalidateTags(array $tags) {
+-    if ($this->consistentBackend instanceof CacheTagsInvalidatorInterface) {
+-      $this->consistentBackend->invalidateTags($tags);
+-    }
+-    $this->markAsOutdated();
+-  }
+-
+-  /**
+-   * {@inheritdoc}
+-   */
+-  public function invalidateAll() {
+-    $this->consistentBackend->invalidateAll();
+-    $this->markAsOutdated();
++  function isEmpty() {
++    return $this->consistentBackend->isEmpty();
+   }
+ 
+   /**
+@@ -272,14 +223,6 @@
+   }
+ 
+   /**
+-   * {@inheritdoc}
+-   */
+-  public function removeBin() {
+-    $this->consistentBackend->removeBin();
+-    $this->fastBackend->removeBin();
+-  }
+-
+-  /**
+    * @todo Document in https://www.drupal.org/node/2311945.
+    */
+   public function reset() {
