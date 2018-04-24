@@ -35,7 +35,12 @@ function yandex_metrics_update_7200() {
       'unsigned' => TRUE,
       'not null' => TRUE,
     );
-    db_add_field('yandex_metrics_popular_content', 'yid', $spec, array('primary key' => array('yid')));
+    db_add_field(
+      'yandex_metrics_popular_content',
+      'yid',
+      $spec,
+      array('primary key' => array('yid'))
+    );
 
     // Add language field.
     $spec_lang = array(
@@ -43,11 +48,17 @@ function yandex_metrics_update_7200() {
       'type' => 'varchar',
       'length' => 12,
       'not null' => TRUE,
-      'default' => ''
+      'default' => '',
     );
-    db_add_field('yandex_metrics_popular_content', 'language', $spec_lang, array('language' => array('language')));
+    db_add_field(
+      'yandex_metrics_popular_content',
+      'language',
+      $spec_lang,
+      array('language' => array('language'))
+    );
 
-    // Drop empty new table which was created by enabling yandex_metrics_reports module.
+    // Drop empty new table which was created
+    // by enabling yandex_metrics_reports module.
     db_drop_table('yandex_metrics_reports_popular_content');
 
     // Rename old table with data.
@@ -84,7 +95,12 @@ function yandex_metrics_update_7200() {
   // Clear variables cache.
   cache_clear_all('variables', 'cache_bootstrap');
 
-  if (db_select('block')->condition('module', 'yandex_metrics')->countQuery()->execute()->fetchField() > 0) {
+  if (db_select('block')
+      ->condition('module', 'yandex_metrics')
+      ->countQuery()
+      ->execute()
+      ->fetchField() > 0
+  ) {
     // Remove new block records.
     db_delete('block')
       ->condition('module', 'yandex_metrics')

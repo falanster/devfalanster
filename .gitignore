@@ -1,10 +1,24 @@
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
-
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
+*~
 
-sites/default/files/css/
-sites/default/files/js/
-sites/all/themes/landing-integration-gradka
+.drush
+.lesshst
+.viminfo
+.htaccess
+.htpasswd
+sites/default/settings.php
+sites/default/files/languages*
+sites/default/files/css*
+sites/default/files/js*
+.ht.filecache
+db
+phpmyadmin
+robots.txt
+robots-old.txt
+php_info.php
+sites/all/themes/landing-integration-gradka/
+.htaccess_new
