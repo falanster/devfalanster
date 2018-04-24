@@ -6,3 +6,5 @@ sites/*/files
 sites/*/private
 
 sites/default/files/css/
+sites/default/files/js/
+sites/all/themes/landing-integration-gradka
