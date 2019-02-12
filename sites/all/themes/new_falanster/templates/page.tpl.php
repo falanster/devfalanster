@@ -1,29 +1,4 @@
-<!doctype html>
-<html lang="be">
-	<head>
-		<meta charset="utf-8">
-		<title>Фаланстэр</title>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=990">
-		<meta name="description" content="Фаланстэр - Моладзевае грамадскае аб'яднанне">
-		<meta name="keywords" content="Асветнiцкая дзейнасць, it, інфармацыйныя тэхналогіі, 
-									   актывiсты, айцi, валанцерства, развіцце валанцерства, 
-									   валанцерства ў беларусі, сацыяльнае валанцерства, 
-									   грамадская ініцыятыва, грамадская актыўнасць, 
-									   інфарматызацыя грамадства.">
-		<link rel="icon" href="sites/all/themes/new_falanster/images-source/shortcut_icon.png">
-		<link rel="stylesheet" href="css/menustyle.css">
-		<link rel="stylesheet" href="css/nav_mob.css">
-		<link rel="stylesheet" href="css/style.css">
-		<link rel="stylesheet" href="css/calendarstyle.css">
-		<link rel="stylesheet" href="css/blogstyle.css">
-		<link rel="stylesheet" href="css/footerstyle.css">
-		<link rel="stylesheet" href="css/modal.css">
-		<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-	</head>
-	
-	<body>
+		<!-- Mobile burger -->
 		<header class="header">
 			<div class="header__mobile-menu mobile-menu">
 				<button class="button-close" type="button">&#10006;</button>
@@ -80,10 +55,11 @@
 					</li>
 				</ul>
 			</div>
-			
+			<!-- Mobile Burger ends -->
 			
 			<div class="header__menu container">
-				<a class="header__logo" href="./index.html">
+				<!-- Static header__logo -->
+				<!-- <a class="header__logo" href="./index.html">
 					<img 
 						srcset="sites/all/themes/new_falanster/images-source/header-logo.png 185w,
 										sites/all/themes/new_falanster/images-source/header-logo-mobile.png 500w"
@@ -91,8 +67,15 @@
 										185px"
 						src="sites/all/themes/new_falanster/images-source/header-logo.png"
 						alt="Фаланстэр">
-				</a>
-				
+				</a> -->
+				<!-- Prints logo start -->
+				<?php if ($logo): ?>
+					<a class="header__logo" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
+					<img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+					</a>
+				<?php endif; ?>
+				<!-- Prints logo end -->
+				<!-- Top menu starts -->
 				<div class="header__top-menu">
 					<ul class="header__controls">
 						<li class="header__controls-item">
@@ -120,7 +103,8 @@
 					<button class="button-hamburger"><img src="sites/all/themes/new_falanster/images-source/hamburger.jpg" alt="Меню" height="80" width="100"></button>
 				</div>
 			</div>
-			
+			<!-- Top menu ends -->
+			<!-- Nav menu starts -->
 			<nav class="header__nav">
 				<ul class="header__nav-items container">
 					<li class="header__nav-item">
@@ -150,7 +134,7 @@
 				</ul>
 			</nav>
 		</header>
-			
+			<!-- Nav menu ends -->
 		<main>
 			<section class="manifest">
 				<h1 class="visually-hidden">Фаланстэр</h1>
@@ -181,7 +165,10 @@
 				</div>
 
 			</section>
-			
+			<!-- ossset testings -->
+			<?php print render($page['content']); ?>
+			<?php print ($content) ?>
+			<!-- ends ossset testings -->
 			<section class="projects">
 				<div class="projects-image-left"></div>
 				
@@ -468,7 +455,4 @@
 		</footer>
 		
 		<script src="script.js"></script>
-		
-	</body>
 
-</html>
