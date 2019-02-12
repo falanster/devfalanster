@@ -53,7 +53,15 @@ stylesheets[all][] = comment.css
 stylesheets[all][] = node.css
 
 ; Then we add our own stylesheet.
+; Styles.css => compiles by gulp(sass)
 stylesheets[all][] = css/styles.css
+stylesheets[all][] = css/blogstyle.css
+stylesheets[all][] = css/calendarstyle.css
+stylesheets[all][] = css/footerstyle.css
+stylesheets[all][] = css/menustyle.css
+stylesheets[all][] = css/modal.css
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/nav_mob.css
 
 ; If you wish to use conditional stylesheets, you should install the
 ; conditional stylesheets module: https://drupal.org/project/conditional_styles

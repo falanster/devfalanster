@@ -11,7 +11,7 @@
 									   валанцерства ў беларусі, сацыяльнае валанцерства, 
 									   грамадская ініцыятыва, грамадская актыўнасць, 
 									   інфарматызацыя грамадства.">
-		<link rel="icon" href="images/shortcut_icon.png">
+		<link rel="icon" href="sites/all/themes/new_falanster/images-source/shortcut_icon.png">
 		<link rel="stylesheet" href="css/menustyle.css">
 		<link rel="stylesheet" href="css/nav_mob.css">
 		<link rel="stylesheet" href="css/style.css">
@@ -85,11 +85,11 @@
 			<div class="header__menu container">
 				<a class="header__logo" href="./index.html">
 					<img 
-						srcset="images/header-logo.png 185w,
-										images/header-logo-mobile.png 500w"
+						srcset="sites/all/themes/new_falanster/images-source/header-logo.png 185w,
+										sites/all/themes/new_falanster/images-source/header-logo-mobile.png 500w"
 						sizes="(max-width: 1079px) 500px,
 										185px"
-						src="images/header-logo.png"
+						src="sites/all/themes/new_falanster/images-source/header-logo.png"
 						alt="Фаланстэр">
 				</a>
 				
@@ -117,7 +117,7 @@
 							<a class="header__language-link" href="#">Eng</a>
 						</li>
 					</ul>
-					<button class="button-hamburger"><img src="images/hamburger.jpg" alt="Меню" height="80" width="100"></button>
+					<button class="button-hamburger"><img src="sites/all/themes/new_falanster/images-source/hamburger.jpg" alt="Меню" height="80" width="100"></button>
 				</div>
 			</div>
 			
@@ -195,7 +195,7 @@
 								<div class="projects__overlay">
 
 									<a href="https://falanster.by/be/wikification">
-										<img class="projects__image" alt="Вiкiфiкацыя" src="images/x1.jpg" height="398" width="456">
+										<img class="projects__image" alt="Вiкiфiкацыя" src="sites/all/themes/new_falanster/images-source/x1.jpg" height="398" width="456">
 									</a>
 								
 									<div class="projects__overlay-text">
@@ -218,7 +218,7 @@
 							<div class="projects__item" id="project2">
 								<div class="projects__overlay">
 									<a href="https://it.falanster.by/">
-										<img class="projects__image" alt="Лiчбавая майстэрня" src="images/x2.jpg" height="398" width="456">
+										<img class="projects__image" alt="Лiчбавая майстэрня" src="sites/all/themes/new_falanster/images-source/x2.jpg" height="398" width="456">
 									</a>
 								
 									<div class="projects__overlay-text">
@@ -246,7 +246,7 @@
 								<div class="projects__overlay">
 								
 									<a href="https://falanster.by/be/creativecommons">
-										<img class="projects__image" alt="Градка" src="images/x3.jpg" height="398" width="456">
+										<img class="projects__image" alt="Градка" src="sites/all/themes/new_falanster/images-source/x3.jpg" height="398" width="456">
 									</a>
 								
 									<div class="projects__overlay-text">
@@ -271,7 +271,7 @@
 								<div class="projects__overlay">
 								
 									<a href="https://falanster.by/be/ulaziny">
-										<img class="projects__image" alt="Улазiны" src="images/x4.jpg" height="398" width="456">
+										<img class="projects__image" alt="Улазiны" src="sites/all/themes/new_falanster/images-source/x4.jpg" height="398" width="456">
 									</a>
 								
 									<div class="projects__overlay-text">
@@ -325,7 +325,7 @@
 									Той, хто напiсаў
 								</p>
 							</div>
-							<img class="blog__article-image" src="images/blogphoto.jpg" alt="" height="295" width="485">
+							<img class="blog__article-image" src="sites/all/themes/new_falanster/images-source/blogphoto.jpg" alt="" height="295" width="485">
 						</article>
 					
 						<div class="blog__aside">
@@ -421,47 +421,47 @@
 					<ul class="footer__social-links">
 						<li>
 							<a class="footer__social-link footer__social-link--vk" href="https://vk.com/falanster_by">
-								<img class="vk-icon" alt="УКантакце" src="images/vk.png" height="60" width="60">
+								<img class="vk-icon" alt="УКантакце" src="sites/all/themes/new_falanster/images-source/vk.png" height="60" width="60">
 							</a>
 						</li>
 						<li>
 							<a class="footer__social-link" href="https://t.me/falansterby">
-								<img class="telegram-icon" alt="Telegram" src="images/telegram.png" height="30" width="30">
+								<img class="telegram-icon" alt="Telegram" src="sites/all/themes/new_falanster/images-source/telegram.png" height="30" width="30">
 							</a>
 						</li>
 						<li>
 							<a class="footer__social-link" href="https://www.facebook.com/falanster.by/">
-								<img class="fb-icon" alt="Facebook" src="images/face.png" height="45" width="45">
+								<img class="fb-icon" alt="Facebook" src="sites/all/themes/new_falanster/images-source/face.png" height="45" width="45">
 							</a>
 						</li>
 						<li>
 							<a class="footer__social-link" href="https://www.youtube.com/channel/UCAmTfxxasQwNaKkljnmvc5A">
-								<img class="youtube-icon" alt="Youtube" src="images/yo.png" height="45" width="45">
+								<img class="youtube-icon" alt="Youtube" src="sites/all/themes/new_falanster/images-source/yo.png" height="45" width="45">
 							</a>
 						</li>
 					</ul>
 				
-					<img class="footer__license" alt="Creative Commons Attribution-ShareAlike" src="images/footerlogo2.jpg" height="34" width="95">
+					<img class="footer__license" alt="Creative Commons Attribution-ShareAlike" src="sites/all/themes/new_falanster/images-source/footerlogo2.jpg" height="34" width="95">
 				</div>
 			
 				<div class="footer__subscribe">
 					<label class="footer__subscribe-title" for="subscribe-email">Падпiсацца на нас</label>
 					<input class="footer__email-input" id="subscribe-email" type="email" placeholder="Ваш e-mail">
 					<a class="footer__subscribe-button" href="#modal">OK</a>
-					<img class="footer__license--big" alt="Creative Commons Attribution-ShareAlike" src="images/by-sa.png">
+					<img class="footer__license--big" alt="Creative Commons Attribution-ShareAlike" src="sites/all/themes/new_falanster/images-source/by-sa.png">
 				</div>
 				
 				<div class="modal" id="modal">
 					<div class="modal__popup">
-						<img class="popup-bg-topleft" src="images/topleft.jpg" alt="" height="54" width="80">
-						<img class="popup-bg-topright" src="images/topright.jpg" alt="" height="54" width="80">
+						<img class="popup-bg-topleft" src="sites/all/themes/new_falanster/images-source/topleft.jpg" alt="" height="54" width="80">
+						<img class="popup-bg-topright" src="sites/all/themes/new_falanster/images-source/topright.jpg" alt="" height="54" width="80">
 						<h2 class="modal__popup-heading">Дзякуй!</h2>
-						<img class="face-icon" src="images/modal.svg" alt="">
+						<img class="face-icon" src="sites/all/themes/new_falanster/images-source/modal.svg" alt="">
 						<p class="modal__popup-text">Амаль гатова!<br>Толькi што вам на email быу адпраулены лiст. 
 						<br>Клiкнiце па спасылке унутры, каб пацвердзiць падпiску</p>
 						<a class="modal__close-button" href="#vk">Добра!</a>
-						<img class="popup-bg-bottomleft" src="images/bottom.jpg" alt="" height="40" width="80">
-						<img class="popup-bg-bottomright" src="images/bottom.jpg" alt="" height="40" width="80">
+						<img class="popup-bg-bottomleft" src="sites/all/themes/new_falanster/images-source/bottom.jpg" alt="" height="40" width="80">
+						<img class="popup-bg-bottomright" src="sites/all/themes/new_falanster/images-source/bottom.jpg" alt="" height="40" width="80">
 					</div>
 				</div>
 			</div>
