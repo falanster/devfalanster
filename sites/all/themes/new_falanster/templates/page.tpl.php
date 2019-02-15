@@ -1,3 +1,22 @@
+		
+		<div class="header__menu container">
+			<!-- Prints logo start -->
+			<?php if ($logo): ?>
+						<a class="header__logo" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
+						<img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+						</a>
+			<?php endif; ?>
+			<!-- Prints logo end -->
+			<?php print render($page['header']); ?>	    <!--Top menu-->
+		</div>
+		<!-- Menu main start-->
+		<div class="header__nav">
+			<div class="header__nav-items  container">
+			<?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('header__nav-items','header__nav-item','links', 'inline', 'clearfix')))); ?>
+			</div>
+		</div>	 	
+		<!-- Menu main end -->
+		<?php print render($page['content']); ?> <!-- Manifesto-->
 		<!-- Mobile burger -->
 		<header class="header">
 			<div class="header__mobile-menu mobile-menu">
@@ -56,8 +75,6 @@
 				</ul>
 			</div>
 			<!-- Mobile Burger ends -->
-			
-			<div class="header__menu container">
 				<!-- Static header__logo -->
 				<!-- <a class="header__logo" href="./index.html">
 					<img 
@@ -68,15 +85,8 @@
 						src="sites/all/themes/new_falanster/images-source/header-logo.png"
 						alt="Фаланстэр">
 				</a> -->
-				<!-- Prints logo start -->
-				<?php if ($logo): ?>
-					<a class="header__logo" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
-					<img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
-					</a>
-				<?php endif; ?>
-				<!-- Prints logo end -->
 				<!-- Top menu starts -->
-				<div class="header__top-menu">
+				<!-- <div class="header__top-menu">
 					<ul class="header__controls">
 						<li class="header__controls-item">
 							<a class="header__controls-link header__controls-link--form" href="https://docs.google.com/forms/d/e/1FAIpQLSf78xrCLn3zsUaXmQGNrA58puu1Mk7AK4gIFyAwVXpNU1TyAw/viewform">Запоўнiць анкету</a>
@@ -101,11 +111,10 @@
 						</li>
 					</ul>
 					<button class="button-hamburger"><img src="sites/all/themes/new_falanster/images-source/hamburger.jpg" alt="Меню" height="80" width="100"></button>
-				</div>
-			</div>
+				</div> -->
 			<!-- Top menu ends -->
 			<!-- Nav menu starts -->
-			<nav class="header__nav">
+			<!-- <nav class="header__nav">
 				<ul class="header__nav-items container">
 					<li class="header__nav-item">
 						<a class="header__nav-link" href="https://falanster.by/be/arganyzacyja">Фаланстэр</a>
@@ -133,10 +142,10 @@
 					</li>
 				</ul>
 			</nav>
-		</header>
+		</header> -->
 			<!-- Nav menu ends -->
 		<main>
-			<section class="manifest">
+			<!-- <section class="manifest">
 				<h1 class="visually-hidden">Фаланстэр</h1>
 				<div class="manifest__container">
 					<div class="manifest__left">
@@ -163,12 +172,7 @@
 						</div>
 					</div>
 				</div>
-
-			</section>
-			<!-- ossset testings -->
-			<?php print render($page['content']); ?>
-			<?php print ($content) ?>
-			<!-- ends ossset testings -->
+			</section> -->
 			<section class="projects">
 				<div class="projects-image-left"></div>
 				

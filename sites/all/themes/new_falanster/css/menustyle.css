@@ -17,6 +17,7 @@
 		justify-content: flex-end;
 		display: flex;
 		width: 50%;
+		margin-left: auto;
 	}
 
 	.header__controls {
@@ -168,6 +169,7 @@
 		padding: 0;
 		margin: 0;
 		list-style-type: none;
+		width: 990px;
 	}
 
 	.header__nav-item {
