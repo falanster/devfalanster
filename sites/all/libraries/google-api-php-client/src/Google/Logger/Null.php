@@ -15,7 +15,27 @@
  * limitations under the License.
  */
 
-require_once dirname(__FILE__) . '/../autoload.php';
-require_once dirname(__FILE__) . '/BaseTest.php';
+require_once realpath(dirname(__FILE__) . '/../../../autoload.php');
 
-date_default_timezone_set('UTC');
+/**
+ * Null logger based on the PSR-3 standard.
+ *
+ * This logger simply discards all messages.
+ */
+class Google_Logger_Null extends Google_Logger_Abstract
+{
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldHandle($level)
+  {
+    return false;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function write($message, array $context = array())
+  {
+  }
+}

@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-require_once dirname(__FILE__) . '/../autoload.php';
-require_once dirname(__FILE__) . '/BaseTest.php';
+require_once realpath(dirname(__FILE__) . '/../../../autoload.php');
 
-date_default_timezone_set('UTC');
+class Google_Logger_Exception extends Google_Exception
+{
+}
