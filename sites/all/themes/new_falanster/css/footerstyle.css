@@ -7,7 +7,7 @@
 		display: -webkit-box;
 		display: -ms-flexbox;
 		display: flex;
-		margin-top: 35px;
+		/* margin-top: 35px; */
 	}
 
 	.prefooter__left {
@@ -61,8 +61,9 @@
 		display: -webkit-box;
 		display: -ms-flexbox;
 		display: flex;
+		flex-direction: row;
+		align-items: center;
 		width: auto;
-		height: 177px;
 		background-color: #333333;
 	}
 
@@ -76,7 +77,13 @@
 		display: block;
 		margin: 31px 0 0 0;
 	}
-
+	.region-bottom{
+		height: 200px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		margin-top: -17px;
+	}
 	.footer__menu {
 		padding: 0;
 		margin: 0;
