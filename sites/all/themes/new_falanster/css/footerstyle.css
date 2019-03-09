@@ -1,0 +1,459 @@
+@media screen and (min-width: 1080px) {
+	body {
+		margin: 0;
+	}
+
+	.prefooter {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		/* margin-top: 35px; */
+	}
+
+	.prefooter__left {
+		width: 50%;
+		height: 280px;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 30px;
+		background-color: #ff6600;
+		-webkit-box-shadow: 0 -1px 70px -5px rgba(0,0,0,0.42);
+		        box-shadow: 0 -1px 70px -5px rgba(0,0,0,0.42);
+		cursor: pointer;
+	}
+
+	.prefooter__heading {
+		float: right;
+		margin: 80px 205px 0 0;
+		font-size: 1.5em;
+		font-weight: bold;
+		letter-spacing: 1px;
+	}
+
+	.prefooter__text--left {
+		margin: 0;
+		color: #333333;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 17px;
+		font-weight: bold;
+		line-height: 1.4;
+		letter-spacing: 1px;
+		visibility: hidden;
+	}
+
+	.prefooter__right {
+		width: 50%;
+		height: 280px;
+		color: #333333;
+		font-family: 'PT Sans', Arial, sans-serif;
+		font-size: 17px;
+		background-color: #f5f5f5;
+	}
+
+	.prefooter__text--right {
+		margin: 95px 0 0 45px;
+		font-weight: bold;
+		line-height: 1.4;
+		letter-spacing: 1px;
+	}
+
+	.footer {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: auto;
+		background-color: #333333;
+	}
+
+	.footer__container {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+	}
+
+	.footer__logo {
+		display: block;
+		margin: 31px 0 0 0;
+	}
+	.region-bottom{
+		height: 200px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		margin-top: -17px;
+	}
+	.footer__menu {
+		padding: 0;
+		margin: 0;
+		margin-top: 20px;
+		margin-left: 70px;
+		list-style-type: none;
+	}
+
+	.footer__menu-item {
+		margin: 7px 0 0 0;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 18px;
+		list-style-type: none;
+	}
+
+	.footer__menu-link {
+		color: #ffffff;
+		text-decoration: none;
+	}
+
+	.footer__social {
+		margin-top: 8px;
+		margin-left: 98px;
+	}
+
+	.footer__social-title {
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 18px;
+	}
+
+	.footer__social-links {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+	}
+
+	.footer__social-link img {
+		-webkit-transition: 200ms;
+		        transition: 200ms;
+	}
+
+	.footer__social-link:hover img {
+		-webkit-transform: scale(1.1);
+		        transform: scale(1.1);
+	}
+
+	.vk-icon {
+		margin-top: -24px;
+		margin-right: 3px;
+		margin-left: -10px;
+	}
+
+	.telegram-icon {
+		margin-top: -5px;
+	}
+
+	.fb-icon {
+		margin-top: -15px;
+	}
+
+	.youtube-icon {
+		margin-top: -15px;
+		margin-left: -5px;
+	}
+
+	.footer__license {
+		margin-top: 10px;
+	}
+
+	.footer__license--big {
+		display: none;
+	}
+
+	.footer__subscribe {
+		margin-top: 8px;
+		margin-left: 124px;
+	}
+
+	.footer__subscribe-title {
+		display: block;
+		margin: 1em 0;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 18px;
+	}
+
+	.footer__email-input {
+		-webkit-box-sizing: border-box;
+		        box-sizing: border-box;
+		width: 195px;
+		height: 40px;
+		padding-left: 10px;
+		color: #ffffff;
+		font-size: 15px;
+		background-color: #333333;
+		border: 1px #ffffff solid;
+		border-radius: 3px;
+  }
+
+  .email-input_error {
+    border: 1px solid #e85c41;
+  }
+
+  .email-input_error:focus {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(232, 92, 65, 0.6);
+    outline: 0 none;
+  }
+
+	::-webkit-input-placeholder {
+		padding-left: 0;
+		font-size: 15px;
+	}
+
+	.footer__subscribe-button {
+		-webkit-box-sizing: border-box;
+		        box-sizing: border-box;
+		display: inline-block;
+		width: 48px;
+		margin-left: 15px;
+		color: #898989;
+		font-family: 'Ubuntu', sans-serif;
+		font-size: 16px;
+		line-height: 40px;
+		text-align: center;
+		text-decoration: none;
+		vertical-align: top;
+		background-color: #ffffff;
+		border: 0;
+		border-radius: 3px;
+		cursor: pointer;
+	}
+}
+
+/*  small screens */
+
+@media screen and (max-width: 1079px) {
+	body {
+		width: 100%;
+		margin: 0;
+		background-color: #dddddd;
+	}
+
+	.prefooter {
+		-ms-flex-pack: center;
+		justify-content: center;
+		width: 100%;
+		height: 800px;
+		margin: 0;
+		background-color: #ff6600;
+		-webkit-box-shadow: 0 -1px 70px -5px rgba(0,0,0,0.42);
+		        box-shadow: 0 -1px 70px -5px rgba(0,0,0,0.42);
+
+		-webkit-box-pack: center;
+	}
+
+	.withoutshadow {
+		-ms-flex-pack: center;
+		justify-content: center;
+		width: 100%;
+		height: 800px;
+		margin: 0;
+		background-color: #ff6600;
+
+		-webkit-box-pack: center;
+	}
+
+	.prefooter__left {
+		height: 410px;
+		margin: 0;
+		font-size: 58px;
+		-webkit-box-shadow: 0 -1px 70px -5px rgba(0,0,0,0);
+		        box-shadow: 0 -1px 70px -5px rgba(0,0,0,0);
+	}
+
+	.prefooter__heading {
+		padding: 75px 0 0 50px;
+		margin: 0;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 1.5em;
+		font-weight: bold;
+		letter-spacing: 1px;
+	}
+
+	.prefooter__text--left {
+		margin: 35px 50px 0 55px;
+		color: #ffffff;
+		font-family: 'PT Sans', Arial, sans-serif;
+		font-size: 45px;
+		font-weight: normal;
+		letter-spacing: 2px;
+		visibility: visible;
+	}
+
+	.prefooter__right {
+		display: none;
+	}
+
+	.footer {
+		width: auto;
+		height: 1000px;
+		background-color: #333333;
+	}
+
+	.footer__container {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+	}
+
+	.footer__logo {
+		width: 135px;
+		height: 135px;
+		margin: 70px 0 0 45px;
+	}
+
+	.footer__menu {
+		width: 320px;
+		padding: 0;
+		margin: 0;
+		margin-top: 50px;
+		margin-left: 70px;
+	}
+
+	.footer__menu-item {
+		width: 270px;
+		margin: 7px 0 0 0;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 35px;
+		line-height: 2;
+		list-style-type: none;
+	}
+
+	.footer__menu-link {
+		color: #ffffff;
+		text-decoration: none;
+	}
+
+	.footer__social {
+		margin-top: 28px;
+		margin-left: 60px;
+	}
+
+	.footer__social-title {
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 42px;
+	}
+
+	.footer__social-links {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+	}
+
+	.vk-icon {
+		width: 140px;
+		height: 140px;
+		margin-top: -24px;
+		margin-right: 3px;
+		margin-left: -10px;
+	}
+
+	.telegram-icon {
+		width: 90px;
+		height: 90px;
+		margin-top: 155px;
+		margin-left: -110px;
+	}
+
+	.fb-icon {
+		width: 100px;
+		height: 100px;
+		padding-left: 40px;
+		margin-top: -5px;
+	}
+
+	.youtube-icon {
+		width: 150px;
+		height: 150px;
+		margin-top: 115px;
+		margin-left: -120px;
+	}
+
+	.face-icon {
+		width: 100px;
+		height: 100px;
+		margin-top: -5px;
+	}
+
+	.footer__subscribe {
+		position: absolute;
+		margin-top: 430px;
+		margin-left: 250px;
+	}
+
+	.footer__subscribe-title {
+		display: block;
+		margin: 1em 0;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 45px;
+	}
+
+	.footer__email-input {
+		-webkit-box-sizing: border-box;
+		        box-sizing: border-box;
+		width: 500px;
+		height: 100px;
+		padding-left: 25px;
+		color: #ffffff;
+		font-size: 40px;
+		background-color: #333333;
+		border: 1px #ffffff solid;
+		border-radius: 1px;
+  }
+
+  .email-input_error {
+    border: 2px solid #e85c41;
+  }
+
+  .email-input_error:focus {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(232, 92, 65, 0.6);
+    outline: 0 none;
+  }
+
+	::-webkit-input-placeholder {
+		padding-top: 5px;
+		padding-left: 2px;
+		font-size: 45px;
+	}
+
+	.footer__subscribe-button {
+		-webkit-box-sizing: border-box;
+		        box-sizing: border-box;
+		display: inline-block;
+		padding: 32px 35px 30px 33px;
+		margin: 0 0 0 35px;
+		color: #848484;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 35px;
+		font-weight: bold;
+		letter-spacing: 1px;
+		text-align: center;
+		text-decoration: none;
+		vertical-align: top;
+		background-color: #ffffff;
+		border: 0;
+		border-radius: 3px;
+		cursor: pointer;
+	}
+
+	.footer__license {
+		display: none;
+	}
+
+	.footer__license--big {
+		display: block;
+		width: 266px;
+		height: 94px;
+		margin-top: 55px;
+		margin-left: 2px;
+	}
+}
