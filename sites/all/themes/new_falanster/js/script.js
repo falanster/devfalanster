@@ -1,26 +1,101 @@
-/**
- * @file
- * A JavaScript file for the theme.
- *
- * In order for this JavaScript to be loaded on pages, see the instructions in
- * the README.txt next to this file.
- */
+window.onscroll = function(){stickyNav(); autoclose_fun()};
 
-// JavaScript should be made compatible with libraries other than jQuery by
-// wrapping it with an "anonymous closure". See:
-// - https://drupal.org/node/1446420
-// - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
-(function ($, Drupal, window, document) {
+function stickyNav(){
+	var navigationbar = document.querySelector(".header__nav");
+	var navbar_settop = navigationbar.offsetTop;
+	if(window.pageYOffset > navbar_settop + 8){
+		navigationbar.classList.add("sticky");
+	}
+	else{
+		navigationbar.classList.remove("sticky");
+	}
+};
 
-  'use strict';
+function autoclose_fun(){
+	var mobnav = document.querySelector('.mobile-menu');
+	var settop = mobnav.offsetTop;
+	if(window.pageYOffset > settop + 300){
+		mobnav.style.left = "-100%";
+	}
+};
 
-  // To understand behaviors, see https://drupal.org/node/756722#behaviors
-  Drupal.behaviors.my_custom_behavior = {
-    attach: function (context, settings) {
+document.querySelector('.mobile-menu__links').onclick = close_btn_fun;
 
-      // Place your code here.
+function close_btn_fun(){
+	var mobnav = document.querySelector('.mobile-menu');
+	mobnav.style.left = "-100%";
+};
 
+
+document.querySelector('.button-hamburger').onclick = open_fun;
+
+function open_fun(){
+	document.querySelector('.mobile-menu').style.left = 0;
+}
+
+document.querySelector('.button-close').onclick = close_fun;
+
+function close_fun(){
+	document.querySelector('.mobile-menu').style.left = "-100%";
+}
+
+
+// <-- the trick to correct sizing -->
+const setCorrectViewPort = () => {
+	let vh = window.innerHeight * 0.01;
+	document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+	window.addEventListener('resize', () => {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+});
+};
+
+setCorrectViewPort();
+// <-- the trick to correct sizing -->
+
+
+
+// <--  scroll into view -->
+const scrollDownBtn = document.querySelector('.btn-scroll');
+if (!!scrollDownBtn) {
+  scrollDownBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollDownBtn.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+  });
+}
+// <--  scroll into view -->
+
+
+// <--  slice content -->
+const containerInnerModule = document.querySelectorAll('.container-inner__module');
+
+if (!!containerInnerModule) {
+  const arrayFromContainerInnerModule = Array.from(containerInnerModule);
+  arrayFromContainerInnerModule.forEach((container) => {
+    const titleBlock = container.children[0];
+
+    function checkHeight() {
+      const textBlock = container.children[2];
+      if (textBlock && titleBlock && titleBlock.scrollHeight < 94) {
+        titleBlock.scrollHeight + textBlock.scrollHeight > 163 ? sliceContent(textBlock) : false;
+      } else if (textBlock && titleBlock && titleBlock.scrollHeight >= 94) {
+        sliceContent(titleBlock);
+      }
+    };
+
+    function sliceContent(textBlock) {
+      const content = textBlock.innerText.split(' ');
+      const newContent = content.slice(content[content.length - 1], -1);
+      textBlock.innerText = (newContent.join(' ') + '...').replace('....', '...');
+      checkHeight();
     }
-  };
 
-})(jQuery, Drupal, this, this.document);
+    checkHeight();
+  });
+}
+// <--  slice content -->
+

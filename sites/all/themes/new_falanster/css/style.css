@@ -42,7 +42,6 @@ a {
 		display: -ms-flexbox;
 		display: flex;
 		justify-content: space-around;
-		margin-left: 100px;
 	}
 
 	.projects-image-left {
@@ -52,6 +51,7 @@ a {
 		width: 50px;
 		height: 379px;
 		background: url('../images-source/left.png') no-repeat;
+		top: -102px;
 	}
 
 	.projects__container {
@@ -70,7 +70,7 @@ a {
 		width: auto;
 		margin-top: 102px;
 		margin-bottom: 76px;
-		margin-left: -4px;
+		margin-left: 22.5%;
 		color: #333333;
 		font-family: 'Ubuntu', Arial, sans-serif;
 		font-size: 60px;
@@ -152,9 +152,9 @@ a {
 	.projects__overlay-title,
 	.projects__title {
 		margin: 20px 0 5px 0;
-		color: #1a1a1a;
+		color: #1a1a1a !important;
 		font-family: 'Ubuntu', Arial, sans-serif;
-		font-size: 24;
+		font-size: 24px;
 		letter-spacing: 0.5px;
 		text-align: center;
 		text-decoration: none;
@@ -370,8 +370,6 @@ a {
 		margin-left: 70px;
 		visibility: visible;
 	}
-
-
 	.projects__item {
 		display: none;
 	}

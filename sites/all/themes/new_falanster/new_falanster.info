@@ -73,7 +73,9 @@ stylesheets[all][] = css/nav_mob.css
 
 ; Optionally add some JavaScripts to your theme.
 
-;scripts[] = js/script.js
+scripts[] = js/script_default.js
+scripts[] = js/script.js
+scripts[] = js/main.js
 
 
 
