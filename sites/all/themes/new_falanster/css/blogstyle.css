@@ -52,6 +52,7 @@
 		font-size: 24px;
 		font-weight: 400;
 		letter-spacing: 0.005em;
+    font-family: 'Ubuntu', Arial, sans-serif;
 	}
 
 	.blog__article-link--main {
