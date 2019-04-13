@@ -207,7 +207,7 @@ a {
 		cursor: pointer;
 		visibility: hidden;
 	}
-  .projects__item:hover{
+  .projects__item:hover .projects__fading-img{
     transition: all 0.35s ease 0s;
     opacity: 0.5;
     box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.5);
@@ -223,7 +223,6 @@ a {
 	.projects__overlay-title {
 		visibility: hidden;
 	}
-
 	.projects__item:hover .projects__overlay-title {
 		-webkit-transition: 0.8s;
 		transition: 0.8s;
@@ -241,13 +240,12 @@ a {
 		margin-left: 75px;
 	}
 
-	.projects-image-right {
+	.projects-img-right {
 		position: absolute;
 		right: 0;
 		z-index: 1;
 		width: 264px;
 		height: 868px;
-		margin-top: 305px;
 		background: url('../images-source/right.svg') no-repeat 0 0;
 	}
 
