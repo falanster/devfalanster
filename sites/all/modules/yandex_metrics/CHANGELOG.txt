@@ -1,6 +1,38 @@
 ; All the dates reported here are referred to UTC.
 
-yandex_metrics 7.x-2.x, xxxx-xx-xx
+yandex_metrics 7.x-3.x, xxxx-xx-xx
+
+yandex_metrics 7.x-3.1, 2017-10-17
+Strengthened the project security.
+
+
+yandex_metrics 7.x-3.0, 2015-11-25
+by konstantin.komelin: Just released.
+
+
+yandex_metrics 7.x-3.0-beta2, 2015-10-31
+#2569233 by konstantin.komelin: Fixed reason of the notice: Undefined variable: output in function yandex_metrics_reports_help().
+by konstantin.komelin: Enabled Visualization module through hook_update.
+#2091205 by zniki.ru, konstantin.komelin | VVS, kalabro: Supplied more information on error when current host doesn't belong to any counters.
+
+
+yandex_metrics 7.x-3.0-beta1, 2015-10-24
+#2481957 by fortis, konstantin.komelin | kalabro: Fixed code style issues.
+
+
+yandex_metrics 7.x-3.0-alpha1, 2015-04-21
+#2144233 by kalabro, 6RUN0, konstantin.komelin: Fixed Data too long for column yandex_metrics_reports_popular_content.url.
+#2170219 by Nikita Petrov, konstantin.komelin: Implemented changing page title of summary report depending on time period.
+#2191745 by zniki.ru, konstantin.komelin: Implemented reset of counter_id on application authorization.
+#2192365 by zniki.ru | kalabro: Fixed undefined constant PHP_ROUND_HALF_DOWN for PHP<=5.2.
+#2453147 by kalabro | i3laze: Added Variable API support.
+#2447267 by konstantin.komelin: Extracted Popular Content View into the separate project https://www.drupal.org/project/yandex_metrics_popular_content
+#2472333 by konstantin.komelin: Simplified IDNA library installation. Used https://www.drupal.org/project/idna_convert
+#2446451 by konstantin.komelin, Niremizov, kalabro | Pierre.Vriens: Replaced Chart module with Visualization.
+#2465849 by konstantin.komelin | kalabro: Allowed changing report order.
+#2465801 by konstantin.komelin | VVS: Fixed bug: Wrong order of dates in the Visits report.
+#2467511 by konstantin.komelin: Updated and moved Documentation to d.org https://www.drupal.org/node/2147065
+#2475109 by konstantin.komelin: Moved translations to localize.drupal.org.
 
 
 yandex_metrics 7.x-2.0, 2013-10-17

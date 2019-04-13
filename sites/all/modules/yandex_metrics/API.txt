@@ -1,0 +1,8 @@
+------------------------------------------------------------------------------
+                        YANDEX.METRICS REPORTS API
+------------------------------------------------------------------------------
+
+You may find detailed instructions on how to add an own report onto the Yandex.Metrics Summury Report page
+in the Yandex.Metrics Reports API Documentation https://www.drupal.org/node/2474791
+
+Enjoy the API!

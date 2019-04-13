@@ -31,23 +31,23 @@ function yandex_metrics_reports_schema() {
       'url' => array(
         'description' => 'The url obtained from Yandex.metrika.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 2048,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'language' => array(
         'description' => 'Language of the page.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'page_title' => array(
         'description' => 'The page title of the url.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'page_views' => array(
         'type' => 'int',
@@ -55,12 +55,12 @@ function yandex_metrics_reports_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Page views of this url.',
-      )
+      ),
     ),
     'primary key' => array('yid'),
-    'unique keys' => array('url' => array('url')),
     'indexes' => array(
       'language' => array('language'),
+      'url' => array(array('url', 255)),
     ),
   );
 
@@ -75,8 +75,13 @@ function yandex_metrics_reports_requirements($phase) {
   $requirements = array();
 
   if ($phase == 'runtime') {
-    if (function_exists('yandex_services_auth_info') && !yandex_services_auth_info('token')) {
-      $message = $t('Please, <a href="!module_config_url">configure @module</a> module.', array('!module_config_url' => url('admin/config/system/yandex_services_auth'), '@module' => 'Yandex Services Authorization API'));
+    if (function_exists('yandex_services_auth_info')
+      && !yandex_services_auth_info('token')
+    ) {
+      $message = $t('Please, <a href="!module_config_url">configure @module</a> module.', array(
+        '!module_config_url' => url('admin/config/system/yandex_services_auth'),
+        '@module' => 'Yandex Services Authorization API',
+      ));
 
       $requirements['yandex_metrics_reports'] = array(
         'title' => t('Yandex.Metrics Reports'),
@@ -107,5 +112,54 @@ function yandex_metrics_reports_update_7201() {
   variable_del('yandex_metrics_reports_client_id');
   variable_del('yandex_metrics_reports_client_secret');
   variable_del('yandex_metrics_reports_auth_token');
+}
 
+/**
+ * Enlarge URL field size for popular content database table.
+ */
+function yandex_metrics_reports_update_7202() {
+  db_drop_unique_key('yandex_metrics_reports_popular_content', 'url');
+
+  db_change_field('yandex_metrics_reports_popular_content', 'url', 'url', array(
+    'description' => 'The url obtained from Yandex.Metrika.',
+    'type' => 'varchar',
+    'length' => 2048,
+    'not null' => TRUE,
+    'default' => '',
+  ),
+    array(
+      'indexes' => array('url' => array(array('url', 255))),
+    )
+  );
+}
+
+/**
+ * Upgrade from 7.x-2.x to 7.x-3.x.
+ *
+ * Migration to Yandex.Metrics Popular Content (yandex_metrics_popular_content).
+ */
+function yandex_metrics_reports_update_7300() {
+
+  // If old table exists.
+  if (db_table_exists('yandex_metrics_reports_popular_content')) {
+
+    // Drop redundant table yandex_metrics_reports module.
+    db_drop_table('yandex_metrics_reports_popular_content');
+  }
+
+  variable_set('yandex_metrics_popular_content_date_period', variable_get('yandex_metrics_reports_date_period', 'week'));
+  variable_del('yandex_metrics_reports_date_period');
+
+  // Remove redundant variables. Now we have only one variable for all report metadata.
+  db_delete('variable')
+    ->condition('name', 'yandex_metrics_reports_%_visible', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
+}
+
+/**
+ * Enable Visualization module.
+ */
+function yandex_metrics_reports_update_7301() {
+  module_enable(array('visualization'));
 }

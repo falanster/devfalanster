@@ -4,24 +4,16 @@ name            = "Yandex.Metrics Reports"
 package         = Yandex.Metrics
 
 ; Dependencies.
-dependencies[]  = chart
+dependencies[]  = visualization
 dependencies[]  = yandex_metrics
 dependencies[]  = yandex_services_auth
-dependencies[]  = views
-
-; Views handlers.
-files[]         = views/yandex_metrics_reports.views.inc;
-files[]         = views/handlers/views_handler_field_ym_title.inc
-
-; Tests.
-files[]         = yandex_metrics_reports.test
 
 ; Configuration path.
 configure       = admin/config/system/yandex_metrics/reports
 
-; Information added by drupal.org packaging script on 2013-10-17
-version = "7.x-2.0"
+; Information added by Drupal.org packaging script on 2017-10-17
+version = "7.x-3.1"
 core = "7.x"
 project = "yandex_metrics"
-datestamp = "1381999544"
+datestamp = "1508262848"
 
