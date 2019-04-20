@@ -1,0 +1,194 @@
+
+@media screen and (min-width: 1081px) {
+	.modal {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 99999;
+		display: none;
+		background: rgba(51,51,51,0.86);
+	}
+
+	.modal:target {
+		display: block;
+	}
+
+	.modal__popup {
+		position: relative;
+		width: 600px;
+		height: 432px;
+		margin: 10% auto;
+		background: #ffffff;
+  }
+
+  .modal__popup_visible {
+    display: block;
+  }
+
+	.modal__popup-heading {
+		display: block;
+		height: 78px;
+		margin-bottom: 5px;
+		color: #333333;
+		font-family: Ubuntu;
+		font-size: 22.5px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-align: center;
+	}
+
+	.modal__popup-text {
+		display: block;
+		color: #333333;
+		font-family: Ubuntu;
+		font-size: 17px;
+		letter-spacing: 1px;
+		text-align: center;
+	}
+
+	.face-icon {
+		display: block;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.popup-bg-topright {
+		position: absolute;
+		right: 0;
+	}
+
+	.popup-bg-bottomleft {
+		position: absolute;
+		bottom: 0;
+	}
+
+	.popup-bg-bottomright {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+	}
+
+	.modal__close-button {
+		display: block;
+		width: 60px;
+		padding: 0;
+		padding: 19px 50px 16px 50px;
+		margin-top: 10px;
+		margin-right: auto;
+		margin-left: auto;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 15px;
+		font-weight: bold;
+		letter-spacing: 1px;
+		text-decoration: none;
+		background-color: #ff6600;
+		border-width: 0;
+		border-radius: 2px;
+		cursor: pointer;
+	}
+
+	.modal__close-button {
+		text-decoration: none;
+	}
+}
+
+/* small screens */
+
+@media screen and (max-width: 1080px) {
+	.modal {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 99999;
+		display: none;
+		background: rgba(51,51,51,0.86);
+	}
+
+	.modal:target {
+		display: block;
+  }
+
+	.modal__popup {
+		position: relative;
+		width: 632px;
+		height: 800px;
+		margin: 10% auto;
+    background: #ffffff;
+    transform: scale(1.4);
+  }
+
+  .modal__popup_visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+	.modal__popup-heading {
+		display: block;
+		color: #333333;
+		font-family: Ubuntu;
+		font-size: 40px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-align: center;
+	}
+
+	.modal__popup-text {
+		display: block;
+		color: #333333;
+		font-family: Ubuntu;
+		font-size: 30px;
+		letter-spacing: 1px;
+		text-align: center;
+	}
+
+	.face-icon {
+		display: block;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.popup-bg-topright {
+		position: absolute;
+		right: 0;
+	}
+
+	.popup-bg-bottomleft {
+		position: absolute;
+		bottom: 0;
+	}
+
+	.popup-bg-bottomright {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+	}
+
+	.modal__close-button {
+		display: block;
+		width: 60px;
+		padding: 19px 100px 16px 50px;
+		margin-top: 10px;
+		margin-right: auto;
+		margin-left: auto;
+		color: #ffffff;
+		font-family: 'Ubuntu', Arial, sans-serif;
+		font-size: 35px;
+		font-weight: bold;
+		letter-spacing: 1px;
+		text-decoration: none;
+		background-color: #ff6600;
+		border-width: 0;
+		border-radius: 3px;
+		cursor: pointer;
+	}
+
+	.modal__close-button {
+		text-decoration: none;
+	}
+}
