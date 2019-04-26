@@ -126,8 +126,8 @@ a {
 		z-index: 3;
 		width: 456px;
 		height: 398px;
-		-webkit-box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.40);
-		        box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.40);
+		-webkit-box-shadow: 0 0 40px 0 rgba(50, 50, 50, 0.40);
+		        box-shadow: 0 0 40px 0 rgba(50, 50, 50, 0.40);
 		border-radius: 3px;
 		-webkit-transition: 0.5s;
 		transition: 0.5s;
@@ -207,22 +207,17 @@ a {
 		cursor: pointer;
 		visibility: hidden;
 	}
-  .projects__item:hover .projects__fading-img{
-    transition: all 0.35s ease 0s;
-    opacity: 0.5;
-    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.5);
-  }
+
 	.projects__item:hover .projects__button-link {
 		-webkit-transition: 0.8s;
 		transition: 0.8s;
 		visibility: visible;
 	}
-  .block__title{
-    position: relative;
-  }
+
 	.projects__overlay-title {
 		visibility: hidden;
 	}
+
 	.projects__item:hover .projects__overlay-title {
 		-webkit-transition: 0.8s;
 		transition: 0.8s;
@@ -240,12 +235,13 @@ a {
 		margin-left: 75px;
 	}
 
-	.projects-img-right {
+	.projects-image-right {
 		position: absolute;
 		right: 0;
 		z-index: 1;
 		width: 264px;
 		height: 868px;
+		margin-top: 305px;
 		background: url('../images-source/right.svg') no-repeat 0 0;
 	}
 
