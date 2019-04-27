@@ -3,15 +3,15 @@
 @import url('https://fonts.googleapis.com/css?family=PT+Sans|Ubuntu');
 
 .block .agenda-block { width: 360px;}
-#block-agenda-1 h2{ color: #333333; font-family: 'Ubuntu', Arial, sans-serif; font-size: 60px !important; letter-spacing: 1px; text-shadow: 2px 2px 0 #d2ff1b; margin: 0;}
+#block-agenda-1 h2{ color: #333333; font-family: 'Ubuntu', Arial, sans-serif; font-size: 60px !important; letter-spacing: 1px; text-shadow: 2px 2px 0 #d6ff32; margin: 0px 0px 30px 0px;}
 .block .agenda-block p { margin: 0; padding: 10px 20px; font-family: 'Ubuntu', sans-serif; font-size: 16px; color: #ffffff; height: 50px; box-sizing: border-box; background: #333333;}
-.block .agenda-block ol { list-style-type: none; margin: 0; padding: 0; font-family:'PT Sans', sans-serif; font-size: 16px;  }
+.block .agenda-block ol { list-style-type: none; margin: 0; padding: 0; font-family:'PT Sans', sans-serif; font-size: 16px;}
 .block .agenda-block ol li { margin: 0px; padding: 0px;  background-image: none; border-bottom: 1px solid #d0d0d0;}
 .block .agenda-block ol li .calendar_title {color: black; cursor: pointer; padding: 0px 20px;  margin: 0px 0px; min-height: 48px; display: flex; flex-direction: column; justify-content: center;}
 .block .agenda-block .moreinfo {display: none; list-style-type: none; font-family:'PT Sans', sans-serif; padding: 10px 10px; margin: 0px; overflow: hidden; color: black; background: #ececec;}
 .block .agenda-block .moreinfo p {display: block; color: black; padding: 10px; background: #ececec; height: 100%;}
-.block .agenda-block .moreinfo em { font-style: normal; font-weight: bold; padding: 0px 10px}
-.block .agenda-block .moreinfo a { color: black; display: block; padding-left: 10px;}
+.block .agenda-block .moreinfo em { font-style: normal; font-weight: bold; padding: 0px 0px 0px 10px}
+.block .agenda-block .moreinfo a { color: black; display: block; padding-left: 10px; font-family: 'Ubuntu',sans-serif;}
 .block .agenda-block .moreinfo li { list-style-type: none; list-style-image: none; background-image: none; padding: 0; font-size: 100%;  border-bottom: 0px solid #d0d0d0; }
 .block .agenda-block .moreinfo ul li {display: flex; flex-direction: column; justify-content: center;}
 .block .agenda-block .moreinfo ul li { margin: 20px;}

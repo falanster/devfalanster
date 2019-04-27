@@ -2,6 +2,9 @@ a {
 	text-decoration: none !important;
   color: #1a1a1a;
 }
+a:visited, a:hover, a:active {
+  outline: none;
+}
 @media screen and (min-width: 2200px) {
 	.projects__items {
 		display: -webkit-box;
