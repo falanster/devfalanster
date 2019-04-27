@@ -46,7 +46,7 @@
 		height: 280px;
 		color: #333333;
 		font-family: 'PT Sans', Arial, sans-serif;
-		font-size: 17px;
+		font-size: 18px;
 		background-color: #f5f5f5;
 	}
 
@@ -99,10 +99,16 @@
 		font-size: 18px;
 		list-style-type: none;
 	}
+	.footer__menu-item:hover{
+		font-size: 20px;
+		color: #ff6600;
+		transition: ease-in-out 0.2s;
+	}
 
 	.footer__menu-link {
 		color: #ffffff;
 		text-decoration: none;
+
 	}
   .menu .menu__item{
     list-style-type: none;
