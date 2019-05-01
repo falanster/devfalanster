@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @file
- * Extendable Object Faces API. Provided by the faces module.
+ * @file Extendable Object Faces API. Provided by the faces module.
  */
 
 if (!interface_exists('FacesExtenderInterface', FALSE)) {
@@ -15,13 +14,12 @@ if (!interface_exists('FacesExtenderInterface', FALSE)) {
     /**
      * Constructs an instance of the extender.
      */
-    public function __construct(FacesExtendable $object);
+    function __construct(FacesExtendable $object);
 
     /**
      * Returns the extended object.
      */
     public function getExtendable();
-
   }
 
   /**
@@ -33,10 +31,9 @@ if (!interface_exists('FacesExtenderInterface', FALSE)) {
 
 if (!class_exists('FacesExtender', FALSE)) {
   /**
-   * A common base class for FacesExtenders.
-   *
-   * Extenders may access protected methods and properties of the extendable
-   * using the property() and call() methods.
+   * A common base class for FacesExtenders. Extenders may access protected
+   * methods and properties of the extendable using the property() and call()
+   * methods.
    */
   abstract class FacesExtender implements FacesExtenderInterface {
 
@@ -45,7 +42,8 @@ if (!class_exists('FacesExtender', FALSE)) {
      */
     protected $object;
 
-    public function __construct(FacesExtendable $object) {
+
+    function __construct(FacesExtendable $object) {
       $this->object = $object;
     }
 
@@ -65,17 +63,17 @@ if (!class_exists('FacesExtender', FALSE)) {
     }
 
     /**
-     * Invokes any method on the extended object, including protected methods.
+     * Invokes any method on the extended object. May be used to invoke
+     * protected methods.
      *
-     * @param string $name
+     * @param $name
      *   The method name.
-     * @param array $args
+     * @param $arguments
      *   An array of arguments to pass to the method.
      */
     protected function call($name, array $args = array()) {
       return $this->object->call($name, $args);
     }
-
   }
 }
 
@@ -110,7 +108,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
     /**
      * Magic method: Invoke the dynamically implemented methods.
      */
-    public function __call($name, $arguments = array()) {
+    function __call($name, $arguments = array()) {
       if (isset($this->facesMethods[$name])) {
         $method = $this->facesMethods[$name];
         // Include code, if necessary.
@@ -136,11 +134,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
     }
 
     /**
-     * Returns the extender object for the given class.
-     *
-     * May be used to explicitly invoke a specific extender, e.g. a function
-     * overriding a method may use that to explicitly invoke the original
-     * extender.
+     * Returns the extender object for the given class. May be used to
+     * explicitly invoke a specific extender, e.g. a function overriding a
+     * method may use that to explicitly invoke the original extender.
      */
     public function extender($class) {
       if (!isset($this->facesClassInstances[$class])) {
@@ -150,17 +146,14 @@ if (!class_exists('FacesExtendable', FALSE)) {
     }
 
     /**
-     * Returns whether the object can face as the given interface.
-     *
      * Returns whether the object can face as the given interface, thus it
-     * returns TRUE if this object has been extended by an appropriate
+     * returns TRUE if this oject has been extended by an appropriate
      * implementation.
      *
      * @param $interface
-     *   Optional. An interface to test for. If it's omitted, all interfaces
-     *   that the object can be faced as are returned.
-     *
-     * @return bool
+     *   Optional. A interface to test for. If it's omitted, all interfaces that
+     *   the object can be faced as are returned.
+     * @return
      *   Whether the object can face as the interface or an array of interface
      *   names.
      */
@@ -176,9 +169,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
      *
      * @param $interface
      *   The interface name or an array of interface names.
-     * @param $className
+     * @param $class
      *   The extender class, which has to implement the FacesExtenderInterface.
-     * @param array $includes
+     * @param $include
      *   An optional array describing the file to include before invoking the
      *   class. The array entries known are 'type', 'module', and 'name'
      *   matching the parameters of module_load_include(). Only 'module' is
@@ -213,10 +206,10 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * @param $interface
      *   The interface name or FALSE to extend the object without a given
      *   interface.
-     * @param array $callbacks
+     * @param $methods
      *   An array, where the keys are methods of the given interface and the
      *   values the callback functions to use.
-     * @param array $includes
+     * @param $includes
      *   An optional array to describe files to include before invoking the
      *   callbacks. You may pass a single array describing one include for all
      *   callbacks or an array of arrays, keyed by the method names. Look at the
@@ -241,11 +234,11 @@ if (!class_exists('FacesExtendable', FALSE)) {
     /**
      * Override the implementation of an extended method.
      *
-     * @param array $callbacks
-     *   An array of methods of the interface, that should be overridden, where
+     * @param $methods
+     *   An array of methods of the interface, that should be overriden, where
      *   the keys are methods to override and the values the callback functions
      *   to use.
-     * @param array $includes
+     * @param $includes
      *   An optional array to describe files to include before invoking the
      *   callbacks. You may pass a single array describing one include for all
      *   callbacks or an array of arrays, keyed by the method names. Look at the
@@ -264,7 +257,6 @@ if (!class_exists('FacesExtendable', FALSE)) {
 
     /**
      * Adds in include files for the given methods while removing any old files.
-     *
      * If a single include file is described, it's added for all methods.
      */
     protected function addIncludes($methods, $includes) {
@@ -280,8 +272,6 @@ if (!class_exists('FacesExtendable', FALSE)) {
     }
 
     /**
-     * Destroys all references to created instances.
-     *
      * Destroys all references to created instances so that PHP's garbage
      * collection can do its work. This is needed as PHP's gc has troubles with
      * circular references until PHP < 5.3.
@@ -306,9 +296,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * This also allows to pass arguments by reference, so it may be used to
      * pass arguments by reference to dynamically extended methods.
      *
-     * @param string $name
+     * @param $name
      *   The method name.
-     * @param array $args
+     * @param $arguments
      *   An array of arguments to pass to the method.
      */
     public function call($name, array $args = array()) {
@@ -317,7 +307,5 @@ if (!class_exists('FacesExtendable', FALSE)) {
       }
       return $this->__call($name, $args);
     }
-
   }
-
 }

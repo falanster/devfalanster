@@ -92,9 +92,6 @@ class Google_Auth_AppIdentity extends Google_Auth_Abstract
       // No token, so nothing to do.
       return $request;
     }
-
-    $this->client->getLogger()->debug('App Identity authentication');
-
     // Add the OAuth2 header to the request
     $request->setRequestHeaders(
         array('Authorization' => 'Bearer ' . $this->token['access_token'])

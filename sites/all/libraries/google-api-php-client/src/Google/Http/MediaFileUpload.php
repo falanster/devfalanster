@@ -178,7 +178,7 @@ class Google_Http_MediaFileUpload
       // No problems, but upload not complete.
       return false;
     } else {
-      return Google_Http_REST::decodeHttpResponse($response, $this->client);
+      return Google_Http_REST::decodeHttpResponse($response);
     }
   }
 
@@ -292,9 +292,6 @@ class Google_Http_MediaFileUpload
       }
       $message = rtrim($message, ';');
     }
-
-    $error = "Failed to start the resumable upload (HTTP {$message})";
-    $this->client->getLogger()->error($error);
-    throw new Google_Exception($error);
+    throw new Google_Exception("Failed to start the resumable upload (HTTP {$message})");
   }
 }

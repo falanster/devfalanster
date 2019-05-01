@@ -79,15 +79,6 @@ class Google_Service_Resource
   public function call($name, $arguments, $expected_class = null)
   {
     if (! isset($this->methods[$name])) {
-      $this->client->getLogger()->error(
-          'Service method unknown',
-          array(
-              'service' => $this->serviceName,
-              'resource' => $this->resourceName,
-              'method' => $name
-          )
-      );
-
       throw new Google_Exception(
           "Unknown function: " .
           "{$this->serviceName}->{$this->resourceName}->{$name}()"
@@ -133,15 +124,6 @@ class Google_Service_Resource
     );
     foreach ($parameters as $key => $val) {
       if ($key != 'postBody' && ! isset($method['parameters'][$key])) {
-        $this->client->getLogger()->error(
-            'Service parameter unknown',
-            array(
-                'service' => $this->serviceName,
-                'resource' => $this->resourceName,
-                'method' => $name,
-                'parameter' => $key
-            )
-        );
         throw new Google_Exception("($name) unknown parameter: '$key'");
       }
     }
@@ -151,15 +133,6 @@ class Google_Service_Resource
           $paramSpec['required'] &&
           ! isset($parameters[$paramName])
       ) {
-        $this->client->getLogger()->error(
-            'Service parameter missing',
-            array(
-                'service' => $this->serviceName,
-                'resource' => $this->resourceName,
-                'method' => $name,
-                'parameter' => $paramName
-            )
-        );
         throw new Google_Exception("($name) missing required param: '$paramName'");
       }
       if (isset($parameters[$paramName])) {
@@ -174,16 +147,6 @@ class Google_Service_Resource
     }
 
     $servicePath = $this->service->servicePath;
-
-    $this->client->getLogger()->info(
-        'Service Call',
-        array(
-            'service' => $this->serviceName,
-            'resource' => $this->resourceName,
-            'method' => $name,
-            'arguments' => $parameters,
-        )
-    );
 
     $url = Google_Http_REST::createRequestUri(
         $servicePath,

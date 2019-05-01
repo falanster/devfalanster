@@ -242,15 +242,6 @@ function agenda_admin_configure($form, $form_state, $delta) {
     '#agenda_setting' => TRUE,
   );
 
-  $form['agenda_timezone'] = array(
-    '#type'           => 'textfield',
-    '#title'          => t('Timezone'),
-    '#default_value'  => agenda_variable_get($delta, 'timezone', variable_get('date_default_timezone', date_default_timezone_get())),
-    '#description'    => t('The timezone identifier to be used for this calendar, as described in <a href="http://php.net/timezones">the PHP manual</a>.'),
-    '#required'       => TRUE,
-    '#agenda_setting' => TRUE,
-  );
-
   $form['agenda_googleapi_override'] = array(
     '#type'           => 'textfield',
     '#title'          => t('Google API Key'),
@@ -258,6 +249,15 @@ function agenda_admin_configure($form, $form_state, $delta) {
     '#size'           => 39,
     '#maxlength'      => 39,
     '#description'    => t("Use this Google API key instead of default set on agenda settings page."),
+    '#agenda_setting' => TRUE,
+  );
+
+  $form['agenda_timezone'] = array(
+    '#type'           => 'textfield',
+    '#title'          => t('Timezone'),
+    '#default_value'  => agenda_variable_get($delta, 'timezone', variable_get('date_default_timezone', date_default_timezone_get())),
+    '#description'    => t('The timezone identifier to be used for this calendar, as described in <a href="http://php.net/timezones">the PHP manual</a>.'),
+    '#required'       => TRUE,
     '#agenda_setting' => TRUE,
   );
 
@@ -359,7 +359,6 @@ function agenda_admin_configure_submit($form, $form_state) {
  */
 function agenda_debug($bid) {
   $output     = array();
-
   // Date check (http://drupal.org/node/545174)
   $output[]   = t('Checking server time: %date', array('%date' => gmdate('r')));
   $output[]   = t('Checking real UTC time via NTP: %date', array('%date' => gmdate('r', agenda_debug_ntp_time('0.pool.ntp.org'))));
@@ -367,7 +366,6 @@ function agenda_debug($bid) {
 
   // Find calendar sources
   $block      = agenda_settings($bid);
-  $debug_title = array('#markup' => '<h2>' . t('Debugging %calendar block', array('%calendar' => $block->title)) . ' - '.l('Edit','admin/config/services/agenda/'.$bid.'/configure',array('query' => drupal_get_destination())).'</h2>');
   $output[]   = t('Reading calendar input:');
   $output[]   = '<pre>' . htmlspecialchars($block->calendars) . '</pre>';
   $calendars  = preg_split('@\r\n?|\n@', $block->calendars);
@@ -386,13 +384,16 @@ function agenda_debug($bid) {
   $output[] = t('Maximum number of events to fetch: %maxEvents',array('%maxEvents' => $block->maxevents));
   $output[] = t('Timezone: %timezone',array('%timezone' => $block->timezone));
 
-  $googlekey = !empty($block->googleapi_override) ? $block->googleapi_override : variable_get('agenda_googleapi', '');
+  $googlekey = ($block->googleapi_override) ? $block->googleapi_override : variable_get('agenda_googleapi', '');
   $output[] = t('Using Google API Key: %googlekey',array('%googlekey' => $googlekey));
 
   // Load the calendar
   list ($address, $token) = _agenda_parse_googleid($googleid);
+  //$source = _agenda_feed_url($address, $token, $block);
+  //$output[] = t('Fetching feed from <em>%source</em>', array('%source' => $source));
 
   // Load the XML
+  //$calendar = _agenda_load_xml($address, $token, $block);
   $calendar = _agenda_load_google($address, $token, $block);
   if (!$calendar) {
     $output[] = t('<strong>Warning</strong>: Failed');
@@ -400,8 +401,8 @@ function agenda_debug($bid) {
   }
   $output[] = t('Loaded Calendar successfully');
 
-  // Find the events
   $calendar_events = $calendar->getItems();
+  // Find the events
   $number_of_events = count($calendar_events);
   $output[] = t('Found @count events', array('@count' => $number_of_events));
   if ($number_of_events === 0) {
@@ -418,6 +419,9 @@ function agenda_debug($bid) {
   $i = 0;
   $eventdata = array();
   foreach ($calendar_events as $event) {
+    //$output[] = t('Loading event @number which is @size bytes', array('@number' => ++$i, '@size' => strlen($event->asXml())));
+    //$output[] = sprintf("<pre>%s</pre>", htmlspecialchars($event->asXml()));
+
     $thisevent = _agenda_parse_event($event, $block);
     if (!$thisevent) {
       $output[] = t('<strong>Warning</strong>: Failed to parse event!');
@@ -428,6 +432,7 @@ function agenda_debug($bid) {
     $output[] = '<pre>' . print_r($thisevent, TRUE) . '</pre>';
     $eventdata[] = $thisevent;
   }
+
 
   $output[] = t('Parsed @success/@total events successfully', array('@success' => count($eventdata), '@total' => $number_of_events));
 
@@ -461,13 +466,13 @@ function agenda_debug($bid) {
     $event_table = theme('table', array(
       'header' => array_keys($first_row[0]),
       'rows'   => $eventdata,
-      'sticky' => TRUE,
+      'sticky' => FALSE,
     ));
   }
 
   // Render
   return array(
-    'title'       => $debug_title,
+    'title'       => array('#markup' => '<h2>' . t('Debugging %calendar block', array('%calendar' => $block->title)) . '</h2>'),
     'debug_log'   => array('#markup' => $debug_log, '#prefix' => '<h3>Log</h3><div id="agenda-debug-log">', '#suffix' => '</div>'),
     'event_table' => array('#markup' => $event_table, '#prefix' => '<h3>Events</h3><div id="agenda-debug-table">', '#suffix' => '</div>'),
     '#attached'   => array('css' => array(drupal_get_path('module', 'agenda') . '/agenda.css')),

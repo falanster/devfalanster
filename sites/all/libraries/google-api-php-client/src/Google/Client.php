@@ -26,7 +26,7 @@ require_once realpath(dirname(__FILE__) . '/../../autoload.php');
  */
 class Google_Client
 {
-  const LIBVER = "1.1.2";
+  const LIBVER = "1.1.1";
   const USER_AGENT_SUFFIX = "google-api-php-client/";
   /**
    * @var Google_Auth_Abstract $auth
@@ -47,11 +47,6 @@ class Google_Client
    * @var Google_Config $config
    */
   private $config;
-
-  /**
-   * @var Google_Logger_Abstract $logger
-   */
-  private $logger;
 
   /**
    * @var boolean $deferExecution
@@ -92,8 +87,7 @@ class Google_Client
     }
 
     if ($config->getIoClass() == Google_Config::USE_AUTO_IO_SELECTION) {
-      if (function_exists('curl_version') && function_exists('curl_exec')
-          && !$this->isAppEngine()) {
+      if (function_exists('curl_version') && function_exists('curl_exec')) {
         $config->setIoClass("Google_IO_Curl");
       } else {
         $config->setIoClass("Google_IO_Stream");
@@ -219,16 +213,6 @@ class Google_Client
   {
     $this->config->setCacheClass(get_class($cache));
     $this->cache = $cache;
-  }
-
-  /**
-   * Set the Logger object
-   * @param Google_Logger_Abstract $logger
-   */
-  public function setLogger(Google_Logger_Abstract $logger)
-  {
-    $this->config->setLoggerClass(get_class($logger));
-    $this->logger = $logger;
   }
 
   /**
@@ -612,18 +596,6 @@ class Google_Client
       $this->cache = new $class($this);
     }
     return $this->cache;
-  }
-
-  /**
-   * @return Google_Logger_Abstract Logger implementation
-   */
-  public function getLogger()
-  {
-    if (!isset($this->logger)) {
-      $class = $this->config->getLoggerClass();
-      $this->logger = new $class($this);
-    }
-    return $this->logger;
   }
 
   /**

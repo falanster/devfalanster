@@ -123,7 +123,7 @@ class Google_Http_Batch
           }
 
           try {
-            $response = Google_Http_REST::decodeHttpResponse($response, $this->client);
+            $response = Google_Http_REST::decodeHttpResponse($response);
             $responses[$key] = $response;
           } catch (Google_Service_Exception $e) {
             // Store the exception as the response, so successful responses

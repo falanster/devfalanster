@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @file
- * Includes any rules integration provided by the module.
+ * @file Includes any rules integration provided by the module.
  */
 
 /**

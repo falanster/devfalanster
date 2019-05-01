@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+require_once realpath(dirname(__FILE__) . '/../../autoload.php');
+
 class TasksTest extends BaseTest
 {
   /** @var Google_TasksService */
@@ -25,7 +27,7 @@ class TasksTest extends BaseTest
     parent::__construct();
     $this->taskService = new Google_Service_Tasks($this->getClient());
   }
-
+  
   public function testInsertTask()
   {
     if (!$this->checkToken()) {

@@ -7,7 +7,8 @@
 
 // This is not necessary as the classes are autoloaded via the registry. However
 // it saves some possible update headaches until the registry is rebuilt.
-// @todo Remove for a future release.
+// @todo
+//   Remove for a future release.
 require_once dirname(__FILE__) . '/faces.inc';
 
 /**
@@ -28,11 +29,10 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden.
-   *
    * @see DrupalDefaultEntityController::attachLoad()
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    // Retrieve stdClass records and store them as rules objects in 'data'.
+    // Retrieve stdClass records and turn them in rules objects stored in 'data'
     $ids = array_keys($queried_entities);
     $result = db_select('rules_tags')
       ->fields('rules_tags', array('id', 'tag'))
@@ -68,8 +68,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Override to support having events and tags as conditions.
-   *
-   * @see EntityAPIController::applyConditions()
+   * @see EntityAPIController::applyConditions($entities, $conditions)
    * @see rules_query_rules_config_load_multiple_alter()
    */
   protected function applyConditions($entities, $conditions = array()) {
@@ -107,8 +106,6 @@ class RulesEntityController extends EntityAPIControllerExportable {
    * @param $export
    *   A serialized string in JSON format as produced by the
    *   RulesPlugin::export() method, or the PHP export as usual PHP array.
-   * @param string $error_msg
-   *   The error message.
    */
   public function import($export, &$error_msg = '') {
     $export = is_array($export) ? $export : drupal_json_decode($export);
@@ -116,9 +113,8 @@ class RulesEntityController extends EntityAPIControllerExportable {
       $error_msg = t('Unable to parse the pasted export.');
       return FALSE;
     }
-    // The key is the configuration name and the value the actual export.
-    $name = key($export);
-    $export = current($export);
+    // The key ist the configuration name and the value the actual export.
+    list($name, $export) = each($export);
     if (!isset($export['PLUGIN'])) {
       $error_msg = t('Export misses plugin information.');
       return FALSE;
@@ -205,10 +201,10 @@ class RulesEntityController extends EntityAPIControllerExportable {
     foreach ($rules_config->events() as $event) {
       db_insert('rules_trigger')
         ->fields(array(
-          'id' => $rules_config->id,
-          'event' => $event,
-        ))
-        ->execute();
+        'id' => $rules_config->id,
+        'event' => $event,
+      ))
+      ->execute();
     }
   }
 
@@ -220,17 +216,16 @@ class RulesEntityController extends EntityAPIControllerExportable {
       foreach ($rules_config->dependencies as $dependency) {
         db_insert('rules_dependencies')
           ->fields(array(
-            'id' => $rules_config->id,
-            'module' => $dependency,
-          ))
-          ->execute();
+          'id' => $rules_config->id,
+          'module' => $dependency,
+        ))
+        ->execute();
       }
     }
   }
 
   /**
    * Overridden to support tags and events in $conditions.
-   *
    * @see EntityAPIControllerExportable::buildQuery()
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
@@ -238,7 +233,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
     $query_conditions =& $query->conditions();
     foreach ($query_conditions as &$condition) {
       // One entry in $query_conditions is a string with key '#conjunction'.
-      // @see QueryConditionInterface::conditions()
+      // @see QueryConditionInterface::conditions().
       if (is_array($condition)) {
         // Support using 'tags' => array('tag1', 'tag2') as condition.
         if ($condition['field'] == 'base.tags') {
@@ -259,7 +254,6 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden to also delete tags and events.
-   *
    * @see EntityAPIControllerExportable::delete()
    */
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
@@ -310,12 +304,9 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
     return $return;
   }
-
 }
 
 /**
- * Base class for RulesExtendables.
- *
  * The RulesExtendable uses the rules cache to setup the defined extenders
  * and overrides automatically.
  * As soon faces is used the faces information is autoloaded using setUp().
@@ -324,7 +315,6 @@ abstract class RulesExtendable extends FacesExtendable {
 
   /**
    * The name of the info definitions associated with info about this class.
-   *
    * This would be defined abstract, if possible. Common rules hooks with class
    * info are e.g. plugin_info and data_info.
    */
@@ -335,8 +325,8 @@ abstract class RulesExtendable extends FacesExtendable {
    */
   protected $itemName;
 
-  protected $cache;
-  protected $itemInfo = array();
+  protected $cache, $itemInfo = array();
+
 
   public function __construct() {
     $this->setUp();
@@ -349,14 +339,14 @@ abstract class RulesExtendable extends FacesExtendable {
     if (isset($this->cache[$this->hook][$this->itemName])) {
       $this->itemInfo = &$this->cache[$this->hook][$this->itemName];
     }
-    // Set up the Faces Extenders.
+    // Set up the Faces Extenders
     if (!empty($this->itemInfo['faces_cache'])) {
       list($this->facesMethods, $this->facesIncludes, $this->faces) = $this->itemInfo['faces_cache'];
     }
   }
 
   /**
-   * Forces the object to be setUp, this executes setUp() if not done yet.
+   * Force the object to be setUp, this executes setUp() if not done yet.
    */
   public function forceSetUp() {
     if (!isset($this->cache) || (!empty($this->itemInfo['faces_cache']) && !$this->faces)) {
@@ -411,14 +401,12 @@ abstract class RulesExtendable extends FacesExtendable {
    *   The info about the item as specified in the hook.
    * @param $interface
    *   The interface to check for.
-   *
-   * @return bool
+   * @return
    *   Whether it supports the given interface.
    */
   public static function itemFacesAs(&$itemInfo, $interface) {
     return in_array($interface, class_implements($itemInfo['class'])) || isset($itemInfo['faces_cache'][2][$interface]);
   }
-
 }
 
 /**
@@ -450,13 +438,11 @@ abstract class RulesPlugin extends RulesExtendable {
 
   /**
    * The parent element, if any.
-   *
    * @var RulesContainerPlugin
    */
   protected $parent = NULL;
 
-  protected $cache = NULL;
-  protected $hook = 'plugin_info';
+  protected $cache = NULL, $hook = 'plugin_info';
 
   /**
    * Identifies an element inside a configuration.
@@ -467,6 +453,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * Static cache for availableVariables().
    */
   protected $availableVariables;
+
 
   /**
    * Sets a new parent element.
@@ -545,7 +532,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * Iterate over all elements nested below the current element.
    *
    * This helper can be used to recursively iterate over all elements of a
-   * configuration. To iterate over the children only, just regularly iterate
+   * configuration. To iterate over the children only, just regulary iterate
    * over the object.
    *
    * @param $mode
@@ -598,7 +585,7 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Evaluate the element on a given rules evaluation state.
    */
-  abstract public function evaluate(RulesState $state);
+  abstract function evaluate(RulesState $state);
 
   protected static function compare(RulesPlugin $a, RulesPlugin $b) {
     if ($a->weight == $b->weight) {
@@ -623,7 +610,7 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Returns info about parameters needed for executing the configured plugin.
    *
-   * @param bool $optional
+   * @param $optional
    *   Whether optional parameters should be included.
    *
    * @see self::pluginParameterInfo()
@@ -756,21 +743,19 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Returns asserted additions to the available variable info.
-   *
-   * Any returned info is merged into the variable info, in case the execution
-   * flow passes the element.
+   * Returns asserted additions to the available variable info. Any returned
+   * info is merged into the variable info, in case the execution flow passes
+   * the element.
    * E.g. this is used to assert the content type of a node if the condition
-   * is met, such that the per-node type properties are available.
+   * is met, such that the per node type properties are available.
    */
   protected function variableInfoAssertions() {
     return array();
   }
 
   /**
-   * Gets the name of this plugin instance.
-   *
-   * The returned name should identify the code which drives this plugin.
+   * Get the name of this plugin instance. The returned name should identify
+   * the code which drives this plugin.
    */
   public function getPluginName() {
     return $this->itemName;
@@ -827,6 +812,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * Usually settings get processed automatically, however if $this->settings
    * has been altered manually after element construction, it needs to be
    * invoked explicitly with $force set to TRUE.
+   *
    */
   public function processSettings($force = FALSE) {
     // Process if not done yet.
@@ -852,15 +838,14 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Makes sure the plugin is configured right.
+   * Makes sure the plugin is configured right, e.g. all needed variables
+   * are available in the element's scope and dependent modules are enabled.
    *
-   * "Configured right" means all needed variables are available in the
-   * element's scope and dependent modules are enabled.
-   *
-   * @return $this
+   * @return RulesPlugin
+   *   Returns $this to support chained usage.
    *
    * @throws RulesIntegrityException
-   *   In case of a failed integrity check, a RulesIntegrityException exception
+   *   In case of a failed integraty check, a RulesIntegrityException exception
    *   is thrown.
    */
   public function integrityCheck() {
@@ -915,24 +900,21 @@ abstract class RulesPlugin extends RulesExtendable {
       elseif (!$this->isRoot() && !isset($this->settings[$name]) && empty($info['optional']) && $info['type'] != 'hidden') {
         throw new RulesIntegrityException(t('Missing configuration for parameter %name.', array('%name' => $name)), array($this, 'parameter', $name));
       }
-      // @todo Make sure used values are allowed.
-      // (key/value pairs + allowed values).
+      //TODO: Make sure used values are allowed. (key/value pairs + allowed values)
     }
   }
 
   /**
-   * Returns the argument for the parameter $name described with $info.
-   *
    * Returns the argument as configured in the element settings for the
    * parameter $name described with $info.
    *
-   * @param string $name
+   * @param $name
    *   The name of the parameter for which to get the argument.
    * @param $info
    *   Info about the parameter.
    * @param RulesState $state
    *   The current evaluation state.
-   * @param string $langcode
+   * @param $langcode
    *   (optional) The language code used to get the argument value if the
    *   argument value should be translated. By default (NULL) the current
    *   interface language will be used.
@@ -985,7 +967,7 @@ abstract class RulesPlugin extends RulesExtendable {
     if (!empty($this->settings[$name . ':process'])) {
       // For processing, make sure the data is unwrapped now.
       $return = rules_unwrap_data(array($arg), array($info));
-      // @todo For Drupal 8: Refactor to add the name and language code as
+      // @todo for Drupal 8: Refactor to add the name and language code as
       // separate parameter to process().
       $info['#name'] = $name;
       $info['#langcode'] = $langcode;
@@ -1022,12 +1004,10 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Applies the given data selector.
+   * Apply the given data selector by using the info about available variables.
+   * Thus it doesn't require an actual evaluation state.
    *
-   * Applies the given data selector by using the info about available
-   * variables. Thus it doesn't require an actual evaluation state.
-   *
-   * @param string $selector
+   * @param $selector
    *   The selector string, e.g. "node:author:mail".
    *
    * @return EntityMetadataWrapper
@@ -1049,7 +1029,7 @@ abstract class RulesPlugin extends RulesExtendable {
             }
           }
         }
-        // Return FALSE if there is no wrappper or we get an exception.
+        // In case of an exception or we were unable to get a wrapper, return FALSE.
         catch (EntityMetadataWrapperException $e) {
           return FALSE;
         }
@@ -1084,10 +1064,8 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Saves the configuration to the database.
-   *
-   * The configuration is saved regardless whether this method is invoked on
-   * the rules configuration or a contained rule element.
+   * Saves the configuration to the database, regardless whether this is invoked
+   * on the rules configuration or a contained rule element.
    */
   public function save($name = NULL, $module = 'rules') {
     if (isset($this->parent)) {
@@ -1117,7 +1095,7 @@ abstract class RulesPlugin extends RulesExtendable {
       // default configurations 'module' points to the module providing the
       // default configuration, so the module via which the rules is configured
       // is stored in the "owner" property.
-      // @todo For Drupal 8 use "owner" for generating machine names also and
+      // @todo: For Drupal 8 use "owner" for generating machine names also and
       // module only for the modules providing default configurations.
       $this->module = !isset($this->module) || $module != 'rules' ? $module : $this->module;
       if (!isset($this->owner)) {
@@ -1212,8 +1190,6 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Deletes configuration from database.
-   *
    * If invoked on a rules configuration it is deleted from database. If
    * invoked on a contained rule element, it's removed from the configuration.
    */
@@ -1258,7 +1234,7 @@ abstract class RulesPlugin extends RulesExtendable {
    *   A status constant, i.e. one of ENTITY_CUSTOM, ENTITY_IN_CODE,
    *   ENTITY_OVERRIDDEN or ENTITY_FIXED.
    *
-   * @return bool
+   * @return
    *   TRUE if the configuration has the status, else FALSE.
    *
    * @see entity_has_status()
@@ -1268,7 +1244,8 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Removes circular object references so PHP garbage collector can work.
+   * Remove circular object references so the PHP garbage collector does its
+   * work.
    */
   public function destroy() {
     parent::destroy();
@@ -1276,9 +1253,8 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Seamlessly invokes the method implemented via faces.
-   *
-   * Frees the caller from having to think about references.
+   * Seamlessy invokes the method implemented via faces without having to think
+   * about references.
    */
   public function form(&$form, &$form_state, array $options = array()) {
     $this->__call('form', array(&$form, &$form_state, $options));
@@ -1362,14 +1338,13 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Exports a rule configuration.
    *
-   * @param string $prefix
+   * @param $prefix
    *   An optional prefix for each line.
-   * @param bool $php
+   * @param $php
    *   Optional. Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
-   *
    * @return
-   *   The exported configuration.
+   *   The exported confiugration.
    *
    * @see rules_import()
    */
@@ -1419,17 +1394,8 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Finalizes the configuration export.
-   *
-   * Adds general attributes regarding the configuration and returns it in the
-   * right format for export.
-   *
-   * @param $export
-   * @param string $prefix
-   *   An optional prefix for each line.
-   * @param bool $php
-   *   Optional. Set to TRUE to format the export using PHP arrays. By default
-   *   JSON is used.
+   * Finalizies the configuration export by adding general attributes regarding
+   * the configuration and returns it in the right format.
    */
   protected function returnExport($export, $prefix = '', $php = FALSE) {
     $this->ensureNameExists();
@@ -1475,13 +1441,11 @@ abstract class RulesPlugin extends RulesExtendable {
   public function resetInternalCache() {
     $this->availableVariables = NULL;
   }
-
 }
 
 /**
- * Defines a common base class for so-called "Abstract Plugins" like actions.
- *
- * Modules have to provide the concrete plugin implementation.
+ * Defines a common base class for so called "Abstract Plugins" like actions.
+ * Thus modules have to provide the concrete plugin implementation.
  */
 abstract class RulesAbstractPlugin extends RulesPlugin {
 
@@ -1490,14 +1454,14 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   protected $infoLoaded = FALSE;
 
   /**
-   * @param string $name
+   * @param $name
    *   The plugin implementation's name.
-   * @param $settings
+   * @param $info
    *   Further information provided about the plugin. Optional.
    * @throws RulesException
    *   If validation of the passed settings fails RulesExceptions are thrown.
    */
-  public function __construct($name = NULL, $settings = array()) {
+  function __construct($name = NULL, $settings = array()) {
     $this->elementName = $name;
     $this->settings = (array) $settings + array('#_needs_processing' => TRUE);
     $this->setUp();
@@ -1508,7 +1472,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
     if (isset($this->cache[$this->itemName . '_info'][$this->elementName])) {
       $this->info = $this->cache[$this->itemName . '_info'][$this->elementName];
       // Remember that the info has been correctly setup.
-      // @see self::forceSetup()
+      // @see self::forceSetup().
       $this->infoLoaded = TRUE;
 
       // Register the defined class, if any.
@@ -1688,6 +1652,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    */
   abstract protected function executeCallback(array $args, RulesState $state = NULL);
 
+
   public function evaluate(RulesState $state) {
     $this->processSettings();
     try {
@@ -1711,7 +1676,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   public function getPluginName() {
-    return $this->itemName . " " . $this->elementName;
+    return $this->itemName ." ". $this->elementName;
   }
 
   /**
@@ -1731,8 +1696,8 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
     self::includeFiles();
 
     // Get the plugin's own info data.
-    $cache[$this->itemName . '_info'] = rules_fetch_data($this->itemName . '_info');
-    foreach ($cache[$this->itemName . '_info'] as $name => &$info) {
+    $cache[$this->itemName .'_info'] = rules_fetch_data($this->itemName .'_info');
+    foreach ($cache[$this->itemName .'_info'] as $name => &$info) {
       $info += array(
         'parameter' => isset($info['arguments']) ? $info['arguments'] : array(),
         'provides' => isset($info['new variables']) ? $info['new variables'] : array(),
@@ -1750,7 +1715,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
       // RulesPluginImplInterface.
       unset($this->faces['RulesPluginHandlerInterface']);
 
-      // Build up the per-plugin implementation faces cache.
+      // Build up the per plugin implementation faces cache.
       foreach ($this->faces as $interface) {
         $methods = $file_names = array();
         $includes = self::getIncludeFiles($info['module']);
@@ -1773,7 +1738,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         // Cache only the plugin implementation specific callbacks.
         $info['faces_cache'][$interface] = array($methods, array_filter($file_names));
       }
-      // Filter out interfaces with no overridden methods.
+      // Filter out interfaces with no overriden methods.
       $info['faces_cache'] = rules_filter_array($info['faces_cache'], 0, TRUE);
       // We don't need that any more.
       unset($info['callbacks'], $info['base']);
@@ -1781,9 +1746,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   /**
-   * Loads this module's .rules.inc file.
-   *
-   * Makes sure the providing modules' .rules.inc file is included, as diverse
+   * Makes sure the providing modules' .rules.inc file is included as diverse
    * callbacks may reside in that file.
    */
   protected function loadBasicInclude() {
@@ -1797,7 +1760,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   /**
-   * Makes sure all supported destinations are included.
+   * Make sure all supported destinations are included.
    */
   public static function includeFiles() {
     static $included;
@@ -1819,11 +1782,8 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         $dirs += $result;
       }
       foreach ($dirs as $module => $directory) {
-        $module_path = drupal_get_path('module', $module);
-        foreach (array('inc', 'php') as $extension) {
-          foreach (glob("$module_path/$directory/*.$extension") as $filename) {
-            include_once $filename;
-          }
+        foreach (glob(drupal_get_path('module', $module) . "/$directory/*.{inc,php}", GLOB_BRACE) as $filename) {
+          include_once $filename;
         }
       }
       $included = TRUE;
@@ -1831,18 +1791,11 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   /**
-   * Returns all include files for a module.
-   *
-   * @param string $module
-   *   The module name.
-   * @param bool $all
-   *   If FALSE, the $module.rules.inc file isn't added.
-   *
-   * @return string[]
-   *   An array containing the names of all the include files for a module.
+   * Returns all include files for a module. If $all is set to FALSE the
+   * $module.rules.inc file isn't added.
    */
   protected static function getIncludeFiles($module, $all = TRUE) {
-    $files = (array) module_invoke($module, 'rules_file_info');
+    $files = (array)module_invoke($module, 'rules_file_info');
     // Automatically add "$module.rules_forms.inc" and "$module.rules.inc".
     $files[] = $module . '.rules_forms';
     if ($all) {
@@ -1869,32 +1822,29 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
     }
     return $filenames[$function];
   }
-
 }
 
 /**
- * Interface for objects that can be used as actions.
+ * Interface for objects that can be used as action.
  */
 interface RulesActionInterface {
 
   /**
-   * @return
-   *   As specified.
+   * @return As specified.
    *
    * @throws RulesEvaluationException
    *   Throws an exception if not all necessary arguments have been provided.
    */
   public function execute();
-
 }
 
 /**
- * Interface for objects that can be used as conditions.
+ * Interface for objects that can be used as condition.
  */
 interface RulesConditionInterface {
 
   /**
-   * @return bool
+   * @return Boolean.
    *
    * @throws RulesEvaluationException
    *   Throws an exception if not all necessary arguments have been provided.
@@ -1910,12 +1860,8 @@ interface RulesConditionInterface {
    * Returns whether the element is configured to negate the result.
    */
   public function isNegated();
-
 }
 
-/**
- * Interface for objects that are triggerable.
- */
 interface RulesTriggerableInterface {
 
   /**
@@ -1926,9 +1872,8 @@ interface RulesTriggerableInterface {
   /**
    * Removes an event from the rule configuration.
    *
-   * @param string $event_name
+   * @param $event
    *   The name of the (configured) event to remove.
-   *
    * @return RulesTriggerableInterface
    *   The object instance itself, to allow chaining.
    */
@@ -1950,7 +1895,7 @@ interface RulesTriggerableInterface {
   /**
    * Gets the event settings associated with the given (configured) event.
    *
-   * @param string $event_name
+   * @param $event_name
    *   The (configured) event's name.
    *
    * @return array|null
@@ -1976,8 +1921,7 @@ interface RulesPluginHandlerInterface {
   /**
    * Processes settings independent from a form submission.
    *
-   * Processing results may be stored and accessed on execution time
-   * in $settings.
+   * Processing results may be stored and accessed on execution time in $settings.
    */
   public function process();
 
@@ -2009,7 +1953,7 @@ interface RulesPluginHandlerInterface {
   public function dependencies();
 
   /**
-   * Alters the generated configuration form of the element.
+   * Alter the generated configuration form of the element.
    *
    * Validation and processing of the settings should be untied from the form
    * and implemented in validate() and process() wherever it makes sense.
@@ -2018,11 +1962,11 @@ interface RulesPluginHandlerInterface {
    */
   public function form_alter(&$form, $form_state, $options);
 
+
   /**
-   * Returns an array of info assertions for the specified parameters.
-   *
-   * This allows conditions to assert additional metadata, such as info about
-   * the fields of a bundle.
+   * Optionally returns an array of info assertions for the specified
+   * parameters. This allows conditions to assert additional metadata, such as
+   * info about the fields of a bundle.
    *
    * @see RulesPlugin::variableInfoAssertions()
    */
@@ -2061,7 +2005,6 @@ interface RulesConditionHandlerInterface extends RulesPluginHandlerInterface {}
 interface RulesActionHandlerInterface extends RulesPluginHandlerInterface {}
 
 /**
- * Interface used for implementing an abstract plugin via Faces.
  *
  * Provides the interface used for implementing an abstract plugin by using
  * the Faces extension mechanism.
@@ -2069,10 +2012,9 @@ interface RulesActionHandlerInterface extends RulesPluginHandlerInterface {}
 interface RulesPluginImplInterface extends RulesPluginHandlerInterface {
 
   /**
-   * Executes the action or condition making use of the parameters as specified.
+   * Execute the action or condition making use of the parameters as specified.
    */
   public function execute();
-
 }
 
 /**
@@ -2081,12 +2023,10 @@ interface RulesPluginImplInterface extends RulesPluginHandlerInterface {
  * @see RulesContainerPlugin::optimize()
  */
 interface RulesOptimizationInterface {
-
   /**
    * Optimizes a rule configuration in order to speed up evaluation.
    */
   public function optimize();
-
 }
 
 /**
@@ -2115,17 +2055,11 @@ abstract class RulesPluginHandlerBase extends FacesExtender implements RulesPlug
   }
 
   public function validate() {}
-
   public function process() {}
-
   public function info_alter(&$element_info) {}
-
   public function dependencies() {}
-
   public function form_alter(&$form, $form_state, $options) {}
-
   public function assertions() {}
-
 }
 
 /**
@@ -2139,7 +2073,7 @@ abstract class RulesConditionHandlerBase extends RulesPluginHandlerBase implemen
 abstract class RulesActionHandlerBase extends RulesPluginHandlerBase implements RulesActionHandlerInterface {}
 
 /**
- * Provides default implementations of all RulesPluginImplInterface methods.
+ * Class providing default implementations of the methods of the RulesPluginImplInterface.
  *
  * If a plugin implementation does not provide a function for a method, the
  * default method of this class will be invoked.
@@ -2150,9 +2084,8 @@ abstract class RulesActionHandlerBase extends RulesPluginHandlerBase implements 
 class RulesAbstractPluginDefaults extends RulesPluginHandlerBase implements RulesPluginImplInterface {
 
   public function execute() {
-    throw new RulesEvaluationException($this->object->getPluginName() . ": Execution implementation is missing.", array(), $this->object, RulesLog::ERROR);
+    throw new RulesEvaluationException($this->object->getPluginName() .": Execution implementation is missing.", array(), $this->object, RulesLog::ERROR);
   }
-
 }
 
 /**
@@ -2160,14 +2093,13 @@ class RulesAbstractPluginDefaults extends RulesPluginHandlerBase implements Rule
  */
 class RulesRecursiveElementIterator extends ArrayIterator implements RecursiveIterator {
 
-  public function getChildren() {
-    return $this->current()->getIterator();
-  }
+   public function getChildren() {
+     return $this->current()->getIterator();
+   }
 
-  public function hasChildren() {
-    return $this->current() instanceof IteratorAggregate;
-  }
-
+   public function hasChildren() {
+      return $this->current() instanceof IteratorAggregate;
+   }
 }
 
 /**
@@ -2198,7 +2130,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Allows access to the children through the iterator.
+   * Allow access to the children through the iterator.
    *
    * @return RulesRecursiveElementIterator
    */
@@ -2260,8 +2192,6 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Returns available state variables for an element.
-   *
    * Returns info about variables available in the evaluation state for any
    * children elements or if given for a special child element.
    *
@@ -2304,8 +2234,6 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Executes container with the given arguments.
-   *
    * Condition containers just return a boolean while action containers return
    * the configured provided variables as an array of variables.
    */
@@ -2360,7 +2288,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Overrides delete to keep the children alive, if possible.
+   * Override delete to keep the children alive, if possible.
    */
   public function delete($keep_children = TRUE) {
     if (isset($this->parent) && $keep_children) {
@@ -2378,13 +2306,13 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   /**
    * Sorts all child elements by their weight.
    *
-   * @param bool $deep
+   * @param $deep
    *   If enabled a deep sort is performed, thus the whole element tree below
    *   this element is sorted.
    */
   public function sortChildren($deep = FALSE) {
     // Make sure the array order is kept in case two children have the same
-    // weight by ensuring later children would have higher weights.
+    // weight by ensuring later childrens would have higher weights.
     foreach (array_values($this->children) as $i => $child) {
       $child->weight += $i / 1000;
     }
@@ -2413,10 +2341,9 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Determines whether the element should be exported in flat style.
-   *
-   * Flat style means that the export keys are written directly into the export
-   * array, whereas else the export is written into a sub-array.
+   * Determines whether the element should be exported in flat style. Flat style
+   * means that the export keys are written directly into the export array,
+   * whereas else the export is written into a sub-array.
    */
   protected function exportFlat() {
     // By default we always use flat style for plugins without any parameters
@@ -2478,7 +2405,6 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
       $element->optimize();
     }
   }
-
 }
 
 /**
@@ -2496,12 +2422,11 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
   }
 
   /**
-   * Adds an action to the container.
+   * Add an action. Pass either an instance of the RulesActionInterface
+   * or the arguments as needed by rules_action().
    *
-   * Pass in either an instance of the RulesActionInterface or the arguments
-   * as needed by rules_action().
-   *
-   * @return $this
+   * @return RulesActionContainer
+   *   Returns $this to support chained usage.
    */
   public function action($name, $settings = array()) {
     $action = (is_object($name) && $name instanceof RulesActionInterface) ? $name : rules_action($name, $settings);
@@ -2533,8 +2458,6 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
   }
 
   /**
-   * Returns an array of provided variable names.
-   *
    * Returns an array of variable names, which are provided by passing through
    * the provided variables of the children.
    */
@@ -2557,7 +2480,6 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
       $this->info['provides'] = $export['PROVIDES VARIABLES'];
     }
   }
-
 }
 
 /**
@@ -2568,12 +2490,11 @@ abstract class RulesConditionContainer extends RulesContainerPlugin implements R
   protected $negate = FALSE;
 
   /**
-   * Adds a condition to the container.
+   * Add a condition. Pass either an instance of the RulesConditionInterface
+   * or the arguments as needed by rules_condition().
    *
-   * Pass in either an instance of the RulesConditionInterface or the arguments
-   * as needed by rules_condition().
-   *
-   * @return $this
+   * @return RulesConditionContainer
+   *   Returns $this to support chained usage.
    */
   public function condition($name, $settings = array()) {
     $condition = (is_object($name) && $name instanceof RulesConditionInterface) ? $name : rules_condition($name, $settings);
@@ -2641,7 +2562,6 @@ abstract class RulesConditionContainer extends RulesContainerPlugin implements R
     }
     return $vars;
   }
-
 }
 
 /**
@@ -2659,7 +2579,7 @@ class RulesLog {
    * @return RulesLog
    *   Returns the rules logger instance.
    */
-  public static function logger() {
+  static function logger() {
     if (!isset(self::$logger)) {
       $class = __CLASS__;
       self::$logger = new $class(variable_get('rules_log_level', self::INFO));
@@ -2668,8 +2588,7 @@ class RulesLog {
   }
 
   protected $log = array();
-  protected $logLevel;
-  protected $line = 0;
+  protected $logLevel, $line = 0;
 
   /**
    * This is a singleton.
@@ -2696,7 +2615,7 @@ class RulesLog {
   /**
    * Checks the log and throws an exception if there were any problems.
    */
-  public function checkLog($logLevel = self::WARN) {
+  function checkLog($logLevel = self::WARN) {
     foreach ($this->log as $entry) {
       if ($entry[2] >= $logLevel) {
         throw new Exception($this->render());
@@ -2705,13 +2624,9 @@ class RulesLog {
   }
 
   /**
-   * Checks the log for error messages.
+   * Checks the log for (error) messages with a log level equal or higher than the given one.
    *
-   * @param int $logLevel
-   *   Lowest log level to return. Values lower than $logLevel will not be
-   *   returned.
-   *
-   * @return bool
+   * @return
    *   Whether the an error has been logged.
    */
   public function hasErrors($logLevel = self::WARN) {
@@ -2757,20 +2672,20 @@ class RulesLog {
         // messages here.
         $vars['head'] = t($this->log[$line][0], $this->log[$line][1]);
         if (isset($this->log[$line][5])) {
-          $vars['link'] = '[' . l(t('edit'), $this->log[$line][5]) . ']';
+          $vars['link'] = '[' . l('edit', $this->log[$line][5]) . ']';
         }
         $vars['log'] = $this->renderHelper($line);
         $output[] = theme('rules_debug_element', $vars);
       }
       else {
-        $formatted_diff = round(($this->log[$line][3] - $startTime) * 1000, 3) . ' ms';
-        $msg = $formatted_diff . ' ' . t($this->log[$line][0], $this->log[$line][1]);
+        $formatted_diff = round(($this->log[$line][3] - $startTime) * 1000, 3) .' ms';
+        $msg = $formatted_diff .' '. t($this->log[$line][0], $this->log[$line][1]);
         if ($this->log[$line][2] >= RulesLog::WARN) {
           $level = $this->log[$line][2] == RulesLog::WARN ? 'warn' : 'error';
-          $msg = '<span class="rules-debug-' . $level . '">' . $msg . '</span>';
+          $msg = '<span class="rules-debug-' . $level . '">'. $msg .'</span>';
         }
         if (isset($this->log[$line][5]) && !isset($this->log[$line][4])) {
-          $msg .= ' [' . l(t('edit'), $this->log[$line][5]) . ']';
+          $msg .= ' [' . l('edit', $this->log[$line][5]) . ']';
         }
         $output[] = $msg;
 
@@ -2790,14 +2705,12 @@ class RulesLog {
   public function clear() {
     $this->log = array();
   }
-
 }
 
 /**
- * A base exception class for Rules.
+ * A common exception for Rules.
  *
- * This class can be used to catch all exceptions thrown by Rules, and it
- * may be subclassed to describe more specific exceptions.
+ * This class can be used to catch all exceptions thrown by Rules.
  */
 abstract class RulesException extends Exception {}
 
@@ -2810,27 +2723,21 @@ abstract class RulesException extends Exception {}
  */
 class RulesEvaluationException extends RulesException {
 
-  public $msg;
-  public $args;
-  public $severity;
-  public $element;
-  public $keys = array();
+  public $msg, $args, $severity, $element, $keys = array();
 
   /**
-   * Constructor.
-   *
-   * @param string $msg
+   * @param $msg
    *   The exception message containing placeholder as t().
-   * @param array $args
+   * @param $args
    *   Replacement arguments such as for t().
    * @param $element
    *   The element of a configuration causing the exception or an array
    *   consisting of the element and keys specifying a setting value causing
    *   the exception.
-   * @param int $severity
+   * @param $severity
    *   The RulesLog severity. Defaults to RulesLog::WARN.
    */
-  public function __construct($msg, array $args = array(), $element = NULL, $severity = RulesLog::WARN) {
+  function __construct($msg, array $args = array(), $element = NULL, $severity = RulesLog::WARN) {
     $this->element = is_array($element) ? array_shift($element) : $element;
     $this->keys = is_array($element) ? $element : array();
     $this->msg = $msg;
@@ -2846,40 +2753,34 @@ class RulesEvaluationException extends RulesException {
         rules_clear_cache();
       }
     }
-    // @todo Fix _drupal_decode_exception() to use __toString() and override it.
+    // @todo fix _drupal_decode_exception() to use __toString() and override it.
     $this->message = t($this->msg, $this->args);
   }
-
 }
 
 /**
- * Indicates the Rules configuration failed the integrity check.
+ * An exception that is thrown for Rules configurations that fail the integrity check.
  *
  * @see RulesPlugin::integrityCheck()
  */
 class RulesIntegrityException extends RulesException {
 
-  public $msg;
-  public $element;
-  public $keys = array();
+  public $msg, $element, $keys = array();
 
   /**
-   * Constructs a RulesIntegrityException object.
-   *
    * @param string $msg
    *   The exception message, already translated.
    * @param $element
    *   The element of a configuration causing the exception or an array
    *   consisting of the element and keys specifying a parameter or provided
    *   variable causing the exception, e.g.
-   *   @code array($element, 'parameter', 'node') @endcode
+   *   @code array($element, 'parameter', 'node') @endcode.
    */
-  public function __construct($msg, $element = NULL) {
+  function __construct($msg, $element = NULL) {
     $this->element = is_array($element) ? array_shift($element) : $element;
     $this->keys = is_array($element) ? $element : array();
     parent::__construct($msg);
   }
-
 }
 
 /**
@@ -2890,9 +2791,9 @@ class RulesDependencyException extends RulesIntegrityException {}
 /**
  * Determines the plugin to be used for importing a child element.
  *
- * @param string $key
+ * @param $key
  *   The key to look for, e.g. 'OR' or 'DO'.
- * @param string $default
+ * @param $default
  *   The default to return if no special plugin can be found.
  */
 function _rules_import_get_plugin($key, $default = 'action') {
@@ -2908,7 +2809,7 @@ function _rules_import_get_plugin($key, $default = 'action') {
       }
     }
   }
-  // Cut off any leading NOT from the key.
+  // Cut of any leading NOT from the key.
   if (strpos($key, 'NOT ') === 0) {
     $key = substr($key, 4);
   }

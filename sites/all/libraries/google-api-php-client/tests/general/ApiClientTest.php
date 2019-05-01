@@ -18,6 +18,9 @@
  * under the License.
  */
 
+require_once 'BaseTest.php';
+require_once realpath(dirname(__FILE__) . '/../../autoload.php');
+
 class ApiClientTest extends BaseTest
 {
   public function testClient()
@@ -128,7 +131,6 @@ class ApiClientTest extends BaseTest
     $_SERVER['SERVER_SOFTWARE'] = 'Google App Engine';
     $client = new Google_Client();
     $this->assertInstanceOf('Google_Cache_Memcache', $client->getCache());
-    $this->assertInstanceOf('Google_Io_Stream', $client->getIo());
     unset($_SERVER['SERVER_SOFTWARE']);
   }
 

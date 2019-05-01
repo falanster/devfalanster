@@ -8,72 +8,10 @@
 
 
 /**
- * Implements hook_requirements().
- */
-function agenda_requirements($phase) {
-  $requirements = array();
-  $t = get_t();
-
-  if ($phase == 'runtime') {
-    $library = libraries_detect('google-api-php-client');
-    $error_type = isset($library['error']) ? drupal_ucfirst($library['error']) : '';
-    $error_message = isset($library['error message']) ? $library['error message'] : '';
-
-    if (empty($library['installed'])) {
-      $requirements['agenda_google_api'] = array(
-        'title' => $t('Agenda module: Google API Client Library for PHP'),
-        'value' => $t('@e: At least @a', array('@e' => $error_type, '@a' => AGENDA_MIN_API_VERSION)),
-        'severity' => REQUIREMENT_ERROR,
-        'description' => $t('!error You need to download the !google_api,
-          extract the archive and place the google-api-php-client directory in
-          the %path directory on your server.', array(
-            '!error' => $error_message,
-            '!google_api' => l($t('Google API PHP Client'), $library['download url']),
-            '%path' => 'sites/all/libraries',
-          )),
-      );
-    }
-    elseif (version_compare($library['version'], AGENDA_MIN_API_VERSION, '>=')) {
-      $requirements['agenda_google_api'] = array(
-        'title' => $t('Agenda module: Google API Client Library for PHP'),
-        'severity' => REQUIREMENT_OK,
-        'value' => $library['version'],
-        'description' => $t('Read the Agenda module\'s README for additional
-          steps needed to configure the Google Calendar API.'),
-      );
-    }
-    else {
-      $requirements['agenda_google_api'] = array(
-        'title' => $t('Agenda module: Google API Client Library for PHP'),
-        'value' => $t('At least @a', array('@a' => AGENDA_MIN_API_VERSION)),
-        'severity' => REQUIREMENT_ERROR,
-        'description' => $t('You need to download a later version of the
-          !google_api and replace the old version located in the %path directory
-          on your server.', array(
-            '!google_api' => l($t('Google API PHP Client'), $library['download url']),
-            '%path' => $library['library path'],
-          )),
-      );
-    }
-  }
-
-  return $requirements;
-}
-
-
-/**
  * Implements hook_install().
  */
 function agenda_install() {
   agenda_install_fixtures();
-}
-
-
-/**
- * Implements hook_uninstall().
- */
-function agenda_uninstall() {
-  variable_del('agenda_googleapi');
 }
 
 
@@ -83,20 +21,19 @@ function agenda_uninstall() {
 function agenda_install_fixtures() {
   $records = array(
     array(1, 'noeventstext', '<p>No upcoming events</p>'),
-    array(1, 'timeformat', 'h:ia'),
-    array(1, 'dateformat', 'l, F jS'),
-    array(1, 'maxevents', '60'),
-    array(1, 'datelimit', '60'),
-    array(1, 'start', 'Jan 1st, 2009'),
-    array(1, 'end', 'April 1st, 2009'),
-    array(1, 'title', 'Example agenda block'),
-    array(1, 'linktext', 'View this event in Google Calendar'),
-    array(1, 'hangoutlinktext', 'Join Google Calendar Event Hangout'),
-    array(1, 'cachetime', '3600'),
+    array(1, 'timeformat',   'h:ia'),
+    array(1, 'dateformat',   'l, F jS'),
+    array(1, 'maxevents',    '60'),
+    array(1, 'datelimit',    '60'),
+    array(1, 'start',        'Jan 1st, 2009'),
+    array(1, 'end',          'April 1st, 2009'),
+    array(1, 'title',        'Example agenda block'),
+    array(1, 'linktext',     'View this event in Google Calendar'),
+    array(1, 'cachetime',    '3600'),
     array(1, 'display_keys', 'start time, end date, end time, published, description, link'),
-    array(1, 'hide_labels', 'description, link'),
-    array(1, 'calendars', 'drupalagenda@gmail.com'),
-    array(1, 'timezone', 'UTC'),
+    array(1, 'hide_labels',  'description, link'),
+    array(1, 'calendars',    'drupalagenda@gmail.com'),
+    array(1, 'timezone',     'UTC'),
   );
 
   $query = db_insert('agenda')

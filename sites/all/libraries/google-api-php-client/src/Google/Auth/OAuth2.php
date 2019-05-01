@@ -233,20 +233,16 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
       if ($this->assertionCredentials) {
         $this->refreshTokenWithAssertion();
       } else {
-        $this->client->getLogger()->debug('OAuth2 access token expired');
         if (! array_key_exists('refresh_token', $this->token)) {
-          $error = "The OAuth 2.0 access token has expired,"
-                  ." and a refresh token is not available. Refresh tokens"
-                  ." are not returned for responses that were auto-approved.";
-
-          $this->client->getLogger()->error($error);
-          throw new Google_Auth_Exception($error);
+            throw new Google_Auth_Exception(
+                "The OAuth 2.0 access token has expired,"
+                ." and a refresh token is not available. Refresh tokens"
+                ." are not returned for responses that were auto-approved."
+            );
         }
         $this->refreshToken($this->token['refresh_token']);
       }
     }
-
-    $this->client->getLogger()->debug('OAuth2 authentication');
 
     // Add the OAuth2 header to the request
     $request->setRequestHeaders(
@@ -299,7 +295,6 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
       }
     }
 
-    $this->client->getLogger()->debug('OAuth2 access token expired');
     $this->refreshTokenRequest(
         array(
           'grant_type' => 'assertion',
@@ -319,14 +314,6 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
 
   private function refreshTokenRequest($params)
   {
-    if (isset($params['assertion'])) {
-      $this->client->getLogger()->info(
-          'OAuth2 access token refresh with Signed JWT assertion grants.'
-      );
-    } else {
-      $this->client->getLogger()->info('OAuth2 access token refresh');
-    }
-
     $http = new Google_Http_Request(
         self::OAUTH2_TOKEN_URI,
         'POST',

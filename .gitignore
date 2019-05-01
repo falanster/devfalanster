@@ -4,6 +4,7 @@ sites/*/settings*.php
 sites/*/files
 sites/*/private
 *~
+
 .drush
 .lesshst
 .viminfo

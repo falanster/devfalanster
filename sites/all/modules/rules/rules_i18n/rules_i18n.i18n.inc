@@ -11,7 +11,7 @@
 class RulesI18nStringController extends EntityDefaultI18nStringController {
 
   /**
-   * Overridden to customize i18n object info.
+   * Overriden to customize i18n object info.
    *
    * @see EntityDefaultI18nStringController::hook_object_info()
    */
@@ -22,7 +22,7 @@ class RulesI18nStringController extends EntityDefaultI18nStringController {
   }
 
   /**
-   * Overridden to customize the used menu wildcard.
+   * Overriden to customize the used menu wildcard.
    */
   protected function menuWildcard() {
     return '%rules_config';
@@ -34,7 +34,6 @@ class RulesI18nStringController extends EntityDefaultI18nStringController {
   protected function menuBasePath() {
     return 'admin/config/workflow/rules/reaction';
   }
-
 }
 
 /**
@@ -43,7 +42,7 @@ class RulesI18nStringController extends EntityDefaultI18nStringController {
 class RulesI18nStringObjectWrapper extends i18n_string_object_wrapper {
 
   /**
-   * Get translatable properties.
+   * Get translatable properties
    */
   protected function build_properties() {
     $strings = parent::build_properties();
@@ -92,5 +91,4 @@ class RulesI18nStringObjectWrapper extends i18n_string_object_wrapper {
       }
     }
   }
-
 }

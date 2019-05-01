@@ -15,13 +15,16 @@
  * limitations under the License.
  */
 
+require_once 'BaseTest.php';
+require_once realpath(dirname(__FILE__) . '/../../autoload.php');
+
 class RestTest extends BaseTest
 {
   /**
    * @var Google_Http_REST $rest
    */
   private $rest;
-
+  
   public function setUp()
   {
     $this->rest = new Google_Http_REST();
@@ -33,7 +36,7 @@ class RestTest extends BaseTest
     $client = $this->getClient();
     $response = new Google_Http_Request($url);
     $response->setResponseHttpCode(204);
-    $decoded = $this->rest->decodeHttpResponse($response, $client);
+    $decoded = $this->rest->decodeHttpResponse($response);
     $this->assertEquals(null, $decoded);
 
 
@@ -43,7 +46,7 @@ class RestTest extends BaseTest
       $response->setResponseBody('{"a": 1}');
 
       $response->setResponseHttpCode($code);
-      $decoded = $this->rest->decodeHttpResponse($response, $client);
+      $decoded = $this->rest->decodeHttpResponse($response);
       $this->assertEquals(array("a" => 1), $decoded);
     }
 
@@ -52,7 +55,7 @@ class RestTest extends BaseTest
 
     $error = "";
     try {
-      $this->rest->decodeHttpResponse($response, $client);
+      $this->rest->decodeHttpResponse($response);
     } catch (Exception $e) {
       $error = $e->getMessage();
 
@@ -77,7 +80,7 @@ class RestTest extends BaseTest
   {
     $basePath = "http://localhost";
     $restPath = "/plus/{u}";
-
+    
     // Test Path
     $params = array();
     $params['u']['type'] = 'string';
@@ -105,7 +108,7 @@ class RestTest extends BaseTest
     $params['u']['location'] = 'query';
     $value = $this->rest->createRequestUri($basePath, '/plus', $params);
     $this->assertEquals("http://localhost/plus?u=true", $value);
-
+    
     // Test encoding
     $params = array();
     $params['u']['type'] = 'string';
@@ -114,7 +117,7 @@ class RestTest extends BaseTest
     $value = $this->rest->createRequestUri($basePath, '/plus', $params);
     $this->assertEquals("http://localhost/plus?u=%40me%2F", $value);
   }
-
+  
   /**
    * @expectedException Google_Service_Exception
    */
@@ -132,7 +135,7 @@ class RestTest extends BaseTest
     );
     Google_Http_Rest::decodeHttpResponse($request);
   }
-
+  
   /**
    * @expectedException Google_Service_Exception
    */

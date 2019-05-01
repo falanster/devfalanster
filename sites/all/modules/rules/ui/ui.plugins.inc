@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @file
- * Contains UI for diverse plugins provided by Rules.
+ * @file Contains UI for diverse plugins provided by Rules.
  */
 
 /**
@@ -10,21 +9,15 @@
  */
 class RulesRuleUI extends RulesActionContainerUI {
 
-  protected $rule;
-  protected $conditions;
+  protected $rule, $conditions;
 
-  /**
-   * Constructs a RulesRuleUI object.
-   *
-   * @param FacesExtendable $object
-   */
   public function __construct(FacesExtendable $object) {
     parent::__construct($object);
     $this->rule = $object;
     $this->conditions = $this->rule->conditionContainer();
   }
 
-  public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
+  public function form(&$form, &$form_state, $options = array()) {
     $form_state['rules_element'] = $this->rule;
     $label = $this->element->label();
     // Automatically add a counter to unlabelled rules.
@@ -65,7 +58,7 @@ class RulesRuleUI extends RulesActionContainerUI {
   /**
    * Applies the values of the form to the rule configuration.
    */
-  public function form_extract_values($form, &$form_state) {
+  function form_extract_values($form, &$form_state) {
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
     // Run condition and action container value extraction.
     if (isset($form['conditions'])) {
@@ -77,13 +70,13 @@ class RulesRuleUI extends RulesActionContainerUI {
     parent::form_extract_values($form, $form_state);
   }
 
+
   public function operations() {
     // When rules are listed only show the edit and delete operations.
     $ops = parent::operations();
     $ops['#links'] = array_intersect_key($ops['#links'], array_flip(array('edit', 'delete')));
     return $ops;
   }
-
 }
 
 /**
@@ -91,7 +84,7 @@ class RulesRuleUI extends RulesActionContainerUI {
  */
 class RulesReactionRuleUI extends RulesRuleUI {
 
-  public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
+  public function form(&$form, &$form_state, $options = array()) {
     $form['events'] = array(
       '#type' => 'container',
       '#weight' => -10,
@@ -101,7 +94,7 @@ class RulesReactionRuleUI extends RulesRuleUI {
     $form['events']['table'] = array(
       '#theme' => 'table',
       '#caption' => 'Events',
-      '#header' => array(t('Event'), t('Operations')),
+      '#header' => array('Event', 'Operations'),
       '#empty' => t('None'),
     );
     $form['events']['table']['#attributes']['class'][] = 'rules-elements-table';
@@ -177,7 +170,6 @@ class RulesReactionRuleUI extends RulesRuleUI {
     $this->rule->active = $form_values['active'];
     $this->rule->weight = $form_values['weight'];
   }
-
 }
 
 /**
@@ -194,7 +186,6 @@ class RulesRuleSetUI extends RulesActionContainerUI {
     $form['elements']['#attributes']['class'][] = 'rules-rule-set';
     $form['elements']['#caption'] = t('Rules');
   }
-
 }
 
 /**
@@ -202,7 +193,7 @@ class RulesRuleSetUI extends RulesActionContainerUI {
  */
 class RulesLoopUI extends RulesActionContainerUI {
 
-  public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
+  public function form(&$form, &$form_state, $options = array()) {
     parent::form($form, $form_state, $options);
     $settings = $this->element->settings;
 
@@ -228,7 +219,7 @@ class RulesLoopUI extends RulesActionContainerUI {
     );
   }
 
-  public function form_extract_values($form, &$form_state) {
+  function form_extract_values($form, &$form_state) {
     parent::form_extract_values($form, $form_state);
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
 
@@ -260,5 +251,4 @@ class RulesLoopUI extends RulesActionContainerUI {
     );
     return $content;
   }
-
 }

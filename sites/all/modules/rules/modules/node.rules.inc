@@ -1,11 +1,9 @@
 <?php
 
 /**
- * @file
- * Rules integration for the node module.
+ * @file rules integration for the node module
  *
  * @addtogroup rules
- *
  * @{
  */
 
@@ -84,7 +82,7 @@ function rules_node_event_info() {
 }
 
 /**
- * Returns some parameter suitable for using it with a node.
+ * Returns some parameter suitable for using it with a node
  */
 function rules_events_node_variables($node_label, $update = FALSE) {
   $args = array(
@@ -142,6 +140,7 @@ function rules_node_admin_access() {
   return user_access('administer nodes');
 }
 
+
 /**
  * Event handler support node bundle event settings.
  */
@@ -155,7 +154,6 @@ class RulesNodeEventHandler extends RulesEventHandlerEntityBundle {
   protected function getBundlePropertyLabel() {
     return t('type');
   }
-
 }
 
 /**

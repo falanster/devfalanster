@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-require_once dirname(__FILE__) . '/../autoload.php';
+include_once 'bootstrap.php';
+require_once 'Google/Client.php';
 
 $client = new Google_Client();
 $client->setScopes(
