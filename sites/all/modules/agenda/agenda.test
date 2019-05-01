@@ -30,7 +30,6 @@ class AgendaBlockTestCase extends AgendaWebTestCase {
     $tz = new DateTimeZone($block->timezone);
     // Parse the update timestamp.
     $updated = new DateTime("now", $tz);
-    $published = new DateTime('now', $tz);
     // Loop through all use cases.
     $use_cases = array(
       'yesterday',
@@ -70,7 +69,6 @@ class AgendaBlockTestCase extends AgendaWebTestCase {
       $event['end date'] = $end->format($block->dateformat);
       $event['end time'] = $end->format($block->timeformat);
       $event['end timestamp'] = strtotime($end->format('c'));
-      $event['published'] = $published->format($block->dateformat);
       $event['updated'] = $updated->format($block->dateformat);
       // The day the event occurs on (without time) used for grouping
       $event['when'] = $start->format('Y-m-d');
