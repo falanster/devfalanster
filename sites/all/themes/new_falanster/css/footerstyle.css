@@ -21,7 +21,11 @@
 		        box-shadow: 0 -1px 70px -5px rgba(0,0,0,0.42);
 		cursor: pointer;
 	}
-
+  .prefooter__left:active{
+    background-color: #fff;
+    color: #ff6600;
+    box-shadow: none;
+  }
 	.prefooter__heading {
 		float: right;
 		margin: 80px 205px 0 0;
@@ -78,11 +82,11 @@
 		margin: 31px 0 0 0;
 	}
 	.region-bottom{
-		height: 200px;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		margin-top: -17px;
+    height: 165px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: 10px;
 	}
 	.footer__menu {
 		padding: 0;

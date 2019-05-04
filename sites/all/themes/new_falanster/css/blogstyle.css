@@ -6,11 +6,12 @@
 
 	.blog {
 		position: relative;
+    margin-bottom: 110px !important;
 	}
 
 	.blog__heading {
 		width: auto;
-		margin-top: 110px;
+		margin-top: 110px !important;
 		margin-bottom: 55px;
 		margin-left: 0;
 		color: #333333;
