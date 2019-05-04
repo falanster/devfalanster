@@ -71,13 +71,17 @@ a {
 		width: auto;
 		margin-top: 102px;
 		margin-bottom: 76px;
-		margin-left: 22.5%;
+		/*margin-left: 22.5%;*/
 		color: #333333;
 		font-family: 'Ubuntu', Arial, sans-serif;
 		font-size: 60px;
 		letter-spacing: 1px;
 		text-shadow: 2px 2px 0 #ff6600;
 	}
+  .projects__title_container{
+    width: 800px;
+    margin: 0 auto;
+  }
 
 	.projects__text {
 		position: absolute;
@@ -239,7 +243,6 @@ a {
 	.projects__item:nth-child(2) {
 		margin-left: 75px;
 	}
-
 	.projects-img-right {
 		position: absolute;
 		right: 0;
