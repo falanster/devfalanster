@@ -18,6 +18,7 @@ a {
 		height: 756px;
 		margin-top: 0;
 		background-size: 230px 756px;
+    top: 275px;
 	}
 
 	.projects__items-row:nth-child(2) {
@@ -244,6 +245,7 @@ a {
 		margin-left: 75px;
 	}
 	.projects-img-right {
+    top: 275px;
 		position: absolute;
 		right: 0;
 		z-index: 1;
