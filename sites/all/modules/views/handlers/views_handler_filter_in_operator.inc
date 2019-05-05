@@ -6,32 +6,24 @@
  */
 
 /**
- * Simple filter to handle matching of multiple options using checkboxes.
+ * Simple filter to handle matching of multiple options selectable via checkboxes
  *
  * Definition items:
- * - options callback: The function to call in order to generate the value
- *   options. If omitted, the options 'Yes' and 'No' will be used.
+ * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  *
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_in_operator extends views_handler_filter {
-
-  /**
-   *
-   */
-  public $value_form_type = 'checkboxes';
+  var $value_form_type = 'checkboxes';
 
   /**
    * @var array
    * Stores all operations which are available on the form.
    */
-  public $value_options = NULL;
+  var $value_options = NULL;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct();
     $this->value_title = t('Options');
     $this->value_options = NULL;
@@ -48,7 +40,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
    * @return
    *   Return the stored values in $this->value_options if someone expects it.
    */
-  public function get_value_options() {
+  function get_value_options() {
     if (isset($this->value_options)) {
       return;
     }
@@ -68,32 +60,22 @@ class views_handler_filter_in_operator extends views_handler_filter {
     return $this->value_options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function expose_options() {
+  function expose_options() {
     parent::expose_options();
     $this->options['expose']['reduce'] = FALSE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function expose_form(&$form, &$form_state) {
+  function expose_form(&$form, &$form_state) {
     parent::expose_form($form, $form_state);
     $form['expose']['reduce'] = array(
       '#type' => 'checkbox',
       '#title' => t('Limit list to selected items'),
       '#description' => t('If checked, the only items presented to the user will be the ones selected here.'),
-      // Safety.
-      '#default_value' => !empty($this->options['expose']['reduce']),
+      '#default_value' => !empty($this->options['expose']['reduce']), // safety
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['operator']['default'] = 'in';
@@ -104,11 +86,11 @@ class views_handler_filter_in_operator extends views_handler_filter {
   }
 
   /**
-   * This kind of construct makes it relatively easy for a child class to add or
-   * remove functionality by overriding this function and adding/removing items
-   * from this array.
+   * This kind of construct makes it relatively easy for a child class
+   * to add or remove functionality by overriding this function and
+   * adding/removing items from this array.
    */
-  public function operators() {
+  function operators() {
     $operators = array(
       'in' => array(
         'title' => t('Is one of'),
@@ -147,9 +129,9 @@ class views_handler_filter_in_operator extends views_handler_filter {
   }
 
   /**
-   * Build strings from the operators() for 'select' options.
+   * Build strings from the operators() for 'select' options
    */
-  public function operator_options($which = 'title') {
+  function operator_options($which = 'title') {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       $options[$id] = $info[$which];
@@ -158,10 +140,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function operator_values($values = 1) {
+  function operator_values($values = 1) {
     $options = array();
     foreach ($this->operators() as $id => $info) {
       if (isset($info['values']) && $info['values'] == $values) {
@@ -172,10 +151,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_form(&$form, &$form_state) {
+  function value_form(&$form, &$form_state) {
     $form['value'] = array();
     $options = array();
 
@@ -196,7 +172,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
-        // Exposed and locked.
+        // exposed and locked.
         $which = in_array($this->operator, $this->operator_values(1)) ? 'value' : 'none';
       }
       else {
@@ -253,7 +229,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
   /**
    * When using exposed filters, we may be required to reduce the set.
    */
-  public function reduce_value_options($input = NULL) {
+  function reduce_value_options($input = NULL) {
     if (!isset($input)) {
       $input = $this->value_options;
     }
@@ -281,12 +257,9 @@ class views_handler_filter_in_operator extends views_handler_filter {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function accept_exposed_input($input) {
+  function accept_exposed_input($input) {
     // A very special override because the All state for this type of
-    // filter could have a default.
+    // filter could have a default:
     if (empty($this->options['exposed'])) {
       return TRUE;
     }
@@ -303,10 +276,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
     return parent::accept_exposed_input($input);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_submit($form, &$form_state) {
+  function value_submit($form, &$form_state) {
     // Drupal's FAPI system automatically puts '0' in for any checkbox that
     // was not set, and the key to the checkbox if it is set.
     // Unfortunately, this means that if the key to that checkbox is 0,
@@ -319,10 +289,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
     $form_state['values']['options']['value'] = $form['value']['#value'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function admin_summary() {
+  function admin_summary() {
     if ($this->is_a_group()) {
       return t('grouped');
     }
@@ -350,7 +317,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
       if (count($this->value) == 0) {
         $values = t('Unknown');
       }
-      elseif (count($this->value) == 1) {
+      else if (count($this->value) == 1) {
         // If any, use the 'single' short name of the operator instead.
         if (isset($info[$this->operator]['short_single'])) {
           $operator = check_plain($info[$this->operator]['short_single']);
@@ -384,20 +351,14 @@ class views_handler_filter_in_operator extends views_handler_filter {
     return $operator . (($values !== '') ? ' ' . $values : '');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
       $this->{$info[$this->operator]['method']}();
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function op_simple() {
+  function op_simple() {
     if (empty($this->value)) {
       return;
     }
@@ -408,10 +369,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
     $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", array_values($this->value), $this->operator);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function op_empty() {
+  function op_empty() {
     $this->ensure_my_table();
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
@@ -423,10 +381,7 @@ class views_handler_filter_in_operator extends views_handler_filter {
     $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", NULL, $operator);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function validate() {
+  function validate() {
     $this->get_value_options();
     $errors = array();
 
@@ -441,13 +396,11 @@ class views_handler_filter_in_operator extends views_handler_filter {
     }
     if (is_array($this->value)) {
       if (!isset($this->value_options)) {
-        // Don't validate if there are none value options provided, for example
-        // for special handlers.
+        // Don't validate if there are none value options provided, for example for special handlers.
         return $errors;
       }
       if ($this->options['exposed'] && !$this->options['expose']['required'] && empty($this->value)) {
-        // Don't validate if the field is exposed and no default value is
-        // provided.
+        // Don't validate if the field is exposed and no default value is provided.
         return $errors;
       }
 
@@ -470,5 +423,4 @@ class views_handler_filter_in_operator extends views_handler_filter {
     }
     return $errors;
   }
-
 }

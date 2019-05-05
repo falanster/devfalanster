@@ -2,18 +2,14 @@
 
 /**
  * @file
- * Definition of views_plugin_argument_validate_node.
+ * Contains the 'node' argument validator plugin.
  */
 
 /**
  * Validate whether an argument is an acceptable node.
  */
 class views_plugin_argument_validate_node extends views_plugin_argument_validate {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['types'] = array('default' => array());
     $options['access'] = array('default' => FALSE, 'bool' => TRUE);
@@ -23,10 +19,7 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $types = node_type_get_types();
     $options = array();
     foreach ($types as $type => $info) {
@@ -65,19 +58,12 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_submit(&$form, &$form_state, &$options = array()) {
-    // Filter trash out of the options so we don't store giant unnecessary
-    // arrays.
+  function options_submit(&$form, &$form_state, &$options = array()) {
+    // filter trash out of the options so we don't store giant unnecessary arrays
     $options['types'] = array_filter($options['types']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function convert_options(&$options) {
+  function convert_options(&$options) {
     if (!isset($options['types']) && !empty($this->argument->options['validate_argument_node_type'])) {
       $options['types'] = isset($this->argument->options['validate_argument_node_type']) ? $this->argument->options['validate_argument_node_type'] : array();
       $options['access'] = !empty($this->argument->options['validate_argument_node_access']);
@@ -86,10 +72,7 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function validate_argument($argument) {
+  function validate_argument($argument) {
     $types = $this->options['types'];
 
     switch ($this->options['nid_type']) {
@@ -116,8 +99,7 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
         }
 
         return isset($types[$node->type]);
-        break;
-
+      break;
       case 'nids':
         $nids = new stdClass();
         $nids->value = array($argument);
@@ -129,7 +111,7 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
         $test = drupal_map_assoc($nids->value);
         $titles = array();
 
-        $result = db_query("SELECT * FROM {node} WHERE nid IN (:nids)", array(':nids' => $nids->value));
+        $result = db_query("SELECT * FROM {node} WHERE nid IN (:nids)", array(':nids' =>  $nids->value));
         foreach ($result as $node) {
           if ($types && empty($types[$node->type])) {
             return FALSE;
@@ -150,5 +132,4 @@ class views_plugin_argument_validate_node extends views_plugin_argument_validate
         return empty($test);
     }
   }
-
 }

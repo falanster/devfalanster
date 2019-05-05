@@ -12,10 +12,7 @@
  */
 class views_plugin_exposed_form_input_required extends views_plugin_exposed_form {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['text_input_required'] = array('default' => 'Select any filter and click on Apply to see results', 'translatable' => TRUE);
@@ -23,10 +20,7 @@ class views_plugin_exposed_form_input_required extends views_plugin_exposed_form
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['text_input_required'] = array(
@@ -39,19 +33,13 @@ class views_plugin_exposed_form_input_required extends views_plugin_exposed_form
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_submit(&$form, &$form_state) {
+  function options_submit(&$form, &$form_state) {
     $form_state['values']['exposed_form_options']['text_input_required_format'] = $form_state['values']['exposed_form_options']['text_input_required']['format'];
     $form_state['values']['exposed_form_options']['text_input_required'] = $form_state['values']['exposed_form_options']['text_input_required']['value'];
     parent::options_submit($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function exposed_filter_applied() {
+  function exposed_filter_applied() {
     static $cache = NULL;
     if (!isset($cache)) {
       $view = $this->view;
@@ -72,10 +60,7 @@ class views_plugin_exposed_form_input_required extends views_plugin_exposed_form
     return $cache;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_render($values) {
+  function pre_render($values) {
     if (!$this->exposed_filter_applied()) {
       $options = array(
         'id' => 'area',
@@ -97,10 +82,7 @@ class views_plugin_exposed_form_input_required extends views_plugin_exposed_form
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     if (!$this->exposed_filter_applied()) {
       // We return with no query; this will force the empty text.
       $this->view->built = TRUE;

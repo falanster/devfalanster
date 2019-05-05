@@ -22,26 +22,14 @@
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_boolean_operator extends views_handler_filter {
+  // exposed filter options
+  var $always_multiple = TRUE;
+  // Don't display empty space where the operator would be.
+  var $no_operator = TRUE;
+  // Whether to accept NULL as a false value or not
+  var $accept_null = FALSE;
 
-  /**
-   * Exposed filter options.
-   */
-  public $always_multiple = TRUE;
-
-  /**
-   * Don't display empty space where the operator would be.
-   */
-  public $no_operator = TRUE;
-
-  /**
-   * Whether to accept NULL as a false value or not.
-   */
-  public $accept_null = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     $this->value_value = t('True');
     if (isset($this->definition['label'])) {
       $this->value_value = $this->definition['label'];
@@ -49,7 +37,7 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
     if (isset($this->definition['accept null'])) {
       $this->accept_null = (bool) $this->definition['accept null'];
     }
-    elseif (isset($this->definition['accept_null'])) {
+    else if (isset($this->definition['accept_null'])) {
       $this->accept_null = (bool) $this->definition['accept_null'];
     }
     $this->value_options = NULL;
@@ -68,7 +56,7 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
    * dynamic for some reason, child classes should use a guard to reduce
    * database hits as much as possible.
    */
-  public function get_value_options() {
+  function get_value_options() {
     if (isset($this->definition['type'])) {
       if ($this->definition['type'] == 'yes-no') {
         $this->value_options = array(1 => t('Yes'), 0 => t('No'));
@@ -87,10 +75,7 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['value']['default'] = FALSE;
@@ -98,17 +83,11 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function operator_form(&$form, &$form_state) {
+  function operator_form(&$form, &$form_state) {
     $form['operator'] = array();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_form(&$form, &$form_state) {
+  function value_form(&$form, &$form_state) {
     if (empty($this->value_options)) {
       // Initialize the array of possible values for this filter.
       $this->get_value_options();
@@ -143,19 +122,13 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_validate($form, &$form_state) {
+  function value_validate($form, &$form_state) {
     if ($form_state['values']['options']['value'] == 'All' && !empty($form_state['values']['options']['expose']['required'])) {
       form_set_error('value', t('You must select a value unless this is an non-required exposed filter.'));
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function admin_summary() {
+  function admin_summary() {
     if ($this->is_a_group()) {
       return t('grouped');
     }
@@ -172,20 +145,14 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
     return $this->value_options[!empty($this->value)];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function expose_options() {
+  function expose_options() {
     parent::expose_options();
     $this->options['expose']['operator_id'] = '';
     $this->options['expose']['label'] = $this->value_value;
     $this->options['expose']['required'] = TRUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
     $field = "$this->table_alias.$this->real_field";
 
@@ -209,5 +176,4 @@ class views_handler_filter_boolean_operator extends views_handler_filter {
       }
     }
   }
-
 }

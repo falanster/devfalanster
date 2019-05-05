@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 if (module_exists('menu')) {
   /**
    * Plugins are described by creating a $plugin array which will be used
@@ -49,6 +45,6 @@ function ctools_node_form_menu_content_type_admin_title($subtype, $conf, $contex
 }
 
 function ctools_node_form_menu_content_type_edit_form($form, &$form_state) {
-  // Provide a blank form so we have a place to have context setting.
+  // provide a blank form so we have a place to have context setting.
   return $form;
 }

@@ -14,20 +14,13 @@
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_term_node_tid_depth_join extends views_handler_filter_term_node_tid {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function operator_options($which = 'title') {
+  function operator_options($which = 'title') {
     return array(
       'or' => t('Is one of'),
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['depth'] = array('default' => 0);
@@ -35,10 +28,7 @@ class views_handler_filter_term_node_tid_depth_join extends views_handler_filter
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function extra_options_form(&$form, &$form_state) {
+  function extra_options_form(&$form, &$form_state) {
     parent::extra_options_form($form, $form_state);
 
     $form['depth'] = array(
@@ -49,10 +39,7 @@ class views_handler_filter_term_node_tid_depth_join extends views_handler_filter
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     // If no filter values are present, then do nothing.
     if (count($this->value) == 0) {
       return;
@@ -65,10 +52,7 @@ class views_handler_filter_term_node_tid_depth_join extends views_handler_filter
       $operator = '=';
     }
     else {
-      $operator = 'IN';
-      // " IN ("
-      // . implode(', ', array_fill(0, sizeof($this->value), '%d'))
-      // . ")";
+      $operator = 'IN';# " IN (" . implode(', ', array_fill(0, sizeof($this->value), '%d')) . ")";
     }
 
     // The normal use of ensure_my_table() here breaks Views.
@@ -88,7 +72,7 @@ class views_handler_filter_term_node_tid_depth_join extends views_handler_filter
     }
 
     // The tids variable can be an integer or an array of integers.
-    $tids = is_array($this->value) ? $this->value : array($this->value);
+    $tids = is_array($this->value) ?  $this->value : array($this->value);
 
     if ($this->options['depth'] > 0) {
       // When the depth is positive search the children.
@@ -151,9 +135,8 @@ class views_handler_filter_term_node_tid_depth_join extends views_handler_filter
         'field' => 'tid',
         'value' => $tids,
         'operator' => $operator,
-      ),
+      )
     );
     $taxonomy_index_alias = $this->query->add_relationship('taxonomy_index', $join, 'node');
   }
-
 }

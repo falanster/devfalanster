@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Plugin to provide a terms context.
+ *
+ * Plugin to provide a terms context
  */
 
 /**
@@ -36,6 +37,7 @@ $plugin = array(
 function ctools_context_create_terms($empty, $data = NULL, $conf = FALSE) {
   // The input is expected to be an object as created by ctools_break_phrase
   // which contains a group of terms.
+
   $context = new ctools_context(array('terms', 'entity:taxonomy_term'));
   $context->plugin = 'terms';
 
@@ -47,7 +49,7 @@ function ctools_context_create_terms($empty, $data = NULL, $conf = FALSE) {
     $context->operator = $data->operator;
     $context->tids     = $data->value;
     if (!isset($data->term)) {
-      // Load the first term:
+      // load the first term:
       reset($context->tids);
       $data->term = taxonomy_term_load(current($context->tids));
     }
@@ -65,16 +67,12 @@ function ctools_context_terms_convert($context, $type) {
   switch ($type) {
     case 'tid':
       return $context->data->tid;
-
     case 'tids':
       return $context->argument;
-
     case 'name':
       return $context->data->name;
-
     case 'name_dashed':
       return drupal_strtolower(str_replace(' ', '-', $context->data->name));
-
     case 'names':
     case 'names_dashed':
       // We only run this query if this item was requested:
@@ -94,7 +92,6 @@ function ctools_context_terms_convert($context, $type) {
         }
       }
       return $context->names;
-
     case 'vid':
       return $context->data->vid;
   }

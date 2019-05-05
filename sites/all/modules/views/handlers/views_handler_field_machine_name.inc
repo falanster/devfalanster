@@ -10,21 +10,16 @@
  * @ingroup views_field_handlers
  *
  * Definition items:
- * - options callback: The function to call in order to generate the value
- *   options. If omitted, the options 'Yes' and 'No' will be used.
+ * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  */
 class views_handler_field_machine_name extends views_handler_field {
-
   /**
    * @var array Stores the available options.
    */
-  public $value_options;
+  var $value_options;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function get_value_options() {
+  function get_value_options() {
     if (isset($this->value_options)) {
       return;
     }
@@ -42,20 +37,14 @@ class views_handler_field_machine_name extends views_handler_field {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['machine_name'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['machine_name'] = array(
@@ -66,17 +55,11 @@ class views_handler_field_machine_name extends views_handler_field {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_render(&$values) {
+  function pre_render(&$values) {
     $this->get_value_options();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $value = $values->{$this->field_alias};
     if (!empty($this->options['machine_name']) || !isset($this->value_options[$value])) {
       $result = check_plain($value);
@@ -87,5 +70,4 @@ class views_handler_field_machine_name extends views_handler_field {
 
     return $result;
   }
-
 }

@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag module for Media integration.
- */
-
-/**
  * Tests for the Metatag module for Media integration.
  */
 class MetatagCoreWithMediaTest extends MetatagTestHelper {
@@ -60,5 +55,4 @@ class MetatagCoreWithMediaTest extends MetatagTestHelper {
     $xpath = $this->xpath("//meta[@name='description']");
     $this->assertEqual($xpath[0]['content'], $desc);
   }
-
 }

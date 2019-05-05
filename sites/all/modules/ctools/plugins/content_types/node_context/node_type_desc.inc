@@ -1,11 +1,9 @@
 <?php
 
 /**
- * @file
  * Plugins are described by creating a $plugin array which will be used
  * by the system that includes this file.
  */
-
 $plugin = array(
   'single' => TRUE,
   'title' => t('Node type description'),
@@ -25,13 +23,13 @@ function ctools_node_type_desc_content_type_render($subtype, $conf, $panel_args,
   $block->module = 'node_type';
 
   if ($node) {
-    $type           = node_type_get_type($node);
-    $block->title   = $type->name;
+    $type = node_type_get_type($node);
+    $block->title = $type->name;
     $block->content = filter_xss_admin($type->description);
     $block->delta   = $node->type;
   }
   else {
-    $block->title   = t('Node type description');
+    $block->title = t('Node type description');
     $block->content = t('Node type description goes here.');
     $block->delta   = 'unknown';
   }
@@ -44,6 +42,6 @@ function ctools_node_type_desc_content_type_admin_title($subtype, $conf, $contex
 }
 
 function ctools_node_type_desc_content_type_edit_form($form, &$form_state) {
-  // Provide a blank form so we have a place to have context setting.
+  // provide a blank form so we have a place to have context setting.
   return $form;
 }

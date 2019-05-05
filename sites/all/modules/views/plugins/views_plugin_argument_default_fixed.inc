@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_argument_default_fixed.
+ * Contains the fixed argument default plugin.
  */
 
 /**
@@ -11,21 +11,14 @@
  * @ingroup views_argument_default_plugins
  */
 class views_plugin_argument_default_fixed extends views_plugin_argument_default {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['argument'] = array('default' => '');
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['argument'] = array(
       '#type' => 'textfield',
@@ -37,19 +30,15 @@ class views_plugin_argument_default_fixed extends views_plugin_argument_default 
   /**
    * Return the default argument.
    */
-  public function get_argument() {
+  function get_argument() {
     return $this->options['argument'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function convert_options(&$options) {
+  function convert_options(&$options) {
     if (!isset($options['argument']) && isset($this->argument->options['default_argument_fixed'])) {
       $options['argument'] = $this->argument->options['default_argument_fixed'];
     }
   }
-
 }
 
 /**

@@ -11,11 +11,7 @@
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_group_by_numeric extends views_handler_filter_numeric {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
     $field = $this->get_field();
 
@@ -24,11 +20,7 @@ class views_handler_filter_group_by_numeric extends views_handler_filter_numeric
       $this->{$info[$this->operator]['method']}($field);
     }
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function op_between($field) {
+  function op_between($field) {
     $placeholder_min = $this->placeholder();
     $placeholder_max = $this->placeholder();
     if ($this->operator == 'between') {
@@ -40,18 +32,12 @@ class views_handler_filter_group_by_numeric extends views_handler_filter_numeric
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function op_simple($field) {
+  function op_simple($field) {
     $placeholder = $this->placeholder();
     $this->query->add_having_expression($this->options['group'], "$field $this->operator $placeholder", array($placeholder => $this->value['value']));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function op_empty($field) {
+  function op_empty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
     }
@@ -62,18 +48,9 @@ class views_handler_filter_group_by_numeric extends views_handler_filter_numeric
     $this->query->add_having_expression($this->options['group'], "$field $operator");
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function ui_name($short = FALSE) {
+  function ui_name($short = FALSE) {
     return $this->get_field(parent::ui_name($short));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function can_group() {
-    return FALSE;
-  }
-
+  function can_group() { return FALSE; }
 }

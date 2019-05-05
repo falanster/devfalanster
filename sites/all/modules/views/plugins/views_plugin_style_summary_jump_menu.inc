@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_style_summary_jump_menu.
+ * Contains the default summary style plugin, which displays items in an HTML list.
  */
 
 /**
@@ -11,11 +11,7 @@
  * @ingroup views_style_plugins
  */
 class views_plugin_style_summary_jump_menu extends views_plugin_style {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['base_path'] = array('default' => '');
@@ -30,10 +26,7 @@ class views_plugin_style_summary_jump_menu extends views_plugin_style {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     // Copy the offset option.
     $pager = array(
       'type' => 'none',
@@ -42,10 +35,7 @@ class views_plugin_style_summary_jump_menu extends views_plugin_style {
     $this->display->handler->set_option('pager', $pager);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['base_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Base path'),
@@ -103,10 +93,7 @@ class views_plugin_style_summary_jump_menu extends views_plugin_style {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
+  function render() {
     $argument = $this->view->argument[$this->view->build_info['summary_level']];
 
     $url_options = array();
@@ -156,5 +143,4 @@ class views_plugin_style_summary_jump_menu extends views_plugin_style {
     $form = drupal_get_form('ctools_jump_menu', $options, $settings);
     return drupal_render($form);
   }
-
 }

@@ -11,21 +11,14 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_comment_link_edit extends views_handler_field_comment_link {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['destination'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['destination'] = array(
@@ -37,12 +30,9 @@ class views_handler_field_comment_link_edit extends views_handler_field_comment_
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     parent::render_link($data, $values);
-    // Ensure user has access to edit this comment.
+    // ensure user has access to edit this comment.
     $comment = $this->get_value($values);
     if (!comment_access('edit', $comment)) {
       return;
@@ -59,5 +49,4 @@ class views_handler_field_comment_link_edit extends views_handler_field_comment_
 
     return $text;
   }
-
 }

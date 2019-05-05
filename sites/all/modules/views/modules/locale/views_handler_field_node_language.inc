@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains .
+ * Definition of views_handler_field_node_language.
  */
 
 /**
@@ -11,21 +11,14 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_node_language extends views_handler_field_node {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['native_language'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['native_language'] = array(
       '#title' => t('Native language'),
@@ -35,14 +28,10 @@ class views_handler_field_node_language extends views_handler_field_node {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $languages = views_language_list(empty($this->options['native_language']) ? 'name' : 'native');
     $value = $this->get_value($values);
     $value = isset($languages[$value]) ? $languages[$value] : '';
     return $this->render_link($value, $values);
   }
-
 }

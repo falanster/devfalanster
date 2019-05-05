@@ -15,7 +15,8 @@
 ?>
 
 <div class="more-link">
-  <a href="<?php print $more_url ?>"<?php if (!empty($new_window)): ?> target="_blank"<?php endif; ?>>
+  <a href="<?php print $more_url ?>"<?php if (!empty($new_window)) { ?> target="_blank"<?php
+ } ?>>
     <?php print $link_text; ?>
   </a>
 </div>

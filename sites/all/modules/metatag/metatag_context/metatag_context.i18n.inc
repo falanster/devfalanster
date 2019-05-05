@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Internationalization (i18n) hooks.
@@ -69,7 +68,7 @@ function metatag_context_i18n_object_info() {
     if (!empty($tag_info['group'])) {
       $tag_group = $tag_info['group'];
       $group_label = !empty($groups[$tag_group]['label']) ? $groups[$tag_group]['label'] : $tag_group;
-      $title = $group_label . ': ' . $title;
+      $title = $group_label . ': '. $title;
     }
 
     $info['metatag_context']['string translation']['properties'][$tag_name] = array(

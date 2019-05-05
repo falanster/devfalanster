@@ -13,7 +13,7 @@ class ctools_export_ui {
    * constructor because we are retaining PHP4 compatibility, which
    * would require all child classes to implement their own constructor.
    */
-  public function init($plugin) {
+  function init($plugin) {
     ctools_include('export');
 
     $this->plugin = $plugin;
@@ -22,7 +22,7 @@ class ctools_export_ui {
   /**
    * Get a page title for the current page from our plugin strings.
    */
-  public function get_page_title($op, $item = NULL) {
+  function get_page_title($op, $item = NULL) {
     if (empty($this->plugin['strings']['title'][$op])) {
       return;
     }
@@ -43,13 +43,13 @@ class ctools_export_ui {
    * This can be overridden for modules that want to be able to export
    * items currently being edited, for example.
    */
-  public function load_item($item_name) {
+  function load_item($item_name) {
     $item = ctools_export_crud_load($this->plugin['schema'], $item_name);
     return empty($item) ? FALSE : $item;
   }
 
   // ------------------------------------------------------------------------
-  // Menu item manipulation.
+  // Menu item manipulation
 
   /**
    * hook_menu() entry point.
@@ -57,7 +57,7 @@ class ctools_export_ui {
    * Child implementations that need to add or modify menu items should
    * probably call parent::hook_menu($items) and then modify as needed.
    */
-  public function hook_menu(&$items) {
+  function hook_menu(&$items) {
     // During upgrades, the schema can be empty as this is called prior to
     // actual update functions being run. Ensure that we can cope with this
     // situation.
@@ -99,7 +99,7 @@ class ctools_export_ui {
    * @return
    *   TRUE if the current user has access, FALSE if not.
    */
-  public function access($op, $item) {
+  function access($op, $item) {
     if (!user_access($this->plugin['access'])) {
       return FALSE;
     }
@@ -122,19 +122,14 @@ class ctools_export_ui {
     switch ($op) {
       case 'import':
         return user_access('use ctools import');
-
       case 'revert':
         return ($item->export_type & EXPORT_IN_DATABASE) && ($item->export_type & EXPORT_IN_CODE);
-
       case 'delete':
         return ($item->export_type & EXPORT_IN_DATABASE) && !($item->export_type & EXPORT_IN_CODE);
-
       case 'disable':
         return empty($item->disabled);
-
       case 'enable':
         return !empty($item->disabled);
-
       default:
         return TRUE;
     }
@@ -149,7 +144,7 @@ class ctools_export_ui {
    * It is unlikely that a child object will need to override this method,
    * unless the listing mechanism is going to be highly specialized.
    */
-  public function list_page($js, $input) {
+  function list_page($js, $input) {
     $this->items = ctools_export_crud_load_all($this->plugin['schema'], $js);
 
     // Respond to a reset command by clearing session and doing a drupal goto
@@ -159,7 +154,7 @@ class ctools_export_ui {
       if (!$js) {
         drupal_goto($_GET['q']);
       }
-      // Clear everything but form id, form build id and form token.
+      // clear everything but form id, form build id and form token:
       $keys = array_keys($input);
       foreach ($keys as $id) {
         if (!in_array($id, array('form_id', 'form_build_id', 'form_token'))) {
@@ -229,7 +224,7 @@ class ctools_export_ui {
    * get the base form and then modify it as necessary to add search
    * gadgets for custom fields.
    */
-  public function list_form(&$form, &$form_state) {
+  function list_form(&$form, &$form_state) {
     // This forces the form to *always* treat as submitted which is
     // necessary to make it work.
     $form['#token'] = FALSE;
@@ -274,7 +269,7 @@ class ctools_export_ui {
       '#title' => t('Enabled'),
       '#options' => $all + array(
         '0' => t('Enabled'),
-        '1' => t('Disabled'),
+        '1' => t('Disabled')
       ),
       '#default_value' => 'all',
     );
@@ -329,7 +324,7 @@ class ctools_export_ui {
    * It is very rare that a filter form needs validation, but if it is
    * needed, override this.
    */
-  public function list_form_validate(&$form, &$form_state) { }
+  function list_form_validate(&$form, &$form_state) { }
 
   /**
    * Submit the filter/sort form.
@@ -341,7 +336,7 @@ class ctools_export_ui {
    * For the most part, you should not need to override this method, as the
    * fiddly bits call through to other functions.
    */
-  public function list_form_submit(&$form, &$form_state) {
+  function list_form_submit(&$form, &$form_state) {
     // Filter and re-sort the pages.
     $plugin = $this->plugin;
 
@@ -386,7 +381,7 @@ class ctools_export_ui {
    * @return
    *   TRUE if the item should be excluded.
    */
-  public function list_filter($form_state, $item) {
+  function list_filter($form_state, $item) {
     $schema = ctools_export_get_schema($this->plugin['schema']);
     if ($form_state['values']['storage'] != 'all' && $form_state['values']['storage'] != $item->{$schema['export']['export type string']}) {
       return TRUE;
@@ -416,7 +411,7 @@ class ctools_export_ui {
    * This widget will search against whatever fields are configured here. By
    * default it will attempt to search against the name, title and description fields.
    */
-  public function list_search_fields() {
+  function list_search_fields() {
     $fields = array(
       $this->plugin['export']['key'],
     );
@@ -437,7 +432,7 @@ class ctools_export_ui {
    * Override this if you wish to provide more or change how these work.
    * The actual handling of the sorting will happen in build_row().
    */
-  public function list_sort_options() {
+  function list_sort_options() {
     if (!empty($this->plugin['export']['admin_title'])) {
       $options = array(
         'disabled' => t('Enabled, title'),
@@ -463,14 +458,14 @@ class ctools_export_ui {
    *
    * Override this if you need custom CSS for your list.
    */
-  public function list_css() {
+  function list_css() {
     ctools_add_css('export-ui-list');
   }
 
   /**
    * Builds the operation links for a specific exportable item.
    */
-  public function build_operations($item) {
+  function build_operations($item) {
     $plugin = $this->plugin;
     $schema = ctools_export_get_schema($plugin['schema']);
     $operations = $plugin['allowed operations'];
@@ -520,7 +515,7 @@ class ctools_export_ui {
    * method, so this is building up a row suitable for theme('table').
    * This doesn't have to be true if you override both.
    */
-  public function list_build_row($item, &$form_state, $operations) {
+  function list_build_row($item, &$form_state, $operations) {
     // Set up sorting
     $name = $item->{$this->plugin['export']['key']};
     $schema = ctools_export_get_schema($this->plugin['schema']);
@@ -568,7 +563,7 @@ class ctools_export_ui {
    * If you've added columns via list_build_row() but are still using a
    * table, override this method to set up the table header.
    */
-  public function list_table_header() {
+  function list_table_header() {
     $header = array();
     if (!empty($this->plugin['export']['admin_title'])) {
       $header[] = array('data' => t('Title'), 'class' => array('ctools-export-ui-title'));
@@ -590,7 +585,7 @@ class ctools_export_ui {
    * Whatever you do if this method is overridden, the ID is important for AJAX
    * so be sure it exists.
    */
-  public function list_render(&$form_state) {
+  function list_render(&$form_state) {
     $table = array(
       'header' => $this->list_table_header(),
       'rows' => $this->rows,
@@ -605,14 +600,14 @@ class ctools_export_ui {
    *
    * This will appear after the filter/sort widgets.
    */
-  public function list_header($form_state) { }
+  function list_header($form_state) { }
 
   /**
    * Render a footer to go after thie list.
    *
    * This is a good place to add additional links.
    */
-  public function list_footer($form_state) { }
+  function list_footer($form_state) { }
 
   // ------------------------------------------------------------------------
   // These methods are the API for adding/editing exportable items
@@ -628,7 +623,7 @@ class ctools_export_ui {
    *   The item in use; this may be necessary as item IDs are often embedded in
    *   redirects.
    */
-  public function redirect($op, $item = NULL) {
+  function redirect($op, $item = NULL) {
     if (isset($this->plugin['redirect'][$op])) {
       $destination = (array) $this->plugin['redirect'][$op];
       if ($item) {
@@ -643,7 +638,7 @@ class ctools_export_ui {
     }
   }
 
-  public function add_page($js, $input, $step = NULL) {
+  function add_page($js, $input, $step = NULL) {
     drupal_set_title($this->get_page_title('add'), PASS_THROUGH);
 
     // If a step not set, they are trying to create a new item. If a step
@@ -680,7 +675,7 @@ class ctools_export_ui {
   /**
    * Main entry point to edit an item.
    */
-  public function edit_page($js, $input, $item, $step = NULL) {
+  function edit_page($js, $input, $item, $step = NULL) {
     drupal_set_title($this->get_page_title('edit', $item), PASS_THROUGH);
 
     // Check to see if there is a cached item to get if we're using the wizard.
@@ -716,7 +711,7 @@ class ctools_export_ui {
   /**
    * Main entry point to clone an item.
    */
-  public function clone_page($js, $input, $original, $step = NULL) {
+  function clone_page($js, $input, $original, $step = NULL) {
     drupal_set_title($this->get_page_title('clone', $original), PASS_THROUGH);
 
     // If a step not set, they are trying to create a new clone. If a step
@@ -773,7 +768,7 @@ class ctools_export_ui {
    * Add and Edit both funnel into this, but they have a few different
    * settings.
    */
-  public function edit_execute_form(&$form_state) {
+  function edit_execute_form(&$form_state) {
     if (!empty($this->plugin['use wizard'])) {
       return $this->edit_execute_form_wizard($form_state);
     }
@@ -787,7 +782,7 @@ class ctools_export_ui {
    *
    * By default, export UI will provide a single form for editing an object.
    */
-  public function edit_execute_form_standard(&$form_state) {
+  function edit_execute_form_standard(&$form_state) {
     $output = drupal_build_form('ctools_export_ui_edit_item_form', $form_state);
     if (!empty($form_state['executed']) && empty($form_state['rebuild'])) {
       $this->edit_save_form($form_state);
@@ -808,7 +803,7 @@ class ctools_export_ui {
    * @param array $form_state
    *   The already created form state.
    */
-  public function get_wizard_info(&$form_state) {
+  function get_wizard_info(&$form_state) {
     if (!isset($form_state['step'])) {
       $form_state['step'] = NULL;
     }
@@ -883,7 +878,7 @@ class ctools_export_ui {
    * Using 'add order' or 'edit order' can be used to ensure that add/edit order
    * is different.
    */
-  public function edit_execute_form_wizard(&$form_state) {
+  function edit_execute_form_wizard(&$form_state) {
     $form_info = $this->get_wizard_info($form_state);
 
     // If there aren't any forms set, fail.
@@ -906,7 +901,7 @@ class ctools_export_ui {
     if (!empty($form_state['complete'])) {
       $this->edit_save_form($form_state);
     }
-    elseif ($output && !empty($form_state['item']->export_ui_item_is_cached)) {
+    else if ($output && !empty($form_state['item']->export_ui_item_is_cached)) {
       // @todo this should be in the plugin strings
       drupal_set_message(t('You have unsaved changes. These changes will not be made permanent until you click <em>Save</em>.'), 'warning');
     }
@@ -924,7 +919,7 @@ class ctools_export_ui {
    *
    * The wizard callback delegates this back to the object.
    */
-  public function edit_wizard_back(&$form_state) {
+  function edit_wizard_back(&$form_state) {
     // This only exists so child implementations can use it.
   }
 
@@ -933,7 +928,7 @@ class ctools_export_ui {
    *
    * The wizard callback delegates this back to the object.
    */
-  public function edit_wizard_next(&$form_state) {
+  function edit_wizard_next(&$form_state) {
     $this->edit_cache_set($form_state['item'], $form_state['form type']);
   }
 
@@ -942,7 +937,7 @@ class ctools_export_ui {
    *
    * The wizard callback delegates this back to the object.
    */
-  public function edit_wizard_cancel(&$form_state) {
+  function edit_wizard_cancel(&$form_state) {
     $this->edit_cache_clear($form_state['item'], $form_state['form type']);
   }
 
@@ -951,7 +946,7 @@ class ctools_export_ui {
    *
    * The wizard callback delegates this back to the object.
    */
-  public function edit_wizard_finish(&$form_state) {
+  function edit_wizard_finish(&$form_state) {
     $form_state['complete'] = TRUE;
 
     // If we are importing, and overwrite was selected, delete the original so
@@ -966,7 +961,7 @@ class ctools_export_ui {
   /**
    * Retrieve the item currently being edited from the object cache.
    */
-  public function edit_cache_get($item, $op = 'edit') {
+  function edit_cache_get($item, $op = 'edit') {
     ctools_include('object-cache');
     if (is_string($item)) {
       $name = $item;
@@ -985,20 +980,20 @@ class ctools_export_ui {
   /**
    * Cache the item currently currently being edited.
    */
-  public function edit_cache_set($item, $op = 'edit') {
+  function edit_cache_set($item, $op = 'edit') {
     ctools_include('object-cache');
     $name = $this->edit_cache_get_key($item, $op);
     return $this->edit_cache_set_key($item, $name);
   }
 
-  public function edit_cache_set_key($item, $name) {
+  function edit_cache_set_key($item, $name) {
     return ctools_object_cache_set('ctui_' . $this->plugin['name'], $name, $item);
   }
 
   /**
    * Clear the object cache for the currently edited item.
    */
-  public function edit_cache_clear($item, $op = 'edit') {
+  function edit_cache_clear($item, $op = 'edit') {
     ctools_include('object-cache');
     $name = $this->edit_cache_get_key($item, $op);
     return ctools_object_cache_clear('ctui_' . $this->plugin['name'], $name);
@@ -1007,7 +1002,7 @@ class ctools_export_ui {
   /**
    * Figure out what the cache key is for this object.
    */
-  public function edit_cache_get_key($item, $op) {
+  function edit_cache_get_key($item, $op) {
     $export_key = $this->plugin['export']['key'];
     return $op == 'edit' ? $item->{$this->plugin['export']['key']} : "::$op";
   }
@@ -1015,7 +1010,7 @@ class ctools_export_ui {
   /**
    * Called to save the final product from the edit form.
    */
-  public function edit_save_form($form_state) {
+  function edit_save_form($form_state) {
     $item = &$form_state['item'];
     $export_key = $this->plugin['export']['key'];
 
@@ -1034,7 +1029,7 @@ class ctools_export_ui {
   /**
    * Provide the actual editing form.
    */
-  public function edit_form(&$form, &$form_state) {
+  function edit_form(&$form, &$form_state) {
     $export_key = $this->plugin['export']['key'];
     $item = $form_state['item'];
     $schema = ctools_export_get_schema($this->plugin['schema']);
@@ -1107,7 +1102,7 @@ class ctools_export_ui {
   /**
    * Validate callback for the edit form.
    */
-  public function edit_form_validate(&$form, &$form_state) {
+  function edit_form_validate(&$form, &$form_state) {
     if (!empty($this->plugin['form']['validate'])) {
       // Pass $form by reference.
       $this->plugin['form']['validate']($form, $form_state);
@@ -1118,7 +1113,7 @@ class ctools_export_ui {
    * Perform a final validation check before allowing the form to be
    * finished.
    */
-  public function edit_finish_validate(&$form, &$form_state) {
+  function edit_finish_validate(&$form, &$form_state) {
     if ($form_state['op'] != 'edit') {
       // Validate the export key. Fake an element for form_error().
       $export_key = $this->plugin['export']['key'];
@@ -1140,7 +1135,7 @@ class ctools_export_ui {
    * If the keys all match up to the schema, this method will not need to be
    * overridden.
    */
-  public function edit_form_submit(&$form, &$form_state) {
+  function edit_form_submit(&$form, &$form_state) {
     if (!empty($this->plugin['form']['submit'])) {
       // Pass $form by reference.
       $this->plugin['form']['submit']($form, $form_state);
@@ -1162,14 +1157,14 @@ class ctools_export_ui {
   /**
    * Callback to enable a page.
    */
-  public function enable_page($js, $input, $item) {
+  function enable_page($js, $input, $item) {
     return $this->set_item_state(FALSE, $js, $input, $item);
   }
 
   /**
    * Callback to disable a page.
    */
-  public function disable_page($js, $input, $item) {
+  function disable_page($js, $input, $item) {
     return $this->set_item_state(TRUE, $js, $input, $item);
   }
 
@@ -1179,7 +1174,7 @@ class ctools_export_ui {
    * If javascript is in use, this will rebuild the list and send that back
    * as though the filter form had been executed.
    */
-  public function set_item_state($state, $js, $input, $item) {
+  function set_item_state($state, $js, $input, $item) {
     ctools_export_crud_set_status($this->plugin['schema'], $item, $state);
 
     if (!$js) {
@@ -1193,7 +1188,7 @@ class ctools_export_ui {
   /**
    * Page callback to delete an exportable item.
    */
-  public function delete_page($js, $input, $item) {
+  function delete_page($js, $input, $item) {
     $form_state = array(
       'plugin' => $this->plugin,
       'object' => &$this,
@@ -1216,7 +1211,7 @@ class ctools_export_ui {
   /**
    * Deletes exportable items from the database.
    */
-  public function delete_form_submit(&$form_state) {
+  function delete_form_submit(&$form_state) {
     $item = $form_state['item'];
 
     ctools_export_crud_delete($this->plugin['schema'], $item);
@@ -1228,7 +1223,7 @@ class ctools_export_ui {
   /**
    * Page callback to display export information for an exportable item.
    */
-  public function export_page($js, $input, $item) {
+  function export_page($js, $input, $item) {
     drupal_set_title($this->get_page_title('export', $item), PASS_THROUGH);
     return drupal_get_form('ctools_export_form', ctools_export_crud_export($this->plugin['schema'], $item), t('Export'));
   }
@@ -1236,7 +1231,7 @@ class ctools_export_ui {
   /**
    * Page callback to import information for an exportable item.
    */
-  public function import_page($js, $input, $step = NULL) {
+  function import_page($js, $input, $step = NULL) {
     drupal_set_title($this->get_page_title('import'), PASS_THROUGH);
     // Import is basically a multi step wizard form, so let's go ahead and
     // use CTools' wizard.inc for it.
@@ -1277,7 +1272,7 @@ class ctools_export_ui {
    * Import form. Provides simple helptext instructions and textarea for
    * pasting a export definition.
    */
-  public function edit_form_import(&$form, &$form_state) {
+  function edit_form_import(&$form, &$form_state) {
     $form['help'] = array(
       '#type' => 'item',
       '#value' => $this->plugin['strings']['help']['import'],
@@ -1303,7 +1298,7 @@ class ctools_export_ui {
    *
    * Evaluates code and make sure it creates an object before we continue.
    */
-  public function edit_form_import_validate($form, &$form_state) {
+  function edit_form_import_validate($form, &$form_state) {
     $item = ctools_export_crud_import($this->plugin['schema'], $form_state['values']['import']);
     if (is_string($item)) {
       form_error($form['import'], t('Unable to get an import from the code. Errors reported: @errors', array('@errors' => $item)));
@@ -1320,7 +1315,7 @@ class ctools_export_ui {
    *
    * Stores the item in the session.
    */
-  public function edit_form_import_submit($form, &$form_state) {
+  function edit_form_import_submit($form, &$form_state) {
     // The validate function already imported and stored the item. This
     // function exists simply to prevent it from going to the default
     // edit_form_submit() method.

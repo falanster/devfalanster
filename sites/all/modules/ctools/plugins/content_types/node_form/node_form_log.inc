@@ -1,11 +1,9 @@
 <?php
 
 /**
- * @file
  * Plugins are described by creating a $plugin array which will be used
  * by the system that includes this file.
  */
-
 $plugin = array(
   'single' => TRUE,
   'icon' => 'icon_node_form.png',
@@ -44,6 +42,6 @@ function ctools_node_form_log_content_type_admin_title($subtype, $conf, $context
 }
 
 function ctools_node_form_log_content_type_edit_form($form, &$form_state) {
-  // Provide a blank form so we have a place to have context setting.
+  // provide a blank form so we have a place to have context setting.
   return $form;
 }

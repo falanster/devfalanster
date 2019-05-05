@@ -10,9 +10,6 @@
  */
 class ViewsPluginDisplayTestCase extends ViewsSqlTest {
 
-  /**
-   *
-   */
   public static function getInfo() {
     return array(
       'name' => 'Display plugin',
@@ -38,7 +35,6 @@ class ViewsPluginDisplayTestCase extends ViewsSqlTest {
    * Returns a test view for testFilterGroupsOverriding.
    *
    * @see testFilterGroupsOverriding
-   *
    * @return view
    */
   function viewFilterGroupsOverriding() {
@@ -84,9 +80,7 @@ class ViewsPluginDisplayTestCase extends ViewsSqlTest {
   }
 
   /**
-   * Based on a bug some filter_groups landed in the overridden display.
-   *
-   * Even the filters weren't overridden.
+   * Based on a bug some filter_groups landed in the overridden display, even the filters weren't overridden.
    * This caused multiple issues.
    * Take sure that the value from the default display are used.
    *
@@ -197,5 +191,4 @@ class ViewsPluginDisplayTestCase extends ViewsSqlTest {
 
     return $view;
   }
-
 }

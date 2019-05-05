@@ -12,30 +12,21 @@
  */
 class views_handler_field_contact_link extends views_handler_field_user_link {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['text']['#title'] = t('Link label');
     $form['text']['#required'] = TRUE;
     $form['text']['#default_value'] = empty($this->options['text']) ? t('contact') : $this->options['text'];
     parent::options_form($form, $form_state);
   }
 
-  /**
-   * An example of field level access control.
-   *
-   * We must override the access method in the parent class, as that requires
-   * the 'access user profiles' permission, which the contact form does not.
-   */
-  public function access() {
+  // An example of field level access control.
+  // We must override the access method in the parent class, as that requires
+  // the 'access user profiles' permission, which the contact form does not.
+  function access() {
     return user_access('access user contact forms');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     global $user;
     $uid = $this->get_value($values, 'uid');
 
@@ -63,5 +54,4 @@ class views_handler_field_contact_link extends views_handler_field_user_link {
 
     return $text;
   }
-
 }

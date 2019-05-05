@@ -1,10 +1,6 @@
 <?php
 
 /**
- * @file
- */
-
-/**
  * Generate new context classes by argument settings on the view.
  */
 function ctools_views_get_argument_context($argument) {

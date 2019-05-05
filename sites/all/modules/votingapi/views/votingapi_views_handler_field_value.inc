@@ -6,7 +6,6 @@
  */
 
 class votingapi_views_handler_field_value extends views_handler_field_numeric {
-
   function construct() {
     parent::construct();
     $this->definition['float'] = TRUE;

@@ -15,21 +15,14 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_math extends views_handler_field_numeric {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['expression'] = array('default' => '');
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['expression'] = array(
       '#type' => 'textarea',
       '#title' => t('Expression'),
@@ -37,20 +30,17 @@ class views_handler_field_math extends views_handler_field_numeric {
       '#default_value' => $this->options['expression'],
     );
 
-    // Create a place for the help.
+    // Create a place for the help
     $form['expression_help'] = array();
     parent::options_form($form, $form_state);
 
-    // Then move the existing help.
+    // Then move the existing help:
     $form['expression_help'] = $form['alter']['help'];
     unset($form['expression_help']['#dependency']);
     unset($form['alter']['help']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     ctools_include('math-expr');
     $tokens = array_map('floatval', $this->get_render_tokens(array()));
     $value = strtr($this->options['expression'], $tokens);
@@ -90,10 +80,5 @@ class views_handler_field_math extends views_handler_field_numeric {
     return $this->sanitize_value($this->options['prefix'] . $value . $this->options['suffix']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
-  }
-
+  function query() { }
 }

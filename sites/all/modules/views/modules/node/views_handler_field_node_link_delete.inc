@@ -15,7 +15,7 @@ class views_handler_field_node_link_delete extends views_handler_field_node_link
   /**
    * Renders the link.
    */
-  public function render_link($node, $values) {
+  function render_link($node, $values) {
     // Ensure user has access to delete this node.
     if (!node_access('delete', $node)) {
       return;
@@ -28,5 +28,4 @@ class views_handler_field_node_link_delete extends views_handler_field_node_link
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
     return $text;
   }
-
 }

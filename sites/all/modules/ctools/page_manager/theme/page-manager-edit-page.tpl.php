@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Template for the page manager page editor.
@@ -43,7 +42,7 @@
               <div class="description">
                 <?php print $content['description']; ?>
               </div>
-            <?php endif; ?>
+              <?php endif; ?>
             <?php print $content['content']; ?>
           </div>
         </div>

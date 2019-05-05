@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Rules integration for Devel.
- */
-
-/**
  * Implements hook_rules_action_info().
  */
 function devel_rules_action_info() {

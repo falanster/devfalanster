@@ -11,27 +11,17 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_user_roles extends views_handler_field_prerender_list {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct();
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->add_additional_fields();
     $this->field_alias = $this->aliases['uid'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_render(&$values) {
+  function pre_render(&$values) {
     $uids = array();
     $this->items = array();
 
@@ -49,29 +39,19 @@ class views_handler_field_user_roles extends views_handler_field_prerender_list 
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_item($count, $item) {
+  function render_item($count, $item) {
     return $item['role'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function document_self_tokens(&$tokens) {
+  function document_self_tokens(&$tokens) {
     $tokens['[' . $this->options['id'] . '-role' . ']'] = t('The name of the role.');
     $tokens['[' . $this->options['id'] . '-rid' . ']'] = t('The role ID of the role.');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function add_self_tokens(&$tokens, $item) {
+  function add_self_tokens(&$tokens, $item) {
     if (!empty($item['role'])) {
       $tokens['[' . $this->options['id'] . '-role' . ']'] = $item['role'];
       $tokens['[' . $this->options['id'] . '-rid' . ']'] = $item['rid'];
     }
   }
-
 }

@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag Google CSE module.
- */
-
-/**
  * Tests for the Metatag Google CSE module.
  */
 class MetatagGoogleCSETest extends MetatagTestHelper {

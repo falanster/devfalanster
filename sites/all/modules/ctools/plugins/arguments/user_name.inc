@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Plugin to provide an argument handler for a username.
+ *
+ * Plugin to provide an argument handler for a username
  */
 
 /**
@@ -11,7 +12,7 @@
  */
 $plugin = array(
   'title' => t("User: name"),
-  // Keyword to use for %substitution.
+  // keyword to use for %substitution
   'keyword' => 'user',
   'description' => t('Creates a user context from a user name.'),
   'context' => 'ctools_argument_user_name_context',
@@ -41,3 +42,6 @@ function ctools_argument_user_name_context($arg = NULL, $conf = NULL, $empty = F
   }
   return ctools_context_create('user', $account);
 }
+
+
+

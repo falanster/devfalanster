@@ -11,21 +11,14 @@
  * @ingroup views_pager_plugins
  */
 class views_plugin_pager_some extends views_plugin_pager {
-
-  /**
-   *
-   */
-  public function summary_title() {
+  function summary_title() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], '@count item, skip @skip', '@count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
     }
-    return format_plural($this->options['items_per_page'], '@count item', '@count items', array('@count' => $this->options['items_per_page']));
+      return format_plural($this->options['items_per_page'], '@count item', '@count items', array('@count' => $this->options['items_per_page']));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['items_per_page'] = array('default' => 10);
     $options['offset'] = array('default' => 0);
@@ -36,7 +29,7 @@ class views_plugin_pager_some extends views_plugin_pager {
   /**
    * Provide the default form for setting options.
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $pager_text = $this->display->handler->get_pager_text();
     $form['items_per_page'] = array(
@@ -54,26 +47,16 @@ class views_plugin_pager_some extends views_plugin_pager {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function use_pager() {
+  function use_pager() {
     return FALSE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function use_count_query() {
+  function use_count_query() {
     return FALSE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->view->query->set_limit($this->options['items_per_page']);
     $this->view->query->set_offset($this->options['offset']);
   }
-
 }

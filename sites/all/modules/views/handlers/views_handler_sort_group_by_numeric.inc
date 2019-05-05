@@ -11,11 +11,7 @@
  * @ingroup views_sort_handlers
  */
 class views_handler_sort_group_by_numeric extends views_handler_sort {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
 
     // Initialize the original handler.
@@ -24,9 +20,9 @@ class views_handler_sort_group_by_numeric extends views_handler_sort {
   }
 
   /**
-   * {@inheritdoc}
+   * Called to add the field to a query.
    */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
 
     $params = array(
@@ -36,11 +32,7 @@ class views_handler_sort_group_by_numeric extends views_handler_sort {
     $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order'], NULL, $params);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function ui_name($short = FALSE) {
+  function ui_name($short = FALSE) {
     return $this->get_field(parent::ui_name($short));
   }
-
 }

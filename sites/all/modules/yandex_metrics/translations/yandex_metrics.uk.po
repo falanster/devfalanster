@@ -1,0 +1,446 @@
+# Russian translation of Drupal module Yandex.Metrics Counter
+# Copyright Dmitry Grigoryan <grigoryan.dev@gmail.com>
+# Generated from files:
+#  yandex_metrics.module: n/a
+#  yandex_metrics.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: yandex_metrics 7.x-2.x\n"
+"POT-Creation-Date: 2013-10-06 21:37+0300\n"
+"PO-Revision-Date: 2013-10-16 11:42+0200\n"
+"Last-Translator: Dmitry Grigoryan <grigoryan.dev@gmail.com>\n"
+"Language-Team: Dmitry Grigoryan <grigoryan.dev@gmail.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)"
+">=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Generator: Poedit 1.5.5\n"
+
+#: yandex_metrics.module:18
+msgid "Administer Yandex.Metrics Settings"
+msgstr "Керувати Yandex.Metrics налаштуваннями"
+
+#: yandex_metrics.module:55;40
+msgid "Counter Code"
+msgstr "Код лічильника"
+
+#: yandex_metrics.module:58
+msgid "Paste Yandex.Metrica counter code for your site here."
+msgstr "Вставте сюди код лічильника Яндекс.Метрики для вашого сайту."
+
+#: yandex_metrics.module:63
+msgid "Page specific tracking settings"
+msgstr "Налаштування спостереження за сторінками"
+
+#: yandex_metrics.module:70
+msgid "Add to every page except the listed pages."
+msgstr "Додати до кожної сторінки, за винятком зазначених"
+
+#: yandex_metrics.module:71
+msgid "Add to the listed pages only."
+msgstr "Додати тільки до зазначених сторінок"
+
+#: yandex_metrics.module:75
+msgid "Add code to specific pages"
+msgstr "Додати код до певних сторінок"
+
+#: yandex_metrics.module:81
+msgid ""
+"Enter one page per line as Drupal paths. The '*' character is a wildcard. "
+"Example paths are %blog for the blog page and %blog-wildcard for every "
+"personal blog. %front is the front page."
+msgstr ""
+"Введіть по одній внутрішній адресі Drupal у рядку.  Символ '*' замінює будь-"
+"яку кількість символів. Наприклад, введіть %blog для оглядової сторінки "
+"блогів, %blog-wildcard для всіх персональних блогів. %front - головна "
+"сторінка."
+
+#: yandex_metrics.module:87
+msgid "Pages"
+msgstr "Сторінки"
+
+#: yandex_metrics.module:97
+msgid "Role specific tracking settings"
+msgstr "Налаштування відстеження ролей"
+
+#: yandex_metrics.module:104
+msgid "Add tracking for specific roles"
+msgstr "Додати спостереження за певними ролями"
+
+#: yandex_metrics.module:106
+msgid "Add to the selected roles only"
+msgstr "Додати тільки для виділених ролей"
+
+#: yandex_metrics.module:107
+msgid "Add to every role except the selected ones"
+msgstr "Додати для кожної ролі за винятком виділених"
+
+#: yandex_metrics.module:119
+msgid "Roles"
+msgstr "Ролі"
+
+#: yandex_metrics.module:122
+msgid ""
+"If none of the roles are selected, all users will be tracked. If a user has "
+"any of the roles checked, that user will be tracked (or excluded, depending "
+"on the setting above)."
+msgstr ""
+"Якщо не виділено ні одної ролі, всі користувачі будут відстежуватися. Якщо "
+"користувач володіє будь-якою з виділених ролей, цей користувач буде "
+"відстежуватися (або ні, в залежності від налаштувань показаних вище)"
+
+#: yandex_metrics.module:127
+msgid "Save"
+msgstr "Зберегти"
+
+#: yandex_metrics.module:150
+msgid "The Counter Code settings has been saved successfully."
+msgstr "Налаштування Коду Лічильника успішно збережені."
+
+#: yandex_metrics.module:253
+msgid "About the module"
+msgstr "Про модуль"
+
+#: yandex_metrics.module:254
+msgid ""
+"The <a href=\"@yandex_metrika\" target=\"_blank\">Yandex.Metrica</a> service "
+"is European alternative of Google Analytics. This is a free tool that helps "
+"you to increase the conversion rate of your site."
+msgstr ""
+"Сервіс <a href=\"@yandex_metrika\" target=\"_blank\">Яндекс.Метрика</a> це "
+"Європейська альтернатива Google Analytics. Це безкоштовний інструмент, який "
+"допомагає підвищити коєфіцієнт конверсії вашого сайту."
+
+#: yandex_metrics.module:255
+msgid ""
+"The Yandex.Metrics Counter module allows to install <a href=\"@yandex_metrika"
+"\" target=\"_blank\">Yandex.Metrica</a> counter code on the site pages."
+msgstr ""
+"Модуль Yandex.Metrics Лічильник дозволяє встановити код лічильника <a href="
+"\"@yandex_metrika\" target=\"_blank\">Яндекс.Метрики</a> на сторінки сайту."
+
+#: yandex_metrics.module:256
+msgid "Usage"
+msgstr "Використання"
+
+#: yandex_metrics.module:258
+msgid "Installing counter"
+msgstr "Встановлення лічильника"
+
+#: yandex_metrics.module:259
+msgid ""
+"Yandex.Metrics counter is JavaScript code that monitors user behavior on "
+"your website. You should <a href=\"@create_counter\" target=\"_blank"
+"\">create</a> and <a href=\"@install_counter\">install</a> the counter to "
+"work with Yandex.Metrics service."
+msgstr ""
+"Лічильник Яндекс.Метрики це JavaScript код, який слідкує за поведінкою "
+"користувача на вашому сайті. Вам слід <a href=\"@create_counter\" target="
+"\"_blank\">створити</a> та <a href=\"@install_counter\">встановити</a> "
+"лічильник для того, щоб працювати з сервісом Яндекс.Метрика."
+
+#: yandex_metrics.module:263
+msgid ""
+"Yandex.Metrica counter is JavaScript code that monitors user behavior on "
+"your website. You should <a href=\"@create_counter\" target=\"_blank"
+"\">create</a> and install the counter code to work with Yandex.Metrica "
+"service."
+msgstr ""
+"Лічильник Яндекс.Метрики це JavaScript код, який слідкує за поведінкою "
+"користувача на вашому сайті. Вам слід <a href=\"@create_counter\" target="
+"\"_blank\">створити</a> та встановити лічильник для того, щоб працювати з "
+"сервісом Яндекс.Метрика."
+
+#: yandex_metrics.module:32 yandex_metrics.info:0
+msgid "Yandex.Metrics"
+msgstr "Yandex.Metrics"
+
+#: yandex_metrics.module:34
+msgid "Integrate your site with Yandex.Metrica service."
+msgstr "Інтегруйте сайт с сервісом Яндекс.Метрика."
+
+#: yandex_metrics.info:0
+msgid "Yandex.Metrics Counter"
+msgstr "Yandex.Metrics Лічильник"
+
+#: yandex_metrics.info:0
+msgid "Allows to install Yandex.Metrica counter on the site pages."
+msgstr "Дозволяє встановлювати лічильник Яндекс.Метрики на сторінки сайту."
+
+#~ msgid "Save & Continue"
+#~ msgstr "Зберегти та продовжити"
+
+#~ msgid "Access Yandex.Metrics report"
+#~ msgstr "Доступ к Yandex.Metrics отчету"
+
+#, fuzzy
+#~ msgid "Popular content"
+#~ msgstr "Популярное содержимое"
+
+#~ msgid "Today"
+#~ msgstr "Сегодня"
+
+#~ msgid "Yesterday"
+#~ msgstr "Вчера"
+
+#~ msgid "Week"
+#~ msgstr "Неделя"
+
+#~ msgid "Month"
+#~ msgstr "Месяц"
+
+#~ msgid "Select date period"
+#~ msgstr "Выберите промежуток времени"
+
+#~ msgid "This date period will be used to filter popular content."
+#~ msgstr ""
+#~ "Этот период времени будет использован для фильтрации популярного "
+#~ "содержимого."
+
+#~ msgid "Select count of links to show"
+#~ msgstr "Выберите количество ссылок для показа"
+
+#~ msgid "The count of links that shown in the block."
+#~ msgstr "Количество ссылок, которое будет показано в блоке."
+
+#~ msgid "Quick filter"
+#~ msgstr "Быстрый фильтр"
+
+#~ msgid "Submit"
+#~ msgstr "Отправить"
+
+#~ msgid ""
+#~ "Please create Yandex.Metrics counter for the site first. See more "
+#~ "details !link."
+#~ msgstr ""
+#~ "Пожалуйста, сначала создайте счетчик Яндекс.Метрики для этого сайта. "
+#~ "Подробнее !link."
+
+#~ msgid "here"
+#~ msgstr "здесь"
+
+#~ msgid ""
+#~ "Perhaps you have not yet placed Yandex.Metrics counter code on the site. "
+#~ "You can do this !link."
+#~ msgstr ""
+#~ "Возможно, вы еще не поместили код счетчика Яндекс.Метрики на сайт. Вы "
+#~ "можете сделать это !link."
+
+#~ msgid "Please make sure that your application is authorized !link."
+#~ msgstr ""
+#~ "Пожалуйста, убедитесь в том, что ваше приложение авторизовано !link."
+
+#~ msgid ""
+#~ "There is no information about search phrases for the selected date range."
+#~ msgstr "За выбранный период информация о поисковых фразах отсутствует."
+
+#~ msgid "Visits (%)"
+#~ msgstr "Посещения (%)"
+
+#~ msgid "Phrase"
+#~ msgstr "Фраза"
+
+#~ msgid "Popular Search Phrases"
+#~ msgstr "Популярные поисковые фразы"
+
+#~ msgid ""
+#~ "There is no information about traffic sources for the selected date range."
+#~ msgstr "За выбранный период информация о источниках переходов отсутствует."
+
+#~ msgid "Traffic Sources"
+#~ msgstr "Источники переходов"
+
+#~ msgid ""
+#~ "There is no information about page views and visitors for the selected "
+#~ "date range."
+#~ msgstr ""
+#~ "За выбранный период информация о просмотрах страниц и посетителях "
+#~ "отсутствует."
+
+#~ msgid "Page Views, Visitors, New Visitors"
+#~ msgstr "Просмотры страниц, посетители, новые посетители"
+
+#~ msgid "Page Views"
+#~ msgstr "Просмотры страниц"
+
+#~ msgid "Visitors"
+#~ msgstr "Посетители"
+
+#~ msgid "New Visitors"
+#~ msgstr "Новые посетители"
+
+#~ msgid ""
+#~ "There is no information about popular content for the selected date range."
+#~ msgstr "За выбранный период информация о популярном содержимом отсутствует."
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Popular Content"
+#~ msgstr "Популярное содержимое"
+
+#~ msgid "The application is already authorized."
+#~ msgstr "Приложение уже авторизовано."
+
+#~ msgid "The application is not authorized yet."
+#~ msgstr "Приложение еще не авторизовано."
+
+#~ msgid "Client ID"
+#~ msgstr "ID клиента"
+
+#~ msgid "Enter your application client ID in this field."
+#~ msgstr "В данное поле введите ID вашего приложения."
+
+#~ msgid "Client Secret"
+#~ msgstr "Пароль клиента"
+
+#~ msgid "Enter your application secret in this field."
+#~ msgstr "В данное поле введите пароль вашего приложения."
+
+#~ msgid "Re-Authorize Application"
+#~ msgstr "Повторно авторизовать приложение"
+
+#~ msgid "Authorize Application"
+#~ msgstr "Авторизовать приложение"
+
+#~ msgid "Please set Client ID first."
+#~ msgstr "Пожалуйста, сначала укажите ID клиента."
+
+#~ msgid "An error has occurred. Please try again."
+#~ msgstr "Произошла ошибка. Пожалуйста, попробуйте снова."
+
+#~ msgid ""
+#~ "Congratulations! Your application has been authorized by Yandex.Metrics "
+#~ "service."
+#~ msgstr ""
+#~ "Поздравляем! Ваше приложение было авторизовано сервисом Яндекс.Метрика."
+
+#~ msgid "Front page"
+#~ msgstr "Главная страница"
+
+#~ msgid "Load reports via AJAX"
+#~ msgstr "Загружать отчеты с помощью AJAX"
+
+#~ msgid "Reports visibility settings"
+#~ msgstr "Настройки видимости отчетов"
+
+#~ msgid "Choose reports to display on Yandex.Metrics Summary Report page."
+#~ msgstr ""
+#~ "Выберите отчеты для отображения на странице Сводного отчета Yandex."
+#~ "Metrics."
+
+#~ msgid "Geography of Visits"
+#~ msgstr "География посещений"
+
+#~ msgid ""
+#~ "There is no information about geography of visits for the selected date "
+#~ "range."
+#~ msgstr "За выбранный период информация о географии посещений отсутствует."
+
+#~ msgid "Others"
+#~ msgstr "Другие"
+
+#~ msgid "Authorizing site"
+#~ msgstr "Авторизация сайта"
+
+#~ msgid ""
+#~ "To get access to the <a href=\"@reports-url\">reports</a> register Yandex "
+#~ "application at !app_register_link. Then enter your application Client ID "
+#~ "and Client Secret in the appropriate fields on the <a href="
+#~ "\"@authorization-page\">Authorization</a> page. The full list of your "
+#~ "Yandex applications is located !app_list_link."
+#~ msgstr ""
+#~ "Зарегистрируйте Яндекс приложение на странице !app_register_link, чтобы "
+#~ "получить доступ к <a href=\"@reports-url\">отчетам</a>. Затем введите ID "
+#~ "клиента и Пароль клиента вашего приложения в соответствующие поля на "
+#~ "странице <a href=\"@authorization-page\">Авторизации</a>. Полный список "
+#~ "ваших приложений находится !app_list_link."
+
+#~ msgid "Configuring reports"
+#~ msgstr "Настройка отчетов"
+
+#~ msgid ""
+#~ "You can choose necessary reports <a href=\"@report-setting-page\">here</"
+#~ "a> to display on <a href=\"@summary-report-page\">Yandex.Metrics Summary "
+#~ "Report</a> page. Also, we recommend you to enable AJAX for reports by "
+#~ "checking appropriate field on the <a href=\"@report-setting-page\">report "
+#~ "settings page</a>."
+#~ msgstr ""
+#~ "Вы можете выбрать необходимые отчеты <a href=\"@report-setting-page"
+#~ "\">здесь</a> для отображения их на странице <a href=\"@summary-report-page"
+#~ "\">Сводного отчета Yandex.Metrics</a>. Также мы рекомендуем вам включить "
+#~ "AJAX для отчетов, отметив соответствующее поле на <a href=\"@report-"
+#~ "setting-page\">странице настройки отчетов</a>."
+
+#~ msgid ""
+#~ "To get access to the <a href=\"@reports-url\">reports</a> register Yandex "
+#~ "application at !app_register_link. Then enter your application Client ID "
+#~ "and Client Secret in the appropriate fields on this page. The full list "
+#~ "of your Yandex applications is located !app_list_link."
+#~ msgstr ""
+#~ "Зарегистрируйте приложение Яндекс на странице !app_register_link, чтобы "
+#~ "получить доступ к <a href=\"@reports-url\">отчетам</a>. Затем введите ID "
+#~ "клиента и Пароль клиента вашего приложения в соответствующие поля на этой "
+#~ "странице. Полный список ваших приложений находится !app_list_link."
+
+#~ msgid "Your Yandex application Callback URI: @callback-uri"
+#~ msgstr "Callback URI вашего Яндекс приложения: @callback-uri"
+
+#~ msgid ""
+#~ "You can choose necessary reports to display on <a href=\"@summary-report-"
+#~ "page\">Yandex.Metrics Summary Report</a> page. Also, we recommend you to "
+#~ "enable AJAX for reports by checking the appropriate field on this page."
+#~ msgstr ""
+#~ "Вы можете выбрать необходимые отчеты для отображения их на странице <a "
+#~ "href=\"@summary-report-page\">Сводного отчета Yandex.Metrics</a>. Также "
+#~ "мы рекомендуем вам включить AJAX для отчетов, отметив соответствующее "
+#~ "поле на данной странице."
+
+#~ msgid "The \"code\" parameter is empty."
+#~ msgstr "Параметр \"код\" пуст."
+
+#~ msgid "Token request seems to be fail, due to \"%error\"."
+#~ msgstr "Запрос токена кажется неудачным из-за \"%error\"."
+
+#~ msgid "Token request is successful."
+#~ msgstr "Запрос токена успешен."
+
+#~ msgid "Counters request seems to be fail, due to \"%error\"."
+#~ msgstr "Запрос счетчиков кажется неудачным из-за \"%error\"."
+
+#~ msgid "Cron: counter ID is not set."
+#~ msgstr "Cron: ID счетчика не установлен."
+
+#~ msgid "Cron: application is not authorised."
+#~ msgstr "Cron: приложение не авторизовано."
+
+#~ msgid "Popular content for %filter has been saved."
+#~ msgstr "Популярный контент за %filter был сохранен."
+
+#~ msgid "Authorization"
+#~ msgstr "Авторизация"
+
+#~ msgid "Reports"
+#~ msgstr "Отчеты"
+
+#~ msgid "Yandex.Metrics Summary Report"
+#~ msgstr "Сводный отчет Yandex.Metrics"
+
+#~ msgid "An error has occurred."
+#~ msgstr "Произошла ошибка."
+
+#~ msgid "Views"
+#~ msgstr "Просмотры"
+
+#~ msgid ""
+#~ "Please create Yandex.Metrics counter for the site first and then try "
+#~ "again. To create counter visit !ym_link"
+#~ msgstr ""
+#~ "Пожалуйста, сначала создайте счетчик Яндекс.Метрики для этого сайта, а "
+#~ "затем попробуйте снова. Для создания счетчика посетите !ym_link"
+
+#~ msgid "Perform configuration for Yandex.Metrics."
+#~ msgstr "Выполнить настройку Yandex.Metrics."

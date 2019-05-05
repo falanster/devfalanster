@@ -6,20 +6,16 @@
  */
 
 /**
- * Render a field as a numeric value.
+ * Render a field as a numeric value
  *
  * Definition terms:
  * - float: If true this field contains a decimal value. If unset this field
- *   will be assumed to be integer.
+ *          will be assumed to be integer.
  *
  * @ingroup views_field_handlers
  */
 class views_handler_field_numeric extends views_handler_field {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['set_precision'] = array('default' => FALSE, 'bool' => TRUE);
@@ -35,10 +31,7 @@ class views_handler_field_numeric extends views_handler_field {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     if (!empty($this->definition['float'])) {
       $form['set_precision'] = array(
         '#type' => 'checkbox',
@@ -112,10 +105,7 @@ class views_handler_field_numeric extends views_handler_field {
     parent::options_form($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $value = $this->get_value($values);
 
     // Hiding should happen before rounding or adding prefix/suffix.
@@ -145,5 +135,4 @@ class views_handler_field_numeric extends views_handler_field {
       . $this->sanitize_value($value)
       . $this->sanitize_value($this->options['suffix'], 'xss');
   }
-
 }

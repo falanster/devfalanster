@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag module to ensure i18n integration doesn't break.
- */
-
-/**
  * Tests for the Metatag module to ensure i18n integration doesn't break.
  */
 class MetatagCoreTermWithI18nTest extends MetatagTestHelper {

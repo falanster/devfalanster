@@ -11,19 +11,12 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_comment_link_reply extends views_handler_field_comment_link {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function access() {
-    // Check for permission to reply to comments.
+  function access() {
+    //check for permission to reply to comments
     return user_access('post comments');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('reply');
     $nid =  $this->get_value($values, 'nid');
     $cid =  $this->get_value($values, 'cid');
@@ -33,5 +26,4 @@ class views_handler_field_comment_link_reply extends views_handler_field_comment
 
     return $text;
   }
-
 }

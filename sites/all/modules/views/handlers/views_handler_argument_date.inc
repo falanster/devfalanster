@@ -10,9 +10,9 @@
  *
  * Adds an option to set a default argument based on the current date.
  *
- * @param string $arg_format
- *   The format string to use on the current time when creating a default date
- *   argument.
+ * @param $arg_format
+ *   The format string to use on the current time when
+ *   creating a default date argument.
  *
  * Definitions terms:
  * - many to one: If true, the "many to one" helper will be used.
@@ -24,40 +24,27 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_date extends views_handler_argument_formula {
-
-  /**
-   *
-   */
-  public $option_name = 'default_argument_date';
-
-  /**
-   *
-   */
-  public $arg_format = 'Y-m-d';
+  var $option_name = 'default_argument_date';
+  var $arg_format = 'Y-m-d';
 
   /**
    * Add an option to set the default value to the current date.
    */
-  public function default_argument_form(&$form, &$form_state) {
+  function default_argument_form(&$form, &$form_state) {
     parent::default_argument_form($form, $form_state);
     $form['default_argument_type']['#options'] += array('date' => t('Current date'));
     $form['default_argument_type']['#options'] += array('node_created' => t("Current node's creation time"));
-    $form['default_argument_type']['#options'] += array('node_changed' => t("Current node's update time"));
-  }
+    $form['default_argument_type']['#options'] += array('node_changed' => t("Current node's update time"));  }
 
   /**
    * Set the empty argument value to the current date,
-   *
    * formatted appropriately for this argument.
-   *
-   * @return string
-   *   The default argument.
    */
-  public function get_default_argument($raw = FALSE) {
+  function get_default_argument($raw = FALSE) {
     if (!$raw && $this->options['default_argument_type'] == 'date') {
       return date($this->arg_format, REQUEST_TIME);
     }
-    elseif (!$raw && in_array($this->options['default_argument_type'], array('node_created', 'node_changed'))) {
+    else if (!$raw && in_array($this->options['default_argument_type'], array('node_created', 'node_changed'))) {
       foreach (range(1, 3) as $i) {
         $node = menu_get_object('node', $i);
         if (!empty($node)) {
@@ -84,12 +71,11 @@ class views_handler_argument_date extends views_handler_argument_formula {
   }
 
   /**
-   * Adapt the export mechanism.
-   *
-   * The date handler provides some default argument types, which aren't
-   * argument default plugins.
+   * The date handler provides some default argument types, which aren't argument default plugins,
+   * so addapt the export mechanism.
    */
-  public function export_plugin($indent, $prefix, $storage, $option, $definition, $parents) {
+  function export_plugin($indent, $prefix, $storage, $option, $definition, $parents) {
+
     // Only use a special behaviour for the special argument types, else just
     // use the default behaviour.
     if ($option == 'default_argument_type') {
@@ -108,11 +94,8 @@ class views_handler_argument_date extends views_handler_argument_formula {
     return parent::export_plugin($indent, $prefix, $storage, $option, $definition, $parents);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function get_sort_name() {
+
+  function get_sort_name() {
     return t('Date', array(), array('context' => 'Sort order'));
   }
-
 }

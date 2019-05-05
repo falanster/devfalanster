@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for Metatag for when i18n is enabled and actively being used.
- */
-
-/**
  * Tests for Metatag for when i18n is enabled and actively being used.
  */
 class MetatagCoreWithI18nOutputTest extends MetatagTestHelper {

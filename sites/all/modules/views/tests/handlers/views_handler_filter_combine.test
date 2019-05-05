@@ -102,5 +102,4 @@ class ViewsHandlerFilterCombineTest extends ViewsSqlTest {
     unset($schema['views_test']['fields']['job']['not null']);
     return $schema;
   }
-
 }

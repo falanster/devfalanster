@@ -13,11 +13,7 @@
  * argument's title to the username.
  */
 class views_plugin_argument_validate_user extends views_plugin_argument_validate {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['type'] = array('default' => 'uid');
     $options['restrict_roles'] = array('default' => FALSE, 'bool' => TRUE);
@@ -26,10 +22,7 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['type'] = array(
       '#type' => 'radios',
       '#title' => t('Type of user filter value to allow'),
@@ -61,19 +54,12 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_submit(&$form, &$form_state, &$options = array()) {
-    // Filter trash out of the options so we don't store giant unnecessary
-    // arrays.
+  function options_submit(&$form, &$form_state, &$options = array()) {
+    // filter trash out of the options so we don't store giant unnecessary arrays
     $options['roles'] = array_filter($options['roles']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function convert_options(&$options) {
+  function convert_options(&$options) {
     if (!isset($options['type']) && isset($this->argument->options['validate_user_argument_type'])) {
       $options['type'] = $this->argument->options['validate_user_argument_type'];
       $options['restrict_roles'] = $this->argument->options['validate_user_restrict_roles'];
@@ -81,14 +67,11 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function validate_argument($argument) {
+  function validate_argument($argument) {
     $type = $this->options['type'];
     // is_numeric() can return false positives, so we ensure it's an integer.
     // However, is_integer() will always fail, since $argument is a string.
-    if (is_numeric($argument) && $argument == (int) $argument) {
+    if (is_numeric($argument) && $argument == (int)$argument) {
       if ($type == 'uid' || $type == 'either') {
         if ($argument == $GLOBALS['user']->uid) {
           // If you assign an object to a variable in PHP, the variable
@@ -143,10 +126,7 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
     return TRUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function process_summary_arguments(&$args) {
+  function process_summary_arguments(&$args) {
     // If the validation says the input is an username, we should reverse the
     // argument so it works for example for generation summary urls.
     $uids_arg_keys = array_flip($args);
@@ -157,5 +137,4 @@ class views_plugin_argument_validate_user extends views_plugin_argument_validate
       }
     }
   }
-
 }

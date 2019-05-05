@@ -11,16 +11,9 @@
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_user_name extends views_handler_filter_in_operator {
+  var $always_multiple = TRUE;
 
-  /**
-   *
-   */
-  public $always_multiple = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function value_form(&$form, &$form_state) {
+  function value_form(&$form, &$form_state) {
     $values = array();
     if ($this->value) {
       $result = db_query("SELECT * FROM {users} u WHERE uid IN (:uids)", array(':uids' => $this->value));
@@ -29,8 +22,7 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
           $values[] = $account->name;
         }
         else {
-          // Intentionally NOT translated.
-          $values[] = 'Anonymous';
+          $values[] = 'Anonymous'; // Intentionally NOT translated.
         }
       }
     }
@@ -50,10 +42,7 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_validate($form, &$form_state) {
+  function value_validate($form, &$form_state) {
     $values = drupal_explode_tags($form_state['values']['options']['value']);
     $uids = $this->validate_user_strings($form['value'], $values);
 
@@ -62,10 +51,7 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function accept_exposed_input($input) {
+  function accept_exposed_input($input) {
     $rc = parent::accept_exposed_input($input);
 
     if ($rc) {
@@ -78,10 +64,7 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
     return $rc;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function exposed_validate(&$form, &$form_state) {
+  function exposed_validate(&$form, &$form_state) {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -113,12 +96,11 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
   }
 
   /**
-   * Validate the user string.
-   *
-   * Since this can come from either the form or the exposed filter, this is
-   * abstracted out a bit so it can handle the multiple input sources.
+   * Validate the user string. Since this can come from either the form
+   * or the exposed filter, this is abstracted out a bit so it can
+   * handle the multiple input sources.
    */
-  public function validate_user_strings(&$form, $values) {
+  function validate_user_strings(&$form, $values) {
     $uids = array();
     $placeholders = array();
     $args = array();
@@ -151,24 +133,15 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
     return $uids;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_submit($form, &$form_state) {
-    // Prevent array filter from removing our anonymous user.
+  function value_submit($form, &$form_state) {
+    // prevent array filter from removing our anonymous user.
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function get_value_options() {
-  }
+  // Override to do nothing.
+  function get_value_options() { }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function admin_summary() {
-    // Set up $this->value_options for the parent summary.
+  function admin_summary() {
+    // set up $this->value_options for the parent summary
     $this->value_options = array();
 
     if ($this->value) {
@@ -179,13 +152,11 @@ class views_handler_filter_user_name extends views_handler_filter_in_operator {
           $this->value_options[$account->uid] = $account->name;
         }
         else {
-          // Intentionally NOT translated.
-          $this->value_options[$account->uid] = 'Anonymous';
+          $this->value_options[$account->uid] = 'Anonymous'; // Intentionally NOT translated.
         }
       }
     }
 
     return parent::admin_summary();
   }
-
 }

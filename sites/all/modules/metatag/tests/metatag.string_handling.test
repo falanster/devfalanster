@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for Metatag's string handling.
- */
-
-/**
  * Tests for Metatag's string handling.
  */
 class MetatagCoreStringHandlingTest extends MetatagTestHelper {

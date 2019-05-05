@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag GooglePlus module.
- */
-
-/**
  * Tests for the Metatag GooglePlus module.
  */
 class MetatagGooglePlusTest extends MetatagTestHelper {

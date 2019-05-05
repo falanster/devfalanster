@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_display_attachment.
+ * Contains the attachment display plugin.
  */
 
 /**
@@ -15,11 +15,7 @@
  * @ingroup views_display_plugins
  */
 class views_plugin_display_attachment extends views_plugin_display {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition () {
+  function option_definition () {
     $options = parent::option_definition();
 
     $options['displays'] = array('default' => array());
@@ -32,17 +28,11 @@ class views_plugin_display_attachment extends views_plugin_display {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function execute() {
+  function execute() {
     return $this->view->render($this->display->id);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function attachment_positions($position = NULL) {
+  function attachment_positions($position = NULL) {
     $positions = array(
       'before' => t('Before'),
       'after' => t('After'),
@@ -61,8 +51,8 @@ class views_plugin_display_attachment extends views_plugin_display {
    *
    * This output is returned as an array.
    */
-  public function options_summary(&$categories, &$options) {
-    // It is very important to call the parent function here.
+  function options_summary(&$categories, &$options) {
+    // It is very important to call the parent function here:
     parent::options_summary($categories, $options);
 
     $categories['attachment'] = array(
@@ -129,8 +119,8 @@ class views_plugin_display_attachment extends views_plugin_display {
   /**
    * Provide the default form for setting options.
    */
-  public function options_form(&$form, &$form_state) {
-    // It is very important to call the parent function here.
+  function options_form(&$form, &$form_state) {
+    // It is very important to call the parent function here:
     parent::options_form($form, $form_state);
 
     switch ($form_state['section']) {
@@ -143,7 +133,6 @@ class views_plugin_display_attachment extends views_plugin_display {
           '#default_value' => $this->get_option('inherit_arguments'),
         );
         break;
-
       case 'inherit_exposed_filters':
         $form['#title'] .= t('Inherit exposed filters');
         $form['inherit_exposed_filters'] = array(
@@ -153,7 +142,6 @@ class views_plugin_display_attachment extends views_plugin_display {
           '#default_value' => $this->get_option('inherit_exposed_filters'),
         );
         break;
-
       case 'inherit_pager':
         $form['#title'] .= t('Inherit pager');
         $form['inherit_pager'] = array(
@@ -163,7 +151,6 @@ class views_plugin_display_attachment extends views_plugin_display {
           '#default_value' => $this->get_option('inherit_pager'),
         );
         break;
-
       case 'render_pager':
         $form['#title'] .= t('Render pager');
         $form['render_pager'] = array(
@@ -173,7 +160,6 @@ class views_plugin_display_attachment extends views_plugin_display {
           '#default_value' => $this->get_option('render_pager'),
         );
         break;
-
       case 'attachment_position':
         $form['#title'] .= t('Position');
         $form['attachment_position'] = array(
@@ -183,7 +169,6 @@ class views_plugin_display_attachment extends views_plugin_display {
           '#default_value' => $this->get_option('attachment_position'),
         );
         break;
-
       case 'displays':
         $form['#title'] .= t('Attach to');
         $displays = array();
@@ -206,8 +191,8 @@ class views_plugin_display_attachment extends views_plugin_display {
    * Perform any necessary changes to the form values prior to storage.
    * There is no need for this function to actually store the data.
    */
-  public function options_submit(&$form, &$form_state) {
-    // It is very important to call the parent function here.
+  function options_submit(&$form, &$form_state) {
+    // It is very important to call the parent function here:
     parent::options_submit($form, $form_state);
     switch ($form_state['section']) {
       case 'inherit_arguments':
@@ -224,7 +209,7 @@ class views_plugin_display_attachment extends views_plugin_display {
   /**
    * Attach to another view.
    */
-  public function attach_to($display_id) {
+  function attach_to($display_id) {
     $displays = $this->get_option('displays');
 
     if (empty($displays[$display_id])) {
@@ -235,8 +220,8 @@ class views_plugin_display_attachment extends views_plugin_display {
       return;
     }
 
-    // Get a fresh view because our current one has a lot of stuff on it
-    // because it's already been executed.
+    // Get a fresh view because our current one has a lot of stuff on it because it's
+    // already been executed.
     $view = $this->view->clone_view();
     $view->original_args = $view->args;
 
@@ -256,11 +241,9 @@ class views_plugin_display_attachment extends views_plugin_display {
       case 'before':
         $this->view->attachment_before .= $attachment;
         break;
-
       case 'after':
         $this->view->attachment_after .= $attachment;
         break;
-
       case 'both':
         $this->view->attachment_before .= $attachment;
         $this->view->attachment_after .= $attachment;
@@ -271,10 +254,11 @@ class views_plugin_display_attachment extends views_plugin_display {
   }
 
   /**
-   * Attachment displays only use exposed widgets if they are set to inherit
-   * the exposed filter settings of their parent display.
+   * Attachment displays only use exposed widgets if
+   * they are set to inherit the exposed filter settings
+   * of their parent display.
    */
-  public function uses_exposed() {
+  function uses_exposed() {
     if (!empty($this->options['inherit_exposed_filters']) && parent::uses_exposed()) {
       return TRUE;
     }
@@ -282,26 +266,19 @@ class views_plugin_display_attachment extends views_plugin_display {
   }
 
   /**
-   * If an attachment is set to inherit the exposed filter settings from its
-   * parent display, then don't render and display a second set of exposed
-   * filter widgets.
+   * If an attachment is set to inherit the exposed filter
+   * settings from its parent display, then don't render and
+   * display a second set of exposed filter widgets.
    */
-  public function displays_exposed() {
+  function displays_exposed() {
     return $this->options['inherit_exposed_filters'] ? FALSE : TRUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function use_pager() {
+  function use_pager() {
     return !empty($this->use_pager);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_pager() {
+  function render_pager() {
     return !empty($this->use_pager) && $this->get_option('render_pager');
   }
-
 }

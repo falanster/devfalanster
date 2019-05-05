@@ -10,9 +10,8 @@
  */
 
 /**
- * Specialized implementation of hook_page_manager_task_tasks().
- *
- * See api-task.html for more information.
+ * Specialized implementation of hook_page_manager_task_tasks(). See api-task.html for
+ * more information.
  */
 function page_manager_search_page_manager_tasks() {
   if (!module_exists('search')) {
@@ -20,7 +19,7 @@ function page_manager_search_page_manager_tasks() {
   }
 
   return array(
-    // This is a 'page' task and will fall under the page admin UI.
+    // This is a 'page' task and will fall under the page admin UI
     'task type' => 'page',
     'title' => t('Search'),
 
@@ -39,6 +38,7 @@ function page_manager_search_page_manager_tasks() {
     'get arguments' => 'page_manager_search_get_arguments',
     'get context placeholders' => 'page_manager_search_get_contexts',
     'access callback' => 'page_manager_search_access_check',
+
   );
 }
 
@@ -59,6 +59,7 @@ function page_manager_search_menu_alter(&$items, $task) {
   // keywords. A second set is for searching *with* keywords. This
   // is necessary because search/node/% and search/node need to be
   // different due to the way the search menu items function.
+
   $default_info = search_get_default_module_info();
   if (empty($default_info)) {
     // Nothing to do.
@@ -84,7 +85,7 @@ function page_manager_search_menu_alter(&$items, $task) {
       $items["$path/%menu_tail"]['file'] = $task['file'];
     }
     else {
-      // Automatically disable this task if it cannot be enabled.
+      // automatically disable this task if it cannot be enabled.
       variable_set('page_manager_search_disabled_' . $module, TRUE);
       if (!empty($GLOBALS['page_manager_enabling_search'])) {
         drupal_set_message(t('Page manager module is unable to enable @path because some other module already has overridden with %callback.', array('%callback' => $callback, '@path' => $path)), 'error');
@@ -95,9 +96,12 @@ function page_manager_search_menu_alter(&$items, $task) {
 
 /**
  * Entry point for our overridden search page.
+ *
  */
 function page_manager_search_page($type) {
   ctools_include('menu');
+//  menu_set_active_trail(ctools_get_menu_trail('search/' . $type));
+
   // Get the arguments and construct a keys string out of them.
   $args = func_get_args();
 
@@ -107,10 +111,10 @@ function page_manager_search_page($type) {
   // And implode() it all back together.
   $keys = $args ? implode('/', $args) : '';
 
-  // Allow other modules to alter the search keys.
-  drupal_alter(array('search_keys', 'search_' . $type . '_keys'), $keys);
+  // Allow other modules to alter the search keys
+  drupal_alter(array('search_keys', 'search_'. $type .'_keys'), $keys);
 
-  // Load my task plugin.
+  // Load my task plugin
   $task = page_manager_get_task('search');
   $subtask = page_manager_get_task_subtask($task, $type);
 
@@ -134,6 +138,7 @@ function page_manager_search_page($type) {
   }
 
   // Otherwise, fall back.
+
   // Put the $type back on the arguments.
   module_load_include('inc', 'search', 'search.pages');
   array_unshift($args, $type);
@@ -219,7 +224,7 @@ function page_manager_search_build_subtask($task, $module) {
     'row class' => empty($page->disabled) ? 'page-manager-enabled' : 'page-manager-disabled',
     'storage' => t('In code'),
     'disabled' => variable_get('page_manager_search_disabled_' . $module, TRUE),
-    // This works for both enable AND disable.
+    // This works for both enable AND disable
     'enable callback' => 'page_manager_search_enable',
   );
 
@@ -235,7 +240,6 @@ function page_manager_search_build_subtask($task, $module) {
  *   The subtask id
  * @param $contexts
  *   The contexts loaded for the task.
- *
  * @return
  *   TRUE if the current user can access the page.
  */

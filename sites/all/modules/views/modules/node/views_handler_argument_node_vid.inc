@@ -2,18 +2,19 @@
 
 /**
  * @file
- * Definition of views_handler_argument_node_vid.
+ * Provide node vid argument handler.
  */
 
 /**
  * Argument handler to accept a node revision id.
  */
 class views_handler_argument_node_vid extends views_handler_argument_numeric {
+  // No constructor is necessary.
 
   /**
    * Override the behavior of title(). Get the title of the revision.
    */
-  public function title_query() {
+  function title_query() {
     $titles = array();
 
     $result = db_query("SELECT n.title FROM {node_revision} n WHERE n.vid IN (:vids)", array(':vids' => $this->value));
@@ -22,5 +23,4 @@ class views_handler_argument_node_vid extends views_handler_argument_numeric {
     }
     return $titles;
   }
-
 }

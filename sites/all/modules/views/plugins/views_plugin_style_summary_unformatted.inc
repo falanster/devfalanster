@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_style_summary_unformatted.
+ * Contains the unformatted summary style plugin.
  */
 
 /**
@@ -11,21 +11,14 @@
  * @ingroup views_style_plugins
  */
 class views_plugin_style_summary_unformatted extends views_plugin_style_summary {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['inline'] = array('default' => FALSE, 'bool' => TRUE);
     $options['separator'] = array('default' => '');
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['inline'] = array(
       '#type' => 'checkbox',
@@ -38,5 +31,4 @@ class views_plugin_style_summary_unformatted extends views_plugin_style_summary 
       '#default_value' => $this->options['separator'],
     );
   }
-
 }

@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 $plugin = array(
   'schema' => 'stylizer',
   'access' => 'administer stylizer',
@@ -46,3 +42,4 @@ $plugin = array(
     ),
   ),
 );
+

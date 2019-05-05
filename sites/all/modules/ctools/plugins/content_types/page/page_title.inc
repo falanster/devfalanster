@@ -29,10 +29,7 @@ $plugin = array(
  * Outputs the page title of the current page.
  */
 function ctools_page_title_content_type_render($subtype, $conf, $panel_args) {
-  // $conf['override_title'] can have one of these three values.
-  // 0 i.e. hide the title, 1 i.e. no title, and 2 i.e. pane title if it's a
-  // panels page.
-  if (!drupal_get_title() && isset($conf['override_title']) && $conf['override_title'] === 1) {
+  if (!drupal_get_title()) {
     return;
   }
   // TODO: This should have a setting or something for the markup.

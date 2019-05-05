@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 $plugin = array(
   'title' => t('Entity extra field'),
   'defaults' => array('view_mode' => NULL),
@@ -123,7 +119,7 @@ function ctools_entity_field_extra_content_type_render($subtype, $conf, $panel_a
 
   if (isset($entity->content[$field_name])) {
     // Build the content type block.
-    $block          = new stdClass();
+    $block = new stdClass();
     $block->module  = 'entity_field_extra';
     $block->content = $entity->content[$field_name];
     $block->delta   = $id;

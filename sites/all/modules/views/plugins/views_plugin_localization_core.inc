@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_localization_core.
+ * Contains the Drupal core localization plugin.
  */
 
 /**
@@ -15,35 +15,35 @@ class views_plugin_localization_core extends views_plugin_localization {
   /**
    * Translate a string.
    *
-   * @param string $string
+   * @param $string
    *   The string to be translated.
-   * @param array $keys
+   * @param $keys
    *   An array of keys to identify the string. Generally constructed from
    *   view name, display_id, and a property, e.g., 'header'.
-   * @param string $format
+   * @param $format
    *   The input format of the string. This is optional.
    */
-  public function translate_string($string, $keys = array(), $format = '') {
+  function translate_string($string, $keys = array(), $format = '') {
     return t($string);
   }
 
   /**
    * Save a string for translation.
    *
-   * @param string $string
+   * @param $string
    *   The string to be translated.
-   * @param array $keys
+   * @param $keys
    *   An array of keys to identify the string. Generally constructed from
    *   view name, display_id, and a property, e.g., 'header'.
-   * @param string $format
+   * @param $format
    *   The input format of the string. This is optional.
    */
-  public function save_string($string, $keys = array(), $format = '') {
+  function save_string($string, $keys = array(), $format = '') {
     global $language;
 
     // If the current language is 'en', we need to reset the language
     // in order to trigger an update.
-    // @todo add test for number of languages.
+    // TODO: add test for number of languages.
     if ($language->language == 'en') {
       $changed = TRUE;
       $languages = language_list();
@@ -67,23 +67,22 @@ class views_plugin_localization_core extends views_plugin_localization {
    *
    * Deletion is not supported.
    *
-   * @param mixed $source
+   * @param $source
    *   Full data for the string to be translated.
    */
-  public function delete($source) {
+  function delete($source) {
     return FALSE;
   }
 
   /**
    * Collect strings to be exported to code.
    *
-   * String identifiers are not supported so strings are anonymously in an
-   * array.
+   * String identifiers are not supported so strings are anonymously in an array.
    *
-   * @param array $source
+   * @param $source
    *   Full data for the string to be translated.
    */
-  public function export($source) {
+  function export($source) {
     if (!empty($source['value'])) {
       $this->export_strings[] = $source['value'];
     }
@@ -92,10 +91,10 @@ class views_plugin_localization_core extends views_plugin_localization {
   /**
    * Render any collected exported strings to code.
    *
-   * @param string $indent
+   * @param $indent
    *   An optional indentation for prettifying nested code.
    */
-  public function export_render($indent = '  ') {
+  function export_render($indent = '  ') {
     $output = '';
     if (!empty($this->export_strings)) {
       $this->export_strings = array_unique($this->export_strings);
@@ -107,5 +106,4 @@ class views_plugin_localization_core extends views_plugin_localization {
     }
     return $output;
   }
-
 }

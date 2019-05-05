@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_term_node_tid_depth_modifier.
+ * Definition of views_handler_argument_term_node_tid_depth_modif.
  */
 
 /**
@@ -14,24 +14,10 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_term_node_tid_depth_modifier extends views_handler_argument {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query($group_by = FALSE) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_query() {
-    // We don't know our argument yet, but it's based upon our position.
+  function options_form(&$form, &$form_state) { }
+  function query($group_by = FALSE) { }
+  function pre_query() {
+    // We don't know our argument yet, but it's based upon our position:
     $argument = isset($this->view->args[$this->position]) ? $this->view->args[$this->position] : NULL;
     if (!is_numeric($argument)) {
       return;
@@ -45,7 +31,7 @@ class views_handler_argument_term_node_tid_depth_modifier extends views_handler_
       $argument = -10;
     }
 
-    // Figure out which argument preceded us.
+    // figure out which argument preceded us.
     $keys = array_reverse(array_keys($this->view->argument));
     $skip = TRUE;
     foreach ($keys as $key) {
@@ -75,5 +61,4 @@ class views_handler_argument_term_node_tid_depth_modifier extends views_handler_
       $handler->options['depth'] = $argument;
     }
   }
-
 }

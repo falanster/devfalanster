@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 if (module_exists('search')) {
   /**
    * Plugins are described by creating a $plugin array which will be used
@@ -46,7 +42,7 @@ function ctools_search_result_content_type_render($subtype, $conf, $panel_args, 
     $keys = $context->data;
   }
 
-  $conditions = NULL;
+  $conditions =  NULL;
   if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
     // Build an optional array of more search conditions.
     $conditions = $info['conditions_callback']($keys);
@@ -63,9 +59,9 @@ function ctools_search_result_content_type_render($subtype, $conf, $panel_args, 
   }
 
   // Build the content type block.
-  $block         = new stdClass();
-  $block->module = 'search';
-  $block->delta  = 'result';
+  $block = new stdClass();
+  $block->module  = 'search';
+  $block->delta   = 'result';
 
   $results = '';
 
@@ -163,6 +159,7 @@ function ctools_search_result_content_type_edit_form($form, &$form_state) {
     '#default_value' => $conf['override_no_key'],
     '#title' => t('Display text if no search keywords were submitted'),
   );
+
 
   $form['no_key_title'] = array(
     '#title' => t('Title'),

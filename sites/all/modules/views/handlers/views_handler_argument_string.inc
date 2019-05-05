@@ -6,30 +6,24 @@
  */
 
 /**
- * Argument handler to implement string arguments that may have length limits.
+ * Basic argument handler to implement string arguments that may have length
+ * limits.
  *
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_string extends views_handler_argument {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($this->definition['many to one'])) {
       $this->helper = new views_many_to_one_helper($this);
 
-      // Ensure defaults for these, during summaries and stuff.
+      // Ensure defaults for these, during summaries and stuff:
       $this->operator = 'or';
       $this->value = array();
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['glossary'] = array('default' => FALSE, 'bool' => TRUE);
@@ -47,10 +41,7 @@ class views_handler_argument_string extends views_handler_argument {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['glossary'] = array(
@@ -135,9 +126,9 @@ class views_handler_argument_string extends views_handler_argument {
   }
 
   /**
-   * Build the summary query based on a string.
+   * Build the summary query based on a string
    */
-  public function summary_query() {
+  function summary_query() {
     if (empty($this->definition['many to one'])) {
       $this->ensure_my_table();
     }
@@ -166,14 +157,14 @@ class views_handler_argument_string extends views_handler_argument {
    *
    * $this->ensure_my_table() MUST have been called prior to this.
    */
-  public function get_formula() {
+  function get_formula() {
     return "SUBSTRING($this->table_alias.$this->real_field, 1, " . intval($this->options['limit']) . ")";
   }
 
   /**
    * Build the query based upon the formula
    */
-  public function query($group_by = FALSE) {
+  function query($group_by = FALSE) {
     $argument = $this->argument;
     if (!empty($this->options['transform_dash'])) {
       $argument = strtr($argument, '-', ' ');
@@ -232,10 +223,7 @@ class views_handler_argument_string extends views_handler_argument {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_argument($data) {
+  function summary_argument($data) {
     $value = $this->case_transform($data->{$this->base_alias}, $this->options['path_case']);
     if (!empty($this->options['transform_dash'])) {
       $value = strtr($value, ' ', '-');
@@ -243,17 +231,11 @@ class views_handler_argument_string extends views_handler_argument {
     return $value;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function get_sort_name() {
+  function get_sort_name() {
     return t('Alphabetical', array(), array('context' => 'Sort order'));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function title() {
+  function title() {
     $this->argument = $this->case_transform($this->argument, $this->options['case']);
     if (!empty($this->options['transform_dash'])) {
       $this->argument = strtr($this->argument, '-', ' ');
@@ -281,14 +263,11 @@ class views_handler_argument_string extends views_handler_argument {
   /**
    * Override for specific title lookups.
    */
-  public function title_query() {
+  function title_query() {
     return drupal_map_assoc($this->value, 'check_plain');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_name($data) {
+  function summary_name($data) {
     return $this->case_transform(parent::summary_name($data), $this->options['case']);
   }
 

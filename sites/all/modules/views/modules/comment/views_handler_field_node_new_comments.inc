@@ -11,34 +11,24 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_node_new_comments extends views_handler_field_numeric {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
 
-    // Translate an older setting.
+    // translate an older setting:
     if (!empty($options['no_empty'])) {
       $this->options['hide_empty'] = TRUE;
       unset($this->options['no_empty']);
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['type'] = 'type';
     $this->additional_fields['comment_count'] = array('table' => 'node_comment_statistics', 'field' => 'comment_count');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['link_to_comment'] = array('default' => TRUE, 'bool' => TRUE);
@@ -46,10 +36,7 @@ class views_handler_field_node_new_comments extends views_handler_field_numeric 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['link_to_comment'] = array(
       '#title' => t('Link this field to new comments'),
       '#description' => t("Enable to override this field's links."),
@@ -60,19 +47,13 @@ class views_handler_field_node_new_comments extends views_handler_field_numeric 
     parent::options_form($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
     $this->field_alias = $this->table . '_' . $this->field;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_render(&$values) {
+  function pre_render(&$values) {
     global $user;
     if (!$user->uid || empty($values)) {
       return;
@@ -108,10 +89,7 @@ class views_handler_field_node_new_comments extends views_handler_field_numeric 
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node = new stdClass();
       $node->nid = $this->get_value($values, 'nid');
@@ -125,10 +103,7 @@ class views_handler_field_node_new_comments extends views_handler_field_numeric 
     return $data;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $value = $this->get_value($values);
     if (!empty($value)) {
       return $this->render_link(parent::render($values), $values);
@@ -137,5 +112,4 @@ class views_handler_field_node_new_comments extends views_handler_field_numeric 
       $this->options['alter']['make_link'] = FALSE;
     }
   }
-
 }

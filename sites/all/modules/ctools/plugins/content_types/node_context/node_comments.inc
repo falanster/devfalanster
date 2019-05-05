@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 if (module_exists('comment')) {
   /**
    * Plugins are described by creating a $plugin array which will be used
@@ -24,17 +20,19 @@ if (module_exists('comment')) {
 }
 
 function ctools_node_comments_content_type_render($subtype, $conf, $panel_args, $context) {
-  if (empty($context->data->nid)) {
-    return;
-  }
-  $node = clone $context->data;
+  $node = isset($context->data) ? clone $context->data : NULL;
   $block = new stdClass();
   $block->module = 'comments';
-  $block->delta = $node->nid;
-  $block->title = t('Comments');
+  $block->delta  = $node->nid;
 
-  if ($node->comment) {
+  $block->title = t('Comments');
+  if (empty($node)) {
+    $block->content = t('Node comments go here.');
+  }
+  else if ($node->comment) {
     $block->content = ctools_comment_render($node, $conf);
+    // Update the history table, stating that this user viewed this node.
+    node_tag_new($node);
   }
 
   return $block;
@@ -52,8 +50,7 @@ function ctools_node_comments_content_type_edit_form($form, &$form_state) {
   foreach (_comment_per_page() as $i) {
     $options[$i] = t('!a comments per page', array('!a' => $i));
   }
-  $form['comments_per_page'] = array(
-    '#type' => 'select',
+  $form['comments_per_page'] = array('#type' => 'select',
     '#title' => t('Pager'),
     '#default_value' => $conf['comments_per_page'],
     '#options' => $options,

@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Metatag API implementations for the Metatag Test module.
- */
-
-/**
  * Implements hook_metatag_config_default().
  *
  * @todo Expand to cover more meta tags.

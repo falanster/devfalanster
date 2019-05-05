@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag module for the direct Views integration.
- */
-
-/**
  * Tests for the Metatag module for the direct Views integration.
  */
 class MetatagViewsI18nTest extends MetatagTestHelper {

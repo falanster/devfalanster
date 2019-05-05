@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Plugin to provide an argument handler for a vocabulary id.
+ *
+ * Plugin to provide an argument handler for a vocabulary id
  */
 
 /**
@@ -11,7 +12,7 @@
  */
 $plugin = array(
   'title' => t("Vocabulary: ID"),
-  // Keyword to use for %substitution.
+  // keyword to use for %substitution
   'keyword' => 'vocabulary',
   'description' => t('Creates a vocabulary context from a vocabulary ID argument.'),
   'context' => 'ctools_vid_context',
@@ -42,3 +43,4 @@ function ctools_vid_context($arg = NULL, $conf = NULL, $empty = FALSE) {
 
   return ctools_context_create('vocabulary', $vocabulary);
 }
+

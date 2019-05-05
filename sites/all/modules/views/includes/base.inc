@@ -2,36 +2,34 @@
 
 /**
  * @file
- * Definition of views_object.
+ * Provides the basic object definitions used by plugins and handlers.
  */
 
 /**
- * Provides the basic object definitions used by plugins and handlers.
+ * Basic definition for many views objects.
  */
 class views_object {
-
   /**
    * Except for displays, options for the object will be held here.
    */
-  public $options = array();
+  var $options = array();
 
   /**
    * The top object of a view.
    *
    * @var view
    */
-  public $view = NULL;
+  var $view = NULL;
 
   /**
-   * Handler's definition.
+   * Handler's definition
    *
    * @var array
    */
-  public $definition;
+  var $definition;
 
   /**
    * Information about options for all kinds of purposes will be held here.
-   *
    * @code
    * 'option_name' => array(
    *  - 'default' => default value,
@@ -54,69 +52,35 @@ class views_object {
    * @see views_object::export_option_always()
    * @see views_object::unpack_translatable()
    */
-  public function option_definition() {
-    return array();
-  }
+  function option_definition() { return array(); }
 
   /**
-   * Collect this handler's option definition and alter them, ready for use.
-   *
-   * @return array
-   *   Returns the options of this handler/plugin after allowing for alters.
-   *
-   * @see hook_views_plugin_option_definition_alter()
-   * @see hook_views_handler_option_definition_alter()
+   * Views handlers use a special construct function so that we can more
+   * easily construct them with variable arguments.
    */
-  function altered_option_definition() {
-    $definition = $this->option_definition();
-    if (!empty($this->is_plugin)) {
-      // Trigger hook_views_plugin_option_definition_alter().
-      drupal_alter('views_plugin_option_definition', $definition, $this);
-    }
-    else {
-      // Trigger hook_views_handler_option_definition_alter().
-      drupal_alter('views_handler_option_definition', $definition, $this);
-    }
-    return $definition;
-  }
+  function construct() { $this->set_default_options(); }
 
   /**
-   * Views handlers use a special construct function.
-   *
-   * Allows it to more easily construct them with variable arguments.
-   */
-  public function construct() {
-    $this->set_default_options();
-  }
-
-  /**
-   * Set default options on this object.
-   *
-   * Called by the constructor in a complex chain to deal with backward
-   * compatibility.
+   * Set default options on this object. Called by the constructor in a
+   * complex chain to deal with backward compatibility.
    *
    * @deprecated since views2
    */
-  public function options(&$options) {
-  }
+  function options(&$options) { }
 
   /**
    * Set default options.
-   *
-   * For backward compatibility, it sends the options array; this is a feature
-   * that will likely disappear at some point.
+   * For backward compatibility, it sends the options array; this is a
+   * feature that will likely disappear at some point.
    */
-  public function set_default_options() {
-    $this->_set_option_defaults($this->options, $this->altered_option_definition());
+  function set_default_options() {
+    $this->_set_option_defaults($this->options, $this->option_definition());
 
     // Retained for complex defaults plus backward compatibility.
     $this->options($this->options);
   }
 
-  /**
-   *
-   */
-  public function _set_option_defaults(&$storage, $options, $level = 0) {
+  function _set_option_defaults(&$storage, $options, $level = 0) {
     foreach ($options as $option => $definition) {
       if (isset($definition['contains']) && is_array($definition['contains'])) {
         $storage[$option] = array();
@@ -132,28 +96,28 @@ class views_object {
   }
 
   /**
-   * Unpack options over our existing defaults, drilling down into arrays so
-   * that defaults don't get totally blown away.
+   * Unpack options over our existing defaults, drilling down into arrays
+   * so that defaults don't get totally blown away.
    */
-  public function unpack_options(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE, $localization_keys = array()) {
+  function unpack_options(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE, $localization_keys = array()) {
     if ($check && !is_array($options)) {
       return;
     }
 
     if (!isset($definition)) {
-      $definition = $this->altered_option_definition();
+      $definition = $this->option_definition();
     }
 
     if (!empty($this->view)) {
       // Ensure we have a localization plugin.
       $this->view->init_localization();
 
-      // Set up default localization keys. Handlers and such set this for us.
+      // Set up default localization keys. Handlers and such set this for us
       if (empty($localization_keys) && isset($this->localization_keys)) {
         $localization_keys = $this->localization_keys;
       }
       // but plugins don't because there isn't a common init() these days.
-      elseif (!empty($this->is_plugin) && empty($localization_keys)) {
+      else if (!empty($this->is_plugin) && empty($localization_keys)) {
         if ($this->plugin_type != 'display') {
           $localization_keys = array($this->view->current_display);
           $localization_keys[] = $this->plugin_type;
@@ -182,9 +146,9 @@ class views_object {
 
         $this->unpack_options($storage[$key], $value, isset($definition[$key]['contains']) ? $definition[$key]['contains'] : array(), $all, FALSE, array_merge($localization_keys, array($key)));
       }
-      // Don't localize strings during editing. When editing, we need to work
-      // with the original data, not the translated version.
-      elseif (empty($this->view->editing) && !empty($definition[$key]['translatable']) && !empty($value) || !empty($definition['contains'][$key]['translatable']) && !empty($value)) {
+      // Don't localize strings during editing. When editing, we need to work with
+      // the original data, not the translated version.
+      else if (empty($this->view->editing) && !empty($definition[$key]['translatable']) && !empty($value) || !empty($definition['contains'][$key]['translatable']) && !empty($value)) {
         if (!empty($this->view) && $this->view->is_translatable()) {
           // Allow other modules to make changes to the string before it's
           // sent for translation.
@@ -206,7 +170,7 @@ class views_object {
           $storage[$key] = t($value);
         }
       }
-      elseif ($all || !empty($definition[$key])) {
+      else if ($all || !empty($definition[$key])) {
         $storage[$key] = $value;
       }
     }
@@ -215,17 +179,14 @@ class views_object {
   /**
    * Let the handler know what its full definition is.
    */
-  public function set_definition($definition) {
+  function set_definition($definition) {
     $this->definition = $definition;
     if (isset($definition['field'])) {
       $this->real_field = $definition['field'];
     }
   }
 
-  /**
-   * Destructor.
-   */
-  public function destroy() {
+  function destroy() {
     if (isset($this->view)) {
       unset($this->view);
     }
@@ -239,22 +200,16 @@ class views_object {
     }
   }
 
-  /**
-   *
-   */
-  public function export_options($indent, $prefix) {
+  function export_options($indent, $prefix) {
     $output = '';
-    foreach ($this->altered_option_definition() as $option => $definition) {
+    foreach ($this->option_definition() as $option => $definition) {
       $output .= $this->export_option($indent, $prefix, $this->options, $option, $definition, array());
     }
 
     return $output;
   }
 
-  /**
-   *
-   */
-  public function export_option($indent, $prefix, $storage, $option, $definition, $parents) {
+  function export_option($indent, $prefix, $storage, $option, $definition, $parents) {
     // Do not export options for which we have no settings.
     if (!isset($storage[$option])) {
       return;
@@ -265,7 +220,7 @@ class views_object {
         return;
       }
 
-      // Special handling for some items.
+      // Special handling for some items
       if (method_exists($this, $definition['export'])) {
         return $this->{$definition['export']}($indent, $prefix, $storage, $option, $definition, $parents);
       }
@@ -307,7 +262,7 @@ class views_object {
   /**
    * Always exports the option, regardless of the default value.
    */
-  public function export_option_always($indent, $prefix, $storage, $option, $definition, $parents) {
+  function export_option_always($indent, $prefix, $storage, $option, $definition, $parents) {
     // If there is no default, the option will always be exported.
     unset($definition['default']);
     // Unset our export method to prevent recursion.
@@ -318,8 +273,8 @@ class views_object {
   /**
    * Unpacks each handler to store translatable texts.
    */
-  public function unpack_translatables(&$translatable, $parents = array()) {
-    foreach ($this->altered_option_definition() as $option => $definition) {
+  function unpack_translatables(&$translatable, $parents = array()) {
+    foreach ($this->option_definition() as $option => $definition) {
       $this->unpack_translatable($translatable, $this->options, $option, $definition, $parents, array());
     }
   }
@@ -329,21 +284,21 @@ class views_object {
    *
    * This function run's through all suboptions recursive.
    *
-   * @param array $translatable
+   * @param $translatable
    *   Stores all available translatable items.
-   * @param array $storage
-   * @param string $option
-   * @param string $definition
-   * @param array $parents
-   * @param array $keys
+   * @param $storage
+   * @param $option
+   * @param $definition
+   * @param $parents
+   * @param $keys
    */
-  public function unpack_translatable(&$translatable, $storage, $option, $definition, $parents, $keys = array()) {
+  function unpack_translatable(&$translatable, $storage, $option, $definition, $parents, $keys = array()) {
     // Do not export options for which we have no settings.
     if (!isset($storage[$option])) {
       return;
     }
 
-    // Special handling for some items.
+    // Special handling for some items
     if (isset($definition['unpack_translatable']) && method_exists($this, $definition['unpack_translatable'])) {
       return $this->{$definition['unpack_translatable']}($translatable, $storage, $option, $definition, $parents, $keys);
     }
@@ -373,8 +328,8 @@ class views_object {
         if (is_array($value)) {
           $this->unpack_translatable($translatable, $options, $key, $definition, $parents, $translation_keys);
         }
-        elseif (!empty($definition[$key]['translatable']) && !empty($value)) {
-          // Build source data and add to the array.
+        else if (!empty($definition[$key]['translatable']) && !empty($value)) {
+          // Build source data and add to the array
           $format = NULL;
           if (isset($definition['format_key']) && isset($options[$definition['format_key']])) {
             $format = $options[$definition['format_key']];
@@ -387,9 +342,9 @@ class views_object {
         }
       }
     }
-    elseif (!empty($definition['translatable']) && !empty($options)) {
+    else if (!empty($definition['translatable']) && !empty($options)) {
       $value = $options;
-      // Build source data and add to the array.
+      // Build source data and add to the array
       $format = NULL;
       if (isset($definition['format_key']) && isset($storage[$definition['format_key']])) {
         $format = $storage[$definition['format_key']];
@@ -401,5 +356,4 @@ class views_object {
       );
     }
   }
-
 }

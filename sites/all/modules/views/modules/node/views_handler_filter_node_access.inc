@@ -11,30 +11,16 @@
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_node_access extends views_handler_filter {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function admin_summary() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function operator_form(&$form, &$form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function can_expose() {
+  function admin_summary() { }
+  function operator_form(&$form, &$form_state) { }
+  function can_expose() {
     return FALSE;
   }
 
   /**
    * See _node_access_where_sql() for a non-views query based implementation.
    */
-  public function query() {
+  function query() {
     if (!user_access('administer nodes') && module_implements('node_grants')) {
       $table = $this->ensure_my_table();
       $grants = db_or();
@@ -51,5 +37,4 @@ class views_handler_filter_node_access extends views_handler_filter {
       $this->query->add_where('AND', $table . '.grant_view', 1, '>=');
     }
   }
-
 }

@@ -11,30 +11,26 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_file extends views_handler_field {
-
   /**
    * Constructor to provide additional field to add.
    */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
     if (!empty($options['link_to_file'])) {
       $this->additional_fields['uri'] = 'uri';
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['link_to_file'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
   /**
-   * Provide link to file option.
+   * Provide link to file option
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['link_to_file'] = array(
       '#title' => t('Link this field to download the file'),
       '#description' => t("Enable to override this field's links."),
@@ -49,7 +45,7 @@ class views_handler_field_file extends views_handler_field {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     if (!empty($this->options['link_to_file']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = file_create_url($this->get_value($values, 'uri'));
@@ -58,12 +54,8 @@ class views_handler_field_file extends views_handler_field {
     return $data;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
-
 }

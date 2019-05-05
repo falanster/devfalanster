@@ -11,7 +11,7 @@
 class views_test_plugin_style_test_mapping extends views_plugin_style_mapping {
 
   /**
-   * {@inheritdoc}
+   * Overrides views_plugin_style_mapping::define_mapping().
    */
   protected function define_mapping() {
     return array(
@@ -49,5 +49,4 @@ class views_test_plugin_style_test_mapping extends views_plugin_style_mapping {
       }
     }
   }
-
 }

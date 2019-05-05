@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains .
+ * Definition of views_plugin_access_none.
  */
 
 /**
@@ -11,12 +11,7 @@
  * @ingroup views_access_plugins
  */
 class views_plugin_access_none extends views_plugin_access {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_title() {
+  function summary_title() {
     return t('Unrestricted');
   }
-
 }

@@ -23,8 +23,9 @@ function poll_views_data() {
   );
 
   // ----------------------------------------------------------------
-  // Fields.
-  // Poll active status.
+  // Fields
+
+  // poll active status
   $data['poll']['active'] = array(
     'title' => t('Active'),
     'help' => t('Whether the poll is open for voting.'),

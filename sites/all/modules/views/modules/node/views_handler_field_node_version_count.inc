@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Definition of views_handler_field_node_version_count.
@@ -11,11 +10,7 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_node_version_count extends views_handler_field_numeric {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
     // Add the field.
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
@@ -23,5 +18,4 @@ class views_handler_field_node_version_count extends views_handler_field_numeric
 
     $this->add_additional_fields();
   }
-
 }

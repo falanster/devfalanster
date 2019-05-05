@@ -40,7 +40,6 @@ function ctools_page_tabs_content_type_render($subtype, $conf, $panel_args) {
     case 'primary':
       unset($menus['#secondary']);
       break;
-
     case 'secondary':
       unset($menus['#primary']);
       break;
@@ -54,6 +53,7 @@ function ctools_page_tabs_content_type_render($subtype, $conf, $panel_args) {
 
   return $block;
 }
+
 
 function ctools_page_tabs_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];

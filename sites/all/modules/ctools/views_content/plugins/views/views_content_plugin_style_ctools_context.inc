@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains the default style plugin.
@@ -12,12 +11,12 @@
  * @ingroup views_style_plugins
  */
 class views_content_plugin_style_ctools_context extends views_plugin_style {
-  public $rows = array();
+  var $rows = array();
 
   /**
    * Render the display in this style.
    */
-  public function render() {
+  function render() {
     if (!empty($this->view->display_handler->previewing)) {
       return parent::render();
     }

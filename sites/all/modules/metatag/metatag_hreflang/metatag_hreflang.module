@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Primary hook implementations for Metatag:hreflang.
@@ -7,6 +6,7 @@
 
 // @todo Clear caches for all versions of an entity when a translation is edited
 // so that the hreflang meta tags update appropriately.
+
 /**
  * Implements hook_ctools_plugin_api().
  */

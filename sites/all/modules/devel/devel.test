@@ -11,9 +11,6 @@
 class DevelMailTest extends DrupalWebTestCase {
   protected $profile = 'testing';
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'Devel Mail interface',
@@ -22,9 +19,6 @@ class DevelMailTest extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
   function setUp() {
     parent::setUp();
   }

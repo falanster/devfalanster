@@ -1,18 +1,13 @@
 <?php
 
 /**
- * @file
- * Install, update and uninstall functions for the Job Scheduler Trigger.
- */
-
-/**
- * Implements hook_schema().
+ * Implementation of hook_schema().
  */
 function job_scheduler_trigger_schema() {
   $schema['job_scheduler_trigger'] = array(
     'description' => 'Schedule of triggers to be created.',
     'fields' => array(
-      'trid' => array(
+       'trid' => array(
         'description' => 'Primary Key: unique trigger id.',
         'type' => 'serial',
         'unsigned' => TRUE,

@@ -9,11 +9,7 @@
  * Plugin which performs a node_view on the resulting object.
  */
 class views_plugin_row_search_view extends views_plugin_row {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['score'] = array('default' => TRUE, 'bool' => TRUE);
@@ -21,10 +17,7 @@ class views_plugin_row_search_view extends views_plugin_row {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['score'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display score'),
@@ -35,13 +28,12 @@ class views_plugin_row_search_view extends views_plugin_row {
   /**
    * Override the behavior of the render() function.
    */
-  public function render($row) {
+  function render($row) {
     return theme($this->theme_functions(),
       array(
         'view' => $this->view,
         'options' => $this->options,
-        'row' => $row,
+        'row' => $row
       ));
   }
-
 }

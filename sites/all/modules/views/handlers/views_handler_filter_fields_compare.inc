@@ -10,19 +10,17 @@
  *
  * @ingroup views_filter_handlers
  */
+
 class views_handler_filter_fields_compare extends views_handler_filter {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function can_expose() {
+  function can_expose() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides views_handler_filter#option_definition().
    */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['left_field'] = $options['right_field'] = array('default' => '');
@@ -33,21 +31,21 @@ class views_handler_filter_fields_compare extends views_handler_filter {
   /**
    * Provide a list of all operators.
    */
-  public function fields_operator_options() {
+  function fields_operator_options() {
     return array(
       '<' => t('Is less than'),
       '<=' => t('Is less than or equal to'),
       '=' => t('Is equal to'),
-      '<>' => t('Is not equal to'),
+      '<>' =>  t('Is not equal to'),
       '>=' => t('Is greater than or equal to'),
-      '>' => t('Is greater than'),
+      '>' => t('Is greater than')
     );
   }
 
   /**
    * Provide a list of available fields.
    */
-  public function field_options() {
+  function field_options() {
     $options = array();
 
     $field_handlers = $this->view->display_handler->get_handlers('field');
@@ -61,9 +59,9 @@ class views_handler_filter_fields_compare extends views_handler_filter {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides views_handler_filter#options_form().
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $field_options = $this->field_options();
@@ -95,10 +93,11 @@ class views_handler_filter_fields_compare extends views_handler_filter {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides views_handler_filter#query().
+   *
+   * Build extra condition from existing fields (from existing joins).
    */
-  public function query() {
-    // Build extra condition from existing fields (from existing joins).
+  function query() {
     $left = $this->options['left_field'];
     $right = $this->options['right_field'];
 
@@ -121,21 +120,22 @@ class views_handler_filter_fields_compare extends views_handler_filter {
     $right_table_alias = $this->query->ensure_table($right_handler->table, $right_handler->relationship);
 
     // Build piece of SQL.
-    $snippet = $left_table_alias . '.' . $left_handler->real_field
-      . ' ' . $this->options['operator'] . ' '
-      . $right_table_alias . '.' . $right_handler->real_field;
+    $snippet =
+      $left_table_alias . '.' . $left_handler->real_field .
+      ' ' . $this->options['operator'] . ' ' .
+      $right_table_alias . '.' . $right_handler->real_field;
 
     $this->query->add_where_expression($this->options['group'], $snippet);
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides views_handler_filter#admin_summary().
    */
-  public function admin_summary() {
+  function admin_summary() {
     return check_plain(
-      $this->options['left_field'] . ' '
-      . $this->options['operator'] . ' '
-      . $this->options['right_field']
+      $this->options['left_field'] . ' ' .
+      $this->options['operator'] . ' ' .
+      $this->options['right_field']
     );
   }
 

@@ -6,39 +6,29 @@
  */
 
 /**
- * Argument handler for fields that have many-to-one table relationships.
- *
- * (i.e. with the table(s) to the left.)
- * This adds a bunch of options that are reasonably common with this type of
- * relationship.
- *
+ * An argument handler for use in fields that have a many to one relationship
+ * with the table(s) to the left. This adds a bunch of options that are
+ * reasonably common with this type of relationship.
  * Definition terms:
  * - numeric: If true, the field will be considered numeric. Probably should
  *   always be set TRUE as views_handler_argument_string has many to one
  *   capabilities.
- * - zero is null: If true, a 0 will be handled as empty, so for example a
- *   default argument can be provided or a summary can be shown.
+ * - zero is null: If true, a 0 will be handled as empty, so for example
+ *   a default argument can be provided or a summary can be shown.
  *
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_many_to_one extends views_handler_argument {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
     $this->helper = new views_many_to_one_helper($this);
 
-    // Ensure defaults for these, during summaries and stuff.
+    // Ensure defaults for these, during summaries and stuff:
     $this->operator = 'or';
     $this->value = array();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     if (!empty($this->definition['numeric'])) {
@@ -59,10 +49,7 @@ class views_handler_argument_many_to_one extends views_handler_argument {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     // allow + for or, , for and
@@ -98,14 +85,11 @@ class views_handler_argument_many_to_one extends views_handler_argument {
    * Override ensure_my_table so we can control how this joins in.
    * The operator actually has influence over joining.
    */
-  public function ensure_my_table() {
+  function ensure_my_table() {
     $this->helper->ensure_my_table();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query($group_by = FALSE) {
+  function query($group_by = FALSE) {
     $empty = FALSE;
     if (isset($this->definition['zero is null']) && $this->definition['zero is null']) {
       if (empty($this->argument)) {
@@ -134,10 +118,7 @@ class views_handler_argument_many_to_one extends views_handler_argument {
     $this->helper->add_filter();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function title() {
+  function title() {
     if (!$this->argument) {
       return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : t('Uncategorized');
     }
@@ -163,10 +144,7 @@ class views_handler_argument_many_to_one extends views_handler_argument {
     return implode($this->operator == 'or' ? ' + ' : ', ', $this->title_query());
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_query() {
+  function summary_query() {
     $field = $this->table . '.' . $this->field;
     $join = $this->get_join();
 
@@ -189,10 +167,7 @@ class views_handler_argument_many_to_one extends views_handler_argument {
     return $this->summary_basics();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_argument($data) {
+  function summary_argument($data) {
     $value = $data->{$this->base_alias};
     if (empty($value)) {
       $value = 0;
@@ -204,8 +179,7 @@ class views_handler_argument_many_to_one extends views_handler_argument {
   /**
    * Override for specific title lookups.
    */
-  public function title_query() {
+  function title_query() {
     return $this->value;
   }
-
 }

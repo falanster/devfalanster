@@ -1,19 +1,14 @@
 <?php
-
 /**
  * @file
- * Definition of views_plugin_row_rss_fields.
+ * Contains an implementation of RSS items based on fields on a row plugin.
  */
 
 /**
  * Renders an RSS item based on fields.
  */
 class views_plugin_row_rss_fields extends views_plugin_row {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['title_field'] = array('default' => '');
     $options['link_field'] = array('default' => '');
@@ -25,10 +20,7 @@ class views_plugin_row_rss_fields extends views_plugin_row {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $initial_labels = array('' => t('- None -'));
@@ -97,10 +89,7 @@ class views_plugin_row_rss_fields extends views_plugin_row {
     );
   }
 
-  /**
-   *
-   */
-  public function validate() {
+  function validate() {
     $errors = parent::validate();
     $required_options = array('title_field', 'link_field', 'description_field', 'creator_field', 'date_field');
     foreach ($required_options as $required_option) {
@@ -116,10 +105,7 @@ class views_plugin_row_rss_fields extends views_plugin_row {
     return $errors;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($row) {
+  function render($row) {
     static $row_index;
     if (!isset($row_index)) {
       $row_index = 0;
@@ -179,12 +165,12 @@ class views_plugin_row_rss_fields extends views_plugin_row {
   /**
    * Retrieves a views field value from the style plugin.
    *
-   * @param int $index
-   *   The index of the row as expected by views_plugin_style::get_field().
-   * @param string $field_id
+   * @param $index
+   *   The index count of the row as expected by views_plugin_style::get_field().
+   * @param $field_id
    *   The ID assigned to the required field in the display.
    */
-  public function get_field($index, $field_id) {
+  function get_field($index, $field_id) {
     if (empty($this->view->style_plugin) || !is_object($this->view->style_plugin) || empty($field_id)) {
       return '';
     }

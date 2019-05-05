@@ -6,26 +6,19 @@
  */
 
 /**
- * Field handler for a simple renderer that allows using a themed user link.
+ * Field handler to provide simple renderer that allows using a themed user link.
  *
  * @ingroup views_field_handlers
  */
 class views_handler_field_user_picture extends views_handler_field {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct();
     $this->additional_fields['uid'] = 'uid';
     $this->additional_fields['name'] = 'name';
     $this->additional_fields['mail'] = 'mail';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
+  function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if ($inline) {
       return 'span';
     }
@@ -47,20 +40,14 @@ class views_handler_field_user_picture extends views_handler_field {
     return 'div';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['link_photo_to_profile'] = array('default' => TRUE, 'bool' => TRUE);
     $options['image_style'] = array('default' => '');
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['link_photo_to_profile'] = array(
       '#title' => t("Link to user's profile"),
@@ -86,29 +73,19 @@ class views_handler_field_user_picture extends views_handler_field {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     if ($this->options['image_style'] && module_exists('image')) {
-      // @todo Switch to always using theme('user_picture') when it starts
+      // @todo: Switch to always using theme('user_picture') when it starts
       // supporting image styles. See http://drupal.org/node/1021564
       if ($picture_fid = $this->get_value($values)) {
         $picture = file_load($picture_fid);
-        if (!empty($picture)) {
-          $picture_filepath = $picture->uri;
-        }
-        else {
-          $picture_filepath = variable_get('user_picture_default', '');
-        }
+        $picture_filepath = $picture->uri;
       }
       else {
         $picture_filepath = variable_get('user_picture_default', '');
       }
       if (file_valid_uri($picture_filepath)) {
-        $account = user_load($this->get_value($values, 'uid'));
-        $alt = t("@user's picture", array('@user' => format_username($account)));
-        $output = theme('image_style', array('style_name' => $this->options['image_style'], 'path' => $picture_filepath, 'alt' => $alt));
+        $output = theme('image_style', array('style_name' => $this->options['image_style'], 'path' => $picture_filepath));
         if ($this->options['link_photo_to_profile'] && user_access('access user profiles')) {
           $uid = $this->get_value($values, 'uid');
           $output = l($output, "user/$uid", array('html' => TRUE));
@@ -134,5 +111,4 @@ class views_handler_field_user_picture extends views_handler_field {
 
     return $output;
   }
-
 }

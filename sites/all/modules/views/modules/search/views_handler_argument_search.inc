@@ -13,12 +13,12 @@
 class views_handler_argument_search extends views_handler_argument {
 
   /**
-   * Take sure that parseSearchExpression is runned and everything is set up.
+   * Take sure that parseSearchExpression is runned and everything is set up for it.
    *
-   * @param string $input
+   * @param $input
    *    The search phrase which was input by the user.
    */
-  public function query_parse_search_expression($input) {
+  function query_parse_search_expression($input) {
     if (!isset($this->search_query)) {
       $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('viewsSearchQuery');
       $this->search_query->searchExpression($input, $this->view->base_table);
@@ -29,7 +29,7 @@ class views_handler_argument_search extends views_handler_argument {
   /**
    * Add this argument to the query.
    */
-  public function query($group_by = FALSE) {
+  function query($group_by = FALSE) {
     $required = FALSE;
     $this->query_parse_search_expression($this->argument);
     if (!isset($this->search_query)) {
@@ -51,9 +51,8 @@ class views_handler_argument_search extends views_handler_argument {
 
       $search_condition = db_and();
 
-      // Create a new join to relate the 'search_total' table to our current
-      // 'search_index' table.
-      $join = new views_join();
+      // Create a new join to relate the 'search_total' table to our current 'search_index' table.
+      $join = new views_join;
       $join->construct('search_total', $search_index, 'word', 'word');
       $search_total = $this->query->add_relationship('search_total', $join, $search_index);
 
@@ -71,7 +70,7 @@ class views_handler_argument_search extends views_handler_argument {
         $search_dataset = $this->query->add_table('search_dataset');
         $conditions = $this->search_query->conditions();
         $condition_conditions =& $conditions->conditions();
-        foreach ($condition_conditions as $key => &$condition) {
+        foreach ($condition_conditions  as $key => &$condition) {
           // Take sure we just look at real conditions.
           if (is_numeric($key)) {
             // Replace the conditions with the table alias of views.
@@ -98,5 +97,4 @@ class views_handler_argument_search extends views_handler_argument {
       $this->query->add_having_expression(0, "COUNT(*) >= $placeholder", array($placeholder => $matches));
     }
   }
-
 }

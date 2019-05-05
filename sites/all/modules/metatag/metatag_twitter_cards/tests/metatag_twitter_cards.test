@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag Twitter Cards module.
- */
-
-/**
  * Tests for the Metatag Twitter Cards module.
  */
 class MetatagTwitterCardsTest extends MetatagTestHelper {

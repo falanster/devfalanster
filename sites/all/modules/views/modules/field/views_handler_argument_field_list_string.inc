@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_field_list_string.
+ * Definition of views_handler_argument_field_list_text.
  */
 
 /**
@@ -12,27 +12,20 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_field_list_string extends views_handler_argument_string {
-
   /**
    * Stores the allowed values of this field.
    *
    * @var array
    */
-  public $allowed_values = NULL;
+  var $allowed_values = NULL;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
     $field = field_info_field($this->definition['field_name']);
     $this->allowed_values = list_allowed_values($field);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['summary']['contains']['human'] = array('default' => FALSE, 'bool' => TRUE);
@@ -40,10 +33,7 @@ class views_handler_argument_field_list_string extends views_handler_argument_st
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['summary']['human'] = array(
@@ -54,19 +44,16 @@ class views_handler_argument_field_list_string extends views_handler_argument_st
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_name($data) {
+
+  function summary_name($data) {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
       return $this->case_transform(field_filter_xss($this->allowed_values[$value]), $this->options['case']);
     }
-    // Else fallback to the key.
+    // else fallback to the key.
     else {
       return $this->case_transform(check_plain($value), $this->options['case']);
     }
   }
-
 }

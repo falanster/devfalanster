@@ -98,7 +98,7 @@ $presets['cheap_dropshadow'] = array (
       'data' =>
       array (
         'width' => '200',
-        'height' => '',
+        'height' => '100%',
         'upscale' => 0,
       ),
     ),

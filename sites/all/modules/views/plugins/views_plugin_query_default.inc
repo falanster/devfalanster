@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_query_default.
+ * Defines the default query object.
  */
 
 /**
@@ -15,98 +15,95 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * A list of tables in the order they should be added, keyed by alias.
    */
-  public $table_queue = array();
+  var $table_queue = array();
 
   /**
-   * Holds an array of tables and counts added so that we can create aliases.
+   * Holds an array of tables and counts added so that we can create aliases
    */
-  public $tables = array();
+  var $tables = array();
 
   /**
    * Holds an array of relationships, which are aliases of the primary
    * table that represent different ways to join the same table in.
    */
-  public $relationships = array();
+  var $relationships = array();
 
   /**
    * An array of sections of the WHERE query. Each section is in itself
    * an array of pieces and a flag as to whether or not it should be AND
    * or OR.
    */
-  public $where = array();
-
+  var $where = array();
   /**
    * An array of sections of the HAVING query. Each section is in itself
    * an array of pieces and a flag as to whether or not it should be AND
    * or OR.
    */
-  public $having = array();
-
+  var $having = array();
   /**
    * The default operator to use when connecting the WHERE groups. May be
    * AND or OR.
    */
-  public $group_operator = 'AND';
+  var $group_operator = 'AND';
 
   /**
    * A simple array of order by clauses.
    */
-  public $orderby = array();
+  var $orderby = array();
 
   /**
    * A simple array of group by clauses.
    */
-  public $groupby = array();
+  var $groupby = array();
+
 
   /**
    * An array of fields.
    */
-  public $fields = array();
+  var $fields = array();
+
 
   /**
    * The table header to use for tablesort. This matters because tablesort
    * needs to modify the query and needs the header.
    */
-  public $header = array();
+  var $header = array();
 
   /**
    * A flag as to whether or not to make the primary field distinct.
    */
-  public $distinct = FALSE;
+  var $distinct = FALSE;
 
-  /**
-   *
-   */
-  public $has_aggregate = FALSE;
+  var $has_aggregate = FALSE;
 
   /**
    * Should this query be optimized for counts, for example no sorts.
    */
-  public $get_count_optimized = NULL;
+  var $get_count_optimized = NULL;
 
   /**
    * The current used pager plugin.
    *
    * @var views_plugin_pager
    */
-  public $pager = NULL;
+   var $pager = NULL;
 
-  /**
+   /**
     * An array mapping table aliases and field names to field aliases.
     */
-  public $field_aliases = array();
+   var $field_aliases = array();
 
-  /**
+   /**
     * Query tags which will be passed over to the dbtng query object.
     */
-  public $tags = array();
+   var $tags = array();
 
   /**
    * Is the view marked as not distinct.
    *
    * @var bool
    */
-  public $no_distinct;
+  var $no_distinct;
 
   /**
    * Defines the distinct type.
@@ -118,21 +115,20 @@ class views_plugin_query_default extends views_plugin_query {
   public $pure_distinct = FALSE;
 
   /**
-   * {@inheritdoc}
+   * Constructor; Create the basic query object and fill with default values.
    */
-  public function init($base_table = 'node', $base_field = 'nid', $options) {
+  function init($base_table = 'node', $base_field = 'nid', $options) {
     parent::init($base_table, $base_field, $options);
-    $this->base_table = $base_table;
-    // Predefine these above, for clarity.
+    $this->base_table = $base_table;  // Predefine these above, for clarity.
     $this->base_field = $base_field;
     $this->relationships[$base_table] = array(
       'link' => NULL,
       'table' => $base_table,
       'alias' => $base_table,
-      'base' => $base_table,
+      'base' => $base_table
     );
 
-    // Unit the table queue with our primary table.
+    // init the table queue with our primary table.
     $this->table_queue[$base_table] = array(
       'alias' => $base_table,
       'table' => $base_table,
@@ -140,20 +136,22 @@ class views_plugin_query_default extends views_plugin_query {
       'join' => NULL,
     );
 
-    // Init the tables with our primary table.
+    // init the tables with our primary table
     $this->tables[$base_table][$base_table] = array(
       'count' => 1,
       'alias' => $base_table,
     );
 
-    // We no longer want the base field to appear automatically.
-    // if ($base_field) {
-    //   $this->fields[$base_field] = array(
-    //     'table' => $base_table,
-    //     'field' => $base_field,
-    //     'alias' => $base_field,
-    //   );
-    // }
+/**
+ * -- we no longer want the base field to appear automatically.
+    if ($base_field) {
+      $this->fields[$base_field] = array(
+        'table' => $base_table,
+        'field' => $base_field,
+        'alias' => $base_field,
+      );
+    }
+ */
 
     $this->count_field = array(
       'table' => $base_table,
@@ -163,9 +161,8 @@ class views_plugin_query_default extends views_plugin_query {
     );
   }
 
-  /**
-   * Utility methods to set flags and data.
-   */
+  // ----------------------------------------------------------------
+  // Utility methods to set flags and data.
 
   /**
    * Set the view to be distinct.
@@ -178,7 +175,7 @@ class views_plugin_query_default extends views_plugin_query {
    * @param bool $pure_distinct
    *   Should only the sql keyword be added.
    */
-  public function set_distinct($value = TRUE, $pure_distinct = FALSE) {
+  function set_distinct($value = TRUE, $pure_distinct = FALSE) {
     if (!(isset($this->no_distinct) && $value)) {
       $this->distinct = $value;
       $this->pure_distinct = $pure_distinct;
@@ -188,7 +185,7 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Set what field the query will count() on for paging.
    */
-  public function set_count_field($table, $field, $alias = NULL) {
+  function set_count_field($table, $field, $alias = NULL) {
     if (empty($alias)) {
       $alias = $table . '_' . $field;
     }
@@ -201,19 +198,14 @@ class views_plugin_query_default extends views_plugin_query {
   }
 
   /**
-   * Set the table header.
-   *
-   * Used for click-sorting because it's needed info to modify the ORDER BY
-   * clause.
+   * Set the table header; used for click-sorting because it's needed
+   * info to modify the ORDER BY clause.
    */
-  public function set_header($header) {
+  function set_header($header) {
     $this->header = $header;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['disable_sql_rewrite'] = array(
       'default' => FALSE,
@@ -245,7 +237,7 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Add settings for the ui.
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['disable_sql_rewrite'] = array(
@@ -253,9 +245,7 @@ class views_plugin_query_default extends views_plugin_query {
       '#description' => t('Disabling SQL rewriting will disable node_access checks as well as other modules that implement hook_query_alter().'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['disable_sql_rewrite']),
-      '#suffix' => '<div class="messages warning sql-rewrite-warning js-hide">'
-        . t('WARNING: Disabling SQL rewriting means that node access security is disabled. This may allow users to see data they should not be able to see if your view is misconfigured. Please use this option only if you understand and accept this security risk.')
-        . '</div>',
+      '#suffix' => '<div class="messages warning sql-rewrite-warning js-hide">' . t('WARNING: Disabling SQL rewriting means that node access security is disabled. This may allow users to see data they should not be able to see if your view is misconfigured. Please use this option only if you understand and accept this security risk.') . '</div>',
     );
     $form['distinct'] = array(
       '#type' => 'checkbox',
@@ -294,45 +284,45 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Special submit handling.
    */
-  public function options_submit(&$form, &$form_state) {
+  function options_submit(&$form, &$form_state) {
     $element = array('#parents' => array('query', 'options', 'query_tags'));
     $value = explode(',', drupal_array_get_nested_value($form_state['values'], $element['#parents']));
     $value = array_filter(array_map('trim', $value));
     form_set_value($element, $value, $form_state);
   }
 
-  /**
-   * Table/join adding.
-   */
+  // ----------------------------------------------------------------
+  // Table/join adding
 
   /**
-   * A relationship is an alternative endpoint to a series of table joins.
+   * A relationship is an alternative endpoint to a series of table
+   * joins. Relationships must be aliases of the primary table and
+   * they must join either to the primary table or to a pre-existing
+   * relationship.
    *
-   * Relationships must be aliases of the primary table and they must join
-   * either to the primary table or to a pre-existing relationship.
+   * An example of a relationship would be a nodereference table.
+   * If you have a nodereference named 'book_parent' which links to a
+   * parent node, you could set up a relationship 'node_book_parent'
+   * to 'node'. Then, anything that links to 'node' can link to
+   * 'node_book_parent' instead, thus allowing all properties of
+   * both nodes to be available in the query.
    *
-   * An example of a relationship would be a nodereference table. If you have a
-   * nodereference named 'book_parent' which links to a parent node, you could
-   * set up a relationship 'node_book_parent' to 'node'. Then, anything that
-   * links to 'node' can link to 'node_book_parent' instead, thus allowing all
-   * properties of both nodes to be available in the query.
-   *
-   * @param string $alias
-   *   What this relationship will be called, and is also the alias for the
-   *   table.
+   * @param $alias
+   *   What this relationship will be called, and is also the alias
+   *   for the table.
    * @param views_join $join
    *   A views_join object (or derived object) to join the alias in.
-   * @param string $base
-   *   The name of the 'base' table this relationship represents; this tells the
-   *   join search which path to attempt to use when finding the path to this
-   *   relationship.
-   * @param string $link_point
-   *   If this relationship links to something other than the primary table,
-   *   specify that table here. For example, a 'track' node might have a
-   *   relationship to an 'album' node, which might have a relationship to an
-   *   'artist' node.
+   * @param $base
+   *   The name of the 'base' table this relationship represents; this
+   *   tells the join search which path to attempt to use when finding
+   *   the path to this relationship.
+   * @param $link_point
+   *   If this relationship links to something other than the primary
+   *   table, specify that table here. For example, a 'track' node
+   *   might have a relationship to an 'album' node, which might
+   *   have a relationship to an 'artist' node.
    */
-  public function add_relationship($alias, $join, $base, $link_point = NULL) {
+  function add_relationship($alias, $join, $base, $link_point = NULL) {
     if (empty($link_point)) {
       $link_point = $this->base_table;
     }
@@ -352,7 +342,8 @@ class views_plugin_query_default extends views_plugin_query {
       $join = $this->adjust_join($join, $link_point);
     }
 
-    // Add the table directly to the queue to avoid accidentally marking it.
+    // Add the table directly to the queue to avoid accidentally marking
+    // it.
     $this->table_queue[$alias] = array(
       'table' => $join->table,
       'num' => 1,
@@ -378,34 +369,34 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Add a table to the query, ensuring the path exists.
    *
-   * This function will test to ensure that the path back to the primary table
-   * is valid and exists; if you do not wish for this testing to occur, use
-   * $query->queue_table() instead.
+   * This function will test to ensure that the path back to the primary
+   * table is valid and exists; if you do not wish for this testing to
+   * occur, use $query->queue_table() instead.
    *
-   * @param string $table
+   * @param $table
    *   The name of the table to add. It needs to exist in the global table
    *   array.
-   * @param string $relationship
-   *   An alias of a table; if this is set, the path back to this table will be
-   *   tested prior to adding the table, making sure that all intermediary
-   *   tables exist and are properly aliased. If set to NULL the path to the
-   *   primary table will be ensured. If the path cannot be made, the table
-   *   will NOT be added.
+   * @param $relationship
+   *   An alias of a table; if this is set, the path back to this table will
+   *   be tested prior to adding the table, making sure that all intermediary
+   *   tables exist and are properly aliased. If set to NULL the path to
+   *   the primary table will be ensured. If the path cannot be made, the
+   *   table will NOT be added.
    * @param views_join $join
-   *   In some join configurations this table may actually join back through a
-   *   different method; this is most likely to be used when tracing a
-   *   hierarchy path. (node->parent->parent2->parent3). This parameter will
-   *   specify how this table joins if it is not the default.
-   * @param string $alias
+   *   In some join configurations this table may actually join back through
+   *   a different method; this is most likely to be used when tracing
+   *   a hierarchy path. (node->parent->parent2->parent3). This parameter
+   *   will specify how this table joins if it is not the default.
+   * @param $alias
    *   A specific alias to use, rather than the default alias.
    *
-   * @return string
+   * @return $alias
    *   The alias of the table; this alias can be used to access information
    *   about the table and should always be used to refer to the table when
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  public function add_table($table, $relationship = NULL, $join = NULL, $alias = NULL) {
+  function add_table($table, $relationship = NULL, $join = NULL, $alias = NULL) {
     if (!$this->ensure_path($table, $relationship, $join)) {
       return FALSE;
     }
@@ -424,27 +415,27 @@ class views_plugin_query_default extends views_plugin_query {
    * ensure_table() should be used instead of this one, unless you are
    * absolutely sure this is what you want.
    *
-   * @param string $table
+   * @param $table
    *   The name of the table to add. It needs to exist in the global table
    *   array.
-   * @param string $relationship
+   * @param $relationship
    *   The primary table alias this table is related to. If not set, the
    *   primary table will be used.
    * @param views_join $join
-   *   In some join configurations this table may actually join back through a
-   *   different method; this is most likely to be used when tracing a
-   *   hierarchy path. (node->parent->parent2->parent3). This parameter will
-   *   specify how this table joins if it is not the default.
-   * @param string $alias
+   *   In some join configurations this table may actually join back through
+   *   a different method; this is most likely to be used when tracing
+   *   a hierarchy path. (node->parent->parent2->parent3). This parameter
+   *   will specify how this table joins if it is not the default.
+   * @param $alias
    *   A specific alias to use, rather than the default alias.
    *
-   * @return string
+   * @return $alias
    *   The alias of the table; this alias can be used to access information
    *   about the table and should always be used to refer to the table when
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  public function queue_table($table, $relationship = NULL, $join = NULL, $alias = NULL) {
+  function queue_table($table, $relationship = NULL, $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
     if (isset($this->table_queue[$alias])) {
       return $alias;
@@ -467,8 +458,8 @@ class views_plugin_query_default extends views_plugin_query {
       }
     }
 
-    // Check this again to make sure we don't blow up existing aliases for
-    // already adjusted joins.
+    // Check this again to make sure we don't blow up existing aliases for already
+    // adjusted joins.
     if (isset($this->table_queue[$alias])) {
       return $alias;
     }
@@ -480,8 +471,8 @@ class views_plugin_query_default extends views_plugin_query {
       $alias = $this->tables[$relationship][$table]['alias'] . $this->tables[$relationship][$table]['count'];
     }
 
-    // If this is a relationship based table, add a marker with the
-    // relationship as a primary table for the alias.
+    // If this is a relationship based table, add a marker with
+    // the relationship as a primary table for the alias.
     if ($table != $alias) {
       $this->mark_table($alias, $this->base_table, $alias);
     }
@@ -507,17 +498,14 @@ class views_plugin_query_default extends views_plugin_query {
     return $alias;
   }
 
-  /**
-   *
-   */
-  public function mark_table($table, $relationship, $alias) {
+  function mark_table($table, $relationship, $alias) {
     // Mark that this table has been added.
     if (empty($this->tables[$relationship][$table])) {
       if (!isset($alias)) {
         $alias = '';
         if ($relationship != $this->base_table) {
-          // Double underscore will help prevent accidental name space
-          // collisions.
+          // double underscore will help prevent accidental name
+          // space collisions.
           $alias = $relationship . '__';
         }
         $alias .= $table;
@@ -535,33 +523,33 @@ class views_plugin_query_default extends views_plugin_query {
   }
 
   /**
-   * Ensure a table exists in the queue; if it already exists it won't do
-   * anything, but if it doesn't it will add the table queue. It will ensure a
-   * path leads back to the relationship table.
+   * Ensure a table exists in the queue; if it already exists it won't
+   * do anything, but if it doesn't it will add the table queue. It will ensure
+   * a path leads back to the relationship table.
    *
-   * @param string $table
+   * @param $table
    *   The unaliased name of the table to ensure.
-   * @param string $relationship
+   * @param $relationship
    *   The relationship to ensure the table links to. Each relationship will
-   *   get a unique instance of the table being added. If not specified, will
-   *   be the primary table.
+   *   get a unique instance of the table being added. If not specified,
+   *   will be the primary table.
    * @param views_join $join
    *   A views_join object (or derived object) to join the alias in.
    *
-   * @return string
+   * @return
    *   The alias used to refer to this specific table, or NULL if the table
    *   cannot be ensured.
    */
-  public function ensure_table($table, $relationship = NULL, $join = NULL) {
-    // Ensure a relationship.
+  function ensure_table($table, $relationship = NULL, $join = NULL) {
+    // ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->base_table;
     }
 
     // If the relationship is the primary table, this actually be a relationship
-    // link back from an alias. We store all aliases along with the primary
-    // table to detect this state, because eventually it'll hit a table we
-    // already have and that's when we want to stop.
+    // link back from an alias. We store all aliases along with the primary table
+    // to detect this state, because eventually it'll hit a table we already
+    // have and that's when we want to stop.
     if ($relationship == $this->base_table && !empty($this->tables[$relationship][$table])) {
       return $this->tables[$relationship][$table]['alias'];
     }
@@ -590,28 +578,31 @@ class views_plugin_query_default extends views_plugin_query {
     $join = $this->adjust_join($join, $relationship);
 
     if ($this->ensure_path($table, $relationship, $join)) {
-      // Attempt to eliminate redundant joins.  If this table's relationship
-      // and join exactly matches an existing table's relationship and join, we
-      // do not have to join to it again; just return the existing table's
-      // alias.
-      // @see http://groups.drupal.org/node/11288
+      // Attempt to eliminate redundant joins.  If this table's
+      // relationship and join exactly matches an existing table's
+      // relationship and join, we do not have to join to it again;
+      // just return the existing table's alias.  See
+      // http://groups.drupal.org/node/11288 for details.
       //
-      // This can be done safely here but not lower down in queue_table(),
-      // because queue_table() is also used by add_table() which requires the
-      // ability to intentionally add the same table with the same join
-      // multiple times.  For example, a view that filters on 3 taxonomy terms
-      // using AND needs to join taxonomy_term_data 3 times with the same join.
+      // This can be done safely here but not lower down in
+      // queue_table(), because queue_table() is also used by
+      // add_table() which requires the ability to intentionally add
+      // the same table with the same join multiple times.  For
+      // example, a view that filters on 3 taxonomy terms using AND
+      // needs to join taxonomy_term_data 3 times with the same join.
+
       // scan through the table queue to see if a matching join and
       // relationship exists.  If so, use it instead of this join.
-      // @todo Scanning through $this->table_queue results in an O(N^2)
-      // algorithm, and this code runs every time the view is instantiated
-      // (Views 2 does not currently cache queries). There are a couple
-      // possible "improvements" but we should do some performance testing
-      // before picking one.
+
+      // TODO: Scanning through $this->table_queue results in an
+      // O(N^2) algorithm, and this code runs every time the view is
+      // instantiated (Views 2 does not currently cache queries).
+      // There are a couple possible "improvements" but we should do
+      // some performance testing before picking one.
       foreach ($this->table_queue as $queued_table) {
-        // In PHP 4 and 5, the == operation returns TRUE for two objects if
-        // they are instances of the same class and have the same attributes
-        // and values.
+        // In PHP 4 and 5, the == operation returns TRUE for two objects
+        // if they are instances of the same class and have the same
+        // attributes and values.
         if ($queued_table['relationship'] == $relationship && $queued_table['join'] == $join) {
           return $queued_table['alias'];
         }
@@ -623,12 +614,12 @@ class views_plugin_query_default extends views_plugin_query {
 
   /**
    * Make sure that the specified table can be properly linked to the primary
-   * table in the JOINs. This function uses recursion. If the tables needed
-   * to complete the path back to the primary table are not in the query they
-   * will be added, but additional copies will NOT be added if the table is
-   * already there.
+   * table in the JOINs. This function uses recursion. If the tables
+   * needed to complete the path back to the primary table are not in the
+   * query they will be added, but additional copies will NOT be added
+   * if the table is already there.
    */
-  public function ensure_path($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
+  function ensure_path($table, $relationship = NULL, $join = NULL, $traced = array(), $add = array()) {
     if (!isset($relationship)) {
       $relationship = $this->base_table;
     }
@@ -661,7 +652,7 @@ class views_plugin_query_default extends views_plugin_query {
 
     // Have we been this way?
     if (isset($traced[$join->left_table])) {
-      // We looped. Broked.
+      // we looped. Broked.
       return FALSE;
     }
 
@@ -677,12 +668,10 @@ class views_plugin_query_default extends views_plugin_query {
   }
 
   /**
-   * Fix a join to adhere to the proper relationship.
-   *
-   * The left table can vary based upon what relationship items are joined in
-   * on.
+   * Fix a join to adhere to the proper relationship; the left table can vary
+   * based upon what relationship items are joined in on.
    */
-  public function adjust_join($join, $relationship) {
+  function adjust_join($join, $relationship) {
     if (!empty($join->adjusted)) {
       return $join;
     }
@@ -694,8 +683,9 @@ class views_plugin_query_default extends views_plugin_query {
     // Adjusts the left table for our relationship.
     if ($relationship != $this->base_table) {
       // If we're linking to the primary table, the relationship to use will
-      // be the prior relationship. Unless it's a direct link. Safety! Don't
-      // modify an original here.
+      // be the prior relationship. Unless it's a direct link.
+
+      // Safety! Don't modify an original here.
       $join = clone $join;
 
       // Do we need to try to ensure a path?
@@ -705,8 +695,7 @@ class views_plugin_query_default extends views_plugin_query {
         $this->ensure_table($join->left_table, $relationship);
       }
 
-      // First, if this is our link point/anchor table, just use the
-      // relationship.
+      // First, if this is our link point/anchor table, just use the relationship
       if ($join->left_table == $this->relationships[$relationship]['table']) {
         $join->left_table = $relationship;
       }
@@ -727,15 +716,15 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Retrieve join data from the larger join data cache.
    *
-   * @param string $table
+   * @param $table
    *   The table to get the join information for.
-   * @param string $base_table
+   * @param $base_table
    *   The path we're following to get this join.
    *
    * @return views_join
    *   A views_join object or child object, if one exists.
    */
-  public function get_join_data($table, $base_table) {
+  function get_join_data($table, $base_table) {
     // Check to see if we're linking to a known alias. If so, get the real
     // table's data instead.
     if (!empty($this->table_queue[$table])) {
@@ -750,7 +739,7 @@ class views_plugin_query_default extends views_plugin_query {
    * If you need the alias of a table with a particular relationship, use
    * ensure_table().
    */
-  public function get_table_info($table) {
+  function get_table_info($table) {
     if (!empty($this->table_queue[$table])) {
       return $this->table_queue[$table];
     }
@@ -766,26 +755,27 @@ class views_plugin_query_default extends views_plugin_query {
 
   /**
    * Add a field to the query table, possibly with an alias. This will
-   * automatically call ensure_table to make sure the required table exists,
-   * *unless* $table is unset.
+   * automatically call ensure_table to make sure the required table
+   * exists, *unless* $table is unset.
    *
-   * @param string $table
-   *   The table this field is attached to. If NULL, it is assumed this will be
-   *   a formula; otherwise, ensure_table is used to make sure the table exists.
-   * @param string $field
+   * @param $table
+   *   The table this field is attached to. If NULL, it is assumed this will
+   *   be a formula; otherwise, ensure_table is used to make sure the
+   *   table exists.
+   * @param $field
    *   The name of the field to add. This may be a real field or a formula.
-   * @param string $alias
+   * @param $alias
    *   The alias to create. If not specified, the alias will be $table_$field
    *   unless $table is NULL. When adding formulae, it is recommended that an
    *   alias be used.
-   * @param array $params
+   * @param $params
    *   An array of parameters additional to the field that will control items
    *   such as aggregation functions and DISTINCT.
    *
-   * @return string
-   *   The name that this field can be referred to as, usually the alias.
+   * @return $name
+   *   The name that this field can be referred to as. Usually this is the alias.
    */
-  public function add_field($table, $field, $alias = '', $params = array()) {
+  function add_field($table, $field, $alias = '', $params = array()) {
     // We check for this specifically because it gets a special alias.
     if ($table == $this->base_table && $field == $this->base_field && empty($alias)) {
       $alias = $this->base_field;
@@ -799,13 +789,13 @@ class views_plugin_query_default extends views_plugin_query {
       $alias = $table . '_' . $field;
     }
 
-    // Make sure an alias is assigned.
+    // Make sure an alias is assigned
     $alias = $alias ? $alias : $field;
 
-    // PostgreSQL truncates aliases to 63 characters.
-    // @see http://drupal.org/node/571548
+    // PostgreSQL truncates aliases to 63 characters: http://drupal.org/node/571548
+
     // We limit the length of the original alias up to 60 characters
-    // to get a unique alias later if its have duplicates.
+    // to get a unique alias later if its have duplicates
     $alias = strtolower(substr($alias, 0, 60));
 
     // Create a field info array.
@@ -815,9 +805,9 @@ class views_plugin_query_default extends views_plugin_query {
       'alias' => $alias,
     ) + $params;
 
-    // Test to see if the field is actually the same or not. Due to differing
-    // parameters changing the aggregation function, we need to do some
-    // automatic alias collision detection.
+    // Test to see if the field is actually the same or not. Due to
+    // differing parameters changing the aggregation function, we need
+    // to do some automatic alias collision detection:
     $base = $alias;
     $counter = 0;
     while (!empty($this->fields[$alias]) && $this->fields[$alias] != $field_info) {
@@ -835,40 +825,35 @@ class views_plugin_query_default extends views_plugin_query {
   }
 
   /**
-   * Remove all fields that may've been added.
-   *
-   * Primarily used for summary mode where we're changing the query because we
-   * didn't get data we needed.
+   * Remove all fields that may've been added; primarily used for summary
+   * mode where we're changing the query because we didn't get data we needed.
    */
-  public function clear_fields() {
+  function clear_fields() {
     $this->fields = array();
   }
 
   /**
-   * Add a simple WHERE clause to the query.
+   * Add a simple WHERE clause to the query. The caller is responsible for
+   * ensuring that all fields are fully qualified (TABLE.FIELD) and that
+   * the table already exists in the query.
    *
-   * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table already exists in the query.
-   *
-   * @param string $group
+   * @param $group
    *   The WHERE group to add these to; groups are used to create AND/OR
-   *   sections. Groups cannot be nested. Use 0 as the default group. If the
-   *   group does not yet exist it will be created as an AND group.
-   * @param string $field
+   *   sections. Groups cannot be nested. Use 0 as the default group.
+   *   If the group does not yet exist it will be created as an AND group.
+   * @param $field
    *   The name of the field to check.
-   * @param string $value
-   *   The value to test the field against. In most cases, this is a scalar. For
-   *   more complex options, it is an array. The meaning of each element in the
-   *   array is dependent on the $operator.
-   * @param string $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more
-   *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
-   *   an array = otherwise. If $field is a string you have to use 'formula'
-   *   here.
+   * @param $value
+   *   The value to test the field against. In most cases, this is a scalar. For more
+   *   complex options, it is an array. The meaning of each element in the array is
+   *   dependent on the $operator.
+   * @param $operator
+   *   The comparison operator, such as =, <, or >=. It also accepts more complex
+   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
+   *   = otherwise. If $field is a string you have to use 'formula' here.
    *
    * The $field, $value and $operator arguments can also be passed in with a
    * single DatabaseCondition object, like this:
-   *
    * @code
    *   $this->query->add_where(
    *     $this->options['group'],
@@ -881,9 +866,9 @@ class views_plugin_query_default extends views_plugin_query {
    * @see QueryConditionInterface::condition()
    * @see DatabaseCondition
    */
-  public function add_where($group, $field, $value = NULL, $operator = NULL) {
-    // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all the
-    // default group.
+  function add_where($group, $field, $value = NULL, $operator = NULL) {
+    // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
+    // the default group.
     if (empty($group)) {
       $group = 0;
     }
@@ -904,22 +889,22 @@ class views_plugin_query_default extends views_plugin_query {
    * Add a complex WHERE clause to the query.
    *
    * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table already exists in the query. Internally
-   * the dbtng method "where" is used.
+   * (TABLE.FIELD) and that the table already exists in the query.
+   * Internally the dbtng method "where" is used.
    *
-   * @param string $group
+   * @param $group
    *   The WHERE group to add these to; groups are used to create AND/OR
-   *   sections. Groups cannot be nested. Use 0 as the default group. If the
-   *   group does not yet exist it will be created as an AND group.
-   * @param string $snippet
-   *   The snippet to check. This can be either a column or a complex expression
-   *   like "UPPER(table.field) = 'value'".
-   * @param array $args
+   *   sections. Groups cannot be nested. Use 0 as the default group.
+   *   If the group does not yet exist it will be created as an AND group.
+   * @param $snippet
+   *   The snippet to check. This can be either a column or
+   *   a complex expression like "UPPER(table.field) = 'value'"
+   * @param $args
    *   An associative array of arguments.
    *
    * @see QueryConditionInterface::where()
    */
-  public function add_where_expression($group, $snippet, $args = array()) {
+  function add_where_expression($group, $snippet, $args = array()) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
     // the default group.
     if (empty($group)) {
@@ -942,30 +927,29 @@ class views_plugin_query_default extends views_plugin_query {
    * Add a simple HAVING clause to the query.
    *
    * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist
-   * in the query. Internally the dbtng method "havingCondition" is used.
+   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
+   * Internally the dbtng method "havingCondition" is used.
    *
-   * @param string $group
+   * @param $group
    *   The HAVING group to add these to; groups are used to create AND/OR
-   *   sections. Groups cannot be nested. Use 0 as the default group. If the
-   *   group does not yet exist it will be created as an AND group.
-   * @param string $field
+   *   sections. Groups cannot be nested. Use 0 as the default group.
+   *   If the group does not yet exist it will be created as an AND group.
+   * @param $field
    *   The name of the field to check.
-   * @param string $value
-   *   The value to test the field against. In most cases, this is a scalar. For
-   *   more complex options, it is an array. The meaning of each element in the
-   *   array is dependent on the $operator.
-   * @param string $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more
-   *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
-   *   an array = otherwise.  If $field is a string you have to use 'formula'
-   *   here.
+   * @param $value
+   *   The value to test the field against. In most cases, this is a scalar. For more
+   *   complex options, it is an array. The meaning of each element in the array is
+   *   dependent on the $operator.
+   * @param $operator
+   *   The comparison operator, such as =, <, or >=. It also accepts more complex
+   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
+   *   = otherwise.  If $field is a string you have to use 'formula' here.
    *
    * @see SelectQueryInterface::havingCondition()
    */
-  public function add_having($group, $field, $value = NULL, $operator = NULL) {
-    // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all the
-    // default group.
+  function add_having($group, $field, $value = NULL, $operator = NULL) {
+    // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
+    // the default group.
     if (empty($group)) {
       $group = 0;
     }
@@ -985,24 +969,23 @@ class views_plugin_query_default extends views_plugin_query {
 
   /**
    * Add a complex HAVING clause to the query.
-   *
    * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist
-   * in the query. Internally the dbtng method "having" is used.
+   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
+   * Internally the dbtng method "having" is used.
    *
-   * @param string $group
+   * @param $group
    *   The HAVING group to add these to; groups are used to create AND/OR
-   *   sections. Groups cannot be nested. Use 0 as the default group. If the
-   *   group does not yet exist it will be created as an AND group.
-   * @param string $snippet
-   *   The snippet to check. This can be either a column or a complex
-   *   expression like "COUNT(table.field) > 3"
-   * @param array $args
+   *   sections. Groups cannot be nested. Use 0 as the default group.
+   *   If the group does not yet exist it will be created as an AND group.
+   * @param $snippet
+   *   The snippet to check. This can be either a column or
+   *   a complex expression like "COUNT(table.field) > 3"
+   * @param $args
    *   An associative array of arguments.
    *
    * @see QueryConditionInterface::having()
    */
-  public function add_having_expression($group, $snippet, $args = array()) {
+  function add_having_expression($group, $snippet, $args = array()) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
     // the default group.
     if (empty($group)) {
@@ -1025,32 +1008,31 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Add an ORDER BY clause to the query.
    *
-   * @param string $table
-   *   The table this field is part of. If a formula, enter NULL. If you want to
-   *   orderby random use "rand" as table and nothing else.
-   * @param string $field
-   *   The field or formula to sort on. If already a field, enter NULL and put
-   *   in the alias.
-   * @param string $order
+   * @param $table
+   *   The table this field is part of. If a formula, enter NULL.
+   *   If you want to orderby random use "rand" as table and nothing else.
+   * @param $field
+   *   The field or formula to sort on. If already a field, enter NULL
+   *   and put in the alias.
+   * @param $order
    *   Either ASC or DESC.
-   * @param string $alias
-   *   The alias to add the field as. In SQL, all fields in the order by must
-   *   also be in the SELECT portion. If an $alias isn't specified one will be
-   *   generated for from the $field; however, if the $field is a formula, this
-   *   alias will likely fail.
-   * @param string $params
+   * @param $alias
+   *   The alias to add the field as. In SQL, all fields in the order by
+   *   must also be in the SELECT portion. If an $alias isn't specified
+   *   one will be generated for from the $field; however, if the
+   *   $field is a formula, this alias will likely fail.
+   * @param $params
    *   Any params that should be passed through to the add_field.
    */
-  public function add_orderby($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
+  function add_orderby($table, $field = NULL, $order = 'ASC', $alias = '', $params = array()) {
     // Only ensure the table if it's not the special random key.
-    // @todo Maybe it would make sense to just add a add_orderby_rand or
-    // something similar.
+    // @todo: Maybe it would make sense to just add a add_orderby_rand or something similar.
     if ($table && $table != 'rand') {
       $this->ensure_table($table);
     }
 
-    // Only fill out this aliasing if there is a table; otherwise we assume it
-    // is a formula.
+    // Only fill out this aliasing if there is a table;
+    // otherwise we assume it is a formula.
     if (!$alias && $table) {
       $as = $table . '_' . $field;
     }
@@ -1064,17 +1046,27 @@ class views_plugin_query_default extends views_plugin_query {
 
     $this->orderby[] = array(
       'field' => $as,
-      'direction' => strtoupper($order),
+      'direction' => strtoupper($order)
     );
+
+	/**
+ 	 * -- removing, this should be taken care of by field adding now.
+     * -- leaving commented because I am unsure.
+      // If grouping, all items in the order by must also be in the
+      // group by clause. Check $table to ensure that this is not a
+      // formula.
+      if ($this->groupby && $table) {
+        $this->add_groupby($as);
+      }
+    */
   }
 
   /**
-   * Add a simple GROUP BY clause to the query.
-   *
-   * The caller is responsible for ensuring that the fields are fully qualified
-   * and the table is properly added.
+   * Add a simple GROUP BY clause to the query. The caller is responsible
+   * for ensuring that the fields are fully qualified and the table is properly
+   * added.
    */
-  public function add_groupby($clause) {
+  function add_groupby($clause) {
     // Only add it if it's not already in there.
     if (!in_array($clause, $this->groupby)) {
       $this->groupby[] = $clause;
@@ -1086,7 +1078,7 @@ class views_plugin_query_default extends views_plugin_query {
    *
    * @see views_plugin_query_default::add_field()
    */
-  public function get_field_alias($table_alias, $field) {
+  function get_field_alias($table_alias, $field) {
     return isset($this->field_aliases[$table_alias][$field]) ? $this->field_aliases[$table_alias][$field] : FALSE;
   }
 
@@ -1095,14 +1087,14 @@ class views_plugin_query_default extends views_plugin_query {
    *
    * @see SelectQuery::addTag()
    */
-  public function add_tag($tag) {
+  function add_tag($tag) {
     $this->tags[] = $tag;
   }
 
   /**
    * Generates a unique placeholder used in the db query.
    */
-  public function placeholder($base = 'views') {
+  function placeholder($base = 'views') {
     static $placeholders = array();
     if (!isset($placeholders[$base])) {
       $placeholders[$base] = 0;
@@ -1121,10 +1113,10 @@ class views_plugin_query_default extends views_plugin_query {
    * There is other code in filters which makes sure that the group IDs are
    * higher than zero.
    *
-   * @param string $where
-   *   Either 'where' or 'having'.
+   * @param $where
+   *   'where' or 'having'.
    */
-  public function build_condition($where = 'where') {
+  function build_condition($where = 'where') {
     $has_condition = FALSE;
     $has_arguments = FALSE;
     $has_filter = FALSE;
@@ -1138,9 +1130,8 @@ class views_plugin_query_default extends views_plugin_query {
         $sub_group = $info['type'] == 'OR' ? db_or() : db_and();
         foreach ($info['conditions'] as $key => $clause) {
           // DBTNG doesn't support to add the same subquery twice to the main
-          // query and the count query, so clone the subquery to have two
-          // instances of the same object.
-          // @see http://drupal.org/node/1112854
+          // query and the count query, so clone the subquery to have two instances
+          // of the same object. - http://drupal.org/node/1112854
           if (is_object($clause['value']) && $clause['value'] instanceof SelectQuery) {
             $clause['value'] = clone $clause['value'];
           }
@@ -1181,7 +1172,7 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Build fields array.
    */
-  public function compile_fields($fields_array, $query) {
+  function compile_fields($fields_array, $query) {
     $non_aggregates = array();
     foreach ($fields_array as $field) {
       $string = '';
@@ -1196,7 +1187,7 @@ class views_plugin_query_default extends views_plugin_query {
       }
 
       if (!empty($field['count'])) {
-        // Retained for compatibility.
+        // Retained for compatibility
         $field['function'] = 'count';
         // It seems there's no way to abstract the table+column reference
         // without adding a field, aliasing, and then using the alias.
@@ -1214,9 +1205,7 @@ class views_plugin_query_default extends views_plugin_query {
       }
       // This is a formula, using no tables.
       elseif (empty($field['table'])) {
-        if (!in_array($fieldname, $non_aggregates)) {
-          $non_aggregates[] = $fieldname;
-        }
+        $non_aggregates[] = $fieldname;
         $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : array();
         $query->addExpression($string, $fieldname, $placeholders);
       }
@@ -1224,19 +1213,14 @@ class views_plugin_query_default extends views_plugin_query {
       elseif ($this->distinct && !in_array($fieldname, $this->groupby)) {
         // d7cx: This code was there, apparently needed for PostgreSQL
         // $string = db_driver() == 'pgsql' ? "FIRST($string)" : $string;
-        if (!in_array($string, $non_aggregates)) {
-          $non_aggregates[] = $string;
-        }
         $query->addField(!empty($field['table']) ? $field['table'] : $this->base_table, $field['field'], $fieldname);
       }
       elseif (empty($field['aggregate'])) {
-        if (!in_array($string, $non_aggregates)) {
-          $non_aggregates[] = $string;
-        }
+        $non_aggregates[] = $fieldname;
         $query->addField(!empty($field['table']) ? $field['table'] : $this->base_table, $field['field'], $fieldname);
       }
 
-      // @todo Remove this old code.
+      // @TODO Remove this old code.
       if (!empty($field['distinct']) && empty($field['function'])) {
         $distinct[] = $string;
       }
@@ -1258,25 +1242,26 @@ class views_plugin_query_default extends views_plugin_query {
    * Generate a query and a countquery from all of the information supplied
    * to the object.
    *
-   * @param bool $get_count
+   * @param $get_count
    *   Provide a countquery if this is true, otherwise provide a normal query.
    *
    * @return SelectQuery
    *   A SelectQuery object.
    */
-  public function query($get_count = FALSE) {
+  function query($get_count = FALSE) {
     // Check query distinct value.
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
-      if ($this->pure_distinct === FALSE) {
+      if ($this->pure_distinct === FALSE){
         $base_field_alias = $this->add_field($this->base_table, $this->base_field);
         $this->add_groupby($base_field_alias);
       }
       $distinct = TRUE;
     }
 
-    // An optimized count query includes just the base field instead of all the
-    // fields. Determine of this query qualifies by checking for a groupby or
-    // distinct.
+    /**
+     * An optimized count query includes just the base field instead of all the fields.
+     * Determine of this query qualifies by checking for a groupby or distinct.
+     */
     $fields_array = $this->fields;
     if ($get_count && !$this->groupby) {
       foreach ($fields_array as $field) {
@@ -1296,18 +1281,18 @@ class views_plugin_query_default extends views_plugin_query {
     $options = array();
     $target = 'default';
     $key = 'default';
-    // Detect an external database and set the.
+    // Detect an external database and set the
     if (isset($this->view->base_database)) {
       $key = $this->view->base_database;
     }
 
-    // Set the slave target if the slave option is set.
+    // Set the slave target if the slave option is set
     if (!empty($this->options['slave'])) {
       $target = 'slave';
     }
 
-    // Go ahead and build the query. db_select doesn't support to specify the
-    // key, so use getConnection directly.
+    // Go ahead and build the query.
+    // db_select doesn't support to specify the key, so use getConnection directly.
     $query = Database::getConnection($target, $key)
       ->select($this->base_table, $this->base_table, $options)
       ->addTag('views')
@@ -1355,7 +1340,7 @@ class views_plugin_query_default extends views_plugin_query {
     }
 
     if (!$this->get_count_optimized) {
-      // We only add the orderby if we're not counting.
+      // we only add the orderby if we're not counting.
       if ($this->orderby) {
         foreach ($this->orderby as $order) {
           if ($order['field'] == 'rand_') {
@@ -1389,8 +1374,8 @@ class views_plugin_query_default extends views_plugin_query {
 
     if (!$get_count) {
       if (!empty($this->limit) || !empty($this->offset)) {
-        // We can't have an offset without a limit, so provide a very large
-        // limit instead.
+        // We can't have an offset without a limit, so provide a very large limit
+        // instead.
         $limit  = intval(!empty($this->limit) ? $this->limit : 999999);
         $offset = intval(!empty($this->offset) ? $this->offset : 0);
         $query->range($offset, $limit);
@@ -1403,7 +1388,7 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Get the arguments attached to the WHERE and HAVING clauses of this query.
    */
-  public function get_where_args() {
+  function get_where_args() {
     $args = array();
     foreach ($this->where as $group => $where) {
       $args = array_merge($args, $where['args']);
@@ -1417,7 +1402,7 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Let modules modify the query just prior to finalizing it.
    */
-  public function alter(&$view) {
+  function alter(&$view) {
     foreach (module_implements('views_query_alter') as $module) {
       $function = $module . '_views_query_alter';
       $function($view, $this);
@@ -1427,7 +1412,7 @@ class views_plugin_query_default extends views_plugin_query {
   /**
    * Builds the necessary info to execute the query.
    */
-  public function build(&$view) {
+  function build(&$view) {
     // Make the query distinct if the option was set.
     if (!empty($this->options['distinct'])) {
       $this->set_distinct(TRUE, !empty($this->options['pure_distinct']));
@@ -1452,9 +1437,8 @@ class views_plugin_query_default extends views_plugin_query {
    * Values to set: $view->result, $view->total_rows, $view->execute_time,
    * $view->current_page.
    */
-  public function execute(&$view) {
-    // Whether this query will run against an external database.
-    $external = FALSE;
+  function execute(&$view) {
+    $external = FALSE; // Whether this query will run against an external database.
     $query = $view->build_info['query'];
     $count_query = $view->build_info['count_query'];
 
@@ -1478,9 +1462,9 @@ class views_plugin_query_default extends views_plugin_query {
       // If not, then hook_query_node_access_alter() may munge the count by
       // adding a distinct against an empty query string
       // (e.g. COUNT DISTINCT(1) ...) and no pager will return.
-      // @see pager.inc > PagerDefault::execute()
-      // @see http://api.drupal.org/api/drupal/includes--pager.inc/function/PagerDefault::execute/7
-      // @see http://drupal.org/node/1046170.
+      // See pager.inc > PagerDefault::execute()
+      // http://api.drupal.org/api/drupal/includes--pager.inc/function/PagerDefault::execute/7
+      // See http://drupal.org/node/1046170.
       $count_query->preExecute();
 
       // Build the count query.
@@ -1495,6 +1479,7 @@ class views_plugin_query_default extends views_plugin_query {
       }
 
       $start = microtime(TRUE);
+
 
       try {
         if ($this->pager->use_count_query() || !empty($view->get_total_rows)) {
@@ -1533,18 +1518,12 @@ class views_plugin_query_default extends views_plugin_query {
     $view->execute_time = microtime(TRUE) - $start;
   }
 
-  /**
-   *
-   */
-  public function add_signature(&$view) {
+  function add_signature(&$view) {
     $view->query->add_field(NULL, "'" . $view->name . ':' . $view->current_display . "'", 'view_name');
   }
 
-  /**
-   *
-   */
-  public function get_aggregation_info() {
-    // @todo Need a way to get database specific and customized aggregation
+  function get_aggregation_info() {
+    // @todo -- need a way to get database specific and customized aggregation
     // functions into here.
     return array(
       'group' => array(
@@ -1615,14 +1594,15 @@ class views_plugin_query_default extends views_plugin_query {
           'filter' => 'views_handler_filter_group_by_numeric',
           'sort' => 'views_handler_sort_group_by_numeric',
         ),
-      ),
+      )
     ) + views_fetch_plugin_data('query_aggregate');
   }
 
   /**
    * Returns the according entity objects for the given query results.
+   *
    */
-  public function get_result_entities($results, $relationship = NULL) {
+  function get_result_entities($results, $relationship = NULL) {
     $base_table = $this->base_table;
     $base_table_alias = $base_table;
 
@@ -1684,19 +1664,12 @@ class views_plugin_query_default extends views_plugin_query {
 
     return array($entity_type, $result);
   }
-
 }
 
-/**
- *
- */
 function views_query_default_aggregation_method_simple($group_type, $field) {
   return strtoupper($group_type) . '(' . $field . ')';
 }
 
-/**
- *
- */
 function views_query_default_aggregation_method_distinct($group_type, $field) {
   $group_type = str_replace('_distinct', '', $group_type);
   return strtoupper($group_type) . '(DISTINCT ' . $field . ')';

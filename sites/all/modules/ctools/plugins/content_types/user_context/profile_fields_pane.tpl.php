@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Display profile fields.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Tests for the Metatag module to ensure the hreflang meta tags work correctly.

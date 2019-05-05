@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag Verification module.
- */
-
-/**
  * Tests for the Metatag Verification module.
  */
 class MetatagVerificationTest extends MetatagTestHelper {

@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Contains .
- */
-
-/**
  * Sort handler that allows sorting on a specific language.
  *
  * @ingroup views_sort_handlers
@@ -15,14 +10,14 @@ class views_handler_sort_node_language extends views_handler_sort {
   /**
    * {@inheritdoc}
    */
-  public function can_expose() {
+  function can_expose() {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  function query() {
     if (isset($this->options['language'])) {
       $langcode = $this->get_system_langcode($this->options['language']);
       // Validate the langcode.
@@ -38,7 +33,7 @@ class views_handler_sort_node_language extends views_handler_sort {
   /**
    * Converts a views language code into a Drupal language code.
    */
-  public function get_system_langcode($langcode) {
+  function get_system_langcode($langcode) {
     global $language_content;
     $default_language = language_default('language');
     $system_langcode = str_replace(array(
@@ -56,7 +51,7 @@ class views_handler_sort_node_language extends views_handler_sort {
   /**
    * {@inheritdoc}
    */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['language'] = array('default' => '***CURRENT_LANGUAGE***');
     return $options;
@@ -65,7 +60,7 @@ class views_handler_sort_node_language extends views_handler_sort {
   /**
    * {@inheritdoc}
    */
-  public function admin_summary() {
+  function admin_summary() {
     $summary = parent::admin_summary();
     if ($this->options['language']) {
       $language_options = $this->get_language_options();
@@ -83,11 +78,11 @@ class views_handler_sort_node_language extends views_handler_sort {
    * @return array
    *   All the languages.
    */
-  public function get_language_options() {
+  function get_language_options() {
     $languages = array(
       '***CURRENT_LANGUAGE***' => t("Current user's language"),
       '***DEFAULT_LANGUAGE***' => t("Default site language"),
-      LANGUAGE_NONE => t('No language'),
+      LANGUAGE_NONE => t('No language')
     );
     $languages = array_merge($languages, views_language_list());
     return $languages;
@@ -96,7 +91,7 @@ class views_handler_sort_node_language extends views_handler_sort {
   /**
    * {@inheritdoc}
    */
-  public function show_sort_form(&$form, &$form_state) {
+  function show_sort_form(&$form, &$form_state) {
     parent::show_sort_form($form, $form_state);
 
     $form['language'] = array(
@@ -109,3 +104,4 @@ class views_handler_sort_node_language extends views_handler_sort {
   }
 
 }
+

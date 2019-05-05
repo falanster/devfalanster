@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Custom tokens for Metatag.
@@ -27,7 +26,7 @@ function metatag_token_info() {
     }
     $info['tokens']['metatag'][$value['name']] = array(
       'name' => $label,
-      'description' => isset($value['description']) ? $value['description'] : '',
+      'description' => $value['description'],
     );
   }
 

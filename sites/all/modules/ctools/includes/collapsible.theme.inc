@@ -30,8 +30,8 @@ function ctools_collapsible_theme(&$items) {
  *   Text to put in the handle/title area of the div.
  * @param $content
  *   Text to put in the content area of the div, this is what will get
- *   collapsed.
- * @param $collapsed
+ *   collapsed
+ * @param $collapsed = FALSE
  *   If true, this div will start out collapsed.
  */
 function theme_ctools_collapsible($vars) {
@@ -56,8 +56,8 @@ function theme_ctools_collapsible($vars) {
  *   Text to put in the handle/title area of the div.
  * @param $content
  *   Text to put in the content area of the div, this is what will get
- *   collapsed.
- * @param $collapsed
+ *   collapsed
+ * @param $collapsed = FALSE
  *   If true, this div will start out collapsed.
  */
 function theme_ctools_collapsible_remembered($vars) {
@@ -76,3 +76,4 @@ function theme_ctools_collapsible_remembered($vars) {
 
   return $output;
 }
+

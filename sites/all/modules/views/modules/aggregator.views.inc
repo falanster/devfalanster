@@ -12,12 +12,13 @@
  */
 function aggregator_views_data() {
   // ----------------------------------------------------------------------
-  // Main Aggregator Item base table.
-  // Define the base group of this table. Fields that don't have a group
-  // defined will go into this field by default.
+  // Main Aggregator Item base table
+
+  // Define the base group of this table. Fields that don't
+  // have a group defined will go into this field by default.
   $data['aggregator_item']['table']['group']  = t('Aggregator');
 
-  // Advertise this table as a possible base table.
+  // Advertise this table as a possible base table
   $data['aggregator_item']['table']['base'] = array(
     'field' => 'iid',
     'title' => t('Aggregator item'),
@@ -26,25 +27,43 @@ function aggregator_views_data() {
 
   // ----------------------------------------------------------------
   // Fields
-  // Item ID / 'iid'.
+
+  // item id.
   $data['aggregator_item']['iid'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Item ID'),
-    // The help that appears on the UI,
+    'title' => t('Feed Item ID'),
     'help' => t('The unique ID of the aggregator item.'),
-    // Information for displaying the iid.
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
     ),
-    // Information for accepting a iid as an argument.
     'argument' => array(
-      'handler' => 'views_handler_argument_aggregator_iid',
-      'name field' => 'title',
-      // The field to display in the summary.
+      'handler' => 'views_handler_argument_numeric',
       'numeric' => TRUE,
     ),
-    // Information for accepting a nid as a filter.
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  // iid
+  $data['aggregator_item']['iid'] = array(
+    'title' => t('Item ID'),
+    'help' => t('The unique ID of the aggregator item.'), // The help that appears on the UI,
+    // Information for displaying the iid
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    // Information for accepting a iid as an argument
+    'argument' => array(
+      'handler' => 'views_handler_argument_aggregator_iid',
+      'name field' => 'title', // the field to display in the summary.
+      'numeric' => TRUE,
+    ),
+    // Information for accepting a nid as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
@@ -54,58 +73,55 @@ function aggregator_views_data() {
     ),
   );
 
-  // Title.
+  // title
   $data['aggregator_item']['title'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Title'),
+    'title' => t('Title'), // The item it appears as on the UI,
     'help' => t('The title of the aggregator item.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_aggregator_title_link',
       'extra' => array('link'),
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
   );
 
-  // Link.
+  // link
   $data['aggregator_item']['link'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Link'),
+    'title' => t('Link'), // The item it appears as on the UI,
     'help' => t('The link to the original source URL of the item.'),
     'field' => array(
       'handler' => 'views_handler_field_url',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
   );
 
-  // Author.
+  // author
   $data['aggregator_item']['author'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Author'),
+    'title' => t('Author'), // The item it appears as on the UI,
     'help' => t('The author of the original imported item.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_aggregator_xss',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -114,20 +130,19 @@ function aggregator_views_data() {
     ),
   );
 
-  // 'guid'.
+  // guid
   $data['aggregator_item']['guid'] = array(
-    // The item it appears as on the UI,
-    'title' => t('GUID'),
+    'title' => t('GUID'), // The item it appears as on the UI,
     'help' => t('The guid of the original imported item.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_xss',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -136,36 +151,34 @@ function aggregator_views_data() {
     ),
   );
 
-  // Feed body.
+  // feed body
   $data['aggregator_item']['description'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Body'),
+    'title' => t('Body'), // The item it appears as on the UI,
     'help' => t('The actual content of the imported item.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_aggregator_xss',
       'click sortable' => FALSE,
-    ),
-    // Information for accepting a title as a filter.
+     ),
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
   );
 
-  // Item timestamp.
+  // item timestamp
   $data['aggregator_item']['timestamp'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Timestamp'),
+    'title' => t('Timestamp'), // The item it appears as on the UI,
     'help' => t('The date the original feed item was posted. (With some feeds, this will be the date it was imported.)'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_date',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_date',
     ),
@@ -174,8 +187,10 @@ function aggregator_views_data() {
     ),
   );
 
+
   // ----------------------------------------------------------------------
-  // Aggregator feed table.
+  // Aggregator feed table
+
   $data['aggregator_feed']['table']['group']  = t('Aggregator feed');
 
   // Explain how this table joins to others.
@@ -186,25 +201,22 @@ function aggregator_views_data() {
     ),
   );
 
-  // Feed ID / 'fid'.
+  // fid
   $data['aggregator_feed']['fid'] = array(
-    // The item it appears as on the UI,
     'title' => t('Feed ID'),
-    // The help that appears on the UI,
-    'help' => t('The unique ID of the aggregator feed.'),
-    // Information for displaying the fid.
+    'help' => t('The unique ID of the aggregator feed.'), // The help that appears on the UI,
+    // Information for displaying the fid
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
     ),
-    // Information for accepting a fid as an argument.
+    // Information for accepting a fid as an argument
     'argument' => array(
       'handler' => 'views_handler_argument_aggregator_fid',
-      'name field' => 'title',
-      // The field to display in the summary.
+      'name field' => 'title', // the field to display in the summary.
       'numeric' => TRUE,
     ),
-    // Information for accepting a nid as a filter.
+    // Information for accepting a nid as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
@@ -214,22 +226,20 @@ function aggregator_views_data() {
     ),
   );
 
-  // Title.
+  // title
   $data['aggregator_feed']['title'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Title'),
-    // The help that appears on the UI,
+    'title' => t('Title'), // The item it appears as on the UI,
     'help' => t('The title of the aggregator feed.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_aggregator_title_link',
       'extra' => array('link'),
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -238,16 +248,15 @@ function aggregator_views_data() {
     ),
   );
 
-  // Link.
+  // link
   $data['aggregator_feed']['link'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Link'),
+    'title' => t('Link'), // The item it appears as on the UI,
     'help' => t('The link to the source URL of the feed.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_url',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -256,16 +265,15 @@ function aggregator_views_data() {
     ),
   );
 
-  // Feed last updated.
+  // feed last updated
   $data['aggregator_feed']['checked'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Last checked'),
+    'title' => t('Last checked'), // The item it appears as on the UI,
     'help' => t('The date the feed was last checked for new content.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_date',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
@@ -277,35 +285,33 @@ function aggregator_views_data() {
     ),
   );
 
-  // Feed description.
+  // feed description
   $data['aggregator_feed']['description'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Description'),
+    'title' => t('Description'), // The item it appears as on the UI,
     'help' => t('The description of the aggregator feed.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_xss',
       'click sortable' => FALSE,
-    ),
+     ),
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
   );
 
-  // Feed last updated.
+  // feed last updated
   $data['aggregator_feed']['modified'] = array(
-    // The item it appears as on the UI,
-    'title' => t('Last modified'),
+    'title' => t('Last modified'), // The item it appears as on the UI,
     'help' => t('The date of the most recent new content on the feed.'),
-    // Information for displaying a title as a field.
+     // Information for displaying a title as a field
     'field' => array(
       'handler' => 'views_handler_field_date',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
-    // Information for accepting a title as a filter.
+    // Information for accepting a title as a filter
     'filter' => array(
       'handler' => 'views_handler_filter_date',
     ),
@@ -315,7 +321,8 @@ function aggregator_views_data() {
   );
 
   // ----------------------------------------------------------------------
-  // Aggregator category feed table.
+  // Aggregator category feed table
+
   $data['aggregator_category_feed']['table']['join'] = array(
     'aggregator_item' => array(
       'left_field' => 'fid',
@@ -324,7 +331,8 @@ function aggregator_views_data() {
   );
 
   // ----------------------------------------------------------------------
-  // Aggregator category table.
+  // Aggregator category table
+
   $data['aggregator_category']['table']['group'] = t('Aggregator category');
 
   $data['aggregator_category']['table']['join'] = array(
@@ -335,7 +343,7 @@ function aggregator_views_data() {
     ),
   );
 
-  // Category ID / 'cid'.
+  // cid
   $data['aggregator_category']['cid'] = array(
     'title' => t('Category ID'),
     'help' => t('The unique ID of the aggregator category.'),
@@ -356,14 +364,14 @@ function aggregator_views_data() {
     ),
   );
 
-  // Title.
+  // title
   $data['aggregator_category']['title'] = array(
     'title' => t('Category'),
     'help' => t('The title of the aggregator category.'),
     'field' => array(
       'handler' => 'views_handler_field_aggregator_category',
       'click sortable' => TRUE,
-    ),
+     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -380,18 +388,15 @@ function aggregator_views_data() {
  */
 function aggregator_views_plugins() {
   return array(
-    'module' => 'views',
-    // This just tells our themes are elsewhere.
+    'module' => 'views', // This just tells our themes are elsewhere.
     'row' => array(
       'aggregator_rss' => array(
         'title' => t('Aggregator item'),
         'help' => t('Display the aggregator item using the data from the original source.'),
         'handler' => 'views_plugin_row_aggregator_rss',
-        'path' => drupal_get_path('module', 'views') . '/modules/node',
-        // Not necessary for most modules.
+        'path' => drupal_get_path('module', 'views') . '/modules/node', // not necessary for most modules
         'theme' => 'views_view_row_rss',
-        'base' => array('aggregator_item'),
-        // Only works with 'node' as base.
+        'base' => array('aggregator_item'), // only works with 'node' as base.
         'uses options' => TRUE,
         'type' => 'feed',
         'help topic' => 'style-aggregator-rss',

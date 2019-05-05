@@ -11,11 +11,7 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_node_translation_link extends views_handler_field {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct();
     $this->additional_fields['nid'] = 'nid';
     $this->additional_fields['tnid'] = 'tnid';
@@ -23,26 +19,17 @@ class views_handler_field_node_translation_link extends views_handler_field {
     $this->additional_fields['language'] = 'language';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $value = $this->get_value($values, 'tnid');
     return $this->render_link($this->sanitize_value($value), $values);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     global $language;
 
     $tnid = $this->get_value($values, 'tnid');
@@ -59,5 +46,4 @@ class views_handler_field_node_translation_link extends views_handler_field {
     $this->options['alter']['path'] = "node/" . $this->get_value($values, 'nid');
     return $this->get_value($values, 'title');
   }
-
 }

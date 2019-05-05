@@ -10,7 +10,6 @@
  *
  * Implementing this
  */
-
 /**
  * Get a plugin configuration form.
  *
@@ -101,7 +100,7 @@ function _ctools_plugin_configure_create_form_info(&$form_info, $plugin_definiti
     if (empty($plugin_definition['title'])) {
       $title = t('Configure');
     }
-    elseif ($op == 'add') {
+    else if ($op == 'add') {
       $title = t('Configure new !plugin_title', array('!plugin_title' => $plugin_definition['title']));
     }
     else {
@@ -135,10 +134,10 @@ function _ctools_plugin_configure_create_form_info(&$form_info, $plugin_definiti
       $form_info['forms']['form']['wrapper'] = 'ctools_plugins_default_form_wrapper';
     }
   }
-  elseif (is_array($info)) {
-    if (empty($form_info['order'])) {
-      $form_info['order'] = array();
-    }
+  else if (is_array($info)) {
+      if (empty($form_info['order'])) {
+        $form_info['order'] = array();
+      }
     if (empty($form_info['forms'])) {
       $form_info['forms'] = array();
     }

@@ -80,3 +80,4 @@ function relcontext_settings_form($conf, $external = FALSE) {
   );
   return $form;
 }
+

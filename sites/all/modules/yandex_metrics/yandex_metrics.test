@@ -5,6 +5,7 @@
  * Tests for Yandex.Metrics Counter module.
  */
 
+
 /**
  * Tests of functionality and settings of Yandex.Metrics Counter module.
  */
@@ -14,7 +15,6 @@ class YandexMetricsCounterTestCase extends DrupalWebTestCase {
    * Return information about test case.
    *
    * @return array
-   *    Information about test case.
    */
   public static function getInfo() {
     return array(
@@ -26,34 +26,35 @@ class YandexMetricsCounterTestCase extends DrupalWebTestCase {
 
   /**
    * Simple counter code.
-   *
    * @var string
    */
-  protected $yandexMetricsCode = '';
+  protected $yandex_metrics_code = '';
 
   /**
    * Test case presets.
+   *
+   * @return bool|void
    */
-  public function setUp() {
+  function setUp() {
     // Install the Yandex.Metrics Counter module.
     parent::setUp('yandex_metrics');
 
     // Set simple string as counter code.
-    $this->yandexMetricsCode = '<!-- Yandex.Metrika counter -->' . $this->randomName(8);
-    variable_set('yandex_metrics_counter_code', $this->yandexMetricsCode);
+    $this->yandex_metrics_code = '<!-- Yandex.Metrika counter -->' . $this->randomName(8);
+    variable_set('yandex_metrics_counter_code', $this->yandex_metrics_code);
 
     // Create admin user.
     $admin_user_permissions = array(
       'administer Yandex.Metrics settings',
       'access administration pages',
-      'access content overview',
+      'access content overview'
     );
     $this->admin_user = $this->drupalCreateUser($admin_user_permissions);
 
     // Create regular user.
     $regular_user_permissions = array(
       'access content',
-      'access comments',
+      'access comments'
     );
     $this->regular_user = $this->drupalCreateUser($regular_user_permissions);
   }
@@ -62,27 +63,26 @@ class YandexMetricsCounterTestCase extends DrupalWebTestCase {
    * Try to find Yandex.Metrics counter code on current page.
    *
    * @return bool
-   *    TRUE if counter code was found.
    */
-  public function checkCounter() {
-    return $this->assertPattern('@<div class="ym-counter">' . $this->yandexMetricsCode . '</div>@', 'Yandex.Metrica counter was outputed on page.');
+  function checkCounter() {
+    return $this->assertPattern('@<div class="ym-counter">' . $this->yandex_metrics_code . '</div>@', 'Yandex.Metrica counter was outputed on page.');
   }
 
   /**
    * Try not to find Yandex.Metrics counter code on current page.
    *
    * @return bool
-   *    TRUE if counter code wasn't found.
    */
-  public function checkNoCounter() {
-    return $this->assertNoPattern('@<div class="ym-counter">' . $this->yandexMetricsCode . '</div>@', 'Yandex.Metrica counter was not found on page.');
+  function checkNoCounter() {
+    return $this->assertNoPattern('@<div class="ym-counter">' . $this->yandex_metrics_code . '</div>@', 'Yandex.Metrica counter was not found on page.');
   }
 
   /**
    * Test counter code with default module settings.
    */
-  public function testCounterCodeDefault() {
-    // Test as Anonymous user.
+  function testCounterCodeDefault() {
+    // Anonymous user.
+
     // Front page.
     $this->drupalGet('');
     $this->checkCounter();
@@ -110,7 +110,7 @@ class YandexMetricsCounterTestCase extends DrupalWebTestCase {
   /**
    * Test Yandex.Metrics page specific settings.
    */
-  public function testCounterCodePagesSettings() {
+  function testCounterCodePagesSettings() {
     // Login as administrator.
     $this->drupalLogin($this->admin_user);
 
@@ -150,7 +150,7 @@ class YandexMetricsCounterTestCase extends DrupalWebTestCase {
   /**
    * Test Yandex.Metrics role specific settings.
    */
-  public function testCounterCodeRolesSettings() {
+  function testCounterCodeRolesSettings() {
 
     // Login as administrator.
     $this->drupalLogin($this->admin_user);
@@ -192,5 +192,4 @@ class YandexMetricsCounterTestCase extends DrupalWebTestCase {
     $this->drupalGet('');
     $this->checkCounter();
   }
-
 }

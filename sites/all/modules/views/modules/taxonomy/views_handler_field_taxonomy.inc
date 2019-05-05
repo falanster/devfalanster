@@ -12,14 +12,13 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_taxonomy extends views_handler_field {
-
   /**
    * Constructor to provide additional field to add.
    *
    * This constructer assumes the taxonomy_term_data table. If using another
    * table, we'll need to be more specific.
    */
-  public function construct() {
+  function construct() {
     parent::construct();
     $this->additional_fields['vid'] = 'vid';
     $this->additional_fields['tid'] = 'tid';
@@ -30,10 +29,7 @@ class views_handler_field_taxonomy extends views_handler_field {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['link_to_taxonomy'] = array('default' => FALSE, 'bool' => TRUE);
     $options['convert_spaces'] = array('default' => FALSE, 'bool' => TRUE);
@@ -41,16 +37,16 @@ class views_handler_field_taxonomy extends views_handler_field {
   }
 
   /**
-   * Provide link to taxonomy option.
+   * Provide link to taxonomy option
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['link_to_taxonomy'] = array(
       '#title' => t('Link this field to its taxonomy term page'),
       '#description' => t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['link_to_taxonomy']),
     );
-    $form['convert_spaces'] = array(
+     $form['convert_spaces'] = array(
       '#title' => t('Convert spaces in term names to hyphens'),
       '#description' => t('This allows links to work with Views taxonomy term arguments.'),
       '#type' => 'checkbox',
@@ -64,7 +60,7 @@ class views_handler_field_taxonomy extends views_handler_field {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     $tid = $this->get_value($values, 'tid');
     if (!empty($this->options['link_to_taxonomy']) && !empty($tid) && $data !== NULL && $data !== '') {
       $term = new stdClass();
@@ -91,12 +87,8 @@ class views_handler_field_taxonomy extends views_handler_field {
     return $data;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     $value = $this->get_value($values);
     return $this->render_link($this->sanitize_value($value), $values);
   }
-
 }

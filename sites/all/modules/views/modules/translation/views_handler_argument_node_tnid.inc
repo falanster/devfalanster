@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_argument_node_tnid.
+ * Provide node tnid argument handler.
  */
 
 /**
@@ -11,11 +11,10 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_node_tnid extends views_handler_argument_numeric {
-
   /**
-   * {@inheritdoc}
+   * Override the behavior of title(). Get the title of the node.
    */
-  public function title_query() {
+  function title_query() {
     $titles = array();
 
     $result = db_query("SELECT n.title FROM {node} n WHERE n.tnid IN (:tnids)", array(':tnids' => $this->value));
@@ -24,5 +23,4 @@ class views_handler_argument_node_tnid extends views_handler_argument_numeric {
     }
     return $titles;
   }
-
 }

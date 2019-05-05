@@ -1,10 +1,6 @@
 <?php
 
-/**
- * @file
- * Set this so we can tell that the file has been included at some point.
- */
-
+// Set this so we can tell that the file has been included at some point.
 define('CTOOLS_AJAX_INCLUDED', 1);
 
 /**
@@ -89,17 +85,17 @@ function ctools_ajax_icon_text_button($text, $image, $dest, $alt, $class = '', $
  * @param $name
  *   The name or key: of the data attached to this selector.
  * @param $value
- *   The value of the data.
+ *  The value of the data.
  */
 function ctools_ajax_command_attr($selector, $name, $value) {
   ctools_add_js('ajax-responder');
   return array(
-    'command' => 'attr',
-    'selector' => $selector,
-    'name' => $name,
-    'value' => $value,
-  );
-}
+     'command' => 'attr',
+     'selector' => $selector,
+     'name' => $name,
+     'value' => $value,
+   );
+ }
 
 /**
  * Force a client-side redirect.
@@ -158,3 +154,4 @@ function ctools_ajax_render_error($error = '') {
   print ajax_render($commands);
   exit;
 }
+

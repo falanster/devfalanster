@@ -12,10 +12,7 @@
  */
 class views_handler_field_user_link_cancel extends views_handler_field_user_link {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render_link($data, $values) {
+  function render_link($data, $values) {
     $uid = $values->{$this->aliases['uid']};
 
     // Build a pseudo account object to be able to check the access.
@@ -33,5 +30,4 @@ class views_handler_field_user_link_cancel extends views_handler_field_user_link
       return $text;
     }
   }
-
 }

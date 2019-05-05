@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_style_grid.
+ * Contains the grid style plugin.
  */
 
 /**
@@ -11,11 +11,10 @@
  * @ingroup views_style_plugins
  */
 class views_plugin_style_grid extends views_plugin_style {
-
   /**
-   * Set default options.
+   * Set default options
    */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['columns'] = array('default' => '4');
@@ -30,7 +29,7 @@ class views_plugin_style_grid extends views_plugin_style {
   /**
    * Render the given style.
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['columns'] = array(
       '#type' => 'textfield',
@@ -68,5 +67,4 @@ class views_plugin_style_grid extends views_plugin_style {
       '#default_value' => $this->options['summary'],
     );
   }
-
 }

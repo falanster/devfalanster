@@ -30,3 +30,4 @@ function ctools_page_help_content_type_render($subtype, $conf, $panel_args) {
 
   return $block;
 }
+

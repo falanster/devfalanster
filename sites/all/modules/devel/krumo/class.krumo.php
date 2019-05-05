@@ -656,15 +656,6 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
   // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
   /**
-  * Allows CSS and Javascript to be included without performing a krumo::dump().
-  */
-  Public Static Function addCssJs() {
-    return krumo::_css();
-  }
-
-  // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-
-  /**
   * Print the skin (CSS)
   *
   * @return boolean
@@ -683,7 +674,7 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
 
     $css = '';
     // DEVEL: changed for Drupal variables system
-    $skin = variable_get('devel_krumo_skin', 'default');
+    $skin = variable_get('devel_krumo_skin', 'orange');
 
     // custom selected skin ?
     //
@@ -714,8 +705,25 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
 
       // the CSS
       //
-      drupal_add_css($css, 'inline');
-      drupal_add_js(join(file(KRUMO_DIR . "krumo.js")), 'inline');
+      ?>
+<!-- Using Krumo Skin: <?php echo preg_replace('~^' . preg_quote(realpath(KRUMO_DIR) . DIRECTORY_SEPARATOR) . '~Uis', '', realpath($_));?> -->
+<style type="text/css">
+<!--/**/
+<?php echo $css?>
+
+/**/-->
+</style>
+<?php
+      // the JS
+      //
+      ?>
+<script type="text/javascript">
+<!--//
+<?php echo join(file(KRUMO_DIR . "krumo.js"));?>
+
+//-->
+</script>
+<?php
       }
 
     return $_css;
@@ -916,7 +924,7 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
       //
       $_recursion_marker = krumo::_marker();
       (is_object($bee))
-        ? (empty($bee->$_recursion_marker) ? ($bee->$_recursion_marker = 1) : $bee->$_recursion_marker++)
+        ? @($bee->$_recursion_marker++)
         : @($bee[$_recursion_marker]++);
 
       $_[0][] =& $bee;
@@ -965,29 +973,6 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
 <div class="krumo-nest" style="display:none;">
   <ul class="krumo-node">
   <?php
-
-  if ($_is_object && get_class($data) != 'stdClass') {
-    // this part for protected/private properties only
-    $refl = new ReflectionClass($data);
-    foreach ($refl->getProperties() as $property) {
-      $k = $property->getName();
-      if ($k === $_recursion_marker || $property->isPublic()) {
-        continue;
-      }
-
-      // add key indicators
-      if ($property->isProtected()) {
-        $k .= ':protected';
-      }
-      elseif ($property->isPrivate()) {
-        $k .= ':private';
-      }
-
-      $property->setAccessible(TRUE);
-      $v = $property->getValue($data);
-      krumo::_dump($v, $k);
-    }
-  }
 
   // keys ?
   //
@@ -1060,7 +1045,10 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
 ?>
 <li class="krumo-child">
 
-  <div class="krumo-element<?php echo !empty($data) ? ' krumo-expand' : '';?>">
+  <div class="krumo-element<?php echo count($data) > 0 ? ' krumo-expand' : '';?>"
+    <?php if (count($data) > 0) {?> onClick="krumo.toggle(this);"<?php } ?>
+    onMouseOver="krumo.over(this);"
+    onMouseOut="krumo.out(this);">
 
       <?php /* DEVEL: added htmlSpecialChars */ ?>
       <a class="krumo-name"><?php echo htmlSpecialChars($name);?></a>
@@ -1109,7 +1097,10 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
 ?>
 <li class="krumo-child">
 
-  <div class="krumo-element<?php echo ' krumo-expand';?>">
+  <div class="krumo-element<?php echo count($data) > 0 ? ' krumo-expand' : '';?>"
+    <?php if (count($data) > 0) {?> onClick="krumo.toggle(this);"<?php } ?>
+    onMouseOver="krumo.over(this);"
+    onMouseOut="krumo.out(this);">
 
       <?php /* DEVEL: added htmlSpecialChars */ ?>
       <a class="krumo-name"><?php echo htmlSpecialChars($name);?></a>
@@ -1117,7 +1108,7 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
       <strong class="krumo-class"><?php echo get_class($data);?></strong>
   </div>
 
-  <?php {
+  <?php if (count($data)) {
     krumo::_vars($data);
     } ?>
 </li>
@@ -1253,13 +1244,16 @@ This is a list of all the values from the <code><b><?php echo realpath($ini_file
     $_extra = false;
     $_ = $data;
     if (strLen($data) > KRUMO_TRUNCATE_LENGTH) {
-      $_ = drupal_substr($data, 0, KRUMO_TRUNCATE_LENGTH - 3) . '...';
+      $_ = substr($data, 0, KRUMO_TRUNCATE_LENGTH - 3) . '...';
       $_extra = true;
       }
 ?>
 <li class="krumo-child">
 
-  <div class="krumo-element<?php echo $_extra ? ' krumo-expand' : '';?>">
+  <div class="krumo-element<?php echo $_extra ? ' krumo-expand' : '';?>"
+    <?php if ($_extra) {?> onClick="krumo.toggle(this);"<?php } ?>
+    onMouseOver="krumo.over(this);"
+    onMouseOut="krumo.out(this);">
 
       <?php /* DEVEL: added htmlSpecialChars */ ?>
       <a class="krumo-name"><?php echo htmlSpecialChars($name);?></a>

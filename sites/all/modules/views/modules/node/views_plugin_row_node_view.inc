@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_row_node_view.
+ * Contains the node view row style plugin.
  */
 
 /**
@@ -13,26 +13,14 @@
  * @ingroup views_row_plugins
  */
 class views_plugin_row_node_view extends views_plugin_row {
+  // Basic properties that let the row style follow relationships.
+  var $base_table = 'node';
+  var $base_field = 'nid';
 
-  /**
-   * Basic properties that let the row style follow relationships.
-   */
-  public $base_table = 'node';
+  // Stores the nodes loaded with pre_render.
+  var $nodes = array();
 
-  /**
-   *
-   */
-  public $base_field = 'nid';
-
-  /**
-   * Stores the nodes loaded with pre_render.
-   */
-  public $nodes = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$display, $options = NULL) {
+  function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
     // Handle existing views with the deprecated 'teaser' option.
     if (isset($this->options['teaser'])) {
@@ -44,10 +32,7 @@ class views_plugin_row_node_view extends views_plugin_row {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['view_mode'] = array('default' => 'teaser');
@@ -57,10 +42,7 @@ class views_plugin_row_node_view extends views_plugin_row {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $options = $this->options_form_summary_options();
@@ -69,7 +51,7 @@ class views_plugin_row_node_view extends views_plugin_row {
       '#options' => $options,
       '#title' => t('View mode'),
       '#default_value' => $this->options['view_mode'],
-    );
+     );
     $form['links'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display links'),
@@ -86,7 +68,7 @@ class views_plugin_row_node_view extends views_plugin_row {
   /**
    * Return the main options, which are shown in the summary title.
    */
-  public function options_form_summary_options() {
+  function options_form_summary_options() {
     $entity_info = entity_get_info('node');
     $options = array();
     if (!empty($entity_info['view modes'])) {
@@ -97,25 +79,19 @@ class views_plugin_row_node_view extends views_plugin_row {
     if (empty($options)) {
       $options = array(
         'teaser' => t('Teaser'),
-        'full' => t('Full content'),
+        'full' => t('Full content')
       );
     }
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_title() {
+  function summary_title() {
     $options = $this->options_form_summary_options();
     return check_plain($options[$this->options['view_mode']]);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_render($values) {
+  function pre_render($values) {
     $nids = array();
     foreach ($values as $row) {
       $nids[] = $row->{$this->field_alias};
@@ -123,10 +99,7 @@ class views_plugin_row_node_view extends views_plugin_row {
     $this->nodes = node_load_multiple($nids);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($row) {
+  function render($row) {
     if (isset($this->nodes[$row->{$this->field_alias}])) {
       $node = $this->nodes[$row->{$this->field_alias}];
       $node->view = $this->view;
@@ -135,5 +108,4 @@ class views_plugin_row_node_view extends views_plugin_row {
       return drupal_render($build);
     }
   }
-
 }

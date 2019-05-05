@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Plugin to provide an argument handler for a Node add form.
+ *
+ * Plugin to provide an argument handler for a Node add form
  */
 
 /**
@@ -11,7 +12,7 @@
  */
 $plugin = array(
   'title' => t("Node add form: node type"),
-  // Keyword to use for %substitution.
+  // keyword to use for %substitution
   'keyword' => 'node_type',
   'description' => t('Creates a node add form context from a node type argument.'),
   'context' => 'ctools_node_add_context',
@@ -28,3 +29,4 @@ function ctools_node_add_context($arg = NULL, $conf = NULL, $empty = FALSE) {
 
   return ctools_context_create('node_add_form', $arg);
 }
+

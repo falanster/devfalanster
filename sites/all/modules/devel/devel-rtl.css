@@ -1,8 +1,3 @@
-/**
- * @file
- * Right-to-left styles for Devel.
- */
-
 .dev-query, .dev-timer, .dev-memory-usage {
   align: left;
   direction: ltr;

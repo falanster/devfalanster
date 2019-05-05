@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * @file
  * Sample ctools content type that takes advantage of context.
@@ -8,6 +9,7 @@
  * ctools content type can access and use context. Note that the simplecontext
  * can be either configured manually into a panel or it can be retrieved via
  * an argument.
+ *
  */
 
 /**
@@ -29,7 +31,7 @@ $plugin = array(
   'edit form' => 'simplecontext_content_type_edit_form',
   'admin title' => 'ctools_plugin_example_simplecontext_content_type_admin_title',
 
-  // Presents a block which is used in the preview of the data.
+  // presents a block which is used in the preview of the data.
   // Pn Panels this is the preview pane shown on the panels building page.
   'admin info' => 'ctools_plugin_example_simplecontext_content_type_admin_info',
   'category' => array(t('CTools Examples'), -9),
@@ -101,6 +103,7 @@ function simplecontext_content_type_render($subtype, $conf, $args, $context) {
 /**
  * 'Edit' callback for the content type.
  * This example just returns a form.
+ *
  */
 function simplecontext_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];

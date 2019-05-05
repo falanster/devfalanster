@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains .
+ * Definition of views_handler_argument_locale_language.
  */
 
 /**
@@ -11,11 +11,7 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_locale_language extends views_handler_argument {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct('language');
   }
 
@@ -23,7 +19,7 @@ class views_handler_argument_locale_language extends views_handler_argument {
    * Override the behavior of summary_name(). Get the user friendly version
    * of the language.
    */
-  public function summary_name($data) {
+  function summary_name($data) {
     return $this->locale_language($data->{$this->name_alias});
   }
 
@@ -31,16 +27,12 @@ class views_handler_argument_locale_language extends views_handler_argument {
    * Override the behavior of title(). Get the user friendly version
    * of the language.
    */
-  public function title() {
+  function title() {
     return $this->locale_language($this->argument);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function locale_language($langcode) {
+  function locale_language($langcode) {
     $languages = views_language_list();
     return isset($languages[$langcode]) ? $languages[$langcode] : t('Unknown language');
   }
-
 }

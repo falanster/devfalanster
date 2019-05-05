@@ -11,11 +11,7 @@
  * @ingroup views_cache_plugins
  */
 class views_plugin_cache_time extends views_plugin_cache {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['results_lifespan'] = array('default' => 3600);
     $options['results_lifespan_custom'] = array('default' => 0);
@@ -25,10 +21,7 @@ class views_plugin_cache_time extends views_plugin_cache {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $options = array(60, 300, 1800, 3600, 21600, 518400);
     $options = drupal_map_assoc($options, 'format_interval');
@@ -74,39 +67,27 @@ class views_plugin_cache_time extends views_plugin_cache {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_validate(&$form, &$form_state) {
+  function options_validate(&$form, &$form_state) {
     $custom_fields = array('output_lifespan', 'results_lifespan');
     foreach ($custom_fields as $field) {
       if ($form_state['values']['cache_options'][$field] == 'custom' && !is_numeric($form_state['values']['cache_options'][$field . '_custom'])) {
-        form_error($form[$field . '_custom'], t('Custom time values must be numeric.'));
+        form_error($form[$field .'_custom'], t('Custom time values must be numeric.'));
       }
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_title() {
+  function summary_title() {
     $results_lifespan = $this->get_lifespan('results');
     $output_lifespan = $this->get_lifespan('output');
     return format_interval($results_lifespan, 1) . '/' . format_interval($output_lifespan, 1);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function get_lifespan($type) {
+  function get_lifespan($type) {
     $lifespan = $this->options[$type . '_lifespan'] == 'custom' ? $this->options[$type . '_lifespan_custom'] : $this->options[$type . '_lifespan'];
     return $lifespan;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_expire($type) {
+  function cache_expire($type) {
     $lifespan = $this->get_lifespan($type);
     if ($lifespan) {
       $cutoff = REQUEST_TIME - $lifespan;
@@ -117,10 +98,7 @@ class views_plugin_cache_time extends views_plugin_cache {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_set_expire($type) {
+  function cache_set_expire($type) {
     $lifespan = $this->get_lifespan($type);
     if ($lifespan) {
       return time() + $lifespan;
@@ -130,20 +108,14 @@ class views_plugin_cache_time extends views_plugin_cache {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_set($type) {
+  function cache_set($type) {
     $lifespan = $this->get_lifespan($type);
     if ($lifespan >= 0) {
       parent::cache_set($type);
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_get($type) {
+  function cache_get($type) {
     $lifespan = $this->get_lifespan($type);
     if ($lifespan >= 0) {
       return parent::cache_get($type);
@@ -152,5 +124,4 @@ class views_plugin_cache_time extends views_plugin_cache {
       return FALSE;
     }
   }
-
 }

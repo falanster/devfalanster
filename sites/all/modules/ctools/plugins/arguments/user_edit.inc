@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Plugin to provide an argument handler for a Taxonomy term.
+ *
+ * Plugin to provide an argument handler for a Taxonomy term
  */
 
 /**
@@ -11,7 +12,7 @@
  */
 $plugin = array(
   'title' => t("User edit form: User ID"),
-  // Keyword to use for %substitution.
+  // keyword to use for %substitution
   'keyword' => 'user',
   'description' => t('Creates a user edit form context from a user ID argument.'),
   'context' => 'ctools_user_edit_context',
@@ -29,14 +30,14 @@ function ctools_user_edit_context($arg = NULL, $conf = NULL, $empty = FALSE) {
   if ($empty) {
     return ctools_context_create_empty('user_edit_form');
   }
-  if (is_object($arg)) {
+  if(is_object($arg)){
     return ctools_context_create('user_edit_form', $arg);
   }
   if (!is_numeric($arg)) {
     return FALSE;
   }
 
-  $account = user_load($arg);
+  $account= user_load($arg);
   if (!$account) {
     return NULL;
   }

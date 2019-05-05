@@ -1,11 +1,9 @@
 <?php
 
 /**
- * @file
  * Plugins are described by creating a $plugin array which will be used
  * by the system that includes this file.
  */
-
 $plugin = array(
   'single' => TRUE,
   'title' => t('User profile'),
@@ -86,3 +84,4 @@ function ctools_user_profile_content_type_edit_form($form, &$form_state) {
 function ctools_user_profile_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['view_mode'] = $form_state['values']['view_mode'];
 }
+

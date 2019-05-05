@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Search API integration.
- */
-
-/**
  * Tests for the Search API integration.
  */
 class MetatagCoreWithSearchAPITest extends MetatagTestHelper {

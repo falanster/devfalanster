@@ -14,11 +14,7 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_term_node_tid_depth extends views_handler_argument {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $options['depth'] = array('default' => 0);
@@ -29,10 +25,7 @@ class views_handler_argument_term_node_tid_depth extends views_handler_argument 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['depth'] = array(
       '#type' => 'weight',
       '#title' => t('Depth'),
@@ -64,10 +57,7 @@ class views_handler_argument_term_node_tid_depth extends views_handler_argument 
     parent::options_form($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function set_breadcrumb(&$breadcrumb) {
+  function set_breadcrumb(&$breadcrumb) {
     if (empty($this->options['set_breadcrumb']) || !is_numeric($this->argument)) {
       return;
     }
@@ -78,7 +68,7 @@ class views_handler_argument_term_node_tid_depth extends views_handler_argument 
   /**
    * Override default_actions() to remove summary actions.
    */
-  public function default_actions($which = NULL) {
+  function default_actions($which = NULL) {
     if ($which) {
       if (in_array($which, array('ignore', 'not found', 'empty', 'default'))) {
         return parent::default_actions($which);
@@ -93,10 +83,7 @@ class views_handler_argument_term_node_tid_depth extends views_handler_argument 
     return $actions;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query($group_by = FALSE) {
+  function query($group_by = FALSE) {
     $this->ensure_my_table();
 
     if (!empty($this->options['break_phrase'])) {
@@ -147,16 +134,12 @@ class views_handler_argument_term_node_tid_depth extends views_handler_argument 
     $this->query->add_where(0, "$this->table_alias.$this->real_field", $subquery, 'IN');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function title() {
+  function title() {
     $term = taxonomy_term_load($this->argument);
     if (!empty($term)) {
       return check_plain($term->name);
     }
-    // @todo review text.
+    // TODO review text
     return t('No name');
   }
-
 }

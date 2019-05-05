@@ -12,30 +12,15 @@
  */
 class views_handler_area_text extends views_handler_area {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
-    $options['content'] = array(
-      'default' => '',
-      'translatable' => TRUE,
-      'format_key' => 'format',
-    );
-    $options['format'] = array(
-      'default' => NULL,
-    );
-    $options['tokenize'] = array(
-      'default' => FALSE,
-      'bool' => TRUE,
-    );
+    $options['content'] = array('default' => '', 'translatable' => TRUE, 'format_key' => 'format');
+    $options['format'] = array('default' => NULL);
+    $options['tokenize'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['content'] = array(
@@ -46,7 +31,7 @@ class views_handler_area_text extends views_handler_area {
       '#wysiwyg' => FALSE,
     );
 
-    // @todo Refactor token handling into a base class.
+    // @TODO: Refactor token handling into a base class.
     $form['tokenize'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use replacement tokens from the first row'),
@@ -59,17 +44,14 @@ class views_handler_area_text extends views_handler_area {
       $options[t('Fields')]["[$field]"] = $handler->ui_name();
     }
 
-    $count = 0;
-    // This lets us prepare the key as we want it printed.
+    $count = 0; // This lets us prepare the key as we want it printed.
     foreach ($this->view->display_handler->get_handlers('argument') as $arg => $handler) {
       $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->ui_name()));
       $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->ui_name()));
     }
 
     if (!empty($options)) {
-      $output = '<p>'
-        . t("The following tokens are available. If you would like to have the characters '[' and ']' please use the html entity codes '%5B' or '%5D' or they will get replaced with empty space.")
-        . '</p>';
+      $output = '<p>' . t('The following tokens are available. If you would like to have the characters \'[\' and \']\' please use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.' . '</p>');
       foreach (array_keys($options) as $type) {
         if (!empty($options[$type])) {
           $items = array();
@@ -79,7 +61,7 @@ class views_handler_area_text extends views_handler_area {
           $output .= theme('item_list',
             array(
               'items' => $items,
-              'type' => $type,
+              'type' => $type
             ));
         }
       }
@@ -100,19 +82,13 @@ class views_handler_area_text extends views_handler_area {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_submit(&$form, &$form_state) {
+  function options_submit(&$form, &$form_state) {
     $form_state['values']['options']['format'] = $form_state['values']['options']['content']['format'];
     $form_state['values']['options']['content'] = $form_state['values']['options']['content']['value'];
     parent::options_submit($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($empty = FALSE) {
+  function render($empty = FALSE) {
     $format = isset($this->options['format']) ? $this->options['format'] : filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
       return $this->render_textarea($this->options['content'], $format);
@@ -123,7 +99,7 @@ class views_handler_area_text extends views_handler_area {
   /**
    * Render a text area, using the proper format.
    */
-  public function render_textarea($value, $format) {
+  function render_textarea($value, $format) {
     if ($value) {
       if ($this->options['tokenize']) {
         $value = $this->view->style_plugin->tokenize_value($value, 0);
@@ -131,5 +107,4 @@ class views_handler_area_text extends views_handler_area {
       return check_markup($value, $format, '', FALSE);
     }
   }
-
 }

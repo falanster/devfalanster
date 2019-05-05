@@ -25,13 +25,7 @@
       });
 
       $('form', ajax_body).once('views-ajax-submit-processed').each(function() {
-        var element_settings = {
-          'url': response.url,
-          'event': 'submit',
-          'progress': {
-            'type': 'throbber'
-          }
-        };
+        var element_settings = { 'url': response.url, 'event': 'submit', 'progress': { 'type': 'throbber' } };
         var $form = $(this);
         var id = $form.attr('id');
         Drupal.ajax[id] = new Drupal.ajax(id, this, element_settings);
@@ -96,7 +90,7 @@
   };
 
   /**
-   * Get rid of irritating tabledrag messages.
+   * Get rid of irritating tabledrag messages
    */
   Drupal.theme.tableDragChangedWarning = function () {
     return [];
@@ -149,9 +143,7 @@
 
       var base_element_settings = {
         'event': 'click',
-        'progress': {
-          'type': 'throbber'
-        }
+        'progress': { 'type': 'throbber' }
       };
       // Bind AJAX behaviors to all items showing the class.
       $('a.views-ajax-link', context).once('views-ajax-processed').each(function () {
@@ -166,23 +158,23 @@
 
       $('div#views-live-preview a')
         .once('views-ajax-processed').each(function () {
-          // We don't bind to links without a URL.
-          if (!$(this).attr('href')) {
-            return true;
-          }
+        // We don't bind to links without a URL.
+        if (!$(this).attr('href')) {
+          return true;
+        }
 
-          var element_settings = base_element_settings;
-          // Set the URL to go to the anchor.
-          element_settings.url = $(this).attr('href');
-          if (Drupal.Views.getPath(element_settings.url).substring(0, 21) != 'admin/structure/views') {
-            return true;
-          }
+        var element_settings = base_element_settings;
+        // Set the URL to go to the anchor.
+        element_settings.url = $(this).attr('href');
+        if (Drupal.Views.getPath(element_settings.url).substring(0, 21) != 'admin/structure/views') {
+          return true;
+        }
 
-          element_settings.wrapper = 'views-live-preview';
-          element_settings.method = 'html';
-          var base = $(this).attr('id');
-          Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
-        });
+        element_settings.wrapper = 'views-live-preview';
+        element_settings.method = 'html';
+        var base = $(this).attr('id');
+        Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
+      });
 
       // Within a live preview, make exposed widget form buttons re-trigger the
       // Preview button.
@@ -190,29 +182,29 @@
       //   of the main Edit form.
       $('div#views-live-preview input[type=submit]')
         .once('views-ajax-processed').each(function(event) {
-          $(this).click(function () {
-            this.form.clk = this;
-            return true;
-          });
-          var element_settings = base_element_settings;
-          // Set the URL to go to the anchor.
-          element_settings.url = $(this.form).attr('action');
-          if (Drupal.Views.getPath(element_settings.url).substring(0, 21) != 'admin/structure/views') {
-            return true;
-          }
-
-          element_settings.wrapper = 'views-live-preview';
-          element_settings.method = 'html';
-          element_settings.event = 'click';
-
-          var base = $(this).attr('id');
-          Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
+        $(this).click(function () {
+          this.form.clk = this;
+          return true;
         });
+        var element_settings = base_element_settings;
+        // Set the URL to go to the anchor.
+        element_settings.url = $(this.form).attr('action');
+        if (Drupal.Views.getPath(element_settings.url).substring(0, 21) != 'admin/structure/views') {
+          return true;
+        }
+
+        element_settings.wrapper = 'views-live-preview';
+        element_settings.method = 'html';
+        element_settings.event = 'click';
+
+        var base = $(this).attr('id');
+        Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
+      });
 
       if (!this.collapseReplaced && Drupal.collapseScrollIntoView) {
         this.collapseReplaced = true;
         Drupal.collapseScrollIntoView = function (node) {
-          for (var $parent = $(node); $parent.get(0) != document && $parent.length != 0; $parent = $parent.parent()) {
+          for (var $parent = $(node); $parent.get(0) != document && $parent.size() != 0; $parent = $parent.parent()) {
             if ($parent.css('overflow') == 'scroll' || $parent.css('overflow') == 'auto') {
               if (Drupal.viewsUi.resizeModal) {
                 // If the modal is already at the max height, don't bother with

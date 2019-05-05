@@ -244,11 +244,9 @@
  *       'title' => t('Node'),
  *       'help' => t('Display the node with standard node view.'),
  *       'handler' => 'views_plugin_row_node_view',
- *       // Not necessary for most modules.
- *       'path' => drupal_get_path('module', 'views') . '/modules/node',
+ *       'path' => drupal_get_path('module', 'views') . '/modules/node', // not necessary for most modules
  *       'theme' => 'views_view_row_node',
- *       // Only works with 'node' as base.
- *       'base' => array('node'),
+ *       'base' => array('node'), // only works with 'node' as base.
  *       'uses options' => TRUE,
  *       'type' => 'normal',
  *     ),
@@ -294,12 +292,12 @@
 /**
  * Describes data tables (or the equivalent) to Views.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be auto
- * loaded. MODULENAME.views.inc must be in the directory specified by the 'path'
- * key returned by MODULENAME_views_api(), or the same directory as the .module
- * file, if 'path' is unspecified.
+ * This hook should be placed in MODULENAME.views.inc and it will be
+ * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
+ * 'path' key returned by MODULENAME_views_api(), or the same directory as the
+ * .module file, if 'path' is unspecified.
  *
- * @return array
+ * @return
  *   An associative array describing the data structure. Primary key is the
  *   name used internally by Views for the table(s) – usually the actual table
  *   name. The values for the key entries are described in detail below.
@@ -309,15 +307,17 @@ function hook_views_data() {
   // table:
   //
   // CREATE TABLE example_table (
-  //   nid INT(11) NOT NULL COMMENT 'Primary key; refers to {node}.nid.',
+  //   nid INT(11) NOT NULL         COMMENT 'Primary key; refers to {node}.nid.',
   //   plain_text_field VARCHAR(32) COMMENT 'Just a plain text field.',
-  //   numeric_field INT(11) COMMENT 'Just a numeric field.',
-  //   boolean_field INT(1) COMMENT 'Just an on/off field.',
-  //   timestamp_field INT(8) COMMENT 'Just a timestamp field.',
+  //   numeric_field INT(11)        COMMENT 'Just a numeric field.',
+  //   boolean_field INT(1)         COMMENT 'Just an on/off field.',
+  //   timestamp_field INT(8)       COMMENT 'Just a timestamp field.',
   //   PRIMARY KEY(nid)
   // );
+
   // First, the entry $data['example_table']['table'] describes properties of
   // the actual table – not its content.
+
   // The 'group' index will be used as a prefix in the UI for any of this
   // table's fields, sort criteria, etc. so it's easy to tell where they came
   // from.
@@ -328,8 +328,7 @@ function hook_views_data() {
   // is not very useful for this table, as it isn't really a distinct object of
   // its own, but it makes a good example.
   $data['example_table']['table']['base'] = array(
-    // This is the identifier field for the view.
-    'field' => 'nid',
+    'field' => 'nid', // This is the identifier field for the view.
     'title' => t('Example table'),
     'help' => t('Example table contains example content and can be related to nodes.'),
     'weight' => -10,
@@ -340,10 +339,10 @@ function hook_views_data() {
   // table, the fields are automatically available.
   $data['example_table']['table']['join'] = array(
     // Index this array by the table name to which this table refers.
+    // 'left_field' is the primary key in the referenced table.
+    // 'field' is the foreign key in this table.
     'node' => array(
-      // The primary key in the referenced table.
       'left_field' => 'nid',
-      // The foreign key in this table.
       'field' => 'nid',
     ),
   );
@@ -363,6 +362,7 @@ function hook_views_data() {
   //     footer or as no result behaviour.
   //
   // The handler descriptions are described with examples below.
+
   // Node ID table field.
   $data['example_table']['nid'] = array(
     'title' => t('Example content'),
@@ -372,10 +372,8 @@ function hook_views_data() {
     // other direction, use hook_views_data_alter(), or use the 'implicit' join
     // method described above.
     'relationship' => array(
-      // The name of the table to join with.
-      'base' => 'node',
-      // The name of the field on the joined table.
-      'base field' => 'nid',
+      'base' => 'node', // The name of the table to join with.
+      'base field' => 'nid', // The name of the field on the joined table.
       // 'field' => 'nid' -- see hook_views_data_alter(); not needed here.
       'handler' => 'views_handler_relationship',
       'label' => t('Default label for the relationship'),
@@ -390,8 +388,7 @@ function hook_views_data() {
     'help' => t('Just a plain text field.'),
     'field' => array(
       'handler' => 'views_handler_field',
-      // This is use by the table display plugin.
-      'click sortable' => TRUE,
+      'click sortable' => TRUE, // This is use by the table display plugin.
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -411,7 +408,7 @@ function hook_views_data() {
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
-    ),
+     ),
     'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
@@ -430,7 +427,7 @@ function hook_views_data() {
     ),
     'filter' => array(
       'handler' => 'views_handler_filter_boolean_operator',
-      // Note that you can override the field-wide label.
+      // Note that you can override the field-wide label:
       'label' => t('Published'),
       // This setting is used by the boolean filter handler, as possible option.
       'type' => 'yes-no',
@@ -471,7 +468,7 @@ function hook_views_data() {
  * 'path' key returned by MODULENAME_views_api(), or the same directory as the
  * .module file, if 'path' is unspecified.
  *
- * @param array $data
+ * @param $data
  *   An array of all Views data, passed by reference. See hook_views_data() for
  *   structure.
  *
@@ -503,12 +500,9 @@ function hook_views_data_alter(&$data) {
     'title' => t('Example relationship'),
     'help' => t('Example help'),
     'relationship' => array(
-      // Table we're joining to.
-      'base' => 'example_table',
-      // Field on the joined table.
-      'base field' => 'eid',
-      // Real field name on the 'foo' table.
-      'field' => 'fid',
+      'base' => 'example_table', // Table we're joining to.
+      'base field' => 'eid', // Field on the joined table.
+      'field' => 'fid', // Real field name on the 'foo' table.
       'handler' => 'views_handler_relationship',
       'label' => t('Default label for relationship'),
       'title' => t('Title seen when adding relationship'),
@@ -522,26 +516,26 @@ function hook_views_data_alter(&$data) {
 /**
  * Override the default data for a Field API field.
  *
- * Field module's Implements hook_views_data() invokes this for each
+ * Field module's implementation of hook_views_data() invokes this for each
  * field in the module that defines the field type (as declared in the field
  * array). It is not invoked in other modules.
  *
  * If no hook implementation exists, hook_views_data() falls back to
  * field_views_field_default_views_data().
  *
- * @param array $field
- *   A field definition array, as returned by field_info_fields().
- *
- * @return array
- *   An array of views data, in the same format as the return value of
- *   hook_views_data().
- *
  * @see field_views_data()
  * @see hook_field_views_data_alter()
  * @see hook_field_views_data_views_data_alter()
+ *
+ * @param $field
+ *  A field definition array, as returned by field_info_fields().
+ *
+ * @return
+ *  An array of views data, in the same format as the return value of
+ *  hook_views_data().
  */
 function hook_field_views_data($field) {
-  return array();
+
 }
 
 /**
@@ -551,13 +545,13 @@ function hook_field_views_data($field) {
  * the field, and therefore may be used to alter the default data that
  * field_views_field_default_views_data() supplies for the field.
  *
- * @param array $result
- *   An array of views table data provided for a single field. This has the same
- *   format as the return value of hook_views_data().
- * @param array $field
- *   A field definition array, as returned by field_info_fields().
- * @param string $module
- *   The module that defines the field type.
+ * @param $result
+ *  An array of views table data provided for a single field. This has the same
+ *  format as the return value of hook_views_data().
+ * @param $field
+ *  A field definition array, as returned by field_info_fields().
+ * @param $module
+ *  The module that defines the field type.
  *
  * @see field_views_data()
  * @see hook_field_views_data()
@@ -570,7 +564,7 @@ function hook_field_views_data_alter(&$result, $field, $module) {
 /**
  * Alter the views data on a per field basis.
  *
- * Field module's Implements hook_views_data_alter() invokes this for
+ * Field module's implementation of hook_views_data_alter() invokes this for
  * each field in the module that defines the field type (as declared in the
  * field array). It is not invoked in other modules.
  *
@@ -603,7 +597,7 @@ function hook_field_views_data_views_data_alter(&$data, $field) {
  * .module file, if 'path' is unspecified. All plugin files need to be
  * referenced in MODULENAME.info with the files[] directive.
  *
- * @return array
+ * @return
  *   An array on the form $plugins['PLUGIN TYPE']['PLUGIN NAME']. The plugin
  *   must be one of row, display, display_extender, style, argument default,
  *   argument validator, access, query, cache, pager, exposed_form or
@@ -625,8 +619,7 @@ function hook_field_views_data_views_data_alter(&$data, $field) {
  *       selectable in the ui, though on the api side they still exists.
  *     - uses options: Set to TRUE to denote that the plugin has an additional
  *       options form.
- *     - help: A short help text, wrapped in t() used as description on the
- *       plugin settings form.
+ *     - help: A short help text, wrapped in t() used as description on the plugin settings form.
  *     - help topic: The name of an entry by advanced help for the plugin.
  *     - theme: The name of a theme suggestion to use for the display.
  *     - js: An array with paths to js files that should be included for the
@@ -653,8 +646,8 @@ function hook_field_views_data_views_data_alter(&$data, $field) {
  *       should be added. Can for example be 'page' or 'block'. If you don't
  *       specify it there will be contextual links around the rendered view. If
  *       this is not set or regions have been specified, views will display an
- *       option to 'hide contextual links'. Use an empty array if you do not
- *       want this.
+ *       option to 'hide contextual links'. Use an empty array if you do not want
+ *       this.
  *     - uses hook menu: Set to TRUE to have the display included by
  *       views_menu_alter(). views_menu_alter executes then execute_hook_menu
  *       on the display object.
@@ -671,8 +664,8 @@ function hook_field_views_data_views_data_alter(&$data, $field) {
  *     - uses fields: Set to TRUE to have the style plugin accept field
  *       handlers.
  *     - uses grouping: Set to TRUE to allow the grouping settings for rows.
- *     - even empty: May have the value 'even empty' to tell Views that the
- *       style should be rendered even if there are no results.
+ *     - even empty: May have the value 'even empty' to tell Views that the style
+ *       should be rendered even if there are no results.
  *
  *   - Used by row plugins:
  *     - uses fields: Set to TRUE to have the row plugin accept field handlers.
@@ -689,14 +682,12 @@ function hook_views_plugins() {
   );
 
   return array(
-    // This just tells our themes are elsewhere.
-    'module' => 'views',
+    'module' => 'views', // This just tells our themes are elsewhere.
     'argument validator' => array(
       'taxonomy_term' => array(
         'title' => t('Taxonomy term'),
         'handler' => 'views_plugin_argument_validate_taxonomy_term',
-        // Declaring path explicitly not necessary for most modules.
-        'path' => drupal_get_path('module', 'views') . '/modules/taxonomy',
+        'path' => drupal_get_path('module', 'views') . '/modules/taxonomy', // not necessary for most modules
       ),
     ),
     'argument default' => array(
@@ -721,68 +712,12 @@ function hook_views_plugins_alter(&$plugins) {
 }
 
 /**
- * Alter existing plugin option definitions.
- *
- * This can be used to edit default or add new option definitions to existing
- * plugins. The reason for doing this is that only overriding the relevent form
- * with hook_form_alter() is insufficent because submitted form values will be
- * ignored if they haven't been declared as an available option.
- *
- * An alternative approach you could also take is to extend each plugin
- * individually. However if your goal is to override many, or even all plugins,
- * this results in a lot of additional code and files. This makes it a lot more
- * troublesome to maintain the codebase, as well as interoperability with other
- * modules.
- *
- * @param array $options
- *  The option definitions to be altered.
- * @param $plugin
- *  A views object of the plugin where the default options are defined.
- *
- * @see views_object::option_definition()
- * @see hook_views_handler_option_definition_alter()
- * @see hook_form_alter()
- */
-function hook_views_plugin_option_definition_alter(&$options, $plugin) {
-  // Add a new option definition.
-  $options['option_name'] = array('default' => '');
-}
-
-/**
- * Alter existing handler option definitions.
- *
- * This can be used to edit default or add new option definitions to existing
- * handers. The reason for doing this is that only overriding the relevent form
- * with hook_form_alter() is insufficent because submitted form values will be
- * ignored if they haven't been declared as an available option.
- *
- * An alternative approach you could also take is to extend each handler
- * individually. However if your goal is to override many, or even all handlers,
- * this results in a lot of additional code and files. This makes it a lot more
- * troublesome to maintain the codebase, as well as interoperability with other
- * modules.
- *
- * @param array $options
- *  The option definitions to be altered.
- * @param $handler
- *  A views object of the handler where the default options are defined.
- *
- * @see views_handler::option_definition()
- * @see hook_views_plugin_option_definition_alter()
- * @see hook_form_alter()
- */
-function hook_views_handler_option_definition_alter(&$options, $handler) {
-  // Add a new option definition.
-  $options['option_name'] = array('default' => '');
-}
-
-/**
  * Register View API information.
  *
  * This is required for your module to have its include files loaded; for
  * example, when implementing hook_views_default_views().
  *
- * @return array
+ * @return
  *   An array with the following possible keys:
  *   - api: (required) The version of the Views API the module implements.
  *   - path: (optional) If includes are stored somewhere other than within the
@@ -801,9 +736,8 @@ function hook_views_api() {
 }
 
 /**
- * Allows modules to provide their own views.
- *
- * These can either be used as-is or as a "starter" for users to build from.
+ * This hook allows modules to provide their own views which can either be used
+ * as-is or as a "starter" for users to build from.
  *
  * This hook should be placed in MODULENAME.views_default.inc and it will be
  * auto-loaded. MODULENAME.views_default.inc must be in the directory specified
@@ -813,7 +747,7 @@ function hook_views_api() {
  * The $view->disabled boolean flag indicates whether the View should be
  * enabled (FALSE) or disabled (TRUE) by default.
  *
- * @return array
+ * @return
  *   An associative array containing the structures of views, as generated from
  *   the Export tab, keyed by the view name. A best practice is to go through
  *   and add t() to all title and label strings, with the exception of menu
@@ -821,7 +755,7 @@ function hook_views_api() {
  */
 function hook_views_default_views() {
   // Begin copy and paste of output from the Export tab of a view.
-  $view = new view();
+  $view = new view;
   $view->name = 'frontpage';
   $view->description = 'Emulates the default Drupal front page; you may set the default home page path to this view to make it your front page.';
   $view->tag = 'default';
@@ -885,11 +819,13 @@ function hook_views_default_views() {
   $handler->display->display_options['sitename_title'] = '1';
 
   // (Export ends here.)
+
   // Add view to list of views to provide.
   $views[$view->name] = $view;
 
-  // Repeat all of the above for each view the module should provide. At the
-  // end, return array of default views.
+  // ...Repeat all of the above for each view the module should provide.
+
+  // At the end, return array of default views.
   return $views;
 }
 
@@ -919,10 +855,9 @@ function hook_views_default_views_alter(&$views) {
 /**
  * Performs replacements in the query before being performed.
  *
- * @param object $view
+ * @param $view
  *   The View being executed.
- *
- * @return array
+ * @return
  *   An array with keys being the strings to replace, and the values the strings
  *   to replace them with. The strings to replace are often surrounded with
  *   '***', as illustrated in the example implementation.
@@ -939,11 +874,10 @@ function hook_views_query_substitutions($view) {
 }
 
 /**
- * This hook is called to get a list of placeholders and their substitutions.
+ * This hook is called to get a list of placeholders and their substitutions,
+ * used when preprocessing a View with form elements.
  *
- * Used when preprocessing a View with form elements.
- *
- * @return array
+ * @return
  *   An array with keys being the strings to replace, and the values the strings
  *   to replace them with.
  */
@@ -954,31 +888,16 @@ function hook_views_form_substitutions() {
 }
 
 /**
- * Allows altering a view at the very beginning of processing a preview.
- *
- * Occurs before anything is done.
- *
- * This hook is only triggered when the one of the following are invoked:
- * - $view->execute_display()
- * - $view->preview()
- *
- * As such code placed in this hook will not fire during:
- * - $view->build()
- * - $view->execute()
- * - $view->render()
- *
- * Likely, hook_views_pre_build() or hook_views_pre_execute() are much better
- * choices for most use cases since they are always invoked, not just when
- * previewing a display.
+ * Allows altering a view at the very beginning of views processing, before
+ * anything is done.
  *
  * Adding output to the view can be accomplished by placing text on
  * $view->attachment_before and $view->attachment_after.
- *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
- * @param string $display_id
+ * @param $display_id
  *   The machine name of the active display.
- * @param array $args
+ * @param $args
  *   An array of arguments passed into the view.
  */
 function hook_views_pre_view(&$view, &$display_id, &$args) {
@@ -987,21 +906,21 @@ function hook_views_pre_view(&$view, &$display_id, &$args) {
   // (Note that this is not necessarily the best way to solve that task. Feel
   // free to contribute another example!)
   if (
-    $view->name == 'my_special_view'
-    && user_access('administer site configuration')
-    && $display_id == 'public_display'
+    $view->name == 'my_special_view' &&
+    user_access('administer site configuration') &&
+    $display_id == 'public_display'
   ) {
     $view->set_display('private_display');
   }
 }
 
 /**
- * Called after the display's pre_execute phase but before the build process.
+ * This hook is called right before the build process, but after displays
+ * are attached and the display performs its pre_execute phase.
  *
  * Adding output to the view can be accomplished by placing text on
  * $view->attachment_before and $view->attachment_after.
- *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
  */
 function hook_views_pre_build(&$view) {
@@ -1015,15 +934,12 @@ function hook_views_pre_build(&$view) {
 }
 
 /**
- * This hook is called right after the build process.
- *
- * The query is now fully built, but it has not yet been run through
- * db_rewrite_sql.
+ * This hook is called right after the build process. The query is now fully
+ * built, but it has not yet been run through db_rewrite_sql.
  *
  * Adding output to the view can be accomplished by placing text on
  * $view->attachment_before and $view->attachment_after.
- *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
  */
 function hook_views_post_build(&$view) {
@@ -1041,15 +957,12 @@ function hook_views_post_build(&$view) {
 }
 
 /**
- * This hook is called right before the execute process.
- *
- * The query is now fully built, but it has not yet been run through
- * db_rewrite_sql.
+ * This hook is called right before the execute process. The query is now fully
+ * built, but it has not yet been run through db_rewrite_sql.
  *
  * Adding output to the view can be accomplished by placing text on
  * $view->attachment_before and $view->attachment_after.
- *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
  */
 function hook_views_pre_execute(&$view) {
@@ -1063,16 +976,14 @@ function hook_views_pre_execute(&$view) {
 }
 
 /**
- * This hook is called right after the execute process.
- *
- * The query has been executed, but the pre_render() phase has not yet happened
- * for handlers.
+ * This hook is called right after the execute process. The query has
+ * been executed, but the pre_render() phase has not yet happened for
+ * handlers.
  *
  * Adding output to the view can be accomplished by placing text on
- * $view->attachment_before and $view->attachment_after. Altering the content
- * can be achieved by editing the items of $view->result.
- *
- * @param object $view
+ * $view->attachment_before and $view->attachment_after. Altering the
+ * content can be achieved by editing the items of $view->result.
+ * @param $view
  *   The view object about to be processed.
  */
 function hook_views_post_execute(&$view) {
@@ -1086,18 +997,16 @@ function hook_views_post_execute(&$view) {
 }
 
 /**
- * This hook is called right before the render process.
- *
- * The query has been executed, and the pre_render() phase has already happened
- * for handlers, so all data should be available.
+ * This hook is called right before the render process. The query has been
+ * executed, and the pre_render() phase has already happened for handlers, so
+ * all data should be available.
  *
  * Adding output to the view can be accomplished by placing text on
  * $view->attachment_before and $view->attachment_after. Altering the content
  * can be achieved by editing the items of $view->result.
  *
  * This hook can be utilized by themes.
- *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
  */
 function hook_views_pre_render(&$view) {
@@ -1128,12 +1037,11 @@ function hook_views_pre_render(&$view) {
  * so all ids used in the query should be discoverable.
  *
  * This hook can be utilized by themes.
- *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
- * @param string $output
+ * @param $output
  *   A flat string with the rendered output of the view.
- * @param array $cache
+ * @param $cache
  *   The cache settings.
  */
 function hook_views_post_render(&$view, &$output, &$cache) {
@@ -1153,11 +1061,10 @@ function hook_views_post_render(&$view, &$output, &$cache) {
  * 'path' key returned by MODULENAME_views_api(), or the same directory as the
  * .module file, if 'path' is unspecified.
  *
- * @param object $view
+ * @param $view
  *   The view object about to be processed.
- * @param object $query
+ * @param $query
  *   An object describing the query.
- *
  * @see hook_views_query_substitutions()
  */
 function hook_views_query_alter(&$view, &$query) {
@@ -1183,9 +1090,8 @@ function hook_views_query_alter(&$view, &$query) {
 }
 
 /**
- * Alter the information box that (optionally) appears with a view preview.
- *
- * Includes query and performance statistics.
+ * Alter the information box that (optionally) appears with a view preview,
+ * including query and performance statistics.
  *
  * This hook should be placed in MODULENAME.views.inc and it will be
  * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
@@ -1195,15 +1101,14 @@ function hook_views_query_alter(&$view, &$query) {
  * Warning: $view is not a reference in PHP4 and cannot be modified here. But it
  * IS a reference in PHP5, and can be modified. Please be careful with it.
  *
- * @param array $rows
+ * @param $rows
  *   An associative array with two keys:
  *   - query: An array of rows suitable for theme('table'), containing
  *     information about the query and the display title and path.
  *   - statistics: An array of rows suitable for theme('table'), containing
  *     performance statistics.
- * @param object $view
+ * @param $view
  *   The view object.
- *
  * @see theme_table()
  */
 function hook_views_preview_info_alter(&$rows, $view) {
@@ -1216,16 +1121,15 @@ function hook_views_preview_info_alter(&$rows, $view) {
 }
 
 /**
- * This hooks allows to alter the links at the top of the view edit form.
+ * This hooks allows to alter the links at the top of the view edit form. Some
+ * modules might want to add links there.
  *
- * Some modules might want to add links there.
- *
- * @param array $links
+ * @param $links
  *   An array of links which will be displayed at the top of the view edit form.
  *   Each entry should be on a form suitable for theme('link').
- * @param object $view
+ * @param view $view
  *   The full view object which is currently edited.
- * @param string $display_id
+ * @param $display_id
  *   The current display id which is edited. For example that's 'default' or
  *   'page_1'.
  */
@@ -1237,11 +1141,12 @@ function hook_views_ui_display_top_links_alter(&$links, $view, $display_id) {
 }
 
 /**
- * Allows altering the commands which are used on a views AJAX request.
+ * This hook allows to alter the commands which are used on a views ajax
+ * request.
  *
- * @param array $commands
- *   An array of ajax commands.
- * @param object $view
+ * @param $commands
+ *   An array of ajax commands
+ * @param $view view
  *   The view which is requested.
  */
 function hook_views_ajax_data_alter(&$commands, $view) {
@@ -1260,12 +1165,9 @@ function hook_views_ajax_data_alter(&$commands, $view) {
  * This hook should fire whenever a view is enabled, disabled, created,
  * updated, or deleted.
  *
- * @param string $cid
- *   The cache identifier that is being cleared.
- *
  * @see views_invalidate_cache()
  */
-function hook_views_invalidate_cache($cid) {
+function hook_views_invalidate_cache() {
   cache_clear_all('views:*', 'cache_mymodule', TRUE);
 }
 

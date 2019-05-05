@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 $plugin = array(
   'schema' => 'ctools_access_ruleset',
   'access' => 'administer ctools access ruleset',
@@ -30,3 +26,4 @@ $plugin = array(
     ),
   ),
 );
+

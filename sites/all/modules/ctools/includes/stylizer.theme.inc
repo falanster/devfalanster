@@ -25,3 +25,4 @@ function ctools_stylizer_theme(&$theme) {
     'file' => 'includes/stylizer.inc',
   );
 }
+

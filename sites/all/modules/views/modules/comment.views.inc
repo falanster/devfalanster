@@ -10,12 +10,13 @@
 /**
  * Implements hook_views_data().
  */
+
 function comment_views_data() {
   $data['comments']['moved to'] = 'comment';
   $data['comment']['comment']['moved to'] = array('field_data_comment_body', 'comment_body');
   $data['comment']['comment']['field']['moved to'] = array('field_data_comment_body', 'comment_body');
-  // Define the base group of this table. Fields that don't have a group
-  // defined will go into this field by default.
+  // Define the base group of this table. Fields that don't
+  // have a group defined will go into this field by default.
   $data['comment']['table']['group']  = t('Comment');
 
   $data['comment']['table']['base'] = array(
@@ -35,8 +36,9 @@ function comment_views_data() {
   );
 
   // ----------------------------------------------------------------
-  // Fields.
-  // Subject.
+  // Fields
+
+  // subject
   $data['comment']['subject'] = array(
     'title' => t('Title'),
     'help' => t('The title of the comment.'),
@@ -55,7 +57,7 @@ function comment_views_data() {
     ),
   );
 
-  // Comment ID / 'cid'.
+  // cid
   $data['comment']['cid'] = array(
     'title' => t('ID'),
     'help' => t('The comment ID of the field'),
@@ -74,7 +76,7 @@ function comment_views_data() {
     ),
   );
 
-  // Username of the comment author.
+  // name (of comment author)
   $data['comment']['name'] = array(
     'title' => t('Author'),
     'help' => t("The name of the comment's author. Can be rendered as a link to the author's homepage."),
@@ -93,7 +95,7 @@ function comment_views_data() {
     ),
   );
 
-  // Homepage.
+  // homepage
   $data['comment']['homepage'] = array(
     'title' => t("Author's website"),
     'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
@@ -112,14 +114,14 @@ function comment_views_data() {
     ),
   );
 
-  // hostname.
+  // hostname
   $data['comment']['hostname'] = array(
     'title' => t('Hostname'),
     'help' => t('Hostname of user that posted the comment.'),
     'field' => array(
       'handler' => 'views_handler_field',
       'click sortable' => TRUE,
-    ),
+     ),
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -131,14 +133,14 @@ function comment_views_data() {
     ),
   );
 
-  // Email address.
+  // mail
   $data['comment']['mail'] = array(
     'title' => t('Mail'),
     'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
       'handler' => 'views_handler_field',
       'click sortable' => TRUE,
-    ),
+     ),
     'filter' => array(
       'handler' => 'views_handler_filter_string',
     ),
@@ -150,7 +152,7 @@ function comment_views_data() {
     ),
   );
 
-  // Created - when comment was posted.
+  // created (when comment was posted)
   $data['comment']['created'] = array(
     'title' => t('Post date'),
     'help' => t('Date and time of when the comment was created.'),
@@ -220,7 +222,7 @@ function comment_views_data() {
     ),
   );
 
-  // Language field.
+  // Language field
   if (module_exists('locale')) {
     $data['comment']['language'] = array(
       'title' => t('Language'),
@@ -242,7 +244,7 @@ function comment_views_data() {
   }
 
   $data['comments']['timestamp']['moved to'] = array('comment', 'changed');
-  // Changed (when comment was last updated).
+  // changed (when comment was last updated)
   $data['comment']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('Date and time of when the comment was last updated.'),
@@ -318,7 +320,7 @@ function comment_views_data() {
     ),
   );
 
-  // Status (approved or not).
+  // status (approved or not)
   $data['comment']['status'] = array(
     'title' => t('Approved'),
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
@@ -339,7 +341,7 @@ function comment_views_data() {
     ),
   );
 
-  // Link to view comment.
+  // link to view comment
   $data['comment']['view_comment'] = array(
     'field' => array(
       'title' => t('View link'),
@@ -348,7 +350,7 @@ function comment_views_data() {
     ),
   );
 
-  // Link to edit comment.
+  // link to edit comment
   $data['comment']['edit_comment'] = array(
     'field' => array(
       'title' => t('Edit link'),
@@ -357,7 +359,7 @@ function comment_views_data() {
     ),
   );
 
-  // Link to delete comment.
+  // link to delete comment
   $data['comment']['delete_comment'] = array(
     'field' => array(
       'title' => t('Delete link'),
@@ -366,7 +368,8 @@ function comment_views_data() {
     ),
   );
 
-  // Link to approve comment.
+
+  // link to approve comment
   $data['comment']['approve_comment'] = array(
     'field' => array(
       'title' => t('Approve link'),
@@ -375,7 +378,7 @@ function comment_views_data() {
     ),
   );
 
-  // Link to reply to comment.
+  // link to reply to comment
   $data['comment']['replyto_comment'] = array(
     'field' => array(
       'title' => t('Reply-to link'),
@@ -458,21 +461,22 @@ function comment_views_data() {
   );
 
   // ----------------------------------------------------------------------
-  // 'node_comment_statistics' table.
-  // Define the group.
+  // node_comment_statistics table
+
+  // define the group
   $data['node_comment_statistics']['table']['group']  = t('Content');
 
-  // Joins.
+  // joins
   $data['node_comment_statistics']['table']['join'] = array(
-    // ...to the node table.
+    //...to the node table
     'node' => array(
       'type' => 'INNER',
       'left_field' => 'nid',
       'field' => 'nid',
-    ),
+     ),
   );
 
-  // Timestamp of the last comment.
+  // last_comment_timestamp
   $data['node_comment_statistics']['last_comment_timestamp'] = array(
     'title' => t('Last comment time'),
     'help' => t('Date and time of when the last comment was posted.'),
@@ -488,7 +492,7 @@ function comment_views_data() {
     ),
   );
 
-  // Last comment author's username.
+  // last_comment_name (author's name)
   $data['node_comment_statistics']['last_comment_name'] = array(
     'title' => t("Last comment author"),
     'help' => t('The name of the author of the last posted comment.'),
@@ -503,7 +507,7 @@ function comment_views_data() {
     ),
   );
 
-  // Comment count.
+  // comment_count
   $data['node_comment_statistics']['comment_count'] = array(
     'title' => t('Comment count'),
     'help' => t('The number of comments a node has.'),
@@ -522,7 +526,7 @@ function comment_views_data() {
     ),
   );
 
-  // Timestamp of when the last comment update happened.
+  // last_comment_timestamp
   $data['node_comment_statistics']['last_updated'] = array(
     'title' => t('Updated/commented date'),
     'help' => t('The most recent of last comment posted or node updated time.'),
@@ -554,7 +558,7 @@ function comment_views_data() {
     ),
   );
 
-  // The user ID / 'uid' of the user who last posted a comment.
+  // last_comment_uid
   $data['node_comment_statistics']['last_comment_uid'] = array(
     'title' => t('Last comment uid'),
     'help' => t('The User ID of the author of the last comment of a node.'),
@@ -580,12 +584,11 @@ function comment_views_data() {
 }
 
 /**
- * Implements hook_views_data_alter() on behalf of comment.module.
- *
- * Add items to the node table that are relevant to comments.
+ * Use views_data_alter to add items to the node table that are
+ * relevant to comments.
  */
 function comment_views_data_alter(&$data) {
-  // New comments.
+  // new comments
   $data['node']['new_comments'] = array(
     'title' => t('New comments'),
     'help' => t('The number of new comments on the node.'),
@@ -603,7 +606,7 @@ function comment_views_data_alter(&$data) {
     ),
   );
 
-  // Comment status of the node.
+  // Comment status of the node
   $data['node']['comment'] = array(
     'title' => t('Comment status'),
     'help' => t('Whether comments are enabled or disabled on the node.'),
@@ -633,7 +636,7 @@ function comment_views_data_alter(&$data) {
       'field' => 'uid',
       'name table' => 'users',
       'name field' => 'name',
-      'handler' => 'views_handler_filter_comment_user_uid',
+      'handler' => 'views_handler_filter_comment_user_uid'
     ),
   );
 
@@ -649,6 +652,7 @@ function comment_views_data_alter(&$data) {
       'handler' => 'views_handler_relationship',
     ),
   );
+
 }
 
 /**
@@ -663,10 +667,8 @@ function comment_views_plugins() {
         'help' => t('Display the comment with standard comment view.'),
         'handler' => 'views_plugin_row_comment_view',
         'theme' => 'views_view_row_comment',
-        'path' => drupal_get_path('module', 'views') . '/modules/comment',
-        // Not necessary for most modules.
-        'base' => array('comment'),
-        // Only works with 'comment' as base.
+        'path' => drupal_get_path('module', 'views') . '/modules/comment', // not necessary for most modules
+        'base' => array('comment'), // only works with 'comment' as base.
         'uses options' => TRUE,
         'type' => 'normal',
         'help topic' => 'style-comment',
@@ -676,10 +678,8 @@ function comment_views_plugins() {
         'help' => t('Display the comment as RSS.'),
         'handler' => 'views_plugin_row_comment_rss',
         'theme' => 'views_view_row_rss',
-        'path' => drupal_get_path('module', 'views') . '/modules/comment',
-        // Not necessary for most modules.
-        'base' => array('comment'),
-        // Only works with 'comment' as base.
+        'path' => drupal_get_path('module', 'views') . '/modules/comment', // not necessary for most modules
+        'base' => array('comment'), // only works with 'comment' as base.
         'uses options' => TRUE,
         'type' => 'feed',
         'help topic' => 'style-comment-rss',
@@ -689,7 +689,7 @@ function comment_views_plugins() {
 }
 
 /**
- * Template helper for theme_views_view_row_comment.
+ * Template helper for theme_views_view_row_comment
  */
 function template_preprocess_views_view_row_comment(&$vars) {
   $options = $vars['options'];
@@ -701,9 +701,9 @@ function template_preprocess_views_view_row_comment(&$vars) {
   $node->view = &$view;
 
   $build = comment_view_multiple(array($comment->cid => $comment), $node, $plugin->options['view_mode']);
-  // If displaying the comments without links, remove them from the renderable
-  // array; there is no way to avoid building them in the first place.
-  // @see comment_build_content()
+  // If we're displaying the comments without links, remove them from the
+  // renderable array. There is no way to avoid building them in the first
+  // place (see comment_build_content()).
   if (empty($options['links'])) {
     foreach ($build as $cid => &$comment_build) {
       if (isset($comment_build['links'])) {

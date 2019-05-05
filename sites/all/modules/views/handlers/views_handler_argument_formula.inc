@@ -16,16 +16,11 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_formula extends views_handler_argument {
-
+  var $formula = NULL;
   /**
-   *
+   * Constructor
    */
-  public $formula = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function construct() {
+  function construct() {
     parent::construct();
 
     if (!empty($this->definition['formula'])) {
@@ -33,17 +28,14 @@ class views_handler_argument_formula extends views_handler_argument {
     }
   }
 
-  /**
-   *
-   */
-  public function get_formula() {
+  function get_formula() {
     return str_replace('***table***', $this->table_alias, $this->formula);
   }
 
   /**
    * Build the summary query based on a formula
    */
-  public function summary_query() {
+  function summary_query() {
     $this->ensure_my_table();
     // Now that our table is secure, get our formula.
     $formula = $this->get_formula();
@@ -58,15 +50,14 @@ class views_handler_argument_formula extends views_handler_argument {
   /**
    * Build the query based upon the formula
    */
-  public function query($group_by = FALSE) {
+  function query($group_by = FALSE) {
     $this->ensure_my_table();
     // Now that our table is secure, get our formula.
     $placeholder = $this->placeholder();
-    $formula = $this->get_formula() . ' = ' . $placeholder;
+    $formula = $this->get_formula() .' = ' . $placeholder;
     $placeholders = array(
       $placeholder => $this->argument,
     );
     $this->query->add_where(0, $formula, $placeholders, 'formula');
   }
-
 }

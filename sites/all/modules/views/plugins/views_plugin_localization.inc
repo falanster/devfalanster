@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_localization.
+ * Contains the base class for views localization plugins.
  */
 
 /**
@@ -17,29 +17,22 @@
  * The base plugin to handle localization of Views strings.
  */
 class views_plugin_localization extends views_plugin {
-
-  /**
-   * Store for exported strings.
-   */
-  public $export_strings = array();
-
-  /**
-   *
-   */
-  public $translate = TRUE;
+  // Store for exported strings
+  var $export_strings = array();
+  var $translate = TRUE;
 
   /**
    * Initialize the plugin.
    *
-   * @param view $view
+   * @param $view
    *   The view object.
    */
-  public function init(&$view) {
+  function init(&$view) {
     $this->view = &$view;
   }
 
   /**
-   * Translate a string / text with format.
+   * Translate a string / text with format
    *
    * The $source parameter is an array with the following elements:
    * - value, source string
@@ -47,15 +40,14 @@ class views_plugin_localization extends views_plugin {
    * - keys. An array of keys to identify the string. Generally constructed from
    *   view name, display_id, and a property, e.g., 'header'.
    *
-   * @param string $source
+   * @param $source
    *   Full data for the string to be translated.
    *
    * @return string
-   *   Translated string / text.
+   *   Translated string / text
    */
-  public function translate($source) {
-    // Allow other modules to make changes to the string before and after
-    // translation.
+  function translate($source) {
+    // Allow other modules to make changes to the string before and after translation
     $source['pre_process'] = $this->invoke_translation_process($source, 'pre');
     $source['translation'] = $this->translate_string($source['value'], $source['keys'], $source['format']);
     $source['post_process'] = $this->invoke_translation_process($source, 'post');
@@ -65,67 +57,64 @@ class views_plugin_localization extends views_plugin {
   /**
    * Translate a string.
    *
-   * @param string $string
+   * @param $string
    *   The string to be translated.
-   * @param array $keys
+   * @param $keys
    *   An array of keys to identify the string. Generally constructed from
-   *   view name, display_id, and a property, e.g. 'header'.
-   * @param string $format
+   *   view name, display_id, and a property, e.g., 'header'.
+   * @param $format
    *   The input format of the string. This is optional.
    */
-  public function translate_string($string, $keys = array(), $format = '') {}
+  function translate_string($string, $keys = array(), $format = '') {}
 
   /**
    * Save string source for translation.
    *
-   * @param string $source
+   * @param $source
    *   Full data for the string to be translated.
    */
-  public function save($source) {
-    // Allow other modules to make changes to the string before saving.
+  function save($source) {
+    // Allow other modules to make changes to the string before saving
     $source['pre_process'] = $this->invoke_translation_process($source, 'pre');
     $this->save_string($source['value'], $source['keys'], isset($source['format']) ? $source['format'] : '');
   }
 
   /**
-   * Save a string for translation.
+   * Save a string for translation
    *
-   * @param string $string
+   * @param $string
    *   The string to be translated.
-   * @param array $keys
+   * @param $keys
    *   An array of keys to identify the string. Generally constructed from
    *   view name, display_id, and a property, e.g., 'header'.
-   * @param string $format
+   * @param $format
    *   The input format of the string. This is optional.
    */
-  public function save_string($string, $keys = array(), $format = '') {}
+  function save_string($string, $keys = array(), $format = '') {}
 
   /**
    * Delete a string.
    *
-   * @param string $source
+   * @param $source
    *   Full data for the string to be translated.
    */
-  public function delete($source) {
-  }
+  function delete($source) { }
 
   /**
    * Collect strings to be exported to code.
    *
-   * @param string $source
+   * @param $source
    *   Full data for the string to be translated.
    */
-  public function export($source) {
-  }
+  function export($source) { }
 
   /**
    * Render any collected exported strings to code.
    *
-   * @param string $indent
+   * @param $indent
    *   An optional indentation for prettifying nested code.
    */
-  public function export_render($indent = '  ') {
-  }
+  function export_render($indent = '  ') { }
 
   /**
    * Invoke hook_translation_pre_process() or hook_translation_post_process().
@@ -133,7 +122,7 @@ class views_plugin_localization extends views_plugin {
    * Like node_invoke_nodeapi(), this function is needed to enable both passing
    * by reference and fetching return values.
    */
-  public function invoke_translation_process(&$value, $op) {
+  function invoke_translation_process(&$value, $op) {
     $return = array();
     $hook = 'translation_' . $op . '_process';
     foreach (module_implements($hook) as $module) {
@@ -146,10 +135,7 @@ class views_plugin_localization extends views_plugin {
     return $return;
   }
 
-  /**
-   *
-   */
-  public function process_locale_strings($op) {
+  function process_locale_strings($op) {
     $this->view->init_display();
 
     foreach ($this->view->display as $display_id => $display) {
@@ -168,11 +154,9 @@ class views_plugin_localization extends views_plugin {
           case 'save':
             $this->save($data);
             break;
-
           case 'delete':
             $this->delete($data);
             break;
-
           case 'export':
             $this->export($data);
             break;
@@ -180,7 +164,6 @@ class views_plugin_localization extends views_plugin {
       }
     }
   }
-
 }
 
 /**

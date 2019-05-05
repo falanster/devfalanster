@@ -1,12 +1,7 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag module to ensure the bulk revert functionality works.
- */
-
-/**
- * Tests for the Metatag module to ensure the bulk revert functionality works.
+ * Tests for the Metatag module to ensure the bulk revert functionality works
  */
 class MetatagBulkRevertTest extends MetatagTestHelper {
 

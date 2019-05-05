@@ -11,32 +11,15 @@
  * @ingroup views_cache_plugins
  */
 class views_plugin_cache_none extends views_plugin_cache {
+  function cache_start() { /* do nothing */ }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_start() {
-    // Do nothing.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function summary_title() {
+  function summary_title() {
     return t('None');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_get($type) {
+  function cache_get($type) {
     return FALSE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cache_set($type) {
-  }
-
+  function cache_set($type) { }
 }

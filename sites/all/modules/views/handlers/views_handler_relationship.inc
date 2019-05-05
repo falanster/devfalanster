@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_relationship.
+ * Views' relationship handlers.
  */
 
 /**
@@ -12,11 +12,12 @@
  */
 
 /**
- * Relationship handler, allows a new version of the primary table to be linked.
+ * Simple relationship handler that allows a new version of the primary table
+ * to be linked in.
  *
- * The base relationship handler can only handle a single join. Some
- * relationships are more complex and might require chains of joins; for those,
- * you must use a custom relationship handler.
+ * The base relationship handler can only handle a single join. Some relationships
+ * are more complex and might require chains of joins; for those, you must
+ * utilize a custom relationship handler.
  *
  * Definition items:
  * - base: The new base table this relationship will be adding. This does not
@@ -35,18 +36,18 @@
  * @ingroup views_relationship_handlers
  */
 class views_handler_relationship extends views_handler {
-
   /**
-   * Let relationships live on tables other than the table they operate on.
+   * Init handler to let relationships live on tables other than
+   * the table they operate on.
    */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
     if (isset($this->definition['relationship table'])) {
       $this->table = $this->definition['relationship table'];
     }
     if (isset($this->definition['relationship field'])) {
-      // Set both real_field and field so custom handler can rely on the old
-      // field value.
+      // Set both real_field and field so custom handler
+      // can rely on the old field value.
       $this->real_field = $this->field = $this->definition['relationship field'];
     }
   }
@@ -54,22 +55,18 @@ class views_handler_relationship extends views_handler {
   /**
    * Get this field's label.
    */
-  public function label() {
+  function label() {
     if (!isset($this->options['label'])) {
       return $this->ui_name();
     }
     return $this->options['label'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
 
-    // Relationships definitions should define a default label, but if they
-    // aren't get another default value.
+    // Relationships definitions should define a default label, but if they aren't get another default value.
     if (!empty($this->definition['label'])) {
       $label = $this->definition['label'];
     }
@@ -84,9 +81,10 @@ class views_handler_relationship extends views_handler {
   }
 
   /**
-   * Provide the label widget that all fields should have.
+   * Default options form that provides the label widget that all fields
+   * should have.
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['label'] = array(
       '#type' => 'textfield',
@@ -107,7 +105,7 @@ class views_handler_relationship extends views_handler {
   /**
    * Called to implement a relationship in a query.
    */
-  public function query() {
+  function query() {
     // Figure out what base table this relationship brings to the party.
     $table_data = views_fetch_data($this->definition['base']);
     $base_field = empty($this->definition['base field']) ? $table_data['table']['base']['field'] : $this->definition['base field'];
@@ -128,7 +126,7 @@ class views_handler_relationship extends views_handler {
     }
 
     if (!empty($def['join_handler']) && class_exists($def['join_handler'])) {
-      $join = new $def['join_handler']();
+      $join = new $def['join_handler'];
     }
     else {
       $join = new views_join();
@@ -139,7 +137,7 @@ class views_handler_relationship extends views_handler {
     $join->construct();
     $join->adjusted = TRUE;
 
-    // Use a short alias for this.
+    // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
     $this->alias = $this->query->add_relationship($alias, $join, $this->definition['base'], $this->relationship);
@@ -154,10 +152,9 @@ class views_handler_relationship extends views_handler {
   /**
    * You can't groupby a relationship.
    */
-  public function use_group_by() {
+  function use_group_by() {
     return FALSE;
   }
-
 }
 
 /**
@@ -166,44 +163,22 @@ class views_handler_relationship extends views_handler {
  * @ingroup views_relationship_handlers
  */
 class views_handler_relationship_broken extends views_handler_relationship {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function ui_name($short = FALSE) {
+  function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function ensure_my_table() {
-    // No table to ensure!
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
-    // No query to run.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function ensure_my_table() { /* No table to ensure! */ }
+  function query() { /* No query to run */ }
+  function options_form(&$form, &$form_state) {
     $form['markup'] = array(
       '#markup' => '<div class="form-item description">' . t('The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item.') . '</div>',
     );
   }
 
   /**
-   * {@inheritdoc}
+   * Determine if the handler is considered 'broken'
    */
-  public function broken() {
-    return TRUE;
-  }
-
+  function broken() { return TRUE; }
 }
 
 /**

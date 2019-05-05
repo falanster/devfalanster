@@ -395,7 +395,7 @@ function ctools_context_ajax_item_add($mechanism = NULL, $type = NULL, $cache_ke
   if (!empty($form_state['cancel'])) {
     $output = array(ctools_modal_command_dismiss());
   }
-  elseif (!empty($form_state['complete'])) {
+  else if (!empty($form_state['complete'])) {
     // Successful submit -- move temporary data to location.
 
     // Create a reference to the place our context lives. Since this is fairly
@@ -580,7 +580,7 @@ function ctools_context_ajax_item_edit($mechanism = NULL, $type = NULL, $cache_k
   if (!empty($form_state['cancel'])) {
     $output = array(ctools_modal_command_dismiss());
   }
-  elseif (!empty($form_state['complete'])) {
+  else if (!empty($form_state['complete'])) {
     // successful submit
     $ref[$position] = $conf;
     if (isset($object->temporary)) {
@@ -657,7 +657,7 @@ function ctools_context_get_defaults($plugin_definition, $object, $type) {
   if (isset($plugin_definition['defaults'])) {
     $defaults = $plugin_definition['defaults'];
   }
-  elseif (isset($subtype['defaults'])) {
+  else if (isset($subtype['defaults'])) {
     $defaults = $subtype['defaults'];
   }
 
@@ -667,7 +667,7 @@ function ctools_context_get_defaults($plugin_definition, $object, $type) {
         $conf += $settings;
       }
     }
-    elseif (is_array($defaults)) {
+    else if (is_array($defaults)) {
       $conf += $defaults;
     }
   }

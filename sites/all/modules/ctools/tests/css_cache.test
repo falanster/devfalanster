@@ -1,28 +1,30 @@
 <?php
+/**
+ * @file
+ * Tests the custom CSS cache handler.
+ */
 
 /**
  * Tests the custom CSS cache handler.
  */
-class CtoolsCSSObjectCache extends DrupalWebTestCase {
+class CtoolsObjectCache extends DrupalWebTestCase {
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
     return array(
-      'name' => 'CSS cache',
+      'name' => 'Ctools CSS cache',
       'description' => 'Tests the custom CSS cache handler.',
       'group' => 'ctools',
-      'dependencies' => array('ctools'),
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setUp(array $modules = array()) {
-    $modules[] = 'ctools';
-    parent::setUp($modules);
+  public function setUp() {
+    parent::setUp('ctools');
   }
 
   /**

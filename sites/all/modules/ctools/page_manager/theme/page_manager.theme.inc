@@ -27,10 +27,10 @@ function template_preprocess_page_manager_edit_page(&$vars) {
     $vars['locked'] = theme('page_manager_lock', array('page' => $page));
     $vars['changed'] = theme('page_manager_changed', array('text' => t('Locked'), 'description' => t('This page is being edited by another user and you cannot make changes to it.')));
   }
-  elseif (!empty($page->new)) {
+  else if (!empty($page->new)) {
     $vars['changed'] = theme('page_manager_changed', array('text' => t('New'), 'description' => t('This page is newly created and has not yet been saved to the database. It will not be available until you save it.')));
   }
-  elseif (!empty($page->changed)) {
+  else if (!empty($page->changed)) {
     $vars['changed'] = theme('page_manager_changed', array('text' => t('Changed'), 'description' => t('This page has been modified, but these modifications are not yet live. While modifying this page, it is locked from modification by other users.')));
   }
 
@@ -49,9 +49,9 @@ function template_preprocess_page_manager_edit_page(&$vars) {
  */
 function theme_page_manager_handler_rearrange($vars) {
   $form = &$vars['form'];
-  // Assemble the data for a table from everything in $form['handlers'].
+  // Assemble the data for a table from everything in $form['handlers']
   foreach (element_children($form['handlers']) as $id) {
-    // Provide a reference shortcut.
+    // provide a reference shortcut.
     $element = &$form['handlers'][$id];
     if (isset($element['title'])) {
       $row = array();

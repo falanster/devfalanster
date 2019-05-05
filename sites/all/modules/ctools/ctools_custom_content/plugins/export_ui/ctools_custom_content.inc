@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 $plugin = array(
   'schema' => 'ctools_custom_content',
   'access' => 'administer custom content',
@@ -21,3 +17,4 @@ $plugin = array(
 
   'handler' => 'ctools_custom_content_ui',
 );
+

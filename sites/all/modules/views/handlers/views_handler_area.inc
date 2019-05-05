@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_handler_area and views_handler_area_broken.
+ * Views area handlers.
  */
 
 /**
@@ -20,31 +20,29 @@
 class views_handler_area extends views_handler {
 
   /**
-   * {@inheritdoc}
+   * Overrides views_handler::init().
+   *
+   * Make sure that no result area handlers are set to be shown when the result
+   * is empty.
    */
-  public function init(&$view, &$options) {
+  function init(&$view, &$options) {
     parent::init($view, $options);
-    // Make sure that no result area handlers are set to be shown when the
-    // result is empty.
     if ($this->handler_type == 'empty') {
       $this->options['empty'] = TRUE;
     }
   }
 
   /**
-   * {@inheritdoc}
+   * Get this field's label.
    */
-  public function label() {
+  function label() {
     if (!isset($this->options['label'])) {
       return $this->ui_name();
     }
     return $this->options['label'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     $this->definition['field'] = !empty($this->definition['field']) ? $this->definition['field'] : '';
@@ -56,17 +54,17 @@ class views_handler_area extends views_handler {
   }
 
   /**
-   * Provide extra data to the administration form.
+   * Provide extra data to the administration form
    */
-  public function admin_summary() {
+  function admin_summary() {
     return $this->label();
   }
 
   /**
-   * Default options form that provides the label widget that all fields should
-   * have.
+   * Default options form that provides the label widget that all fields
+   * should have.
    */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['label'] = array(
       '#type' => 'textfield',
@@ -85,25 +83,23 @@ class views_handler_area extends views_handler {
   }
 
   /**
-   * Don't run a query.
+   * Don't run a query
    */
-  public function query() {
-  }
+  function query() { }
 
   /**
-   * Render the area.
+   * Render the area
    */
-  public function render($empty = FALSE) {
+  function render($empty = FALSE) {
     return '';
   }
 
   /**
    * Area handlers shouldn't have groupby.
    */
-  public function use_group_by() {
+  function use_group_by() {
     return FALSE;
   }
-
 }
 
 /**
@@ -112,39 +108,14 @@ class views_handler_area extends views_handler {
  * @ingroup views_area_handlers
  */
 class views_handler_area_broken extends views_handler_area {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function ui_name($short = FALSE) {
+  function ui_name($short = FALSE) {
     return t('Broken/missing handler');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function ensure_my_table() {
-    // No table to ensure!
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query($group_by = FALSE) {
-    // No query to run.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render($empty = FALSE) {
-    return '';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function ensure_my_table() { /* No table to ensure! */ }
+  function query($group_by = FALSE) { /* No query to run */ }
+  function render($empty = FALSE) { return ''; }
+  function options_form(&$form, &$form_state) {
     $form['markup'] = array(
       '#prefix' => '<div class="form-item description">',
       '#value' => t('The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item.'),
@@ -152,12 +123,9 @@ class views_handler_area_broken extends views_handler_area {
   }
 
   /**
-   * {@inheritdoc}
+   * Determine if the handler is considered 'broken'
    */
-  public function broken() {
-    return TRUE;
-  }
-
+  function broken() { return TRUE; }
 }
 
 /**

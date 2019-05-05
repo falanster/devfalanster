@@ -15,18 +15,16 @@ define('FILEFIELD_SOURCE_REMOTE_HINT_TEXT', 'http://example.com/files/file.png')
  * Implements hook_filefield_source_info().
  */
 function filefield_source_remote_info() {
-  if (filefield_sources_curl_enabled()) {
-    $source = array();
-    $source['remote'] = array(
-      'name'        => t('Remote URL textfield'),
-      'label'       => t('Remote URL'),
-      'description' => t('Download a file from a remote server.'),
-      'process'     => 'filefield_source_remote_process',
-      'value'       => 'filefield_source_remote_value',
-      'file'        => 'sources/remote.inc',
-    );
-    return $source;
-  }
+  $source = array();
+  $source['remote'] = array(
+    'name' => t('Remote URL textfield'),
+    'label' => t('Remote URL'),
+    'description' => t('Download a file from a remote server.'),
+    'process' => 'filefield_source_remote_process',
+    'value' => 'filefield_source_remote_value',
+    'file' => 'sources/remote.inc',
+  );
+  return $source;
 }
 
 /**
@@ -64,9 +62,6 @@ function filefield_source_remote_settings($op, $instance) {
   $return = array();
 
   // Add settings to the FileField widget form.
-  if (!filefield_sources_curl_enabled()) {
-    drupal_set_message(t('<strong>Filefield sources:</strong> remote plugin will be disabled without php-curl extension.'), 'warning');
-  }
 
   return $return;
 
@@ -149,9 +144,6 @@ function filefield_source_remote_value($element, &$item) {
     curl_setopt($ch, CURLOPT_HEADERFUNCTION, '_filefield_source_remote_parse_header');
     // Causes a warning if PHP safe mode is on.
     @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-    // Set a user agent - some hosts block requests unless header is present.
-    $curl_version = curl_version();
-    curl_setopt($ch,CURLOPT_USERAGENT,'PHP-curl/' . $curl_version['version']);
     curl_exec($ch);
     $info = curl_getinfo($ch);
     if ($info['http_code'] != 200) {
@@ -250,9 +242,6 @@ function filefield_source_remote_value($element, &$item) {
       curl_setopt($ch, CURLOPT_WRITEFUNCTION, 'filefield_source_remote_curl_write');
       // Causes a warning if PHP safe mode is on.
       @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-      // Set a user agent - some hosts block requests unless header is present.
-      $curl_version = curl_version();
-      curl_setopt($ch,CURLOPT_USERAGENT,'PHP-curl/' . $curl_version['version']);
       $transfer_success = curl_exec($ch);
       curl_close($ch);
     }
@@ -261,21 +250,19 @@ function filefield_source_remote_value($element, &$item) {
     }
 
     // Delete the temporary file.
-    if ($filepath !== $item['uri']) {
-      @unlink($filepath);
-    }
+    @unlink($filepath);
   }
 }
 
 /**
  * Parse cURL header and record the filename specified in Content-Disposition.
  */
-function _filefield_source_remote_parse_header($ch, $header) {
-  if (preg_match('/Content-Disposition:.*?filename="(.+?)"/i', $header, $matches)) {
+function _filefield_source_remote_parse_header(&$ch, $header) {
+  if (preg_match('/Content-Disposition:.*?filename="(.+?)"/', $header, $matches)) {
     // Content-Disposition: attachment; filename="FILE NAME HERE"
     _filefield_source_remote_filename($matches[1]);
   }
-  elseif (preg_match('/Content-Disposition:.*?filename=([^; ]+)/i', $header, $matches)) {
+  elseif (preg_match('/Content-Disposition:.*?filename=([^; ]+)/', $header, $matches)) {
     // Content-Disposition: attachment; filename=file.ext
     $uri = trim($matches[1]);
     _filefield_source_remote_filename($uri);
@@ -407,9 +394,3 @@ function theme_filefield_source_remote_element($variables) {
   return '<div class="filefield-source filefield-source-remote clear-block">' . drupal_render($element['url']) . '</div>';
 }
 
-/**
- * Check for CURL extension enabled.
- */
-function filefield_sources_curl_enabled() {
-  return function_exists('curl_version');
-}

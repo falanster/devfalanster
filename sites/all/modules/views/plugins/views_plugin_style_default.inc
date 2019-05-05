@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_style_default.
+ * Contains the default style plugin.
  */
 
 /**
@@ -12,19 +12,14 @@
  * @ingroup views_style_plugins
  */
 class views_plugin_style_default extends views_plugin_style {
-
   /**
-   * Set default options.
+   * Set default options
    */
-  public function options(&$options) {
+  function options(&$options) {
     parent::options($options);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
   }
-
 }

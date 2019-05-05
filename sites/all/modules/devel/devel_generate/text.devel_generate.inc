@@ -21,15 +21,14 @@ function _text_devel_generate($object, $field, $instance, $bundle) {
 
   if (empty($field['settings']['max_length'])) {
     // Textarea handling
-    $object_field['value'] = devel_create_content();
+    $object_field['value'] = devel_create_content($format);
     if ($instance['widget']['type'] == 'text_textarea_with_summary' && !empty($instance['display_summary'])) {
-      $object_field['summary'] = devel_create_content();
+      $object_field['summary'] = devel_create_content($format);
     }
   }
   else {
     // Textfield handling.
-    $max = ceil($field['settings']['max_length'] / 6);
-    $object_field['value'] = substr(devel_create_greeking(mt_rand(1, $max), FALSE), 0, $field['settings']['max_length']);
+    $object_field['value'] = substr(devel_create_greeking(mt_rand(1, $field['settings']['max_length'] / 6), FALSE), 0, $field['settings']['max_length']);
   }
   $object_field['format'] = $format;
   return $object_field;

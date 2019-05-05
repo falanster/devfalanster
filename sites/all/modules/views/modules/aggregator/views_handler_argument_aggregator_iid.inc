@@ -11,11 +11,10 @@
  * @ingroup views_argument_handlers
  */
 class views_handler_argument_aggregator_iid extends views_handler_argument_numeric {
-
   /**
    * Override the behavior of title(). Get the title of the category.
    */
-  public function title_query() {
+  function title_query() {
     $titles = array();
     $placeholders = implode(', ', array_fill(0, sizeof($this->value), '%d'));
 
@@ -28,5 +27,4 @@ class views_handler_argument_aggregator_iid extends views_handler_argument_numer
     }
     return $titles;
   }
-
 }

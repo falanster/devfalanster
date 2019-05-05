@@ -10,12 +10,8 @@
  *
  * @ingroup views_relationship_handlers
  */
-class views_handler_relationship_node_term_data extends views_handler_relationship {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init(&$view, &$options) {
+class views_handler_relationship_node_term_data extends views_handler_relationship  {
+  function init(&$view, &$options) {
     parent::init($view, $options);
 
     // Convert legacy vids option to machine name vocabularies.
@@ -29,19 +25,13 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['vocabularies'] = array('default' => array());
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $vocabularies = taxonomy_get_vocabularies();
     $options = array();
     foreach ($vocabularies as $voc) {
@@ -61,7 +51,7 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
   /**
    * Called to implement a relationship in a query.
    */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
 
     $def = $this->definition;
@@ -75,7 +65,7 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
       $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';
     }
     else {
-      // If vocabularies are supplied join a subselect instead.
+      // If vocabularies are supplied join a subselect instead
       $def['left_table'] = $this->table_alias;
       $def['left_field'] = 'nid';
       $def['field'] = 'nid';
@@ -99,10 +89,9 @@ class views_handler_relationship_node_term_data extends views_handler_relationsh
     $join->construct();
     $join->adjusted = TRUE;
 
-    // Use a short alias for this.
+    // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
     $this->alias = $this->query->add_relationship($alias, $join, 'taxonomy_term_data', $this->relationship);
   }
-
 }

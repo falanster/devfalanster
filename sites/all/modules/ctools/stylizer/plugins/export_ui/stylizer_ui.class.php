@@ -5,18 +5,16 @@
  */
 class stylizer_ui extends ctools_export_ui {
 
-
-  public function access($op, $item) {
+  function access($op, $item) {
     $access = parent::access($op, $item);
     if ($op == 'add' && $access && empty($this->base_types)) {
-      // Make sure there are base styles defined.
-      $access = FALSE;
+     // Make sure there are base styles defined.
+     $access = FALSE;
     }
     return $access;
   }
 
-
-  public function list_form(&$form, &$form_state) {
+  function list_form(&$form, &$form_state) {
     ctools_include('stylizer');
     parent::list_form($form, $form_state);
 
@@ -62,8 +60,7 @@ class stylizer_ui extends ctools_export_ui {
     );
   }
 
-
-  public function list_sort_options() {
+  function list_sort_options() {
     return array(
       'disabled' => t('Enabled, title'),
       'title' => t('Title'),
@@ -74,8 +71,7 @@ class stylizer_ui extends ctools_export_ui {
     );
   }
 
-
-  public function list_filter($form_state, $item) {
+  function list_filter($form_state, $item) {
     if (empty($form_state['style_plugins'][$item->settings['style_base']])) {
       $this->style_plugin = array(
         'name' => 'broken',
@@ -106,37 +102,30 @@ class stylizer_ui extends ctools_export_ui {
     return parent::list_filter($form_state, $item);
   }
 
-
-  public function list_search_fields() {
+  function list_search_fields() {
     $fields = parent::list_search_fields();
     $fields[] = 'plugin_title';
     return $fields;
   }
 
-
-  public function list_build_row($item, &$form_state, $operations) {
-    // Set up sorting.
+  function list_build_row($item, &$form_state, $operations) {
+    // Set up sorting
     switch ($form_state['values']['order']) {
       case 'disabled':
         $this->sorts[$item->name] = empty($item->disabled) . $item->admin_title;
         break;
-
       case 'title':
         $this->sorts[$item->name] = $item->admin_title;
         break;
-
       case 'name':
         $this->sorts[$item->name] = $item->name;
         break;
-
       case 'type':
         $this->sorts[$item->name] = $this->style_plugin['type'] . $item->admin_title;
         break;
-
       case 'base':
         $this->sorts[$item->name] = $this->style_plugin['title'] . $item->admin_title;
         break;
-
       case 'storage':
         $this->sorts[$item->name] = $item->type . $item->admin_title;
         break;
@@ -165,8 +154,7 @@ class stylizer_ui extends ctools_export_ui {
     );
   }
 
-
-  public function list_table_header() {
+  function list_table_header() {
     return array(
       array('data' => t('Type'), 'class' => array('ctools-export-ui-type')),
       array('data' => t('Name'), 'class' => array('ctools-export-ui-name')),
@@ -177,16 +165,14 @@ class stylizer_ui extends ctools_export_ui {
     );
   }
 
-
-  public function init($plugin) {
+  function init($plugin) {
     ctools_include('stylizer');
     $this->base_types = ctools_get_style_base_types();
 
     parent::init($plugin);
   }
 
-
-  public function get_wizard_info(&$form_state) {
+  function get_wizard_info(&$form_state) {
     $form_info = parent::get_wizard_info($form_state);
     ctools_include('stylizer');
 
@@ -233,7 +219,7 @@ class stylizer_ui extends ctools_export_ui {
    * The stylizer wizard stores its stuff in slightly different places, so
    * we have to find it and move it to the right place.
    */
-  public function store_stylizer_info(&$form_state) {
+  function store_stylizer_info(&$form_state) {
     /*
     foreach (array('name', 'admin_title', 'admin_description') as $key) {
       if (!empty($form_state['values'][$key])) {
@@ -249,14 +235,12 @@ class stylizer_ui extends ctools_export_ui {
     $form_state['item']->settings['name'] = $form_state['item']->name;
   }
 
-
-  public function edit_wizard_next(&$form_state) {
+  function edit_wizard_next(&$form_state) {
     $this->store_stylizer_info($form_state);
     parent::edit_wizard_next($form_state);
   }
 
-
-  public function edit_wizard_finish(&$form_state) {
+  function edit_wizard_finish(&$form_state) {
     // These might be stored by the stylizer wizard, so we should clear them.
     if (isset($form_state['settings']['old_settings'])) {
       unset($form_state['settings']['old_settings']);
@@ -265,8 +249,7 @@ class stylizer_ui extends ctools_export_ui {
     parent::edit_wizard_finish($form_state);
   }
 
-
-  public function edit_form_type(&$form, &$form_state) {
+  function edit_form_type(&$form, &$form_state) {
     foreach ($this->base_types as $module => $info) {
       foreach ($info as $key => $base_type) {
         $types[$module . '-' . $key] = $base_type['title'];
@@ -283,9 +266,7 @@ class stylizer_ui extends ctools_export_ui {
     );
   }
 
-
-  public function edit_form_type_submit(&$form, &$form_state) {
+  function edit_form_type_submit(&$form, &$form_state) {
     list($form_state['item']->style_module, $form_state['item']->style_type) = explode('-', $form_state['values']['type']);
   }
-
 }

@@ -174,5 +174,4 @@ class ViewsNodeRevisionRelationsTestCase extends ViewsSqlTest {
 
     return $view;
   }
-
 }

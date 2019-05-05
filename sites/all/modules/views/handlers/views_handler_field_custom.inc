@@ -11,18 +11,11 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_custom extends views_handler_field {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
-    // Do nothing -- to override the parent query.
+  function query() {
+    // do nothing -- to override the parent query.
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
 
     // Override the alter text option to always alter the text.
@@ -31,13 +24,10 @@ class views_handler_field_custom extends views_handler_field {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
-    // Remove the checkbox.
+    // Remove the checkbox
     unset($form['alter']['alter_text']);
     unset($form['alter']['text']['#dependency']);
     unset($form['alter']['text']['#process']);
@@ -46,14 +36,10 @@ class views_handler_field_custom extends views_handler_field {
     $form['#pre_render'][] = 'views_handler_field_custom_pre_render_move_text';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render($values) {
+  function render($values) {
     // Return the text, so the code never thinks the value is empty.
     return $this->options['alter']['text'];
   }
-
 }
 
 /**

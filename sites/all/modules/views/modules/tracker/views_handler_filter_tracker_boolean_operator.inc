@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Definition of views_handler_filter_tracker_boolean_operator.
+ * Contains views_handler_filter_tracker_boolean_operator
  */
 
-/**
- * Filter handler for boolean values to use = 1 instead of <> 0.
- */
+  /**
+   * Filter handler for boolean values to use = 1 instead of <> 0.
+   */
 class views_handler_filter_tracker_boolean_operator extends views_handler_filter_boolean_operator {
 
   /**
-   * {@inheritdoc}
+   * Overrides views_handler_filter_boolean_operator::query().
    */
-  public function query() {
+  function query() {
     $this->ensure_my_table();
     $where = "$this->table_alias.$this->real_field ";
     if (empty($this->value)) {

@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Plugin to provide an argument handler for a Taxonomy term.
+ *
+ * Plugin to provide an argument handler for a Taxonomy term
  */
 
 /**
@@ -11,7 +12,7 @@
  */
 $plugin = array(
   'title' => t("Taxonomy term: ID"),
-  // Keyword to use for %substitution.
+  // keyword to use for %substitution
   'keyword' => 'term',
   'description' => t('Creates a single taxonomy term from a taxonomy ID or taxonomy term name.'),
   'context' => 'ctools_term_context',
@@ -66,7 +67,7 @@ function ctools_term_context($arg = NULL, $conf = NULL, $empty = FALSE) {
             foreach ($vocabularies as $machine_name) {
               if ($potential->vocabulary_machine_name == $machine_name) {
                 $term = $potential;
-                // Break out of the foreaches AND the case.
+                // break out of the foreaches AND the case
                 break 3;
               }
             }
@@ -91,7 +92,7 @@ function ctools_term_context($arg = NULL, $conf = NULL, $empty = FALSE) {
 }
 
 /**
- * Settings form for the argument.
+ * Settings form for the argument
  */
 function ctools_term_settings_form(&$form, &$form_state, $conf) {
   // @todo allow synonym use like Views does.
@@ -136,9 +137,10 @@ function ctools_term_settings_form(&$form, &$form_state, $conf) {
     '#type' => 'checkbox',
     '#default_value' => !empty($conf['transform']),
   );
+//  return $form;
 }
 
-function ctools_term_settings_form_validate(&$form, &$form_state) {
+function ctools_term_settings_form_validate (&$form, &$form_state) {
   // Filter the selected vocabularies to avoid storing redundant data.
   $vocabularies = array_filter($form_state['values']['settings']['vocabularies']);
   form_set_value($form['settings']['vocabularies'], $vocabularies, $form_state);
@@ -155,7 +157,6 @@ function ctools_term_ctools_argument_placeholder($conf) {
         '#type' => 'textfield',
         '#description' => t('Enter a taxonomy term ID.'),
       );
-
     case 'term':
       return array(
         '#type' => 'textfield',
@@ -189,14 +190,13 @@ function ctools_term_breadcrumb($conf, $context) {
  *
  * @param array $vids
  *   Array of either vids.
- *
  * @return array
  *   A keyed array of machine names.
  */
 function _ctools_term_vocabulary_machine_name_convert($vids) {
   $vocabularies = taxonomy_vocabulary_load_multiple($vids);
   $return = array();
-  foreach ($vocabularies as $vocabulary) {
+  foreach($vocabularies as $vocabulary) {
     $return[$vocabulary->machine_name] = $vocabulary->machine_name;
   }
   return $return;

@@ -25,8 +25,7 @@ function views_ajax() {
 
     $commands = array();
 
-    // Remove all of this stuff from $_GET so it doesn't end up in pagers and
-    // tablesort URLs.
+    // Remove all of this stuff from $_GET so it doesn't end up in pagers and tablesort URLs.
     foreach (array('view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', 'ajax_html_ids', 'ajax_page_state') as $key) {
       if (isset($_GET[$key])) {
         unset($_GET[$key]);
@@ -47,11 +46,11 @@ function views_ajax() {
         $_GET['q'] = $path;
       }
 
-      // If page parameter is in the $_POST exclude it from $_GET, otherwise
-      // support views_ajax requests using $_GET.
+      // If page parameter is in the $_POST exclude it from $_GET,
+      // otherwise support views_ajax requests using $_GET.
       $exclude = isset($_POST['page']) ? array('page') : array();
-      // Add all $_POST data to $_GET as many things, such as tablesorts,
-      // exposed filters and paging assume $_GET.
+      // Add all $_POST data to $_GET as many things,
+      // such as tablesorts, exposed filters and paging assume $_GET.
       $_GET = $_POST + drupal_get_query_parameters($_GET, $exclude);
 
       // Overwrite the destination.
@@ -82,14 +81,14 @@ function views_ajax() {
 /**
  * Creates a Drupal AJAX 'viewsSetForm' command.
  *
- * @param string $output
+ * @param $output
  *   The form to display in the modal.
- * @param string $title
+ * @param $title
  *   The title.
- * @param string $url
+ * @param $url
  *   An optional URL.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_set_form($output, $title, $url = NULL) {
@@ -107,7 +106,7 @@ function views_ajax_command_set_form($output, $title, $url = NULL) {
 /**
  * Creates a Drupal AJAX 'viewsDismissForm' command.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_dismiss_form() {
@@ -120,8 +119,8 @@ function views_ajax_command_dismiss_form() {
 /**
  * Creates a Drupal AJAX 'viewsHilite' command.
  *
- * @param string $selector
- *   The selector to highlight.
+ * @param $selector
+ *   The selector to highlight
  *
  * @return
  *   An array suitable for use with the ajax_render() function.
@@ -136,14 +135,14 @@ function views_ajax_command_hilite($selector) {
 /**
  * Creates a Drupal AJAX 'addTab' command.
  *
- * @param string $id
+ * @param $id
  *   The DOM ID.
- * @param string $title
+ * @param $title
  *   The title.
- * @param string $body
+ * @param $body
  *   The body.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_add_tab($id, $title, $body) {
@@ -159,7 +158,7 @@ function views_ajax_command_add_tab($id, $title, $body) {
 /**
  * Scroll to top of the current view.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_scroll_top($selector) {
@@ -176,7 +175,7 @@ function views_ajax_command_scroll_top($selector) {
  * @param bool $changed
  *   Whether of not the view has changed.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_show_buttons($changed) {
@@ -190,7 +189,7 @@ function views_ajax_command_show_buttons($changed) {
 /**
  * Trigger the Views live preview.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_trigger_preview() {
@@ -203,7 +202,7 @@ function views_ajax_command_trigger_preview() {
 /**
  * Replace the page title.
  *
- * @return array
+ * @return
  *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_command_replace_title($title) {
@@ -217,12 +216,6 @@ function views_ajax_command_replace_title($title) {
 
 /**
  * Return an AJAX error.
- *
- * @param string $message
- *   The message to display.
- *
- * @return array
- *   An array suitable for use with the ajax_render() function.
  */
 function views_ajax_error($message) {
   $commands = array();
@@ -232,7 +225,6 @@ function views_ajax_error($message) {
 
 /**
  * Wrapper around drupal_build_form to handle some AJAX stuff automatically.
- *
  * This makes some assumptions about the client.
  */
 function views_ajax_form_wrapper($form_id, &$form_state) {
@@ -251,15 +243,15 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
   $form = drupal_build_form($form_id, $form_state);
   $output = drupal_render($form);
 
-  // These forms have the title built in, so set the title here.
+  // These forms have the title built in, so set the title here:
   if (empty($form_state['ajax']) && !empty($form_state['title'])) {
     drupal_set_title($form_state['title']);
     drupal_add_css(drupal_get_path('module', 'views_ui') . '/css/views-admin.css');
   }
 
   if (!empty($form_state['ajax']) && (empty($form_state['executed']) || !empty($form_state['rerender']))) {
-    // If the form didn't execute and we're using ajax, build up a AJAX command
-    // list to execute.
+    // If the form didn't execute and we're using ajax, build up a
+    // Ajax command list to execute.
     $commands = array();
 
     $display = '';
@@ -287,7 +279,7 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     return $commands;
   }
 
-  // These forms have the title built in, so set the title here.
+  // These forms have the title built in, so set the title here:
   if (empty($form_state['ajax']) && !empty($form_state['title'])) {
     drupal_set_title($form_state['title']);
   }
@@ -297,14 +289,13 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
 
 
 /**
- * Page callback for views user autocomplete.
+ * Page callback for views user autocomplete
  */
 function views_ajax_autocomplete_user($string = '') {
-  // The user enters a comma-separated list of user name. We only autocomplete
-  // the last name.
+  // The user enters a comma-separated list of user name. We only autocomplete the last name.
   $array = drupal_explode_tags($string);
 
-  // Fetch last name.
+  // Fetch last name
   $last_string = trim(array_pop($array));
   $matches = array();
   if ($last_string != '') {
@@ -337,16 +328,16 @@ function views_ajax_autocomplete_user($string = '') {
 /**
  * Page callback for views taxonomy autocomplete.
  *
- * @param int $vid
+ * @param $vid
  *   The vocabulary id of the tags which should be returned.
- * @param string $tags_typed
+ *
+ * @param $tags_typed
  *   The typed string of the user.
  *
  * @see taxonomy_autocomplete()
  */
 function views_ajax_autocomplete_taxonomy($vid, $tags_typed = '') {
-  // The user enters a comma-separated list of tags. We only autocomplete the
-  // last tag.
+  // The user enters a comma-separated list of tags. We only autocomplete the last tag.
   $tags_typed = drupal_explode_tags($tags_typed);
   $tag_last = drupal_strtolower(array_pop($tags_typed));
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of views_plugin_localization_none.
+ * Contains the 'none' localization plugin.
  */
 
 /**
@@ -11,31 +11,26 @@
  * @ingroup views_localization_plugins
  */
 class views_plugin_localization_none extends views_plugin_localization {
-
-  /**
-   * {@inheritdoc}
-   */
-  public $translate = FALSE;
+  var $translate = FALSE;
 
   /**
    * Translate a string; simply return the string.
    */
-  public function translate($source) {
+  function translate($source) {
     return $source['value'];
   }
 
   /**
    * Save a string for translation; not supported.
    */
-  public function save($source) {
+  function save($source) {
     return FALSE;
   }
 
   /**
    * Delete a string; not supported.
    */
-  public function delete($source) {
+  function delete($source) {
     return FALSE;
   }
-
 }

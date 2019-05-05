@@ -11,11 +11,7 @@
  * @ingroup views_field_handlers
  */
 class views_handler_field_contextual_links extends views_handler_field_links {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pre_render(&$values) {
+  function pre_render(&$values) {
     // Add a row plugin css class for the contextual link.
     $class = 'contextual-links-region';
     if (!empty($this->view->style_plugin->options['row_class'])) {
@@ -26,10 +22,7 @@ class views_handler_field_contextual_links extends views_handler_field_links {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['fields']['#description'] = t('Fields to be included as contextual links.');
@@ -39,7 +32,7 @@ class views_handler_field_contextual_links extends views_handler_field_links {
   /**
    * Render the contextual fields.
    */
-  public function render($values) {
+  function render($values) {
     $links = $this->get_links();
     if (!empty($links)) {
       $build = array(
@@ -59,5 +52,4 @@ class views_handler_field_contextual_links extends views_handler_field_links {
       return '';
     }
   }
-
 }

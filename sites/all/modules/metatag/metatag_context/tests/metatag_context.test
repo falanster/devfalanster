@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Functional tests for the Metatag:Context module.
- */
-
-/**
  * Functional tests for the Metatag:Context module.
  */
 class MetatagContextTest extends MetatagTestHelper {

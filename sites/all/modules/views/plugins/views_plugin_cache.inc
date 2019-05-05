@@ -17,32 +17,31 @@
  * The base plugin to handle caching.
  */
 class views_plugin_cache extends views_plugin {
-
   /**
    * Contains all data that should be written/read from cache.
    */
-  public $storage = array();
+  var $storage = array();
 
   /**
    * What table to store data in.
    */
-  public $table = 'cache_views_data';
+  var $table = 'cache_views_data';
 
   /**
    * Initialize the plugin.
    *
-   * @param view $view
+   * @param $view
    *   The view object.
-   * @param object $display
+   * @param $display
    *   The display handler.
    */
-  public function init(&$view, &$display) {
+  function init(&$view, &$display) {
     $this->view = &$view;
     $this->display = &$display;
 
     if (is_object($display->handler)) {
       $options = $display->handler->get_option('cache');
-      // Overlay incoming options on top of defaults.
+      // Overlay incoming options on top of defaults
       $this->unpack_options($this->options, $options);
     }
   }
@@ -51,7 +50,7 @@ class views_plugin_cache extends views_plugin {
    * Return a string to display as the clickable title for the
    * access control.
    */
-  public function summary_title() {
+  function summary_title() {
     return t('Unknown');
   }
 
@@ -60,37 +59,35 @@ class views_plugin_cache extends views_plugin {
    *
    * Plugins must override this to implement expiration.
    *
-   * @param string $type
+   * @param $type
    *   The cache type, either 'query', 'result' or 'output'.
    */
-  public function cache_expire($type) {
-  }
+   function cache_expire($type) { }
 
-  /**
-   * Determine expiration time in the cache table of the cache type.
-   *
-   * Or CACHE_PERMANENT if item shouldn't be removed automatically from cache.
-   *
-   * Plugins must override this to implement expiration in the cache table.
-   *
-   * @param string $type
-   *   The cache type, either 'query', 'result' or 'output'.
-   */
-  public function cache_set_expire($type) {
+   /**
+    * Determine expiration time in the cache table of the cache type
+    * or CACHE_PERMANENT if item shouldn't be removed automatically from cache.
+    *
+    * Plugins must override this to implement expiration in the cache table.
+    *
+    * @param $type
+    *   The cache type, either 'query', 'result' or 'output'.
+    */
+  function cache_set_expire($type) {
     return CACHE_PERMANENT;
   }
+
 
   /**
    * Save data to the cache.
    *
    * A plugin should override this to provide specialized caching behavior.
    */
-  public function cache_set($type) {
+  function cache_set($type) {
     switch ($type) {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
         break;
-
       case 'results':
         $data = array(
           'result' => $this->view->result,
@@ -99,7 +96,6 @@ class views_plugin_cache extends views_plugin {
         );
         cache_set($this->get_results_key(), $data, $this->table, $this->cache_set_expire($type));
         break;
-
       case 'output':
         $this->gather_headers();
         $this->storage['output'] = $this->view->display_handler->output;
@@ -108,18 +104,18 @@ class views_plugin_cache extends views_plugin {
     }
   }
 
+
   /**
    * Retrieve data from the cache.
    *
    * A plugin should override this to provide specialized caching behavior.
    */
-  public function cache_get($type) {
+  function cache_get($type) {
     $cutoff = $this->cache_expire($type);
     switch ($type) {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
         return FALSE;
-
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.
@@ -133,7 +129,6 @@ class views_plugin_cache extends views_plugin {
           }
         }
         return FALSE;
-
       case 'output':
         if ($cache = cache_get($this->get_output_key(), $this->table)) {
           if (!$cutoff || $cache->created > $cutoff) {
@@ -150,18 +145,18 @@ class views_plugin_cache extends views_plugin {
   /**
    * Clear out cached data for a view.
    *
-   * We're just going to nuke anything related to the view, regardless of
-   * display, to be sure that we catch everything. Maybe that's a bad idea.
+   * We're just going to nuke anything related to the view, regardless of display,
+   * to be sure that we catch everything. Maybe that's a bad idea.
    */
-  public function cache_flush() {
+  function cache_flush() {
     cache_clear_all($this->view->name . ':', $this->table, TRUE);
   }
 
   /**
    * Post process any rendered data.
    *
-   * This can be valuable to be able to cache a view and still have some level
-   * of dynamic output. In an ideal world, the actual output will include HTML
+   * This can be valuable to be able to cache a view and still have some level of
+   * dynamic output. In an ideal world, the actual output will include HTML
    * comment based tokens, and then the post process can replace those tokens.
    *
    * Example usage. If it is known that the view is a node view and that the
@@ -177,8 +172,7 @@ class views_plugin_cache extends views_plugin {
    * All of the cached result data will be available in $view->result, as well,
    * so all ids used in the query should be discoverable.
    */
-  public function post_render(&$output) {
-  }
+  function post_render(&$output) { }
 
   /**
    * Start caching javascript, css and other out of band info.
@@ -187,7 +181,7 @@ class views_plugin_cache extends views_plugin {
    * duplicate it. Later on, when gather_headers() is run, this information
    * will be removed so that we don't hold onto it.
    */
-  public function cache_start() {
+  function cache_start() {
     $this->storage['head'] = drupal_add_html_head();
     $this->storage['css'] = drupal_add_css();
     $this->storage['js'] = drupal_add_js();
@@ -195,10 +189,10 @@ class views_plugin_cache extends views_plugin {
   }
 
   /**
-   * Gather out of band data, compare it to the start data and store the diff.
+   * Gather out of band data, compare it to what we started with and store the difference.
    */
-  public function gather_headers() {
-    // Simple replacement for head.
+  function gather_headers() {
+    // Simple replacement for head
     if (isset($this->storage['head'])) {
       $this->storage['head'] = str_replace($this->storage['head'], '', drupal_add_html_head());
     }
@@ -209,7 +203,7 @@ class views_plugin_cache extends views_plugin {
     // Check if the advanced mapping function of D 7.23 is available.
     $array_mapping_func = function_exists('drupal_array_diff_assoc_recursive') ? 'drupal_array_diff_assoc_recursive' : 'array_diff_assoc';
 
-    // Slightly less simple for CSS.
+    // Slightly less simple for CSS:
     $css = drupal_add_css();
     $css_start = isset($this->storage['css']) ? $this->storage['css'] : array();
     $this->storage['css'] = $this->assetDiff($css, $css_start, $array_mapping_func);
@@ -265,7 +259,7 @@ class views_plugin_cache extends views_plugin {
   /**
    * Restore out of band data saved to cache. Copied from Panels.
    */
-  public function restore_headers() {
+  function restore_headers() {
     if (!empty($this->storage['head'])) {
       drupal_add_html_head($this->storage['head']);
     }
@@ -293,10 +287,7 @@ class views_plugin_cache extends views_plugin {
     }
   }
 
-  /**
-   *
-   */
-  public function get_results_key() {
+  function get_results_key() {
     if (!isset($this->_results_key)) {
       $key_data = array();
       foreach (array('exposed_info', 'page', 'sort', 'order', 'items_per_page', 'offset') as $key) {
@@ -311,10 +302,7 @@ class views_plugin_cache extends views_plugin {
     return $this->_results_key;
   }
 
-  /**
-   *
-   */
-  public function get_output_key() {
+  function get_output_key() {
     if (!isset($this->_output_key)) {
       $key_data = array(
         'result' => $this->view->result,
@@ -335,21 +323,19 @@ class views_plugin_cache extends views_plugin {
    *
    * @return string
    */
-  public function get_cache_key($key_data = array()) {
+  function get_cache_key($key_data = array()) {
     global $user;
 
     $key_data += array(
       'roles' => array_keys($user->roles),
-      'super-user' => $user->uid == 1,
-    // special caching for super user.
+      'super-user' => $user->uid == 1, // special caching for super user.
       'language' => $GLOBALS['language']->language,
-      'language_content' => $GLOBALS['language_content']->language,
       'base_url' => $GLOBALS['base_url'],
     );
 
     if (empty($key_data['build_info'])) {
       $build_info = $this->view->build_info;
-      foreach (array('query', 'count_query') as $index) {
+      foreach (array('query','count_query') as $index) {
         // If the default query back-end is used generate SQL query strings from
         // the query objects.
         if ($build_info[$index] instanceof SelectQueryInterface) {
@@ -362,9 +348,9 @@ class views_plugin_cache extends views_plugin {
         }
       }
     }
-    return md5(serialize($key_data));
+    $key = md5(serialize($key_data));
+    return $key;
   }
-
 }
 
 /**

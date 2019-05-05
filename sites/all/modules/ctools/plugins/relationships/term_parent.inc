@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file
+ * @file relationships/term_parent.inc
  * Plugin to provide an relationship handler for term parent.
  */
 

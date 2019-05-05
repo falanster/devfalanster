@@ -9,10 +9,6 @@
  * Tests the core views_handler_field_date handler.
  */
 class ViewsHandlerFieldDateTest extends ViewsSqlTest {
-
-  /**
-   *
-   */
   public static function getInfo() {
     return array(
       'name' => 'Field: Date',
@@ -21,18 +17,12 @@ class ViewsHandlerFieldDateTest extends ViewsSqlTest {
     );
   }
 
-  /**
-   *
-   */
   function viewsData() {
     $data = parent::viewsData();
     $data['views_test']['created']['field']['handler'] = 'views_handler_field_date';
     return $data;
   }
 
-  /**
-   *
-   */
   public function testFieldDate() {
     $view = $this->getBasicView();
 
@@ -42,8 +32,7 @@ class ViewsHandlerFieldDateTest extends ViewsSqlTest {
         'table' => 'views_test',
         'field' => 'created',
         'relationship' => 'none',
-        // c is iso 8601 date format.
-        // @see http://php.net/manual/en/function.date.php
+        // c is iso 8601 date format @see http://php.net/manual/en/function.date.php
         'custom_date_format' => 'c',
         'second_date_format' => 'custom',
         'second_date_format_custom' => 'c',
@@ -73,17 +62,13 @@ class ViewsHandlerFieldDateTest extends ViewsSqlTest {
     $intervals = array(
       'raw time ago' => format_interval(REQUEST_TIME - $time, 2),
       'time ago' => t('%time ago', array('%time' => format_interval(REQUEST_TIME - $time, 2))),
-      // @todo write tests for them
-      // 'raw time span' => format_interval(REQUEST_TIME - $time, 2),
-      // 'time span' => t('%time hence',
-      //   array('%time' => format_interval(REQUEST_TIME - $time, 2))),
+      // TODO write tests for them
+//       'raw time span' => format_interval(REQUEST_TIME - $time, 2),
+//       'time span' => t('%time hence', array('%time' => format_interval(REQUEST_TIME - $time, 2))),
     );
     $this->assertRenderedDatesEqual($view, $intervals);
   }
 
-  /**
-   *
-   */
   protected function assertRenderedDatesEqual($view, $map, $timezone = NULL) {
     foreach ($map as $date_format => $expected_result) {
       $check_result_number = 0;
@@ -129,5 +114,4 @@ class ViewsHandlerFieldDateTest extends ViewsSqlTest {
 
     return $data;
   }
-
 }

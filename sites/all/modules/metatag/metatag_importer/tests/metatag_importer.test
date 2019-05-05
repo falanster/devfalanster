@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @file
- * Tests for the Metatag Importer module.
- */
-
-/**
  * Tests for the Metatag Importer module.
  */
 class MetatagImporterTest extends MetatagTestHelper {

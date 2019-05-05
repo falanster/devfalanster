@@ -11,26 +11,19 @@
  * @ingroup views_field_handlers
  */
 class views_handler_filter_combine extends views_handler_filter_string {
-
   /**
    * @var views_plugin_query_default
    */
   public $query;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['fields'] = array('default' => array());
 
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $this->view->init_style();
 
@@ -56,10 +49,7 @@ class views_handler_filter_combine extends views_handler_filter_string {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     $this->view->_build('field');
     $fields = array();
     // Only add the fields if they have a proper field and table alias.
@@ -96,28 +86,20 @@ class views_handler_filter_combine extends views_handler_filter_string {
     }
   }
 
-  /**
-   * By default things like op_equal uses add_where, that doesn't support
-   * complex expressions, so override all operators.
-   */
-  public function op_equal($field) {
+  // By default things like op_equal uses add_where, that doesn't support
+  // complex expressions, so override all operators.
+  function op_equal($field) {
     $placeholder = $this->placeholder();
     $operator = $this->operator();
     $this->query->add_where_expression($this->options['group'], "$field $operator $placeholder", array($placeholder => $this->value));
   }
 
-  /**
-   *
-   */
-  public function op_contains($field) {
+  function op_contains($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }
 
-  /**
-   *
-   */
-  public function op_word($field) {
+  function op_word($field) {
     $where = $this->operator == 'word' ? db_or() : db_and();
 
     // Don't filter on empty strings.
@@ -150,58 +132,37 @@ class views_handler_filter_combine extends views_handler_filter_string {
     $this->query->add_where($this->options['group'], $where);
   }
 
-  /**
-   *
-   */
-  public function op_starts($field) {
+  function op_starts($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));
   }
 
-  /**
-   *
-   */
-  public function op_not_starts($field) {
+  function op_not_starts($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field NOT LIKE $placeholder", array($placeholder => db_like($this->value) . '%'));
   }
 
-  /**
-   *
-   */
-  public function op_ends($field) {
+  function op_ends($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
   }
 
-  /**
-   *
-   */
-  public function op_not_ends($field) {
+  function op_not_ends($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
   }
 
-  /**
-   *
-   */
-  public function op_not($field) {
+  function op_not($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field NOT LIKE $placeholder", array($placeholder => '%' . db_like($this->value) . '%'));
   }
 
-  /**
-   *
-   */
-  public function op_regex($field) {
+  function op_regex($field) {
     $placeholder = $this->placeholder();
     $this->query->add_where_expression($this->options['group'], "$field RLIKE $placeholder", array($placeholder => $this->value));
   }
 
-  /**
-   *
-   */
-  public function op_empty($field) {
+  function op_empty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
     }
@@ -211,5 +172,4 @@ class views_handler_filter_combine extends views_handler_filter_string {
 
     $this->query->add_where_expression($this->options['group'], "$field $operator");
   }
-
 }

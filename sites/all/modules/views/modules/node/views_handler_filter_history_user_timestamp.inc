@@ -14,16 +14,10 @@
  * @ingroup views_filter_handlers
  */
 class views_handler_filter_history_user_timestamp extends views_handler_filter {
+  // Don't display empty space where the operator would be.
+  var $no_operator = TRUE;
 
-  /**
-   * Don't display empty space where the operator would be.
-   */
-  public $no_operator = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function expose_form(&$form, &$form_state) {
+  function expose_form(&$form, &$form_state) {
     parent::expose_form($form, $form_state);
     // @todo There are better ways of excluding required and multiple (object flags)
     unset($form['expose']['required']);
@@ -31,10 +25,7 @@ class views_handler_filter_history_user_timestamp extends views_handler_filter {
     unset($form['expose']['remember']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function value_form(&$form, &$form_state) {
+  function value_form(&$form, &$form_state) {
     // Only present a checkbox for the exposed filter itself. There's no way
     // to tell the difference between not checked and the default value, so
     // specifying the default value via the views UI is meaningless.
@@ -53,10 +44,7 @@ class views_handler_filter_history_user_timestamp extends views_handler_filter {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function query() {
+  function query() {
     global $user;
     // This can only work if we're logged in.
     if (!$user || !$user->uid) {
@@ -70,6 +58,7 @@ class views_handler_filter_history_user_timestamp extends views_handler_filter {
 
     // Hey, Drupal kills old history, so nodes that haven't been updated
     // since NODE_NEW_LIMIT are bzzzzzzzt outta here!
+
     $limit = REQUEST_TIME - NODE_NEW_LIMIT;
 
     $this->ensure_my_table();
@@ -90,13 +79,9 @@ class views_handler_filter_history_user_timestamp extends views_handler_filter {
     $this->query->add_where_expression($this->options['group'], "($field IS NULL AND ($node.changed > (***CURRENT_TIME*** - $limit) $clause)) OR $field < $node.changed $clause2");
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function admin_summary() {
+  function admin_summary() {
     if (!empty($this->options['exposed'])) {
       return t('exposed');
     }
   }
-
 }

@@ -2,6 +2,7 @@
 
 /**
  * @file
+ *
  * Plugins to handle cache-indirection.
  *
  * Simple plugin management to allow clients to more tightly control where
@@ -51,6 +52,7 @@
  * @param string $mechanism
  *   A string containing the plugin name, and an optional data element to
  *   send to the plugin separated by two colons.
+ *
  * @param string $key
  *   The key used to identify the cache.
  *
@@ -68,6 +70,7 @@ function ctools_cache_get($mechanism, $key) {
  * @param string $mechanism
  *   A string containing the plugin name, and an optional data element to
  *   send to the plugin separated by two colons.
+ *
  * @param string $key
  *   The key used to identify the cache.
  *
@@ -85,6 +88,7 @@ function ctools_cache_set($mechanism, $key, $object) {
  * @param string $mechanism
  *   A string containing the plugin name, and an optional data element to
  *   send to the plugin separated by two colons.
+ *
  * @param string $key
  *   The key used to identify the cache.
  */
@@ -104,10 +108,13 @@ function ctools_cache_clear($mechanism, $key) {
  * @param string $mechanism
  *   A string containing the plugin name, and an optional data element to
  *   send to the plugin separated by two colons.
+ *
  * @param string $key
  *   The key used to identify the cache.
+ *
  * @param string $op
  *   The operation to call, such as 'break' or 'finalize'.
+ *
  * @param mixed $object
  *   The cache data being operated on, in case it is necessary. This is
  *   optional so no references should be used.
@@ -143,7 +150,7 @@ function ctools_cache_operation($mechanism, $key, $op, $object = NULL) {
  */
 function ctools_cache_find_plugin($mechanism) {
   if (strpos($mechanism, '::') !== FALSE) {
-    // Use explode(2) to ensure that the data can contain double
+    // use explode(2) to ensure that the data can contain double
     // colons, just in case.
     list($name, $data) = explode('::', $mechanism, 2);
   }

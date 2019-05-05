@@ -4,10 +4,6 @@
  * The plugin that handles entity-attached views.
  */
 class eva_plugin_display_entity extends views_plugin_display {
-
-  /**
-   * {@inheritdoc}
-   */
   function option_definition() {
     $options = parent::option_definition();
 
@@ -17,7 +13,6 @@ class eva_plugin_display_entity extends views_plugin_display {
     $options['default_argument'] = array('default' => '');
     $options['show_title'] = 0;
     $options['exposed_form_as_field'] = 0;
-    $options['show_on'] = array('default' => 'display');
 
     return $options;
   }
@@ -58,12 +53,6 @@ class eva_plugin_display_entity extends views_plugin_display {
       'category' => 'entity_view',
       'title' => t('Bundles'),
       'value' => empty($bundle_names) ? t('All') : implode(', ', $bundle_names),
-    );
-
-    $options['show_on'] = array(
-      'category' => 'entity_view',
-      'title' => t('Show on'),
-      'value' => $this->get_option('show_on'),
     );
 
     $argument_mode = $this->get_option('argument_mode');
@@ -136,21 +125,6 @@ class eva_plugin_display_entity extends views_plugin_display {
         );
         break;
 
-      case 'show_on':
-        $form['#title'] .= t('Show on');
-        $form['show_on'] = array(
-          '#type' => 'select',
-          '#title' => t('Where to show this view'),
-          '#description' => t('This view can be used on either the entity display or on the entity form. When shown on a form, the exposed filters will be hidden.'),
-          '#options' => array(
-            'display' => t('Display'),
-            'form' => t('Form'),
-          ),
-          '#required' => TRUE,
-          '#default_value' => $this->get_option('show_on'),
-        );
-        break;
-
       case 'arguments':
         $form['#title'] .= t('Arguments');
         $default = $this->get_option('argument_mode');
@@ -180,7 +154,7 @@ class eva_plugin_display_entity extends views_plugin_display {
 
         $form['token']['default_argument'] = array(
           '#title' => t('Arguments'),
-          '#type' => 'textarea',
+          '#type' => 'textfield',
           '#default_value' => $this->get_option('default_argument'),
           '#description' => t('You may use token replacement to provide arguments based on the current entity. Separate arguments with "/".'),
         );
@@ -207,15 +181,12 @@ class eva_plugin_display_entity extends views_plugin_display {
           '#type' => 'checkbox',
           '#title' => t('Split off Exposed Form as Separate Field'),
           '#default_value' => $this->get_option('exposed_form_as_field'),
-          '#description' => t('Check this box to have a separate field for this view\'s exposed form on the "Manage Display" tab. This is not available to EVAs attached to the form.'),
+          '#description' => t('Check this box to have a separate field for this view\'s exposed form on the "Manage Display" tab'),
         );
     }
 
   }
 
-  /**
-   * {@inheritdoc}
-   */
   function options_submit(&$form, &$form_state) {
     // It is very important to call the parent function here:
     parent::options_submit($form, $form_state);
@@ -243,11 +214,6 @@ class eva_plugin_display_entity extends views_plugin_display {
       case 'bundles':
         $this->set_option('bundles', array_values(array_filter($form_state['values']['bundles'])));
         break;
-
-      case 'show_on':
-        $this->set_option('show_on', $form_state['values']['show_on']);
-        break;
-
       case 'arguments':
         $this->set_option('argument_mode', $form_state['values']['argument_mode']);
         if ($form_state['values']['argument_mode'] == 'token') {
@@ -267,9 +233,6 @@ class eva_plugin_display_entity extends views_plugin_display {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   function validate() {
     $errors = parent::validate();
 
@@ -281,13 +244,41 @@ class eva_plugin_display_entity extends views_plugin_display {
   }
 
   /**
+   * We have to run token replacement before the arguments are used.
+   */
+  function pre_execute() {
+    // Call the parent setup function so we do not lose data.
+    parent::pre_execute();
+
+    if (isset($this->view->current_entity)) {
+      $entity = $this->view->current_entity;
+      $entity_type = $this->view->display_handler->get_option('entity_type');
+      $entity_info = entity_get_info($entity_type);
+
+      $arg_mode = $this->view->display_handler->get_option('argument_mode');
+      if ($arg_mode == 'token') {
+        if ($token_string = $this->view->display_handler->get_option('default_argument')) {
+          // Now do the token replacement.
+          $token_values = eva_get_arguments_from_token_string($token_string, $entity_type, $entity);
+          $new_args = array();
+          // We have to be careful to only replace arguments that have tokens.
+          foreach ($token_values as $key => $value) {
+            $new_args[$key] = $value;
+          }
+
+          $this->view->args = $new_args;
+        }
+      }
+      elseif ($arg_mode == 'id') {
+        $this->view->args = array($entity->{$entity_info['entity keys']['id']});
+      }
+    }
+  }
+
+  /**
    * Specify the path of the entity.
    */
   function get_path() {
-    if (($path = parent::get_path())) {
-      return $path;
-    }
-
     if (isset($this->view->current_entity)) {
       $uri = entity_uri($this->view->display_handler->get_option('entity_type'), $this->view->current_entity);
       if ($uri) {
@@ -295,6 +286,7 @@ class eva_plugin_display_entity extends views_plugin_display {
         return url($uri['path'], $uri['options']);
       }
     }
+    return parent::get_path();
   }
 
   /**
