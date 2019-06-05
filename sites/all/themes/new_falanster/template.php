@@ -136,3 +136,9 @@ function new_falanster_preprocess_comment(&$variables, $hook) {
   $variables['sample_variable'] = t('Lorem ipsum.');
 }
 // */
+function mytheme_preprocess_page(&$vars, $hook) {
+    if (isset($vars['node'])) {
+        $vars['theme_hook_suggestions'][] = 'page__'. str_replace('_', '--', $vars['node']->type);
+    }
+}
+// код выше - для корректоной работы page.tpl.php

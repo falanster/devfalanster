@@ -24,9 +24,10 @@
 				 <?php print render($page['bottom']); ?><!-- Printing exact footer -->
 			</div> 
 		</footer>
-		 
-		 
-		<header class="header">
+
+
+
+        <header class="header">
 			<div class="header__mobile-menu mobile-menu">
 				<button class="button-close" type="button">&#10006;</button>
 				<div class="mobile-menu__links">
