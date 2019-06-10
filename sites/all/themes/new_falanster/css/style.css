@@ -10,6 +10,10 @@ a {
 	text-decoration: none !important;
   color: #1a1a1a;
 }
+ul{
+  padding: 0;
+  list-style: none;
+}
 @media screen and (min-width: 2200px) {
 	.projects__items {
 		display: -webkit-box;
@@ -57,11 +61,10 @@ a {
 	.projects-image-left {
 		position: absolute;
 		left: 3%;
-		z-index: 0;
+		z-index: -1;
 		width: 50px;
 		height: 379px;
 		background: url('../images-source/left.png') no-repeat;
-		top: -102px;
 	}
 
 	.projects__container {
@@ -469,4 +472,29 @@ a {
 	border: 0;
 
 	-webkit-clip-path: inset(100%);
+}
+/* .pager{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-bottom: 20px;
+  list-style: none;
+}
+
+ */
+#block-menu-menu-footer-menu{
+  width: 200px;
+}
+.region-bottom{
+  display: flex;
+  padding: 15px 0 31px 0;
+  width: 990px;
+  justify-content: space-between;
+}
+#main-menu > li {
+  padding-right: 18px;
+}
+#block-menu-menu-footer-menu{
+  display: flex;
+  align-items: center;
 }

@@ -1,0 +1,86 @@
+.pager {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+}
+
+.pager > li {
+  display: flex;
+  margin: 0 2px;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  width: 20px;
+  height: 20px;
+  font: 14px 'Ubuntu', Arial, sans-serif;
+  font-weight: 500;
+}
+
+.pager>li:not(span):hover {
+  color: #ff6600;
+}
+
+.pager > li:hover {
+  background-color: #ff6600;
+  color: #ffffff;
+  border-radius: 50%;
+}
+
+.pagination-container > .pagination-item_active::before {
+  content:'';
+  width: 1px;
+}
+
+.item-prev {
+  align-self: center;
+  font-size: 0;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg) scale(0.6);
+  border-left: 3px solid #666666;
+  border-bottom: 3px solid #666666;
+  margin-right: 24px;
+}
+
+.item-next {
+  align-self: center;
+  font-size: 0;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg) scale(0.6);
+  border-top: 3px solid #666666;
+  border-right: 3px solid #666666;
+  margin-left: 24px;
+}
+
+.item-prev:hover,
+.item-next:hover {
+  border-color: #ff6600;
+}
+
+@media screen and (max-width: 1079px) {
+  .pagination-item {
+    width: 90px;
+    height: 90px;
+    font-size: 3em;
+    margin: 0 6px;
+  }
+
+  .item-prev,
+  .item-next {
+    width: 45px;
+    height: 45px;
+    font-size: 0;
+  }
+
+  .item-prev {
+    margin-right: 48px;
+  }
+
+  .item-next {
+    margin-left: 48px;
+  }
+}

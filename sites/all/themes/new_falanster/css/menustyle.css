@@ -16,8 +16,7 @@
 		flex-direction: row;
 		justify-content: flex-end;
 		display: flex;
-		width: 50%;
-		margin-left: auto;
+    width: 500px;
 	}
 
 	.header__controls {
@@ -149,28 +148,28 @@
 	}
 
 	.header__nav {
-		position: relative;
+    position: absolute;
+    width: 100%;
 		z-index: 2;
 		margin: 0;
-		background: #1f1f1f;
-    opacity: 0.9;
+		background: rgba(31, 31, 31, 0.9);
 	}
-
+  /*
 	.sticky {
 		position: fixed;
 		top: 0;
 		z-index: 999999;
 		width: 100%;
-		background: rgba(30, 30, 30, 0.86);
+		background: rgba(31, 31, 31, 0.9);
 	}
-
+  */
 	.header__nav-items {
 		justify-content: space-between;
 		display: flex;
 		padding: 0;
 		margin: 0;
-		list-style-type: none;
-		width: 990px;
+    list-style-type: none;
+    position: relative;
 	}
 
 	.header__nav-item {
@@ -214,38 +213,37 @@
 	}
 
 	.manifest__container {
-    display: flex;
-    width: 100%;
+		display: flex;
+		width: 100%;
     height: calc(100vh - 66px);
     min-height: 690px;
-    margin: 0;
+		margin: 0;
 	}
 
 	.manifest__left {
-		z-index: 1;
 		width: 50%;
 		height: 100%;
-		/*background: url('../images-source/spacetable3.png') no-repeat 0 0;*/
-    /*width: 50%;*/
-    /*height: 100%;*/
-    background: url(../images-source/spacetable3.png) no-repeat top left;
+    background: url('../images-source/spacetable3.png') no-repeat top left;
     background-size: cover;
 	}
 
 	.manifest__left .manifest__content {
 		display: none;
-	}
+  }
+
+  .manifest__right .manifest__content {
+    margin: 215px 0 0 63px;
+  }
 
 	.manifest__right {
 		width: 50%;
 		height: 100%;
-		background: #121212 url('../images-source/background.jpg') no-repeat top right;
+    background: #121212 url('../images-source/background.jpg') no-repeat top right;
+    background-size: cover;
 	}
 
 	.manifest__text {
-		position: absolute;
-		z-index: 3;
-		margin: 215px 0 0 63px;
+    margin: 0 0 25px 0;
 		color: #ffffff;
 		font-family: 'Ubuntu', Arial, sans-serif;
 		font-size: 25px;
@@ -253,23 +251,21 @@
 	}
 
 	.manifest__button {
-		position: absolute;
-		z-index: 3;
-		padding: 15px 25px 18px 25px;
-		margin: 420px 0 0 63px;
+    padding: 15px 25px 18px 25px;
 		color: #ffffff;
 		font-family: 'Ubuntu', Arial, sans-serif;
 		font-size: 18px;
 		font-weight: bold;
 		text-decoration: none;
 		background-color: #ff6600;
-		border-radius: 3px;
+    border-radius: 3px;
+    display: inline-block;
 	}
-  	
+
   .manifest__button:hover {
-   transform: scale(1.05);
+    transform: scale(1.05);
   }
-	
+
   .manifest__button:active {
   color: #f60;
 	background-color: #fff;
@@ -282,7 +278,6 @@
 	body {
 		width: 100%;
 		margin: 0;
-		background-color: #dddddd;
 	}
 
 	header {
@@ -335,7 +330,7 @@
 		height: 1024px;
 		margin: 0;
 		background-color: #ffffff;
-		background-image: url('../images-source/space_table_blur2.jpg');
+		background-image: url('../images/space_table_blur2.jpg');
 	}
 
 	.manifest__right {
