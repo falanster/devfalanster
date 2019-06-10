@@ -62,6 +62,9 @@ stylesheets[all][] = css/menustyle.css
 stylesheets[all][] = css/modal.css
 stylesheets[all][] = css/style.css
 stylesheets[all][] = css/nav_mob.css
+stylesheets[all][] = css/pagination.css
+stylesheets[all][] = css/content.css
+stylesheets[all][] = css/cont.css
 
 ; If you wish to use conditional stylesheets, you should install the
 ; conditional stylesheets module: https://drupal.org/project/conditional_styles
