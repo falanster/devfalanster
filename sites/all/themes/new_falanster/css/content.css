@@ -95,6 +95,10 @@
 	        transform: translate(-50%, 0);
 }
 
+.banner__text a{
+color: #ff6600;
+}
+
 .banner__heading {
 	margin: 0;
 	font-size: 60px;
@@ -360,7 +364,7 @@
     line-height: 1.375em;
     margin-bottom: 0;
   }
-  
+
   .content__summary p {
     margin-bottom: 2rem;
   }
@@ -369,7 +373,7 @@
     width: 110%;
     margin-left: -5%;
   }
-  
+
   .intro-paragraph {
     margin-bottom: 0 !important;
     font-size: 1.5em;
@@ -436,7 +440,7 @@
 		justify-content: center;
 		align-items: center;
 	}
-	
+
 	.banner__status--process .banner__status-icon {
 		display: inline-block;
 		width: 1.125em;
@@ -469,7 +473,7 @@
     line-height: 3em;
     font-size: 1.875em;
   }
-  
+
   .content__btn:hover {
     -webkit-transform: none;
             transform: none;
