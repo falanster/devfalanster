@@ -25,9 +25,6 @@
           <div id="field_audio">
             <?php print render($content['field_audio']);?>
           </div>
-          <div id="field_target_page">
-            <?php print render($content['field_target_page']);?>
-          </div>
           <div id="field_file">
             <?php print render($content['field_file']);?>
           </div>
