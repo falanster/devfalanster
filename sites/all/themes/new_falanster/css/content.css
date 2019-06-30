@@ -1,3 +1,43 @@
+	.login_admin_panel{
+		display: flex;
+		flex-direction: column;
+	}
+	.login_admin_panel label{
+	margin-bottom: 40px;
+	color: #ff6600;
+	font-size: 18px;
+	}
+	.description{
+		margin-bottom: 20px;
+	}
+
+.banner_login_admin_panel{
+	position: relative;
+	-ms-flex-pack: center;
+	justify-content: center;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	width: 100%;
+	height: calc(125vh - 66px);
+	background: black;
+	background-repeat: no-repeat;
+	background-position: top center;
+	background-size: cover;
+	-webkit-box-pack: center;
+	}
+
+#edit-submit{
+		padding: 9px 25px 9px 25px;
+    color: #333333;
+    font-family: 'Ubuntu',Arial,sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid #333333;
+    border-radius: 4px;
+}
+
 .banner {
 	font-family: 'Ubuntu', Arial, sans-serif;
 }
@@ -94,6 +134,7 @@
 	-webkit-transform: translate(-50%, 0);
 	        transform: translate(-50%, 0);
 }
+
 
 .banner__heading {
 	margin: 0;
@@ -360,7 +401,7 @@
     line-height: 1.375em;
     margin-bottom: 0;
   }
-  
+
   .content__summary p {
     margin-bottom: 2rem;
   }
@@ -369,7 +410,7 @@
     width: 110%;
     margin-left: -5%;
   }
-  
+
   .intro-paragraph {
     margin-bottom: 0 !important;
     font-size: 1.5em;
@@ -436,7 +477,7 @@
 		justify-content: center;
 		align-items: center;
 	}
-	
+
 	.banner__status--process .banner__status-icon {
 		display: inline-block;
 		width: 1.125em;
@@ -469,7 +510,7 @@
     line-height: 3em;
     font-size: 1.875em;
   }
-  
+
   .content__btn:hover {
     -webkit-transform: none;
             transform: none;

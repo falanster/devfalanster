@@ -32,6 +32,7 @@
             $month = substr($fied_data_event_rest, 5, 2);
             $day = substr($fied_data_event_rest, 8, 2);
             print_r($day .".".$month .".". $year. ", " . $time);
+          
             echo '</p>';
 
         }

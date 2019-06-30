@@ -142,3 +142,47 @@ function mytheme_preprocess_page(&$vars, $hook) {
     }
 }
 // код выше - для корректоной работы page.tpl.php
+
+//Implement hook_theme for new_falanster theme
+
+function new_falanster_theme() {
+  $items = array();
+
+  $items['user_login'] = array(
+    'render element' => 'form',
+    'path' => drupal_get_path('theme', 'new_falanster') . '/templates',
+    'template' => 'user-login',
+    'preprocess functions' => array(
+       'new_falanster_preprocess_user_login'
+    ),
+  );
+  $items['user_register_form'] = array(
+    'render element' => 'form',
+    'path' => drupal_get_path('theme', 'new_falanster') . '/templates',
+    'template' => 'user-register-form',
+    'preprocess functions' => array(
+      'new_falanster_preprocess_user_register_form'
+    ),
+  );
+  $items['user_pass'] = array(
+    'render element' => 'form',
+    'path' => drupal_get_path('theme', 'new_falanster') . '/templates',
+    'template' => 'user-pass',
+    'preprocess functions' => array(
+      'new_falanster_preprocess_user_pass'
+    ),
+  );
+  return $items;
+}
+
+function new_falanster_preprocess_user_login(&$vars) {
+  $vars['intro_text'] = t('Введите свои данные');
+}
+
+function new_falanster_preprocess_user_register_form(&$vars) {
+  $vars['intro_text'] = t('Форма регистрации');
+}
+
+function new_falanster_preprocess_user_pass(&$vars) {
+  $vars['intro_text'] = t('Новый пароль');
+}
