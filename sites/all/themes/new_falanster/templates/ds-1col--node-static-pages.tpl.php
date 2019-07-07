@@ -1,6 +1,6 @@
 <main>
     <section class="banner">
-      <div class="banner__photo" style="background-image: url('<?php $field_background = file_create_url($node->field_preview['und'][0]['uri']); print render($field_background)?>');">
+      <div class="banner__photo" style="background-image: url('<?php $field_background = file_create_url($node->field_image['und'][0]['uri']); print render($field_background)?>');">
         <div class="banner__container container-inner">
           <div class="banner__text">
             <h1 class="banner__heading"><?php print($title)?></h1>
@@ -56,9 +56,6 @@
               ?>
             <div id="field_related_node">
               <?php print render($content['field_related_node']);?>
-            </div>
-            <div id="field_image">
-              <?php print render($content['field_image']);?>
             </div>
           </article>
       </div>
