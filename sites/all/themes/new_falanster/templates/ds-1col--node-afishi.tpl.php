@@ -1,18 +1,12 @@
 <main>
     <section class="banner">
-
       <div class="banner__photo" style="background-image: url('<?php $field_background = file_create_url($node->field_image['und'][0]['uri']); print render($field_background)?>');">
-
                <div class="banner__container container-inner">
                  <div class="banner__text">
                    <h1 class="banner__heading"><?php print($title)?></h1>
                    <p class="banner__info">
-                      <span>
-                       <?php print render($content['field_open_tag']);?>
-                     </span>
-                    </div>
+                </div>
                 <?php
-
                    $my_field_items = field_get_items('node', $node, 'field_display_the_field');
                    $display_the_field = $my_field_items[0]['value'];
 
@@ -28,7 +22,6 @@
                        echo '</p>';
                    }
                  ?>
-
         </div>
       </div>
     </section>
@@ -37,14 +30,8 @@
       <div class="container-inner">
         <article class="content__text">
           <?php print render($content['body'])?>
-          <div>
-            <?php
-            print render($content['field_video_youtube']);
-            print render($content['field_gallery']);
-            print render($content['field_related_node']);
-            ?>
-          </div>
-
+            <div id="field-video-youtube"><?php  print render($content['field_video_youtube']);?></div>
+            <div id="field-related-node"><?php print render($content['field_related_node']);?></div>
         </article>
       </div>
     </section>
