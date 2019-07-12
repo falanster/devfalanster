@@ -1,4 +1,4 @@
-		
+
 		<div class="header__menu container">
 			<!-- Prints logo start -->
 			<?php if ($logo): ?>
@@ -14,15 +14,17 @@
 			<div class="header__nav-items  container">
 			<?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('header__nav-items','header__nav-item','links', 'inline', 'clearfix')))); ?>
 			</div>
-		</div>	 	
+		</div>
+		<?php if ($tabs && !empty($tabs['#primary'])): ?><div class="tabs-clearfix"><?php print render($tabs); ?></div><?php endif; ?>
 		<!-- Menu main end -->
 		<?php print render($page['content']); ?> <!-- Manifesto-->
 		<!-- Mobile burger -->
+
 		 <?php print render($page['footer']); ?> <!-- Printing pre-footer content -->
 		<footer class="footer">
 			<div class="footer__container container">
 				 <?php print render($page['bottom']); ?><!-- Printing exact footer -->
-			</div> 
+			</div>
 		</footer>
 
 
@@ -83,5 +85,3 @@
 					</li>
 				</ul>
 			</div>
-		
-
