@@ -15,12 +15,34 @@
 			<?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('header__nav-items','header__nav-item','links', 'inline', 'clearfix')))); ?>
 			</div>
 		</div>
+
 		<?php if ($tabs && !empty($tabs['#primary'])): ?><div class="tabs-clearfix"><?php print render($tabs); ?></div><?php endif; ?>
 		<!-- Menu main end -->
-		<?php print render($page['content']); ?> <!-- Manifesto-->
-		<!-- Mobile burger -->
+	
 
-		 <?php print render($page['footer']); ?> <!-- Printing pre-footer content -->
+		<!-- Menu main end -->
+		<?php print render($page['content']); ?> <!-- Manifesto-->
+    <!-- Mobile burger -->
+    <div class="blog-image-right"></div>
+    <?php
+      if (drupal_is_front_page()) {
+          ?><h2 class="container blog__heading">Блог</h2><?php
+      }
+    ?>
+    <div class="blog__container">
+      <?php print render($page['blog_left']); ?>
+      <div class="blog__right-side">
+        <?php print render($page['blog_right']); ?>
+        <?php
+          if (drupal_is_front_page()) {
+              ?><a href="#" class="blog__link">Усе падзеi</a><?php
+          }
+        ?>
+      </div>
+    </div>
+    <div class="prefooter_mt">
+      <?php print render($page['footer']); ?> <!-- Printing pre-footer content -->
+    </div>
 		<footer class="footer">
 			<div class="footer__container container">
 				 <?php print render($page['bottom']); ?><!-- Printing exact footer -->
