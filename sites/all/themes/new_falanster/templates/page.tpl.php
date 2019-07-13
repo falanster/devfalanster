@@ -15,6 +15,11 @@
 			<?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('id' => 'main-menu', 'class' => array('header__nav-items','header__nav-item','links', 'inline', 'clearfix')))); ?>
 			</div>
 		</div>
+
+		<?php if ($tabs && !empty($tabs['#primary'])): ?><div class="tabs-clearfix"><?php print render($tabs); ?></div><?php endif; ?>
+		<!-- Menu main end -->
+	
+
 		<!-- Menu main end -->
 		<?php print render($page['content']); ?> <!-- Manifesto-->
     <!-- Mobile burger -->
@@ -102,5 +107,3 @@
 					</li>
 				</ul>
 			</div>
-
-
