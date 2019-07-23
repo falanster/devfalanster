@@ -47,7 +47,13 @@
 	border: 2px solid #d6ff32;
 }
 
+	main ul {
+		list-style: disc;
+	}
 
+	#field_file img{
+		display: inline;
+	}
 .banner {
 	font-family: 'Ubuntu', Arial, sans-serif;
 }
@@ -325,11 +331,8 @@ color: #ff6600;
 
 .content__text img {
 	display: block;
-	width: 100%;
 	height: auto;
-	margin-top: 58px;
-	margin-bottom: 70px;
-}
+	}
 
 .content__text h2 {
 	margin-top: 0;
@@ -414,6 +417,7 @@ color: #ff6600;
     line-height: 1.375em;
     margin-bottom: 0;
   }
+
 
   .content__summary p {
     margin-bottom: 2rem;
