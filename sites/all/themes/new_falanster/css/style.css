@@ -6,6 +6,9 @@ ul{
   padding: 0;
   list-style: none;
 }
+.blog__date {
+	margin-bottom: 35px;
+}
 .blog__container{
   display: flex;
   justify-content: space-between;
@@ -13,6 +16,7 @@ ul{
   margin-bottom: 121px;
   width: 990px;
   margin: 0 auto;
+  position: relative;
 }
 .blog__container .views-field{
   width: 490px;
@@ -29,7 +33,6 @@ ul{
 a.blog__link{
   display: block;
   width: 78px;
-  margin-top: 60px;
   border-bottom: 2px solid #1a1a1a ;
 }
 .blog__link:hover{
@@ -278,7 +281,7 @@ a.blog__link{
 		margin-left: 75px;
 	}
 	.projects-img-right {
-    top: 275px;
+		/* top: 275px; */
 		position: absolute;
 		right: 0;
 		z-index: 1;

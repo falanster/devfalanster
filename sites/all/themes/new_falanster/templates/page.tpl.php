@@ -23,13 +23,13 @@
 		<!-- Menu main end -->
 		<?php print render($page['content']); ?> <!-- Manifesto-->
     <!-- Mobile burger -->
-    <div class="blog-image-right"></div>
     <?php
       if (drupal_is_front_page()) {
           ?><h2 class="container blog__heading">Блог</h2><?php
       }
     ?>
     <div class="blog__container">
+	<div class="blog-image-right"></div>
       <?php print render($page['blog_left']); ?>
       <div class="blog__right-side">
         <?php print render($page['blog_right']); ?>

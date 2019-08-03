@@ -88,3 +88,6 @@ Disallow: /?q=user/password/
 Disallow: /?q=user/register/
 Disallow: /?q=user/login/
 Disallow: /?q=user/logout/
+Sitemap: http://ftest.falanster.by/etwsmap.xml
+Sitemap: http://ftest.falanster.by/asdumap.xml
+Sitemap: http://ftest.falanster.by/vswmap.xml

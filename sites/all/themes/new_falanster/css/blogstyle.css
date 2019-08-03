@@ -119,12 +119,12 @@
 	.blog-image-right {
 		position: absolute;
 		top: 0;
-		right: 0;
+		right: -460px;
 		z-index: 1;
 		width: 135px;
 		height: 325px;
 		margin-top: -60px;
-		background: url('../images/try_dis.svg') no-repeat;
+		background: url('../images-source/try_dis.svg') no-repeat;
 	}
 
 	.blog__more-link {

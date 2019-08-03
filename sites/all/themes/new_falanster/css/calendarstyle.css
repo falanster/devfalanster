@@ -39,6 +39,26 @@
   text-shadow: 2px 2px 0 #d2ff1b;
   margin: 0;
 }
+.block-agenda {
+ position: relative;
+}
+.block-agenda .block__title::before {
+  content: '';
+  width: 147px;
+  height: 3px;
+  background-color: #d2ff1b;
+  position: absolute;
+  left: -180px;
+}
+.block-agenda .block__title::after {
+  content: '';
+  width: 103px;
+  height: 3px;
+  background-color: #333333;
+  position: absolute;
+  top: 9px;
+  left: -180px;
+}
 
 @media screen and (max-width: 1079px) {
   .calendar {
