@@ -273,11 +273,8 @@
 
 .content__text img {
 	display: block;
-	width: 100%;
 	height: auto;
-	margin-top: 58px;
-	margin-bottom: 70px;
-}
+	}
 
 .content__text h2 {
 	margin-top: 0;
@@ -368,7 +365,7 @@
   }
 
 	.content__text img {
-    width: 110%;
+		 width: 110%;
     margin-left: -5%;
   }
 
