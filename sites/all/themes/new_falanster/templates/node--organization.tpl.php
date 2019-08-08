@@ -17,6 +17,9 @@
         <article class="content__text">
   <?php print render($content['body'])?>
         </article>
+      <div id="field_file">
+          <?php print render($content['field_file']);?>
+      </div>
       </div>
     </section>
   </main>
